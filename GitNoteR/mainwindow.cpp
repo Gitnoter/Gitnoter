@@ -28,12 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
 //        qDebug() << e.message();
 //    }
 
-    try {
-        repository->clone(PublicUrl, MacPath);
-    } catch (const LibQGit2::Exception& e) {
-        qDebug() << e.message();
-    }
-    qDebug() << repository->listReferences();
+//    try {
+//        repository->clone(PublicUrl, MacPath);
+//    } catch (const LibQGit2::Exception& e) {
+//        qDebug() << e.message();
+//    }
+//    qDebug() << repository->listReferences();
 }
 
 MainWindow::~MainWindow()

@@ -9,7 +9,7 @@ INCLUDEPATH += ..	# to allow includes of other libs
 
 *-g++ {
     # -Wall / -Wextra are enabled by default
-    QMAKE_CXXFLAGS += -Werror
+    #QMAKE_CXXFLAGS += -Werror
     QMAKE_CXXFLAGS += -Wdeprecated
     QMAKE_CXXFLAGS += -Wextra           # not enabled on linux by default
 }
