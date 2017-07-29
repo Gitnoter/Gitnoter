@@ -36,3 +36,4 @@ Makefile*
 #my
 .DS_Store
 .idea
+*.user
