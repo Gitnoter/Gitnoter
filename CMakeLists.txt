@@ -9,9 +9,14 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
-link_directories("${PROJECT_SOURCE_DIR}/libraries/lib")
+link_directories(${PROJECT_SOURCE_DIR}/libraries/lib)
 
-find_library(git2 libgit2.dylib)
+if (WIN32)
+    find_library(git2 libgit2.dll.a)
+elseif (APPLE)
+    find_library(git2 libgit2.dylib)
+elseif (UNIX)
+endif()
 
 add_executable(${PROJECT_NAME}
         "controllers/GitManager.h"

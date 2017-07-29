@@ -37,3 +37,4 @@ Makefile*
 .DS_Store
 .idea
 *.user
+!libraries/lib/*
