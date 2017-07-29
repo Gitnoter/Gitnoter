@@ -1,15 +1,23 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
 #include <QtCore>
-#include <QDebug>
 
-#include "gitmanager.h"
+#include "GitManager.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+int main(int argc, char *argv[])
 {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+
+
+
 //    GitManager *gitManager = new GitManager();
     const char *url = "https://git.oschina.net/TerryZ/bTabs.git";
     const char *repo_directory = "/Users/apple/Desktop/test3";
@@ -31,11 +39,5 @@ MainWindow::MainWindow(QWidget *parent) :
     gitManager->clone(purl, buffer);
 
 
-
-    ui->setupUi(this);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
+    return app.exec();
 }

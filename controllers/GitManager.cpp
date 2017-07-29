@@ -1,4 +1,4 @@
-#include "gitmanager.h"
+#include "GitManager.h"
 
 #include <QObject>
 
