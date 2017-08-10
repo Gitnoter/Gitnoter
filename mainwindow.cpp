@@ -84,12 +84,15 @@ void MainWindow::textChangedAndUpdatePreview()
 void MainWindow::menuPushButtonClicked()
 {
     QString objectName = this->sender()->objectName();
-    QMap<QString, QPushButton *>::Iterator itr;
 
+    // TODO: 选择这里需要优化, 重复点击同一个按钮会出现闪烁, 之后改成, 点击替换按钮图片, 避免闪烁
+    QMap<QString, QPushButton *>::Iterator itr;
     for (itr = this->menuPushButtons.begin(); itr != this->menuPushButtons.end(); ++itr) {
         if (itr.key() == objectName) {
-            continue;
+            itr.value()->setChecked(true);
         }
-        itr.value()->setChecked(false);
+        else {
+            itr.value()->setChecked(false);
+        }
     }
 }
