@@ -105,9 +105,12 @@
           </size>
          </property>
          <property name="checkable">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="default">
           <bool>false</bool>
          </property>
          <property name="flat">
@@ -498,7 +501,7 @@ QTableWidget::item:selected{
            <bool>true</bool>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>true</bool>
@@ -556,96 +559,6 @@ QTableWidget::item:selected{
             <string>新建行</string>
            </property>
           </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
           <column>
            <property name="text">
             <string>Datetime</string>
@@ -658,12 +571,72 @@ QTableWidget::item:selected{
           </column>
           <item row="0" column="0">
            <property name="text">
-            <string>asf</string>
+            <string>2017年08月11日14:10:07</string>
            </property>
           </item>
           <item row="0" column="1">
            <property name="text">
-            <string>asdf</string>
+            <string>做游戏究竟需要哪些技能呢.md</string>
+           </property>
+          </item>
+          <item row="1" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="1" column="1">
+           <property name="text">
+            <string>教你如何取消恶心的迅雷浏览器关联.md</string>
+           </property>
+          </item>
+          <item row="2" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="2" column="1">
+           <property name="text">
+            <string>关于番羽弓虽访问Google的方法.md</string>
+           </property>
+          </item>
+          <item row="3" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="3" column="1">
+           <property name="text">
+            <string>在同个工程中使用-Swift-和-Objective-C(Swift-and-Objective-C-in-the-Same-Project).md</string>
+           </property>
+          </item>
+          <item row="4" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="4" column="1">
+           <property name="text">
+            <string>关于学习-iOS-Swift-开发的一点感悟.md</string>
+           </property>
+          </item>
+          <item row="5" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="5" column="1">
+           <property name="text">
+            <string>学习使用-Swift-编写-iOS-应用程序教程-1.md</string>
+           </property>
+          </item>
+          <item row="6" column="0">
+           <property name="text">
+            <string>2017年08月11日14:10:07</string>
+           </property>
+          </item>
+          <item row="6" column="1">
+           <property name="text">
+            <string>iOS-SwiftUIImageView-loading-webImg.md</string>
            </property>
           </item>
          </widget>
@@ -701,6 +674,147 @@ QTableWidget::item:selected{
           <property name="styleSheet">
            <string notr="true">border-bottom: 1px solid #D3D3D3;</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>Categories</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>Tags</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_2">
+               <property name="styleSheet">
+                <string notr="true">border: 0px;</string>
+               </property>
+               <property name="frame">
+                <bool>false</bool>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="placeholderText">
+                <string>Click add tags</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit">
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>false</bool>
+               </property>
+               <property name="placeholderText">
+                <string>Search</string>
+               </property>
+               <property name="cursorMoveStyle">
+                <enum>Qt::LogicalMoveStyle</enum>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>Image</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_7">
+               <property name="text">
+                <string>Url</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>Table</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="text">
+                <string>Code</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>

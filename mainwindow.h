@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "document.h"
+#include "categorieswidget.h"
 
 #include <QMainWindow>
 #include <QString>
@@ -22,9 +23,13 @@ public:
 
     QMap<QString, QPushButton *> menuPushButtons;
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Document m_content;
+    CategoriesWidget *categoriesWidget;
 
     void textChangedAndUpdatePreview();
     void menuPushButtonClicked();

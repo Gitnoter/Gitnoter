@@ -27,15 +27,18 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         previewpage.cpp \
-        document.cpp
+        document.cpp \
+    categorieswidget.cpp
 
 HEADERS += \
         mainwindow.h \
         previewpage.h \
-        document.h
+        document.h \
+    categorieswidget.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    categorieswidget.ui
 
 RESOURCES += \
     resources/markdowneditor.qrc

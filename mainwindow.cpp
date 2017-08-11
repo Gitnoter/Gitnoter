@@ -25,17 +25,17 @@ MainWindow::MainWindow(QWidget *parent) :
     this->menuPushButtons.insert("pushButton_Trash", ui->pushButton_Trash);
 
     QMap<QString, QPushButton *>::Iterator itr;
-
     for (itr = this->menuPushButtons.begin(); itr != this->menuPushButtons.end(); ++itr) {
 //        qDebug() << "key:"<<itr.key()<<"value:"<<itr.value();
         connect(itr.value(), &QPushButton::clicked, this, &MainWindow::menuPushButtonClicked);
     }
 
-    for (int i = 0; i < ui->tableWidget_list->horizontalHeader()->count(); ++i) {
-        ui->tableWidget_list->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
-    }
+    // item响应父节点的布局
+//    for (int i = 0; i < ui->tableWidget_list->horizontalHeader()->count(); ++i) {
+//        ui->tableWidget_list->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Custom);
+//    }
 
-    ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);   // 屏蔽选中时的边框颜色
 
     ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     ui->webEngineView_preview->setContextMenuPolicy(Qt::NoContextMenu);
@@ -95,4 +95,10 @@ void MainWindow::menuPushButtonClicked()
             itr.value()->setChecked(false);
         }
     }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    this->categoriesWidget = new CategoriesWidget(this);
+    this->categoriesWidget->show();
 }
