@@ -41,4 +41,4 @@ FORMS += \
     categorieswidget.ui
 
 RESOURCES += \
-    resources/markdowneditor.qrc
+    resources/resources.qrc

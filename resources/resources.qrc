@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>highlight.js/github-gist.css</file>
+        <file>highlight.js/highlight.min.js</file>
+        <file>marked/default.md</file>
+        <file>marked/markdown.css</file>
+        <file>marked/index.html</file>
+        <file>marked/marked.min.js</file>
+        <file>marked/qwebchannel.js</file>
+        <file>images/select.jpg</file>
+        <file>images/selected.jpg</file>
+    </qresource>
+</RCC>

@@ -50,9 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     channel->registerObject(QStringLiteral("content"), &m_content);
     page->setWebChannel(channel);
 
-    ui->webEngineView_preview->setUrl(QUrl("qrc:/index.html"));
+    ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
 
-    QFile defaultTextFile(":/default.md");
+    QFile defaultTextFile(":/marked/default.md");
     defaultTextFile.open(QIODevice::ReadOnly);
     ui->plainTextEdit_editor->setPlainText(defaultTextFile.readAll());
 

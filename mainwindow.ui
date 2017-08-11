@@ -94,8 +94,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -143,8 +143,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -186,8 +186,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -223,8 +223,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -260,8 +260,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -316,8 +316,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <selectedoff>:/select.jpg</selectedoff>
-           <selectedon>:/selected.jpg</selectedon>
+           <selectedoff>:/images/select.jpg</selectedoff>
+           <selectedon>:/images/selected.jpg</selectedon>
           </iconset>
          </property>
          <property name="iconSize">
