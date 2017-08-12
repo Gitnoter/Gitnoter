@@ -23,11 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(itr.value(), &QPushButton::clicked, this, &MainWindow::menuPushButtonClicked);
     }
 
-    // item响应父节点的布局
-//    for (int i = 0; i < ui->tableWidget_list->horizontalHeader()->count(); ++i) {
-//        ui->tableWidget_list->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Custom);
-//    }
-
     ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);   // 屏蔽选中时的边框颜色
 
     ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
@@ -35,9 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     PreviewPage *page = new PreviewPage(this);
     ui->webEngineView_preview->setPage(page);
-
-    connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChangedAndUpdatePreview);
-    connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChangedAndUpdatePreview);
 
     QWebChannel *channel = new QWebChannel(this);
     channel->registerObject(QStringLiteral("content"), &m_content);
@@ -47,7 +39,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QFile defaultTextFile(":/marked/default.md");
     defaultTextFile.open(QIODevice::ReadOnly);
-    ui->plainTextEdit_editor->setPlainText(defaultTextFile.readAll());
+    QString defaultText = QString(defaultTextFile.readAll());
+
+    noteModel = new NoteModel(defaultText);
+    ui->lineEdit_title->setText(noteModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(noteModel->getBody());
+
+    updatePreview();
+
+    connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
+    connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 
     //    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
     //    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onFileOpen);
@@ -64,13 +65,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::textChangedAndUpdatePreview()
+void MainWindow::textChanged()
 {
-    if (ui->lineEdit_title->displayText().isEmpty()) {
-        m_content.setText(ui->plainTextEdit_editor->toPlainText());
+    noteModel->setTitle(ui->lineEdit_title->displayText());
+    noteModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    this->updatePreview();
+}
+
+void MainWindow::updatePreview()
+{
+    if (noteModel->getTitle().isEmpty()) {
+        m_content.setText(noteModel->getBody());
     }
     else {
-        m_content.setText("# " + ui->lineEdit_title->displayText() + "\n\n" + ui->plainTextEdit_editor->toPlainText());
+        m_content.setText("# " + noteModel->getTitle() + "\n\n" + noteModel->getBody());
     }
 }
 

@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
         previewpage.cpp \
         document.cpp \
-    categorieswidget.cpp
+    categorieswidget.cpp \
+    notemodel.cpp
 
 HEADERS += \
         mainwindow.h \
         previewpage.h \
         document.h \
-    categorieswidget.h
+    categorieswidget.h \
+    notemodel.h
 
 FORMS += \
         mainwindow.ui \

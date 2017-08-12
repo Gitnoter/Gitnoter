@@ -3,7 +3,7 @@
 
 #include "document.h"
 #include "categorieswidget.h"
-
+#include "notemodel.h"
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
@@ -35,9 +35,10 @@ private:
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
+    NoteModel *noteModel;
 
-
-    void textChangedAndUpdatePreview();
+    void textChanged();
+    void updatePreview();
     void menuPushButtonClicked();
 };
 
