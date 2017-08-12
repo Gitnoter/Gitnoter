@@ -5,8 +5,8 @@
 #include "categorieswidget.h"
 
 #include <QMainWindow>
-#include <QString>
-#include <QMap>
+#include <QtCore>
+#include <QtGui>
 #include <QPushButton>
 
 namespace Ui {
@@ -21,15 +21,21 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QMap<QString, QPushButton *> menuPushButtons;
+protected:
+    void resizeEvent(QResizeEvent *size);
 
 private slots:
     void on_pushButton_clicked();
 
+signals:
+    void resizeChildWindow(QSize size);
+
 private:
     Ui::MainWindow *ui;
     Document m_content;
+    QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
+
 
     void textChangedAndUpdatePreview();
     void menuPushButtonClicked();

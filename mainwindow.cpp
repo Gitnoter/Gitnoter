@@ -2,14 +2,7 @@
 #include "previewpage.h"
 #include "ui_mainwindow.h"
 
-#include <QFile>
-#include <QFileDialog>
-#include <QFontDatabase>
-#include <QMessageBox>
-#include <QTextStream>
 #include <QWebChannel>
-#include <QScrollBar>
-#include <QMapIterator>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -99,6 +92,15 @@ void MainWindow::menuPushButtonClicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    this->categoriesWidget = new CategoriesWidget(this);
-    this->categoriesWidget->show();
+    if (categoriesWidget) {
+        categoriesWidget->close();
+    }
+    categoriesWidget = new CategoriesWidget(this);
+    categoriesWidget->show();
+
+    connect(this, &MainWindow::resizeChildWindow, categoriesWidget, &CategoriesWidget::resizeWindow);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *size) {
+    emit resizeChildWindow(size->size());
 }

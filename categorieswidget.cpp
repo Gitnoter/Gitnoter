@@ -1,5 +1,8 @@
 #include "categorieswidget.h"
+#include "mainwindow.h"
 #include "ui_categorieswidget.h"
+
+#include <QDebug>
 
 CategoriesWidget::CategoriesWidget(QWidget *parent) :
     QWidget(parent),
@@ -7,15 +10,15 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    this->pAnimation = new QPropertyAnimation(this, "geometry");
-//    this->pDesktopWidget = QApplication::desktop();
-//    int x = (this->pDesktopWidget->availableGeometry().width() - width()) / 2 - this->width() / 2;
+    MainWindow *mainWindow = (MainWindow *) parentWidget();
+    resizeWindow(mainWindow->geometry().size());
 
-//    this->pAnimation->setDuration(300);
-//    this->pAnimation->setStartValue(QRect(x, -this->height(), this-width(), this->height()));
-//    this->pAnimation->setEndValue(QRect(x, -12, this->width(), this->height()));
-//    this->pAnimation->setEasingCurve(QEasingCurve::Linear);
-//    this->pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
+    pAnimation->setDuration(300);
+    pAnimation->setStartValue(QRect(0, -height(), width(), height()));
+    pAnimation->setEndValue(QRect(0, -12, width(), height()));
+    pAnimation->setEasingCurve(QEasingCurve::Linear);
+    pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 CategoriesWidget::~CategoriesWidget()
@@ -23,12 +26,17 @@ CategoriesWidget::~CategoriesWidget()
     delete ui;
 }
 
+void CategoriesWidget::resizeWindow(QSize size)
+{
+    setGeometry(x(), y(), size.width(), size.height());
+}
+
 void CategoriesWidget::on_pushButton_clicked()
 {
-    int x = (this->pDesktopWidget->availableGeometry().width() - width()) / 2 - this->width() / 2;
-
-    this->pAnimation->setDuration(300);
-    this->pAnimation->setEndValue(QRect(x, -this->height(), this->width(), this->height()));
-    this->pAnimation->setEasingCurve(QEasingCurve::Linear);
-    this->pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
+    pAnimation->setDuration(300);
+    pAnimation->setEndValue(QRect(0, -height(), width(), height()));
+    pAnimation->setStartValue(QRect(0, -12, width(), height()));
+    pAnimation->setEasingCurve(QEasingCurve::Linear);
+    pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }

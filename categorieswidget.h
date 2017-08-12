@@ -17,13 +17,15 @@ public:
     explicit CategoriesWidget(QWidget *parent = 0);
     ~CategoriesWidget();
 
+public slots:
+    void resizeWindow(QSize size);
+
 private slots:
     void on_pushButton_clicked();
 
 private:
     Ui::CategoriesWidget *ui;
-    QPropertyAnimation *pAnimation;
-    QDesktopWidget *pDesktopWidget;
+
 };
 
 #endif // CATEGORIESWIDGET_H
