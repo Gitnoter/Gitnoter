@@ -9,5 +9,6 @@
         <file>marked/qwebchannel.js</file>
         <file>images/select.jpg</file>
         <file>images/selected.jpg</file>
+        <file>database/gitnoter.sql</file>
     </qresource>
 </RCC>

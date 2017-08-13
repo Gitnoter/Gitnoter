@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webenginewidgets webchannel
+QT       += core gui webenginewidgets webchannel sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,14 +29,16 @@ SOURCES += \
         previewpage.cpp \
         document.cpp \
     categorieswidget.cpp \
-    notemodel.cpp
+    notemodel.cpp \
+    database.cpp
 
 HEADERS += \
         mainwindow.h \
         previewpage.h \
         document.h \
     categorieswidget.h \
-    notemodel.h
+    notemodel.h \
+    database.h
 
 FORMS += \
         mainwindow.ui \
