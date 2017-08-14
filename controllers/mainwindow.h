@@ -4,6 +4,7 @@
 #include "document.h"
 #include "categorieswidget.h"
 #include "notemodel.h"
+
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>

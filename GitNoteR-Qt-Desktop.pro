@@ -22,27 +22,34 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += $$PWD/controllers \
+    $$PWD/view \
+    $$PWD/models
+
+DEPENDPATH += $$PWD/controllers \
+    $$PWD/view \
+    $$PWD/models
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-        previewpage.cpp \
-        document.cpp \
-    categorieswidget.cpp \
-    notemodel.cpp \
-    database.cpp
+        controllers/mainwindow.cpp \
+        controllers/previewpage.cpp \
+        controllers/document.cpp \
+    controllers/categorieswidget.cpp \
+    controllers/database.cpp \
+    models/notemodel.cpp
 
 HEADERS += \
-        mainwindow.h \
-        previewpage.h \
-        document.h \
-    categorieswidget.h \
-    notemodel.h \
-    database.h
+        controllers/mainwindow.h \
+        controllers/previewpage.h \
+        controllers/document.h \
+    controllers/categorieswidget.h \
+    controllers/database.h \
+    models/notemodel.h
 
 FORMS += \
-        mainwindow.ui \
-    categorieswidget.ui
+        views/mainwindow.ui \
+    views/categorieswidget.ui
 
 RESOURCES += \
     resources/resources.qrc

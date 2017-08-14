@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "previewpage.h"
+#include "database.h"
 #include "ui_mainwindow.h"
 
 #include <QWebChannel>
@@ -44,6 +45,11 @@ MainWindow::MainWindow(QWidget *parent) :
     noteModel = new NoteModel(defaultText);
     ui->lineEdit_title->setText(noteModel->getTitle());
     ui->plainTextEdit_editor->setPlainText(noteModel->getBody());
+
+    Database *database = new Database();
+    database->insertNote(noteModel);
+    qDebug() << database->selectNote();
+    qDebug() << noteModel->getCreateDate();
 
     updatePreview();
 
