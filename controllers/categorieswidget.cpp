@@ -10,7 +10,7 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    MainWindow *mainWindow = (MainWindow *) parentWidget();
+    auto *mainWindow = (MainWindow *) parentWidget();
     resizeWindow(mainWindow->geometry().size());
 
     QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");

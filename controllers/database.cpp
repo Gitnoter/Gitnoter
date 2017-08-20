@@ -85,7 +85,7 @@ void Database::initNoteData(const QString path)
 }
 
 
-uint Database::insertNote(NoteModel *noteModel)
+int Database::insertNote(NoteModel *noteModel)
 {
     query.prepare("INSERT INTO notes (title, create_date, update_date, body) VALUES (?, ?, ?, ?)");
     query.bindValue(0, noteModel->getTitle());
@@ -93,7 +93,7 @@ uint Database::insertNote(NoteModel *noteModel)
     query.bindValue(2, noteModel->getUpdateDate());
     query.bindValue(3, noteModel->getBody());
 
-    uint insertId = 0;
+    int insertId = 0;
     if (!query.exec()) {
         qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
     }
@@ -110,9 +110,9 @@ QList<NoteModel *> Database::selectNote()
     QList<NoteModel *> result;
     if (query.exec("select id, title, create_date from notes")) {
         while (query.next()) {
-            uint id = query.value(0).toInt();
+            int id = query.value(0).toInt();
             QString title = query.value(1).toString();
-            uint createDate = query.value(2).toInt();
+            int createDate = query.value(2).toInt();
 
             NoteModel *noteModel = new NoteModel(id, title, createDate);
             result.append(noteModel);

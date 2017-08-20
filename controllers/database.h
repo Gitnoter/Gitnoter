@@ -24,7 +24,7 @@ public:
 
     QList<NoteModel *> selectNote();
 
-    uint insertNote(NoteModel *noteModel);
+    int insertNote(NoteModel *noteModel);
     void insertTag(NoteModel *noteModel);
     void insertCategorie(NoteModel *noteModel);
     void insertNoteJoinCategorie(NoteModel *noteModel);

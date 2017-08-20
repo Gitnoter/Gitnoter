@@ -15,7 +15,7 @@ class CategoriesWidget : public QWidget
 
 public:
     explicit CategoriesWidget(QWidget *parent = 0);
-    ~CategoriesWidget();
+    ~CategoriesWidget() override;
 
 public slots:
     void resizeWindow(QSize size);

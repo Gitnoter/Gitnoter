@@ -11,28 +11,28 @@ class NoteModel : public QObject
 {
     Q_OBJECT
 public:
-    NoteModel(QString noteText);
-    NoteModel(uint id, QString title, uint updateDate);
-    NoteModel(uint id, QString title, QString categories, QStringList tags,
-              uint createDate, uint updateDate, QString body);
+    explicit NoteModel(QString noteText);
+    NoteModel(int id, QString title, int updateDate);
+    NoteModel(int id, QString title, QString categories, QStringList tags,
+              int createDate, int updateDate, QString body);
 
-    void setId(uint id);
+    void setId(int id);
     void setTitle(QString title);
     void setCreateDate(QString createDate);
-    void setCreateDate(uint createDate);
+    void setCreateDate(int createDate);
     void setUpdateDate(QString updateDate);
-    void setUpdateDate(uint updateDate);
+    void setUpdateDate(int updateDate);
     void setCategories(QString categories);
-    void setTags(QList<QString> tags);
+    void setTags(QStringList tags);
     void setTags(QString tags);
     void setBody(QString body);
     void setFileDir(QString fileDir);
     void setFileName(QString fileName);
 
-    uint getId();
+    int getId();
     QString getTitle();
-    uint getCreateDate();
-    uint getUpdateDate();
+    int getCreateDate();
+    int getUpdateDate();
     QString getCategories();
     QStringList getTags();
     QString getBody();
@@ -41,19 +41,19 @@ public:
     QString getFileName();
 
 private:
-    uint id;
+    int id;
     QString uuid;
     QString title;
-    uint createDate;
-    uint updateDate;
+    int createDate;
+    int updateDate;
     QString categories;
     QStringList tags;
     QString body;
     QString fileDir;
     QString fileName;
 
-    uint timestampFromDateTime(QString dateTime);
-    QString timestampToDateTime(uint timestamp);
+    int timestampFromDateTime(QString dateTime);
+    QString timestampToDateTime(int timestamp);
 };
 
 #endif // NOTEMODEL_H

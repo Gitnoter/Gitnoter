@@ -43,6 +43,6 @@ add_executable(${PROJECT_NAME}
     "resources/resources.qrc"
 
     ${UIS_HDRS}
-)
+        controllers/tools.cpp controllers/tools.h)
 # target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick git2)
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql)

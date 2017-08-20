@@ -37,7 +37,8 @@ SOURCES += \
         controllers/document.cpp \
     controllers/categorieswidget.cpp \
     controllers/database.cpp \
-    models/notemodel.cpp
+    models/notemodel.cpp \
+    controllers/tools.cpp
 
 HEADERS += \
         controllers/mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
         controllers/document.h \
     controllers/categorieswidget.h \
     controllers/database.h \
-    models/notemodel.h
+    models/notemodel.h \
+    controllers/tools.h
 
 FORMS += \
         views/mainwindow.ui \

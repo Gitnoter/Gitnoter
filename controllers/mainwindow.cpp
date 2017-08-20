@@ -98,12 +98,7 @@ void MainWindow::menuPushButtonClicked()
     // TODO: 选择这里需要优化, 重复点击同一个按钮会出现闪烁, 之后改成, 点击替换按钮图片, 避免闪烁
     QMap<QString, QPushButton *>::Iterator itr;
     for (itr = this->menuPushButtons.begin(); itr != this->menuPushButtons.end(); ++itr) {
-        if (itr.key() == objectName) {
-            itr.value()->setChecked(true);
-        }
-        else {
-            itr.value()->setChecked(false);
-        }
+        itr.value()->setChecked(itr.key() == objectName);
     }
 }
 
