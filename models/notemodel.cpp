@@ -2,35 +2,40 @@
 
 #include <QDebug>
 
-NoteModel::NoteModel(QString note)
+NoteModel::NoteModel(QString noteText)
 {
-    QStringList noteLines = note.replace("\r\n", "\n").split("\n");
-    for (int i = 0; i < noteLines.length(); ++i) {
+    QTextStream in(&noteText);
+    uint i = 0;
+    while(!in.atEnd()) {
+        QString noteLine = in.readLine();
+
         if (i == 0) {
-            this->title = QString(noteLines[i]).replace("title: ", "");
+            this->uuid = noteLine.mid(6);
         }
         else if (i == 1) {
-            this->createDate = this->timestampFromDateTime(QString(noteLines[i]).replace("createDate: ", ""));
+            this->title = noteLine.replace("title: ", "");
         }
         else if (i == 2) {
-            this->updateDate = this->timestampFromDateTime(QString(noteLines[i]).replace("updateDate: ", ""));
+            this->createDate = this->timestampFromDateTime(noteLine.replace("createDate: ", ""));
         }
         else if (i == 3) {
-            this->tags = QString(noteLines[i]).replace("title: ", "").split(__TAGS_SPLITE__);
+            this->updateDate = this->timestampFromDateTime(noteLine.replace("updateDate: ", ""));
         }
         else if (i == 4) {
-            this->categories = QString(noteLines[i]).replace("categories: ", "");
+            this->tags = noteLine.replace("title: ", "").split(__TAGS_SPLITE__);
         }
-        else if (i == 5 || i == 6 || i == 7) {
-            continue;
+        else if (i == 5) {
+            this->categories = noteLine.replace("categories: ", "");
+        }
+        else if (i == 6 || i == 7 || i == 8) {
+
         }
         else {
-            this->body += noteLines[i];
-            if (i != noteLines.length() - 1) {
-                this->body += "\n";
-            }
+            this->body += noteLine += "\n";
         }
+        i += 1;
     }
+    this->body.chop(2);
 }
 
 NoteModel::NoteModel(uint id, QString title, uint updateDate)
@@ -50,6 +55,11 @@ NoteModel::NoteModel(uint id, QString title, QString categories, QStringList tag
     this->createDate = createDate;
     this->updateDate = updateDate;
     this->body = body;
+}
+
+void NoteModel::setId(uint id)
+{
+    this->id = id;
 }
 
 void NoteModel::setTitle(QString title)
@@ -90,6 +100,21 @@ void NoteModel::setUpdateDate(QString updateDate)
 void NoteModel::setBody(QString body)
 {
     this->body = body;
+}
+
+void NoteModel::setFileDir(QString fileDir)
+{
+    this->fileDir = fileDir;
+}
+
+void NoteModel::setFileName(QString fileName)
+{
+    this->fileName = fileName;
+}
+
+uint NoteModel::getId()
+{
+    return this->id;
 }
 
 QString NoteModel::getTitle()
@@ -152,6 +177,16 @@ QString NoteModel::getNote()
     note += "\n\n---\n\n" + this->body;
 
     return note;
+}
+
+QString NoteModel::getFileDir()
+{
+    return this->fileDir;
+}
+
+QString NoteModel::getFileName()
+{
+    return this->fileName;
 }
 
 uint NoteModel::timestampFromDateTime(QString dateTime)

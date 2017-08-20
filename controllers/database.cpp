@@ -42,23 +42,48 @@ void Database::connent(const QString filename)
     }
 }
 
+void Database::createTables()
+{
+    QFile tablesFile(":/database/gitnoter.sql");
+    tablesFile.open(QIODevice::ReadOnly);
+    QString tablesSql = QString(tablesFile.readAll());
+    QStringList sqlList = tablesSql.split("\n");
+
+    for (int i = 0; i < sqlList.length(); ++i) {
+        if (!sqlList[i].isEmpty()) {
+            query.exec(sqlList[i]);
+        }
+        query.clear();
+    }
+}
+
 void Database::initTables()
 {
     if (!query.exec("select * from config")) {
-        QFile tablesFile(":/database/gitnoter.sql");
-        tablesFile.open(QIODevice::ReadOnly);
-        QString tablesSql = QString(tablesFile.readAll());
-        QStringList sqlList = tablesSql.split("\n");
+        query.clear();
+        this->createTables();
+    }
+}
 
-        for (int i = 0; i < sqlList.length(); ++i) {
-            query.clear();
-            if (!sqlList[i].isEmpty()) {
-                qDebug() << query.exec(sqlList[i]);
+void Database::initNoteData(const QString path)
+{
+    this->createTables();
+
+    QDir dir(path);
+
+    foreach(QFileInfo mfi ,dir.entryInfoList()) {
+        if(mfi.isFile()) {
+            qDebug()<< "File :" << path << "/" << mfi.fileName();
+        }
+        else {
+            if(mfi.fileName() == "." || mfi.fileName() == "..") {
+                continue;
             }
+            this->initNoteData(mfi.absoluteFilePath());
         }
     }
-    query.clear();
 }
+
 
 uint Database::insertNote(NoteModel *noteModel)
 {

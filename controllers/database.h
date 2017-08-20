@@ -18,11 +18,13 @@ public:
     ~Database();
 
     void connent(const QString filename);
+    void createTables();
+    void initNoteData(const QString path);
     void initTables();
 
     QList<NoteModel *> selectNote();
 
-    void insertNote(NoteModel *noteModel);
+    uint insertNote(NoteModel *noteModel);
     void insertTag(NoteModel *noteModel);
     void insertCategorie(NoteModel *noteModel);
     void insertNoteJoinCategorie(NoteModel *noteModel);

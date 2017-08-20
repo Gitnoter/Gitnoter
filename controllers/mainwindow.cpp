@@ -42,14 +42,17 @@ MainWindow::MainWindow(QWidget *parent) :
     defaultTextFile.open(QIODevice::ReadOnly);
     QString defaultText = QString(defaultTextFile.readAll());
 
+    qDebug() << defaultText;
     noteModel = new NoteModel(defaultText);
+    qDebug() << noteModel->getBody();
     ui->lineEdit_title->setText(noteModel->getTitle());
     ui->plainTextEdit_editor->setPlainText(noteModel->getBody());
 
     Database *database = new Database();
-    database->insertNote(noteModel);
-    qDebug() << database->selectNote();
-    qDebug() << noteModel->getCreateDate();
+    database->initNoteData("/Users/MakeHui/Developer/Projects/GitNoteR/Note/User/user.git/notes");
+//    database->insertNote(noteModel);
+//    qDebug() << database->selectNote();
+//    qDebug() << noteModel->getCreateDate();
 
     updatePreview();
 
