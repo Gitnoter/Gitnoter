@@ -47,7 +47,8 @@ HEADERS += \
     controllers/categorieswidget.h \
     controllers/database.h \
     models/notemodel.h \
-    controllers/tools.h
+    controllers/tools.h \
+    controllers/sqlquerybuilder.h
 
 FORMS += \
         views/mainwindow.ui \

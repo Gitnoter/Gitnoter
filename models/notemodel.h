@@ -5,18 +5,17 @@
 #include <QtCore>
 
 #define __TAGS_SPLITE__ ", "
-#define __DATE_FORMAT__ "yyyy/MM/dd hh:mm:ss"
 
 class NoteModel : public QObject
 {
     Q_OBJECT
 public:
     explicit NoteModel(QString noteText);
-    NoteModel(int id, QString title, int updateDate);
-    NoteModel(int id, QString title, QString categories, QStringList tags,
+    NoteModel(QString id, QString title, int updateDate);
+    NoteModel(QString id, QString title, QString categories, QStringList tags,
               int createDate, int updateDate, QString body);
 
-    void setId(int id);
+    void setUuid(QString uuid);
     void setTitle(QString title);
     void setCreateDate(QString createDate);
     void setCreateDate(int createDate);
@@ -29,7 +28,7 @@ public:
     void setFileDir(QString fileDir);
     void setFileName(QString fileName);
 
-    int getId();
+    QString setUuid();
     QString getTitle();
     int getCreateDate();
     int getUpdateDate();
@@ -41,7 +40,6 @@ public:
     QString getFileName();
 
 private:
-    int id;
     QString uuid;
     QString title;
     int createDate;
@@ -51,9 +49,6 @@ private:
     QString body;
     QString fileDir;
     QString fileName;
-
-    int timestampFromDateTime(QString dateTime);
-    QString timestampToDateTime(int timestamp);
 };
 
 #endif // NOTEMODEL_H

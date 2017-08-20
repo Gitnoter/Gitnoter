@@ -1,4 +1,5 @@
 #include "database.h"
+#include "tools.h"
 
 #include <QStandardPaths>
 #include <QDir>
@@ -68,60 +69,61 @@ void Database::initTables()
 void Database::initNoteData(const QString path)
 {
     this->createTables();
+    const QFileInfoList fileInfoList = Tools::getFilesPath(path);
+    for (auto &&fileInfo : fileInfoList) {
 
-    QDir dir(path);
-
-    foreach(QFileInfo mfi ,dir.entryInfoList()) {
-        if(mfi.isFile()) {
-            qDebug()<< "File :" << path << "/" << mfi.fileName();
-        }
-        else {
-            if(mfi.fileName() == "." || mfi.fileName() == "..") {
-                continue;
-            }
-            this->initNoteData(mfi.absoluteFilePath());
-        }
     }
-}
-
-
-int Database::insertNote(NoteModel *noteModel)
-{
-    query.prepare("INSERT INTO notes (title, create_date, update_date, body) VALUES (?, ?, ?, ?)");
-    query.bindValue(0, noteModel->getTitle());
-    query.bindValue(1, noteModel->getCreateDate());
-    query.bindValue(2, noteModel->getUpdateDate());
-    query.bindValue(3, noteModel->getBody());
-
-    int insertId = 0;
-    if (!query.exec()) {
-        qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
-    }
-    else {
-        insertId = query.lastInsertId().toInt();
-    }
-    query.clear();
-
-    return insertId;
 }
 
 QList<NoteModel *> Database::selectNote()
 {
     QList<NoteModel *> result;
-    if (query.exec("select id, title, create_date from notes")) {
+    selectBuilder.select("uuid", "title", "create_date").from("notes");
+    QString sql = QString::fromStdString(selectBuilder.str());
+
+    if (query.exec(sql)) {
         while (query.next()) {
-            int id = query.value(0).toInt();
+            QString uuid = query.value(0).toString();
             QString title = query.value(1).toString();
             int createDate = query.value(2).toInt();
 
-            NoteModel *noteModel = new NoteModel(id, title, createDate);
+            NoteModel *noteModel = new NoteModel(uuid, title, createDate);
             result.append(noteModel);
         }
     }
     else {
         qDebug() << "QList<NoteModel *> Database::selectNoteList(): failed!";
     }
-    query.clear();
+    this->clear();
 
     return result;
+}
+
+QString Database::insertNote(NoteModel *noteModel)
+{
+    insertBuilder.insert("title", noteModel->getTitle())
+            ("create_date", noteModel->getCreateDate())
+            ("update_date", noteModel->getUpdateDate())
+            ("body", noteModel->getBody()).into("notes");
+    sql = QString::fromStdString(insertBuilder.str());
+
+    QString insertId = "";
+    if (!query.exec(sql)) {
+        qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
+    }
+    else {
+        insertId = query.lastInsertId().toString();
+    }
+    this->clear();
+
+    return insertId;
+}
+
+void Database::clear() {
+    query.clear();
+    selectBuilder.reset();
+    insertBuilder.reset();
+    updateBuilder.reset();
+    deleteBuilder.reset();
+    sql = "";
 }

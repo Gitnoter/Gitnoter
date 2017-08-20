@@ -1,4 +1,5 @@
 #include "notemodel.h"
+#include "tools.h"
 
 #include <QDebug>
 
@@ -16,10 +17,10 @@ NoteModel::NoteModel(QString noteText)
             this->title = noteLine.replace("title: ", "");
         }
         else if (i == 2) {
-            this->createDate = this->timestampFromDateTime(noteLine.replace("createDate: ", ""));
+            this->createDate = Tools::timestampFromDateTime(noteLine.replace("createDate: ", ""));
         }
         else if (i == 3) {
-            this->updateDate = this->timestampFromDateTime(noteLine.replace("updateDate: ", ""));
+            this->updateDate = Tools::timestampFromDateTime(noteLine.replace("updateDate: ", ""));
         }
         else if (i == 4) {
             this->tags = noteLine.replace("title: ", "").split(__TAGS_SPLITE__);
@@ -38,17 +39,17 @@ NoteModel::NoteModel(QString noteText)
     this->body.chop(2);
 }
 
-NoteModel::NoteModel(int id, const QString title, int updateDate)
+NoteModel::NoteModel(QString uuid, const QString title, int updateDate)
 {
-    this->id = id;
+    this->uuid = uuid;
     this->title = title;
     this->updateDate = updateDate;
 }
 
-NoteModel::NoteModel(int id, const QString title, const QString categories, const QStringList tags,
+NoteModel::NoteModel(QString uuid, const QString title, const QString categories, const QStringList tags,
           int createDate, int updateDate, const QString body)
 {
-    this->id = id;
+    this->uuid = uuid;
     this->title = title;
     this->categories = categories;
     this->tags = tags;
@@ -57,9 +58,8 @@ NoteModel::NoteModel(int id, const QString title, const QString categories, cons
     this->body = body;
 }
 
-void NoteModel::setId(int id)
-{
-    this->id = id;
+QString NoteModel::setUuid() {
+    return this->uuid;
 }
 
 void NoteModel::setTitle(const QString title)
@@ -84,7 +84,7 @@ void NoteModel::setTags(const QString tags)
 
 void NoteModel::setCreateDate(const QString createDate)
 {
-    this->createDate = this->timestampFromDateTime(createDate);
+    this->createDate = Tools::timestampFromDateTime(createDate);
 }
 
 void NoteModel::setCreateDate(int createDate)
@@ -94,7 +94,7 @@ void NoteModel::setCreateDate(int createDate)
 
 void NoteModel::setUpdateDate(const QString updateDate)
 {
-    this->updateDate = this->timestampFromDateTime(updateDate);
+    this->updateDate = Tools::timestampFromDateTime(updateDate);
 }
 
 void NoteModel::setUpdateDate(int updateDate)
@@ -117,9 +117,8 @@ void NoteModel::setFileName(const QString fileName)
     this->fileName = fileName;
 }
 
-int NoteModel::getId()
-{
-    return this->id;
+void NoteModel::setUuid(QString uuid) {
+    this->uuid = uuid;
 }
 
 QString NoteModel::getTitle()
@@ -168,17 +167,16 @@ QString NoteModel::getNote()
 {
     QString note;
     note += "title: " + this->title + "\n";
-    note += "createDate: " + this->timestampToDateTime(this->createDate) + "\n";
-    note += "updateDate" + this->timestampToDateTime(this->updateDate) + "\n";
+    note += "createDate: " + Tools::timestampToDateTime(this->createDate) + "\n";
+    note += "updateDate" + Tools::timestampToDateTime(this->updateDate) + "\n";
     note += "categories: " + this->categories + "\n";
 
     note += "notes: ";
-    for (int i = 0; i < this->tags.length(); ++i) {
-        note += this->tags[i];
-        if (i != this->tags.length() - 1) {
-            note += "\n";
-        }
+    for (auto &&tag : this->tags) {
+        note += tag + "\n";
     }
+    note.chop(2);
+
     note += "\n\n---\n\n" + this->body;
 
     return note;
@@ -192,14 +190,4 @@ QString NoteModel::getFileDir()
 QString NoteModel::getFileName()
 {
     return this->fileName;
-}
-
-int NoteModel::timestampFromDateTime(const QString dateTime)
-{
-    return QDateTime::fromString(dateTime, __DATE_FORMAT__).toTime_t();
-}
-
-QString NoteModel::timestampToDateTime(int timestamp)
-{
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(__DATE_FORMAT__);
 }
