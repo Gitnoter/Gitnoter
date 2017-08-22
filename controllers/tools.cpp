@@ -1,4 +1,5 @@
 #include "tools.h"
+#include "appconfig.h"
 
 #include <QDebug>
 #include <QUuid>
@@ -30,10 +31,16 @@ QString Tools::getUuid() {
 
 int Tools::timestampFromDateTime(const QString dateTime)
 {
-    return QDateTime::fromString(dateTime, __DATE_FORMAT__).toTime_t();
+    return QDateTime::fromString(dateTime, AppConfig::dateFormat).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(__DATE_FORMAT__);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(AppConfig::dateFormat);
+}
+
+QString Tools::readerFile(QString path) {
+    QFile textFile(path);
+    textFile.open(QIODevice::ReadOnly);
+    return QString(textFile.readAll());
 }

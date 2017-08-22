@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "previewpage.h"
 #include "database.h"
+#include "tools.h"
+#include "appconfig.h"
+
 #include "ui_mainwindow.h"
 
 #include <QWebChannel>
@@ -42,14 +45,21 @@ MainWindow::MainWindow(QWidget *parent) :
     defaultTextFile.open(QIODevice::ReadOnly);
     QString defaultText = QString(defaultTextFile.readAll());
 
-    qDebug() << defaultText;
-    noteModel = new NoteModel(defaultText);
-    qDebug() << noteModel->getBody();
-    ui->lineEdit_title->setText(noteModel->getTitle());
-    ui->plainTextEdit_editor->setPlainText(noteModel->getBody());
+//    Database *database = new Database();
+//    QFileInfoList fileInfoList = Tools::getFilesPath(QDir(AppConfig::appConfigLocation).filePath(AppConfig::noteFolderName));
+//    for (auto &&fileInfo : fileInfoList) {
+//        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
+//        database
+//    }
 
-    Database *database = new Database();
-    database->initNoteData("/Users/MakeHui/Developer/Projects/GitNoteR/Note/User/user.git/notes");
+
+//    noteModel = new NoteModel(defaultText);
+//    qDebug() << noteModel->noteTableModel->getBody();
+//    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
+//    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
+
+
+//    database->initNoteData("/Users/MakeHui/Developer/Projects/GitNoteR/Note/User/user.git/notes");
 //    database->insertNote(noteModel);
 //    qDebug() << database->selectNote();
 //    qDebug() << noteModel->getCreateDate();
@@ -59,14 +69,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 
-    //    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
-    //    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onFileOpen);
-    //    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
-    //    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::onFileSaveAs);
-    //    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onExit);
+//        connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
+//        connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onFileOpen);
+//        connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
+//        connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onExit);
+//        connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::onFileSaveAs);
 
-    //    connect(ui->editor->document(), &QTextDocument::modificationChanged,
-    //            ui->actionSave, &QAction::setEnabled);
+//        connect(ui->editor->document(), &QTextDocument::modificationChanged,
+//                ui->actionSave, &QAction::setEnabled);
 }
 
 MainWindow::~MainWindow()
@@ -76,18 +86,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::textChanged()
 {
-    noteModel->setTitle(ui->lineEdit_title->displayText());
-    noteModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    noteModel->noteTableModel->setTitle(ui->lineEdit_title->displayText());
+    noteModel->noteTableModel->setBody(ui->plainTextEdit_editor->toPlainText());
     this->updatePreview();
 }
 
 void MainWindow::updatePreview()
 {
-    if (noteModel->getTitle().isEmpty()) {
-        m_content.setText(noteModel->getBody());
+    if (noteModel->noteTableModel->getTitle().isEmpty()) {
+        m_content.setText(noteModel->noteTableModel->getBody());
     }
     else {
-        m_content.setText("# " + noteModel->getTitle() + "\n\n" + noteModel->getBody());
+        m_content.setText("# " + noteModel->noteTableModel->getTitle() + "\n\n" + noteModel->noteTableModel->getBody());
     }
 }
 

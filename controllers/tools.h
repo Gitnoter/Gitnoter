@@ -4,14 +4,14 @@
 #include <QObject>
 #include <QDir>
 
-#define __DATE_FORMAT__ "yyyy/MM/dd hh:mm:ss"
-
 class Tools : public QObject
 {
     Q_OBJECT
 public:
     static QFileInfoList getFilesPath(QString path);
     static QString getUuid();
+
+    static QString readerFile(QString path);
 
     static int timestampFromDateTime(QString dateTime);
     static QString timestampToDateTime(int timestamp);

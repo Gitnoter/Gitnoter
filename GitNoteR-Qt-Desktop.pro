@@ -38,7 +38,11 @@ SOURCES += \
     controllers/categorieswidget.cpp \
     controllers/database.cpp \
     models/notemodel.cpp \
-    controllers/tools.cpp
+    controllers/tools.cpp \
+    models/notetablemodel.cpp \
+    models/categorisetablemodel.cpp \
+    models/tagtablemodel.cpp \
+    controllers/appconfig.cpp
 
 HEADERS += \
         controllers/mainwindow.h \
@@ -48,7 +52,11 @@ HEADERS += \
     controllers/database.h \
     models/notemodel.h \
     controllers/tools.h \
-    controllers/sqlquerybuilder.h
+    controllers/sqlquerybuilder.h \
+    models/notetablemodel.h \
+    models/categorisetablemodel.h \
+    models/tagtablemodel.h \
+    controllers/appconfig.h
 
 FORMS += \
         views/mainwindow.ui \

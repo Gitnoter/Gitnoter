@@ -20,29 +20,38 @@ include_directories(${PROJECT_SOURCE_DIR}/views)
 # endif()
 
 qt5_wrap_ui(UIS_HDRS
-    "views/mainwindow.ui"
-    "views/categorieswidget.ui"
+    views/mainwindow.ui
+    views/categorieswidget.ui
 )
 
 add_executable(${PROJECT_NAME}
-    "controllers/mainwindow.h"
-    "controllers/previewpage.h"
-    "controllers/document.h"
-    "controllers/categorieswidget.h"
-    "controllers/database.h"
-    "models/notemodel.h"
+        main.cpp
+        controllers/mainwindow.h
+        controllers/previewpage.h
+        controllers/document.h
+        controllers/categorieswidget.h
+        controllers/database.h
+        controllers/appconfig.h
+        models/notemodel.h
+        models/notetablemodel.h
+        models/categorisetablemodel.h
+        models/tagtablemodel.h
 
-    "main.cpp"
-    "controllers/mainwindow.cpp"
-    "controllers/previewpage.cpp"
-    "controllers/document.cpp"
-    "controllers/categorieswidget.cpp"
-    "controllers/database.cpp"
-    "models/notemodel.cpp"
+        controllers/mainwindow.cpp
+        controllers/previewpage.cpp
+        controllers/document.cpp
+        controllers/categorieswidget.cpp
+        controllers/database.cpp
+        controllers/appconfig.cpp
+        models/notemodel.cpp
+        models/notetablemodel.cpp
+        models/categorisetablemodel.cpp
+        models/tagtablemodel.cpp
 
-    "resources/resources.qrc"
 
-    ${UIS_HDRS}
+        resources/resources.qrc
+
+        ${UIS_HDRS}
         controllers/tools.cpp controllers/tools.h
         controllers/sqlquerybuilder.h)
 # target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick git2)

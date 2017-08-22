@@ -2,15 +2,10 @@
 #define DATABASE_H
 
 #include "notemodel.h"
-#include "sqlquerybuilder.h"
 
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-
-#define __DB_NAME__ "gitnoter.db"
-
-using namespace SqlQueryBuilder;
 
 class Database : public QObject
 {
@@ -20,28 +15,18 @@ public:
     Database(QString filename);
     ~Database();
 
-    void connent(QString filename);
+    void connect(QString filename);
     void createTables();
-    void initNoteData(QString path);
     void initTables();
 
-    void clear();
-
     QList<NoteModel *> selectNote();
-
-    QString insertNote(NoteModel *noteModel);
-    void insertTag(NoteModel *noteModel);
-    void insertCategorie(NoteModel *noteModel);
-    void insertNoteJoinCategorie(NoteModel *noteModel);
-    void insertNoteJoinTag(NoteModel *noteModel);
+    QString insertNote(NoteTableModel *noteTableModel);
+    void insertTag(TagTableModel *tagTableModel);
+    void insertCategorie(CategoriseTableModel *categoriseTableModel);
 
 private:
     QSqlDatabase db;
     QSqlQuery query;
-    SelectModel selectBuilder;
-    InsertModel insertBuilder;
-    UpdateModel updateBuilder;
-    DeleteModel deleteBuilder;
     QString sql;
 };
 
