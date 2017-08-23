@@ -5,22 +5,36 @@
 
 class CategoriseTableModel : public QObject
 {
-    Q_OBJECT
 public:
-    explicit CategoriseTableModel(QString name, int createDate, int isDefault);
+    explicit CategoriseTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
+                                  int updateDate, int isDefault);
+    CategoriseTableModel(int id, QString name, int createDate, int updateDate, int isDefault);
+    CategoriseTableModel(int id, int categoriesId, QString notesUuid, int createDate);
     CategoriseTableModel(QString name);
 
+    int getId();
+    int getCategoriesId();
     QString getName();
+    QString getNotesUuid();
     int getCreateDate();
+    int getUpdateDate();
     int getIsDefault();
 
+    void setId(int id);
+    void setCategoriesId(int categoriesId);
     void setName(QString name);
-    void setCreateDate(int insertDate);
+    void setNotesUuid(QString notesUuid);
+    void setCreateDate(int createDate);
+    void setUpdateDate(int updateDate);
     void setIsDefault(int isDefault);
 
 private:
+    int id;
+    int categoriesId;
     QString name;
-    int insertDate;
+    QString notesUuid;
+    int createDate;
+    int updateDate;
     int isDefault;
 };
 

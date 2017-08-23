@@ -6,7 +6,6 @@
 
 class Tools : public QObject
 {
-    Q_OBJECT
 public:
     static QFileInfoList getFilesPath(QString path);
     static QString getUuid();

@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     defaultTextFile.open(QIODevice::ReadOnly);
     QString defaultText = QString(defaultTextFile.readAll());
 
-//    Database *database = new Database();
+    Database *database = new Database();
 //    QFileInfoList fileInfoList = Tools::getFilesPath(QDir(AppConfig::appConfigLocation).filePath(AppConfig::noteFolderName));
 //    for (auto &&fileInfo : fileInfoList) {
 //        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
@@ -53,10 +53,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //    }
 
 
-//    noteModel = new NoteModel(defaultText);
-//    qDebug() << noteModel->noteTableModel->getBody();
-//    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
-//    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
+    noteModel = new NoteModel(defaultText);
+    qDebug() << noteModel->noteTableModel->getBody();
+    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
 
 
 //    database->initNoteData("/Users/MakeHui/Developer/Projects/GitNoteR/Note/User/user.git/notes");

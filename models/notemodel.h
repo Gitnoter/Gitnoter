@@ -10,10 +10,10 @@
 
 class NoteModel : public QObject
 {
-    Q_OBJECT
 public:
     NoteModel(QString noteText);
-    NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList, CategoriseTableModel *categoriseTableModel);
+    NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
+              CategoriseTableModel *categoriseTableModel);
 
     QString getNote();
 

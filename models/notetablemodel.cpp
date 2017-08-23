@@ -1,35 +1,24 @@
 #include "notetablemodel.h"
 #include "tools.h"
 
-NoteTableModel::NoteTableModel(QString uuid, QString title, int insertDate)
+NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate)
 {
     this->uuid = uuid;
     this->title = title;
-    this->insertDate = insertDate;
+    this->createDate = createDate;
 }
 
-NoteTableModel::NoteTableModel(QString uuid, QString title, int insertDate, int updateDate, QString body,
-                               QString fileDir, QString fileName)
+NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body)
 {
     this->uuid = uuid;
     this->title = title;
-    this->insertDate = insertDate;
-    this->updateDate = updateDate;
-    this->body = body;
-    this->fileDir = fileDir;
-    this->fileName = fileName;
-}
-
-NoteTableModel::NoteTableModel(QString uuid, QString title, int insertDate, int updateDate, QString body)
-{
-    this->uuid = uuid;
-    this->title = title;
-    this->insertDate = insertDate;
+    this->createDate = createDate;
     this->updateDate = updateDate;
     this->body = body;
 }
 
-QString NoteTableModel::setUuid() {
+QString NoteTableModel::setUuid()
+{
     return this->uuid;
 }
 
@@ -40,12 +29,12 @@ void NoteTableModel::setTitle(const QString title)
 
 void NoteTableModel::setCreateDate(const QString createDate)
 {
-    this->insertDate = Tools::timestampFromDateTime(createDate);
+    this->createDate = Tools::timestampFromDateTime(createDate);
 }
 
 void NoteTableModel::setCreateDate(int createDate)
 {
-    this->insertDate = createDate;
+    this->createDate = createDate;
 }
 
 void NoteTableModel::setUpdateDate(const QString updateDate)
@@ -63,16 +52,6 @@ void NoteTableModel::setBody(const QString body)
     this->body = body;
 }
 
-void NoteTableModel::setFileDir(const QString fileDir)
-{
-    this->fileDir = fileDir;
-}
-
-void NoteTableModel::setFileName(const QString fileName)
-{
-    this->fileName = fileName;
-}
-
 void NoteTableModel::setUuid(QString uuid) {
     this->uuid = uuid;
 }
@@ -84,7 +63,7 @@ QString NoteTableModel::getTitle()
 
 int NoteTableModel::getCreateDate()
 {
-    return this->insertDate;
+    return this->createDate;
 }
 
 int NoteTableModel::getUpdateDate()
@@ -95,14 +74,4 @@ int NoteTableModel::getUpdateDate()
 QString NoteTableModel::getBody()
 {
     return this->body;
-}
-
-QString NoteTableModel::getFileDir()
-{
-    return this->fileDir;
-}
-
-QString NoteTableModel::getFileName()
-{
-    return this->fileName;
 }

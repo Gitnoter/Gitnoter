@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class AppConfig
+class AppConfig : public QObject
 {
 public:
     static QString dateFormat;

@@ -5,11 +5,9 @@
 
 class NoteTableModel : public QObject
 {
-    Q_OBJECT
 public:
-    explicit NoteTableModel(QString uuid, QString title, int insertDate);
-    NoteTableModel(QString uuid, QString title, int insertDate, int updateDate, QString body);
-    NoteTableModel(QString uuid, QString title, int insertDate, int updateDate, QString body, QString fileDir, QString fileName);
+    NoteTableModel(QString uuid, QString title, int createDate);
+    NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body);
 
     void setUuid(QString uuid);
     void setTitle(QString title);
@@ -18,25 +16,19 @@ public:
     void setUpdateDate(QString updateDate);
     void setUpdateDate(int updateDate);
     void setBody(QString body);
-    void setFileDir(QString fileDir);
-    void setFileName(QString fileName);
 
     QString setUuid();
     QString getTitle();
     int getCreateDate();
     int getUpdateDate();
     QString getBody();
-    QString getFileDir();
-    QString getFileName();
 
 private:
     QString uuid;
     QString title;
-    int insertDate;
+    int createDate;
     int updateDate;
     QString body;
-    QString fileDir;
-    QString fileName;
 };
 
 #endif // NOTETABLEMODEL_H
