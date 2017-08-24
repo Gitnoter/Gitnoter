@@ -40,7 +40,7 @@ SOURCES += \
     models/notemodel.cpp \
     controllers/tools.cpp \
     models/notetablemodel.cpp \
-    models/categorisetablemodel.cpp \
+    models/categoriestablemodel.cpp \
     models/tagtablemodel.cpp \
     controllers/appconfig.cpp
 
@@ -54,7 +54,7 @@ HEADERS += \
     controllers/tools.h \
     controllers/sqlquerybuilder.h \
     models/notetablemodel.h \
-    models/categorisetablemodel.h \
+    models/categoriestablemodel.h \
     models/tagtablemodel.h \
     controllers/appconfig.h
 

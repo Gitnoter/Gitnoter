@@ -34,7 +34,7 @@ add_executable(${PROJECT_NAME}
         controllers/appconfig.h
         models/notemodel.h
         models/notetablemodel.h
-        models/categorisetablemodel.h
+        models/categoriestablemodel.h
         models/tagtablemodel.h
 
         controllers/mainwindow.cpp
@@ -45,7 +45,7 @@ add_executable(${PROJECT_NAME}
         controllers/appconfig.cpp
         models/notemodel.cpp
         models/notetablemodel.cpp
-        models/categorisetablemodel.cpp
+        models/categoriestablemodel.cpp
         models/tagtablemodel.cpp
 
 

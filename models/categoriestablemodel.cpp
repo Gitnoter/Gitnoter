@@ -1,4 +1,4 @@
-#include "categorisetablemodel.h"
+#include "categoriestablemodel.h"
 
 CategoriseTableModel::CategoriseTableModel(int id, int categoriesId,  QString notesUuid, QString name, int createDate, int updateDate, int isDefault) {
     this->id = id;
