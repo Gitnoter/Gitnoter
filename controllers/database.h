@@ -46,7 +46,7 @@ private:
     int insertNJTTable(QString notesUuid, int tagsId);
     bool deleteNJTTableById(int id);
     bool deleteNJTTableById(QString notesUuid, int tagsId);
-    QList<TagTableModel *> selectNJTTableByNotesUuid(QString notesUuid);
+    QList<TagTableModel *>* selectNJTTableByNotesUuid(QString notesUuid);
     QList<TagTableModel *> selectNJTTableByTagsId(int tagsId);
 
     int insertNJCTable(QString notesUuid, int categoriesId);

@@ -60,12 +60,31 @@ void Database::addNoteText(NoteModel *noteModel) {
     this->insertNJCTable(uuid, categoriesId);
 }
 
+// TODO: 待测试
 NoteModel* Database::getNoteByUuid(QString uuid)
 {
-    NoteModel *result = nullptr;
+    // 获取 notes 数据
+    NoteTableModel *noteTableModel = this->selectNotesTableByUuid(uuid);
 
+    // 获取 tags 数据
+    QList<TagTableModel *> *tagTableList = this->selectNJTTableByNotesUuid(uuid);
+    for (int i = 0; i < tagTableList->length(); ++i) {
+        TagTableModel *tagTableModel = this->selectTagsTableById(tagTableList->at(i)->getTagsId());
+        tagTableList[i] = *tagTableList->at(i) + *tagTableModel;
+    }
 
-    return result;
+    // 获取 categories 数据
+    CategoriseTableModel *categoriseTableModel = nullptr;
+    QList<CategoriseTableModel *> categoriseTableList = this->selectNJCTableByNotesUuid(uuid);
+    if (categoriseTableList.length() > 0) {
+        for (int i = 0; i < categoriseTableList.length(); ++i) {
+            CategoriseTableModel *ctm = this->selectCategoriesTableById(categoriseTableList[i]->getCategoriesId());
+            categoriseTableList[i] = *categoriseTableList[i] + *ctm;
+        }
+        categoriseTableModel = categoriseTableList[0];
+    }
+
+    return new NoteModel(noteTableModel, tagTableList, categoriseTableModel);
 }
 
 void Database::connect(const QString filename)
@@ -448,14 +467,14 @@ bool Database::deleteNJTTableById(QString notesUuid, int tagsId)
     return query.numRowsAffected() != -1;
 }
 
-QList<TagTableModel *> Database::selectNJTTableByNotesUuid(QString notesUuid)
+QList<TagTableModel *>* Database::selectNJTTableByNotesUuid(QString notesUuid)
 {
     SelectModel selectBuilder;
     selectBuilder.select("id", "tags_id", "create_date").from("notes_join_tags")
             .where(column("notes_uuid") == notesUuid.toStdString());
     QString sql = QString::fromStdString(selectBuilder.str());
 
-    QList<TagTableModel *> result;
+    QList<TagTableModel *> *result = nullptr;
     if (query.exec(sql)) {
         while (query.next()) {
             int id = query.value(0).toInt();
@@ -463,7 +482,7 @@ QList<TagTableModel *> Database::selectNJTTableByNotesUuid(QString notesUuid)
             int createDate = query.value(2).toInt();
 
             TagTableModel *tagTableModel = new TagTableModel(id, tagsId, notesUuid, createDate);
-            result.append(tagTableModel);
+            result->append(tagTableModel);
         }
     }
     else {
