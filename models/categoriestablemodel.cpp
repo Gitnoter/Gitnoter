@@ -18,9 +18,9 @@ CategoriseTableModel::CategoriseTableModel(int id, int categoriesId, QString not
     this->createDate = createDate;
 }
 
-CategoriseTableModel::CategoriseTableModel(int id, QString name, int createDate, int updateDate, int isDefault)
+CategoriseTableModel::CategoriseTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault)
 {
-    this->id = id;
+    this->categoriesId = categoriesId;
     this->name = name;
     this->createDate = createDate;
     this->updateDate = updateDate;
@@ -31,6 +31,19 @@ CategoriseTableModel::CategoriseTableModel(QString name)
 {
     this->name = name;
     this->isDefault = 0;
+}
+
+CategoriseTableModel* CategoriseTableModel::operator+(CategoriseTableModel & categoriseTableModel)
+{
+    int id = this->getId() != 0 ? this->getId() : categoriseTableModel.getId();
+    int categoriesId = this->getCategoriesId() != 0 ? this->getCategoriesId() : categoriseTableModel.getCategoriesId();
+    QString notesUuid = this->getNotesUuid().isEmpty() ? categoriseTableModel.getNotesUuid() : this->getNotesUuid();
+    QString name = this->getName().isEmpty() ? categoriseTableModel.getName() : this->getName();
+    int createDate = this->getCreateDate() != 0 ? this->getCreateDate() : categoriseTableModel.getCreateDate();
+    int updateDate = this->getUpdateDate() != 0 ? this->getUpdateDate() : categoriseTableModel.getUpdateDate();
+    int isDefault = this->getIsDefault() != 0 ? this->getIsDefault() : categoriseTableModel.getIsDefault();
+
+    return new CategoriseTableModel(id, categoriesId, notesUuid, name, createDate, updateDate, isDefault);
 }
 
 QString CategoriseTableModel::getName()

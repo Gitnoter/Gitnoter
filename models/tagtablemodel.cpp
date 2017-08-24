@@ -18,12 +18,24 @@ TagTableModel::TagTableModel(int id, int tagsId, QString notesUuid, int createDa
     this->createDate = createDate;
 }
 
-TagTableModel::TagTableModel(int id, QString name, int createDate, int updateDate)
+TagTableModel::TagTableModel(int tagsId, QString name, int createDate, int updateDate)
 {
-    this->id = id;
+    this->tagsId = tagsId;
     this->name = name;
     this->createDate = createDate;
     this->updateDate = updateDate;
+}
+
+TagTableModel* TagTableModel::operator+(TagTableModel & tagTableModel)
+{
+    int id = this->getId() != 0 ? this->getId() : tagTableModel.getId();
+    int tagsId = this->getTagsId() != 0 ? this->getTagsId() : tagTableModel.getTagsId();
+    QString notesUuid = this->getNotesUuid().isEmpty() ? tagTableModel.getNotesUuid() : this->getNotesUuid();
+    QString name = this->getName().isEmpty() ? tagTableModel.getName() : this->getName();
+    int createDate = this->getCreateDate() != 0 ? this->getCreateDate() : tagTableModel.getCreateDate();
+    int updateDate = this->getUpdateDate() != 0 ? this->getUpdateDate() : tagTableModel.getUpdateDate();
+
+    return new TagTableModel(id, tagsId, notesUuid, name, createDate, updateDate);
 }
 
 void TagTableModel::setName(QString name)

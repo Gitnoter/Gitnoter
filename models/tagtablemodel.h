@@ -7,9 +7,11 @@ class TagTableModel : public QObject
 {
 public:
     explicit TagTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
-    TagTableModel(int id, QString name, int createDate, int updateDate);
+    TagTableModel(int tagsId, QString name, int createDate, int updateDate);
     TagTableModel(int id, int tagsId, QString notesUuid, int createDate);
     TagTableModel(QString name);
+
+    TagTableModel* operator + (TagTableModel &tagTableModel);
 
     void setId(int id);
     void setTagsId(int tagsId);
