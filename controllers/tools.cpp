@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QUuid>
 #include <QDateTime>
+#include <QVersionNumber>
 
 QFileInfoList Tools::getFilesPath(const QString path)
 {
@@ -43,4 +44,24 @@ QString Tools::readerFile(QString path) {
     QFile textFile(path);
     textFile.open(QIODevice::ReadOnly);
     return QString(textFile.readAll());
+}
+
+QStringList Tools::textToStringList(QString text)
+{
+    QTextStream in(&text);
+    QStringList stringList;
+
+    while(!in.atEnd()) {
+        stringList.append(in.readLine());
+    }
+
+    return stringList;
+}
+
+bool Tools::compareVersions(const QString string, const QString string1)
+{
+    QVersionNumber versionNumber = QVersionNumber::fromString(string);
+    QVersionNumber versionNumber1 = QVersionNumber::fromString(string1);
+
+    return versionNumber == versionNumber1;
 }

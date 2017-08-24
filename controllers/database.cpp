@@ -20,6 +20,54 @@ Database::~Database()
     db.close();
 }
 
+void Database::initTables()
+{
+    if (query.exec("select version from config") && query.first()) {
+        QString version = query.value(0).toString();
+        if (version != AppConfig::version) {
+            this->createTables();
+        }
+    }
+    else {
+        this->createTables();
+    }
+}
+
+void Database::addNoteText(NoteModel *noteModel) {
+    // 插入 notes
+    NoteTableModel *noteTableModel = this->selectNotesTableByUuid(noteModel->noteTableModel->getUuid());
+    QString uuid = "";
+    if (noteTableModel) {
+        this->updateNotesTableByUuid(noteTableModel);
+        uuid = noteTableModel->getUuid();
+    }
+    else {
+        uuid = this->insertNotesTable(noteModel->noteTableModel);
+    }
+
+    // 插入 tags
+    for (auto &&item : *noteModel->tagTableList) {
+        TagTableModel *tagTableModel = this->selectTagsTableByName(item->getName());
+        int tagId = tagTableModel ? tagTableModel->getId() : this->insertTagsTable(item->getName());
+        this->insertNJTTable(uuid, tagId);
+    }
+
+    // 插入 categories
+    CategoriseTableModel *categoriseTableModel = this->selectCategoriesTableById(
+            noteModel->categoriesTableModel->getName());
+    int categoriesId = categoriseTableModel ? categoriseTableModel->getId()
+                                            : this->insertCategoriesTable(noteModel->categoriesTableModel->getName());
+    this->insertNJCTable(uuid, categoriesId);
+}
+
+NoteModel* Database::getNoteByUuid(QString uuid)
+{
+    NoteModel *result = nullptr;
+
+
+    return result;
+}
+
 void Database::connect(const QString filename)
 {
     QDir dir(AppConfig::dbPath);
@@ -35,7 +83,7 @@ void Database::connect(const QString filename)
     if (db.open()) {
         qDebug() << "Database: connection ok";
         query = QSqlQuery(db);
-        this->initTables();
+//        this->initTables();
     }
     else {
         qDebug() << "Error: connection with database fail";
@@ -53,55 +101,26 @@ void Database::createTables()
         if (!sqlList[i].isEmpty()) {
             query.exec(sqlList[i]);
         }
-        query.clear();
     }
-}
-
-void Database::initTables()
-{
-    if (!query.exec("select * from config")) {
-        query.clear();
-        this->createTables();
-    }
-}
-
-NoteModel* Database::selectNoteByUuid(QString uuid)
-{
-    NoteModel *result = nullptr;
-
-
-    return result;
-}
-
-void Database::insertNoteText(NoteModel *noteModel) {
-//    QString uuid = this->insertNotesTable(noteModel->noteTableModel);
-//    for (auto &&tagTableModel : *noteModel->tagTableList) {
-//        tagTableModel->setNotesUuid(uuid);
-//        this->insertTagsTable(tagTableModel->getName());
-//    }
-//    noteModel->categoriseTableModel->setNotesUuid(uuid);
-//    this->insertCategorie(noteModel->categoriseTableModel);
 }
 
 QString Database::insertNotesTable(NoteTableModel *noteTableModel)
 {
+    QString uuid = Tools::getUuid();
     InsertModel insertBuilder;
-    insertBuilder.insert("uuid", Tools::getUuid().toStdString())
+    insertBuilder.insert("uuid", noteTableModel->getUuid().toStdString())
             ("title", noteTableModel->getTitle().toStdString())
             ("create_date", noteTableModel->getCreateDate())
             ("update_date", noteTableModel->getUpdateDate())
             ("body", noteTableModel->getBody().toStdString()).into("notes");
     QString sql = QString::fromStdString(insertBuilder.str());
 
-    QString insertId = "";
     if (!query.exec(sql)) {
         qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
-    }
-    else {
-        insertId = query.lastInsertId().toString();
+        uuid = "";
     }
 
-    return insertId;
+    return uuid;
 }
 
 bool Database::deleteNotesTableByUuid(QString uuid)
@@ -128,6 +147,21 @@ bool Database::updateNotesTableByUuid(QString uuid, QString title, QString body,
     return query.numRowsAffected() != -1;
 }
 
+bool Database::updateNotesTableByUuid(NoteTableModel *noteTableModel)
+{
+    UpdateModel updateBuilder;
+    updateBuilder.update("notes")
+            .set("title", noteTableModel->getTitle().toStdString())
+                    ("body", noteTableModel->getBody().toStdString())
+                    ("create_date", noteTableModel->getCreateDate())
+                    ("update_date", noteTableModel->getUpdateDate())
+            .where(column("uuid") == noteTableModel->getUuid().toStdString());
+    QString sql = QString::fromStdString(updateBuilder.str());
+    query.exec(sql);
+
+    return query.numRowsAffected() != -1;
+}
+
 NoteTableModel* Database::selectNotesTableByUuid(QString uuid)
 {
     SelectModel selectBuilder;
@@ -137,8 +171,7 @@ NoteTableModel* Database::selectNotesTableByUuid(QString uuid)
     QString sql = QString::fromStdString(selectBuilder.str());
 
     NoteTableModel *result = nullptr;
-    if (query.exec(sql)) {
-        query.first();
+    if (query.exec(sql) && query.first()) {
         QString title = query.value(0).toString();
         int createDate = query.value(1).toInt();
         int updateDate = query.value(2).toInt();
@@ -162,7 +195,7 @@ int Database::insertTagsTable(QString name)
 
     int insertId = 0;
     if (!query.exec(sql)) {
-        qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
+        qDebug() << "int Database::insertTagsTable(QString name): Failed!";
     }
     else {
         insertId = query.lastInsertId().toInt();
@@ -222,19 +255,40 @@ QList<TagTableModel *> Database::selectTagsTable()
 TagTableModel* Database::selectTagsTableById(int id)
 {
     SelectModel selectBuilder;
-    selectBuilder.select("id", "name", "create_date", "update_date").from("tags").where(column("id") == id);
+    selectBuilder.select("id", "create_date", "update_date").from("tags").where(column("id") == id);
     QString sql = QString::fromStdString(selectBuilder.str());
 
     TagTableModel *result = nullptr;
-    if (query.exec(sql)) {
-        QString name = query.value(1).toString();
-        int createDate = query.value(2).toInt();
-        int updateDate = query.value(3).toInt();
+    if (query.exec(sql) && query.first()) {
+        QString name = query.value(0).toString();
+        int createDate = query.value(1).toInt();
+        int updateDate = query.value(2).toInt();
 
         result = new TagTableModel(id, name, createDate, updateDate);
     }
     else {
-        qDebug() << "QList<NoteModel *> Database::selectNoteList(): failed!";
+        qDebug() << "TagTableModel* Database::selectTagsTableById(int id): failed!";
+    }
+
+    return result;
+}
+
+TagTableModel *Database::selectTagsTableByName(QString name)
+{
+    SelectModel selectBuilder;
+    selectBuilder.select("id", "create_date", "update_date").from("tags").where(column("name") == name.toStdString());
+    QString sql = QString::fromStdString(selectBuilder.str());
+
+    TagTableModel *result = nullptr;
+    if (query.exec(sql) && query.first()) {
+        int id = query.value(0).toInt();
+        int createDate = query.value(1).toInt();
+        int updateDate = query.value(2).toInt();
+
+        result = new TagTableModel(id, name, createDate, updateDate);
+    }
+    else {
+        qDebug() << "TagTableModel *Database::selectTagsTableByName(QString name): failed!";
     }
 
     return result;
@@ -297,9 +351,9 @@ QList<CategoriseTableModel *> Database::selectCategoriesTable()
             int updateDate = query.value(3).toInt();
             int isDefault = query.value(4).toInt();
 
-            CategoriseTableModel *categoriseTableModel = new CategoriseTableModel(id, name, createDate,
+            CategoriseTableModel *categoriesTableModel = new CategoriseTableModel(id, name, createDate,
                                                                                   updateDate, isDefault);
-            result.append(categoriseTableModel);
+            result.append(categoriesTableModel);
         }
     }
     else {
@@ -312,20 +366,43 @@ QList<CategoriseTableModel *> Database::selectCategoriesTable()
 CategoriseTableModel* Database::selectCategoriesTableById(int id)
 {
     SelectModel selectBuilder;
-    selectBuilder.select("id", "name", "create_date", "update_date", "is_default").from("categories").where(column("id") == id);
+    selectBuilder.select("name", "create_date", "update_date", "is_default").from("categories").where(column("id") == id);
     QString sql = QString::fromStdString(selectBuilder.str());
 
     CategoriseTableModel *result = nullptr;
-    if (query.exec(sql)) {
-        QString name = query.value(1).toString();
-        int createDate = query.value(2).toInt();
-        int updateDate = query.value(3).toInt();
-        int isDefault = query.value(4).toInt();
+    if (query.exec(sql) && query.first()) {
+        QString name = query.value(0).toString();
+        int createDate = query.value(1).toInt();
+        int updateDate = query.value(2).toInt();
+        int isDefault = query.value(3).toInt();
 
         result = new CategoriseTableModel(id, name, createDate, updateDate, isDefault);
     }
     else {
         qDebug() << "QList<NoteModel *> Database::selectNoteList(): failed!";
+    }
+
+    return result;
+}
+
+CategoriseTableModel *Database::selectCategoriesTableById(QString name)
+{
+    SelectModel selectBuilder;
+    selectBuilder.select("id", "create_date", "update_date", "is_default").from("categories")
+            .where(column("name") == name.toStdString());
+    QString sql = QString::fromStdString(selectBuilder.str());
+
+    CategoriseTableModel *result = nullptr;
+    if (query.exec(sql) && query.first()) {
+        int id = query.value(0).toInt();
+        int createDate = query.value(1).toInt();
+        int updateDate = query.value(2).toInt();
+        int isDefault = query.value(3).toInt();
+
+        result = new CategoriseTableModel(id, name, createDate, updateDate, isDefault);
+    }
+    else {
+        qDebug() << "CategoriseTableModel *Database::selectCategoriesTableById(QString name): failed!";
     }
 
     return result;
@@ -341,7 +418,7 @@ int Database::insertNJTTable(QString notesUuid, int tagsId)
 
     int insertId = 0;
     if (!query.exec(sql)) {
-        qDebug() << "int Database::insertCategoriesTable(QString name): Failed!";
+        qDebug() << "int Database::insertNJTTable(QString notesUuid, int tagsId): Failed!";
     }
     else {
         insertId = query.lastInsertId().toInt();
@@ -432,7 +509,7 @@ int Database::insertNJCTable(QString notesUuid, int categoriesId)
 
     int insertId = 0;
     if (!query.exec(sql)) {
-        qDebug() << "int Database::insertCategoriesTable(QString name): Failed!";
+        qDebug() << "int Database::insertNJCTable(QString notesUuid, int categoriesId): Failed!";
     }
     else {
         insertId = query.lastInsertId().toInt();
@@ -511,3 +588,4 @@ QList<CategoriseTableModel *> Database::selectNJCTableByTagsId(int categoriesId)
 
     return result;
 }
+

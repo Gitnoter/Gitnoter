@@ -11,10 +11,12 @@ public:
     static QString getUuid();
 
     static QString readerFile(QString path);
+    static QStringList textToStringList(QString text);
 
     static int timestampFromDateTime(QString dateTime);
     static QString timestampToDateTime(int timestamp);
 
+    static bool compareVersions(const QString string, const QString string1);
 };
 
 #endif // TOOLS_H

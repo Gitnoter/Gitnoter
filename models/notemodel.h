@@ -3,7 +3,7 @@
 
 #include "notetablemodel.h"
 #include "tagtablemodel.h"
-#include "categorisetablemodel.h"
+#include "categoriestablemodel.h"
 
 #include <QObject>
 #include <QtCore>
@@ -13,14 +13,14 @@ class NoteModel : public QObject
 public:
     NoteModel(QString noteText);
     NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
-              CategoriseTableModel *categoriseTableModel);
+              CategoriseTableModel *categoriesTableModel);
 
     QString getNote();
 
 public:
     NoteTableModel *noteTableModel;
     QList<TagTableModel *> *tagTableList;
-    CategoriseTableModel *categoriseTableModel;
+    CategoriseTableModel *categoriesTableModel;
 
 };
 

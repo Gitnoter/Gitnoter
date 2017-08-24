@@ -46,12 +46,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QString defaultText = QString(defaultTextFile.readAll());
 
     Database *database = new Database();
-//    QFileInfoList fileInfoList = Tools::getFilesPath(QDir(AppConfig::appConfigLocation).filePath(AppConfig::noteFolderName));
-//    for (auto &&fileInfo : fileInfoList) {
-//        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
-//        database
-//    }
-
+    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
+    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
+    qDebug() << notesPath;
+    for (auto &&fileInfo : fileInfoList) {
+        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
+        database->addNoteText(noteModel);
+    }
 
     noteModel = new NoteModel(defaultText);
     qDebug() << noteModel->noteTableModel->getBody();

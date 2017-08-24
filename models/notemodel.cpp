@@ -20,19 +20,19 @@ NoteModel::NoteModel(QString noteText) {
             uuid = noteLine.mid(6);
         }
         else if (i == 1) {
-            title = noteLine.replace("title: ", "");
+            title = noteLine.mid(7);
         }
         else if (i == 2) {
-            createDate = Tools::timestampFromDateTime(noteLine.replace("createDate: ", ""));
+            createDate = Tools::timestampFromDateTime(noteLine.mid(12));
         }
         else if (i == 3) {
-            updateDate = Tools::timestampFromDateTime(noteLine.replace("updateDate: ", ""));
+            updateDate = Tools::timestampFromDateTime(noteLine.mid(12));
         }
         else if (i == 4) {
-            tags = noteLine.replace("title: ", "").split(AppConfig::tagSplit);
+            tags = noteLine.mid(6).split(AppConfig::tagSplit);
         }
         else if (i == 5) {
-            categories = noteLine.replace("categories: ", "");
+            categories = noteLine.mid(12);
         }
         else if (i == 6 || i == 7 || i == 8) {
 
@@ -44,7 +44,7 @@ NoteModel::NoteModel(QString noteText) {
     }
     body.chop(2);
     this->noteTableModel = new NoteTableModel(uuid, title, createDate, updateDate, body);
-    this->categoriseTableModel = new CategoriseTableModel(categories);
+    this->categoriesTableModel = new CategoriseTableModel(categories);
     this->tagTableList = new QList<TagTableModel *>;
     for (auto &&tag : tags) {
         this->tagTableList->append(new TagTableModel(tag));
@@ -52,10 +52,10 @@ NoteModel::NoteModel(QString noteText) {
 }
 
 NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
-                     CategoriseTableModel *categoriseTableModel) {
+                     CategoriseTableModel *categoriesTableModel) {
     this->noteTableModel = noteTableModel;
     this->tagTableList = tagTableList;
-    this->categoriseTableModel = categoriseTableModel;
+    this->categoriesTableModel = categoriesTableModel;
 }
 
 QString NoteModel::getNote()
@@ -64,7 +64,7 @@ QString NoteModel::getNote()
     note += "title: " + this->noteTableModel->getTitle() + "\n";
     note += "createDate: " + Tools::timestampToDateTime(this->noteTableModel->getCreateDate()) + "\n";
     note += "updateDate" + Tools::timestampToDateTime(this->noteTableModel->getUpdateDate()) + "\n";
-    note += "categories: " + this->categoriseTableModel->getName() + "\n";
+    note += "categories: " + this->categoriesTableModel->getName() + "\n";
 
     note += "notes: ";
     for (auto &&tagTableModel : *(this->tagTableList)) {

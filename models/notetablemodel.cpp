@@ -17,7 +17,7 @@ NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int 
     this->body = body;
 }
 
-QString NoteTableModel::setUuid()
+QString NoteTableModel::getUuid()
 {
     return this->uuid;
 }

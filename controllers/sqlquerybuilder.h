@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <regex>
 
 namespace SqlQueryBuilder {
 
@@ -15,7 +16,7 @@ std::string to_value(const T& data) {
 template <size_t N>
 std::string to_value(char const(&data)[N]) {
     std::string str("'");
-    str.append(data);
+    str.append(std::regex_replace(data, std::regex("'"), "''"));
     str.append("'");
     return str;
 }
@@ -23,7 +24,7 @@ std::string to_value(char const(&data)[N]) {
 template <>
 std::string to_value<std::string>(const std::string& data) {
     std::string str("'");
-    str.append(data);
+    str.append(std::regex_replace(data, std::regex("'"), "''"));
     str.append("'");
     return str;
 }
@@ -31,7 +32,7 @@ std::string to_value<std::string>(const std::string& data) {
 template <>
 std::string to_value<const char*>(const char* const& data) {
     std::string str("'");
-    str.append(data);
+    str.append(std::regex_replace(data, std::regex("'"), "''"));
     str.append("'");
     return str;
 }

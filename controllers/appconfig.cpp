@@ -3,6 +3,7 @@
 
 QString AppConfig::dateFormat = "";
 QString AppConfig::tagSplit = "";
+QString AppConfig::version = "";
 QString AppConfig::dbPath = "";
 QString AppConfig::dbName = "";
 QString AppConfig::repoPath = "";
@@ -14,7 +15,6 @@ QString AppConfig::videosFolderName = "";
 QString AppConfig::appConfigLocation = "";
 
 // database -> config
-QString AppConfig::version = "";
 QString AppConfig::repoDir = "";
 QString AppConfig::repoUrl = "";
 QString AppConfig::repoUsername = "";
@@ -31,7 +31,6 @@ void AppConfig::init(QString appConfigLocation, QString version, QString repoDir
     AppConfig::defaultInit();
 
     // database -> config
-    AppConfig::version = version;
     AppConfig::repoDir = repoDir;
     AppConfig::repoUrl = repoUrl;
     AppConfig::repoUsername = repoUsername;
@@ -41,6 +40,7 @@ void AppConfig::init(QString appConfigLocation, QString version, QString repoDir
 void AppConfig::defaultInit() {
     dateFormat = "yyyy/MM/dd hh:mm:ss";
     tagSplit = ", ";
+    version = "1.0.0";
 
     dbPath = QDir(appConfigLocation).filePath("db/");
     dbName = "gitnoter.db";

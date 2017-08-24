@@ -17,7 +17,7 @@ public:
     void setUpdateDate(int updateDate);
     void setBody(QString body);
 
-    QString setUuid();
+    QString getUuid();
     QString getTitle();
     int getCreateDate();
     int getUpdateDate();
