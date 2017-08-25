@@ -18,7 +18,7 @@ public:
 
     void addNoteText(NoteModel *noteModel);
     NoteModel* getNoteByUuid(QString uuid);
-    QList<NoteTableModel *>* getNavigationNotes();
+    QList<NoteTableModel *>* getSidebarNotes();
 
 private:
     void connect(QString filename);

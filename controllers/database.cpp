@@ -86,7 +86,7 @@ NoteModel* Database::getNoteByUuid(QString uuid)
     return new NoteModel(noteTableModel, tagTableList, categoriseTableModel);
 }
 
-QList<NoteTableModel *> *Database::getNavigationNotes()
+QList<NoteTableModel *> *Database::getSidebarNotes()
 {
     QList<NoteTableModel *> *result = new QList<NoteTableModel *>();
 

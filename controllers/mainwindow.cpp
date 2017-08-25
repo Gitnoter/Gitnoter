@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 是否需要打开默认note
     // TODO: 还需要查看数据库中是否记录上次打开的文件
-//    QList<NoteTableModel *> *navigationNotes = database->getNavigationNotes();
+//    QList<NoteTableModel *> *navigationNotes = database->getSidebarNotes();
 //    if (navigationNotes->length() == 0) {
 //        noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
 //    }
