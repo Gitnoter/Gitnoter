@@ -86,6 +86,30 @@ NoteModel* Database::getNoteByUuid(QString uuid)
     return new NoteModel(noteTableModel, tagTableList, categoriseTableModel);
 }
 
+QList<NoteTableModel *> *Database::getNavigationNotes()
+{
+    QList<NoteTableModel *> *result = new QList<NoteTableModel *>();
+
+    SelectModel selectBuilder;
+    selectBuilder.select("uuid", "title", "create_date", "update_date").from("notes");
+    QString sql = QString::fromStdString(selectBuilder.str());
+
+    if (query.exec(sql)) {
+        while (query.next()) {
+            QString uuid = query.value(0).toString();
+            QString title = query.value(1).toString();
+            int createDate = query.value(2).toInt();
+            int updateDate = query.value(3).toInt();
+            result->append(new NoteTableModel(uuid, title, createDate, updateDate));
+        }
+    }
+    else {
+        qDebug() << "QList<NoteModel *> Database::selectNoteList(): failed!";
+    }
+
+    return result;
+}
+
 void Database::connect(const QString filename)
 {
     QDir dir(AppConfig::dbPath);
@@ -605,4 +629,5 @@ QList<CategoriseTableModel *> Database::selectNJCTableByTagsId(int categoriesId)
 
     return result;
 }
+
 

@@ -1,13 +1,6 @@
 #include "notetablemodel.h"
 #include "tools.h"
 
-NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate)
-{
-    this->uuid = uuid;
-    this->title = title;
-    this->createDate = createDate;
-}
-
 NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body)
 {
     this->uuid = uuid;

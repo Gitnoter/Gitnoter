@@ -4,6 +4,7 @@
 #include "document.h"
 #include "categorieswidget.h"
 #include "notemodel.h"
+#include "database.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -37,6 +38,8 @@ private:
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
     NoteModel *noteModel;
+    Database *database;
+    QString openNotesUuid;
 
     void textChanged();
     void updatePreview();

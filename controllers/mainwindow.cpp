@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "previewpage.h"
-#include "database.h"
 #include "tools.h"
 #include "appconfig.h"
 
@@ -14,6 +13,28 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    database = new Database();
+
+    // 初始化notes到数据库
+    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
+    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
+    for (auto &&fileInfo : fileInfoList) {
+        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
+        database->addNoteText(noteModel);
+    }
+
+    // 是否需要打开默认note
+    // TODO: 还需要查看数据库中是否记录上次打开的文件
+//    QList<NoteTableModel *> *navigationNotes = database->getNavigationNotes();
+//    if (navigationNotes->length() == 0) {
+//        noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+//    }
+//    else {
+//        noteModel = database->getNoteByUuid(openNotesUuid);
+//    }
+    noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+
+    // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
     this->menuPushButtons.insert("pushButton_notes", ui->pushButton_notes);
     this->menuPushButtons.insert("pushButton_search", ui->pushButton_search);
@@ -21,14 +42,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->menuPushButtons.insert("pushButton_tags", ui->pushButton_tags);
     this->menuPushButtons.insert("pushButton_Trash", ui->pushButton_Trash);
 
-    QMap<QString, QPushButton *>::Iterator itr;
-    for (itr = this->menuPushButtons.begin(); itr != this->menuPushButtons.end(); ++itr) {
-//        qDebug() << "key:"<<itr.key()<<"value:"<<itr.value();
+    for (auto itr = menuPushButtons.begin(); itr != menuPushButtons.end(); ++itr) {
         connect(itr.value(), &QPushButton::clicked, this, &MainWindow::menuPushButtonClicked);
     }
 
-    ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);   // 屏蔽选中时的边框颜色
+    // 屏蔽选中时的边框颜色
+    ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
+    // 初始化编辑器
     ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     ui->webEngineView_preview->setContextMenuPolicy(Qt::NoContextMenu);
 
@@ -41,43 +62,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
 
-    QFile defaultTextFile(":/marked/default.md");
-    defaultTextFile.open(QIODevice::ReadOnly);
-    QString defaultText = QString(defaultTextFile.readAll());
-
-    Database *database = new Database();
-    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
-    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
-    qDebug() << notesPath;
-    for (auto &&fileInfo : fileInfoList) {
-        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
-        database->addNoteText(noteModel);
-    }
-
-    noteModel = new NoteModel(defaultText);
-    qDebug() << noteModel->noteTableModel->getBody();
+    // 设置编辑器文本
     ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
     ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
-
-
-//    database->initNoteData("/Users/MakeHui/Developer/Projects/GitNoteR/Note/User/user.git/notes");
-//    database->insertNote(noteModel);
-//    qDebug() << database->selectNote();
-//    qDebug() << noteModel->getCreateDate();
-
     updatePreview();
 
+    // 监听编辑器中文本是否有更改
     connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
-
-//        connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onFileNew);
-//        connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onFileOpen);
-//        connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onFileSave);
-//        connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onExit);
-//        connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::onFileSaveAs);
-
-//        connect(ui->editor->document(), &QTextDocument::modificationChanged,
-//                ui->actionSave, &QAction::setEnabled);
 }
 
 MainWindow::~MainWindow()
