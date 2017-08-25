@@ -48,19 +48,18 @@ void Database::addNoteText(NoteModel *noteModel) {
     // 插入 tags
     for (auto &&item : *noteModel->tagTableList) {
         TagTableModel *tagTableModel = this->selectTagsTableByName(item->getName());
-        int tagId = tagTableModel ? tagTableModel->getId() : this->insertTagsTable(item->getName());
+        int tagId = tagTableModel ? tagTableModel->getTagsId() : this->insertTagsTable(item->getName());
         this->insertNJTTable(uuid, tagId);
     }
 
     // 插入 categories
     CategoriseTableModel *categoriseTableModel = this->selectCategoriesTableById(
             noteModel->categoriesTableModel->getName());
-    int categoriesId = categoriseTableModel ? categoriseTableModel->getId()
+    int categoriesId = categoriseTableModel ? categoriseTableModel->getCategoriesId()
                                             : this->insertCategoriesTable(noteModel->categoriesTableModel->getName());
     this->insertNJCTable(uuid, categoriesId);
 }
 
-// TODO: 待测试
 NoteModel* Database::getNoteByUuid(QString uuid)
 {
     // 获取 notes 数据
@@ -70,7 +69,7 @@ NoteModel* Database::getNoteByUuid(QString uuid)
     QList<TagTableModel *> *tagTableList = this->selectNJTTableByNotesUuid(uuid);
     for (int i = 0; i < tagTableList->length(); ++i) {
         TagTableModel *tagTableModel = this->selectTagsTableById(tagTableList->at(i)->getTagsId());
-        tagTableList[i] = *tagTableList->at(i) + *tagTableModel;
+        tagTableList->replace(i, *tagTableList->at(i) + *tagTableModel);
     }
 
     // 获取 categories 数据
@@ -125,7 +124,6 @@ void Database::createTables()
 
 QString Database::insertNotesTable(NoteTableModel *noteTableModel)
 {
-    QString uuid = Tools::getUuid();
     InsertModel insertBuilder;
     insertBuilder.insert("uuid", noteTableModel->getUuid().toStdString())
             ("title", noteTableModel->getTitle().toStdString())
@@ -136,10 +134,9 @@ QString Database::insertNotesTable(NoteTableModel *noteTableModel)
 
     if (!query.exec(sql)) {
         qDebug() << "void Database::insertNotes(NoteModel noteModel): Failed!";
-        uuid = "";
     }
 
-    return uuid;
+    return noteTableModel->getUuid();
 }
 
 bool Database::deleteNotesTableByUuid(QString uuid)
@@ -274,7 +271,7 @@ QList<TagTableModel *> Database::selectTagsTable()
 TagTableModel* Database::selectTagsTableById(int id)
 {
     SelectModel selectBuilder;
-    selectBuilder.select("id", "create_date", "update_date").from("tags").where(column("id") == id);
+    selectBuilder.select("name", "create_date", "update_date").from("tags").where(column("id") == id);
     QString sql = QString::fromStdString(selectBuilder.str());
 
     TagTableModel *result = nullptr;
@@ -474,7 +471,8 @@ QList<TagTableModel *>* Database::selectNJTTableByNotesUuid(QString notesUuid)
             .where(column("notes_uuid") == notesUuid.toStdString());
     QString sql = QString::fromStdString(selectBuilder.str());
 
-    QList<TagTableModel *> *result = nullptr;
+    QList<TagTableModel *> *result = new QList<TagTableModel *>();
+    qDebug() << result->length();
     if (query.exec(sql)) {
         while (query.next()) {
             int id = query.value(0).toInt();

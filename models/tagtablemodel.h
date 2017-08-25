@@ -6,7 +6,8 @@
 class TagTableModel : public QObject
 {
 public:
-    explicit TagTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
+    explicit TagTableModel();
+    TagTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
     TagTableModel(int tagsId, QString name, int createDate, int updateDate);
     TagTableModel(int id, int tagsId, QString notesUuid, int createDate);
     TagTableModel(QString name);

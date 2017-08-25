@@ -1,6 +1,18 @@
 #include "categoriestablemodel.h"
 
-CategoriseTableModel::CategoriseTableModel(int id, int categoriesId,  QString notesUuid, QString name, int createDate, int updateDate, int isDefault) {
+CategoriseTableModel::CategoriseTableModel()
+{
+    this->id = 0;
+    this->categoriesId = 0;
+    this->notesUuid = "";
+    this->name = "";
+    this->createDate = 0;
+    this->updateDate = 0;
+    this->isDefault = 0;
+}
+
+CategoriseTableModel::CategoriseTableModel(int id, int categoriesId,  QString notesUuid, QString name, int createDate, int updateDate, int isDefault)
+{
     this->id = id;
     this->categoriesId = categoriesId;
     this->notesUuid = notesUuid;
@@ -15,12 +27,17 @@ CategoriseTableModel::CategoriseTableModel(int id, int categoriesId, QString not
     this->id = id;
     this->categoriesId = categoriesId;
     this->notesUuid = notesUuid;
+    this->name = "";
     this->createDate = createDate;
+    this->updateDate = 0;
+    this->isDefault = 0;
 }
 
 CategoriseTableModel::CategoriseTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault)
 {
+    this->id = 0;
     this->categoriesId = categoriesId;
+    this->notesUuid = "";
     this->name = name;
     this->createDate = createDate;
     this->updateDate = updateDate;
@@ -29,7 +46,12 @@ CategoriseTableModel::CategoriseTableModel(int categoriesId, QString name, int c
 
 CategoriseTableModel::CategoriseTableModel(QString name)
 {
+    this->id = 0;
+    this->categoriesId = 0;
+    this->notesUuid = "";
     this->name = name;
+    this->createDate = 0;
+    this->updateDate = 0;
     this->isDefault = 0;
 }
 

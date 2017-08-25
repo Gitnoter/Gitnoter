@@ -6,7 +6,8 @@
 class CategoriseTableModel : public QObject
 {
 public:
-    explicit CategoriseTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
+    explicit CategoriseTableModel();
+    CategoriseTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
                                   int updateDate, int isDefault);
     CategoriseTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
     CategoriseTableModel(int id, int categoriesId, QString notesUuid, int createDate);

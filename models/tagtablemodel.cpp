@@ -1,5 +1,15 @@
 #include "tagtablemodel.h"
 
+TagTableModel::TagTableModel()
+{
+    this->id = 0;
+    this->tagsId = 0;
+    this->notesUuid = "";
+    this->name = "";
+    this->createDate = 0;
+    this->updateDate = 0;
+}
+
 TagTableModel::TagTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate)
 {
     this->id = id;
@@ -15,15 +25,29 @@ TagTableModel::TagTableModel(int id, int tagsId, QString notesUuid, int createDa
     this->id = id;
     this->tagsId = tagsId;
     this->notesUuid = notesUuid;
+    this->name = "";
     this->createDate = createDate;
+    this->updateDate = 0;
 }
 
 TagTableModel::TagTableModel(int tagsId, QString name, int createDate, int updateDate)
 {
+    this->id = 0;
     this->tagsId = tagsId;
+    this->notesUuid = "";
     this->name = name;
     this->createDate = createDate;
     this->updateDate = updateDate;
+}
+
+TagTableModel::TagTableModel(QString name)
+{
+    this->id = 0;
+    this->tagsId = 0;
+    this->notesUuid = "";
+    this->name = name;
+    this->createDate = 0;
+    this->updateDate = 0;
 }
 
 TagTableModel* TagTableModel::operator+(TagTableModel & tagTableModel)
@@ -56,11 +80,6 @@ QString TagTableModel::getName()
 int TagTableModel::getCreateDate()
 {
     return this->createDate;
-}
-
-TagTableModel::TagTableModel(QString name)
-{
-    this->name = name;
 }
 
 void TagTableModel::setId(int id)
