@@ -11,7 +11,7 @@
 class NoteModel : public QObject
 {
 public:
-    NoteModel(QString noteText);
+    NoteModel(QString noteText, QString filePath = "");
     NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
               CategoriseTableModel *categoriesTableModel);
 

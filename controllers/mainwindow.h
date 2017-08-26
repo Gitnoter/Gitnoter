@@ -5,6 +5,7 @@
 #include "categorieswidget.h"
 #include "notemodel.h"
 #include "database.h"
+#include "configtablemodel.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -28,6 +29,7 @@ protected:
 
 private slots:
     void on_pushButton_clicked();
+    void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
 signals:
     void resizeChildWindow(QSize size);
@@ -38,12 +40,18 @@ private:
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
     NoteModel *noteModel;
+    ConfigTableModel *configTableModel;
     Database *database;
-    QString openNotesUuid;
+    QList<NoteTableModel *> *sidebarNoteList;
 
     void textChanged();
     void updatePreview();
     void menuPushButtonClicked();
+
+    void initNotesToDatabases();
+    void setDefaultNote();
+    void setSidebarTable();
+    void setEditText();
 };
 
 #endif // MAINWINDOW_H

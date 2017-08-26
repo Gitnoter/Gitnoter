@@ -2,7 +2,7 @@
 #include "tools.h"
 #include "appconfig.h"
 
-NoteModel::NoteModel(QString noteText) {
+NoteModel::NoteModel(QString noteText, QString filePath) {
     QTextStream in(&noteText);
     QString uuid;
     QString title;
@@ -43,7 +43,7 @@ NoteModel::NoteModel(QString noteText) {
         i += 1;
     }
     body.chop(2);
-    this->noteTableModel = new NoteTableModel(uuid, title, createDate, updateDate, body);
+    this->noteTableModel = new NoteTableModel(uuid, title, createDate, updateDate, body, filePath);
     this->categoriesTableModel = new CategoriseTableModel(categories);
     this->tagTableList = new QList<TagTableModel *>;
     for (auto &&tag : tags) {

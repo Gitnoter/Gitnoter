@@ -13,26 +13,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    configTableModel = new ConfigTableModel();
     database = new Database();
+    sidebarNoteList = database->getSidebarNotes();
 
-    // 初始化notes到数据库
-    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
-    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
-    for (auto &&fileInfo : fileInfoList) {
-        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()));
-        database->addNoteText(noteModel);
-    }
+    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde");
 
-    // 是否需要打开默认note
-    // TODO: 还需要查看数据库中是否记录上次打开的文件
-//    QList<NoteTableModel *> *navigationNotes = database->getSidebarNotes();
-//    if (navigationNotes->length() == 0) {
-//        noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
-//    }
-//    else {
-//        noteModel = database->getNoteByUuid(openNotesUuid);
-//    }
-    noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+    this->initNotesToDatabases();
+    this->setDefaultNote();
+    this->setSidebarTable();
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -63,13 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
 
     // 设置编辑器文本
-    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
-    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
-    updatePreview();
-
-    // 监听编辑器中文本是否有更改
-    connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
-    connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
+    this->setEditText();
 }
 
 MainWindow::~MainWindow()
@@ -118,4 +101,58 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::resizeEvent(QResizeEvent *size) {
     emit resizeChildWindow(size->size());
+}
+
+void MainWindow::initNotesToDatabases()
+{
+    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
+    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
+    for (auto &&fileInfo : fileInfoList) {
+        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()), fileInfo.absoluteFilePath());
+        database->addNoteText(noteModel);
+    }
+}
+
+void MainWindow::setDefaultNote()
+{
+    if (sidebarNoteList->length() == 0 && configTableModel->getOpenNotesUuid().isEmpty()) {
+        noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+    }
+    else {
+        noteModel = database->getNoteByUuid(configTableModel->getOpenNotesUuid());
+    }
+}
+
+void MainWindow::setSidebarTable()
+{
+    ui->tableWidget_list->setRowCount(sidebarNoteList->length());
+    for (int i = 0; i < sidebarNoteList->length(); ++i) {
+        ui->tableWidget_list->setItem(i, 0, new QTableWidgetItem(sidebarNoteList->at(i)->getTitle()));
+        ui->tableWidget_list->setItem(i, 1, new QTableWidgetItem(Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate())));
+    }
+}
+
+void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
+{
+    QString uuid = sidebarNoteList->at(index.row())->getUuid();
+    if (configTableModel->getOpenNotesUuid() == uuid) {
+        return;
+    }
+    configTableModel->setOpenNotesUuid(uuid);
+    this->setDefaultNote();
+    this->setEditText();
+}
+
+void MainWindow::setEditText()
+{
+    disconnect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
+    disconnect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
+
+    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
+    this->updatePreview();
+
+    // 监听编辑器中文本是否有更改
+    connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
+    connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 }

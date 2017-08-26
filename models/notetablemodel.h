@@ -6,7 +6,7 @@
 class NoteTableModel : public QObject
 {
 public:
-    NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body = "");
+    NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body = "", QString filePath = "");
 
     void setUuid(QString uuid);
     void setTitle(QString title);
@@ -15,12 +15,14 @@ public:
     void setUpdateDate(QString updateDate);
     void setUpdateDate(int updateDate);
     void setBody(QString body);
+    void setFilePath(const QString &filePath);
 
     QString getUuid();
     QString getTitle();
     int getCreateDate();
     int getUpdateDate();
     QString getBody();
+    const QString &getFilePath() const;
 
 private:
     QString uuid;
@@ -28,6 +30,8 @@ private:
     int createDate;
     int updateDate;
     QString body;
+    QString filePath;
+
 };
 
 #endif // NOTETABLEMODEL_H

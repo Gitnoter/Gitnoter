@@ -153,7 +153,8 @@ QString Database::insertNotesTable(NoteTableModel *noteTableModel)
             ("title", noteTableModel->getTitle().toStdString())
             ("create_date", noteTableModel->getCreateDate())
             ("update_date", noteTableModel->getUpdateDate())
-            ("body", noteTableModel->getBody().toStdString()).into("notes");
+            ("body", noteTableModel->getBody().toStdString())
+            ("file_path", noteTableModel->getFilePath().toStdString()).into("notes");
     QString sql = QString::fromStdString(insertBuilder.str());
 
     if (!query.exec(sql)) {
@@ -195,6 +196,7 @@ bool Database::updateNotesTableByUuid(NoteTableModel *noteTableModel)
                     ("body", noteTableModel->getBody().toStdString())
                     ("create_date", noteTableModel->getCreateDate())
                     ("update_date", noteTableModel->getUpdateDate())
+                    ("file_path", noteTableModel->getFilePath())
             .where(column("uuid") == noteTableModel->getUuid().toStdString());
     QString sql = QString::fromStdString(updateBuilder.str());
     query.exec(sql);
@@ -205,7 +207,7 @@ bool Database::updateNotesTableByUuid(NoteTableModel *noteTableModel)
 NoteTableModel* Database::selectNotesTableByUuid(QString uuid)
 {
     SelectModel selectBuilder;
-    selectBuilder.select("title", "create_date", "update_date", "body")
+    selectBuilder.select("title", "create_date", "update_date", "body", "file_path")
             .from("notes")
             .where(column("uuid") == uuid.toStdString());
     QString sql = QString::fromStdString(selectBuilder.str());
@@ -216,7 +218,8 @@ NoteTableModel* Database::selectNotesTableByUuid(QString uuid)
         int createDate = query.value(1).toInt();
         int updateDate = query.value(2).toInt();
         QString body = query.value(3).toString();
-        result = new NoteTableModel(uuid, title, createDate, updateDate, body);
+        QString filePath = query.value(4).toString();
+        result = new NoteTableModel(uuid, title, createDate, updateDate, body, filePath);
     }
     else {
         qDebug() << "QList<NoteModel *> Database::selectNoteList(): failed!";

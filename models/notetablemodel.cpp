@@ -1,13 +1,14 @@
 #include "notetablemodel.h"
 #include "tools.h"
 
-NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body)
+NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
     this->uuid = uuid;
     this->title = title;
     this->createDate = createDate;
     this->updateDate = updateDate;
     this->body = body;
+    this->filePath = filePath;
 }
 
 QString NoteTableModel::getUuid()
@@ -67,4 +68,14 @@ int NoteTableModel::getUpdateDate()
 QString NoteTableModel::getBody()
 {
     return this->body;
+}
+
+const QString &NoteTableModel::getFilePath() const
+{
+    return filePath;
+}
+
+void NoteTableModel::setFilePath(const QString &filePath)
+{
+    NoteTableModel::filePath = filePath;
 }

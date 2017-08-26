@@ -501,7 +501,7 @@ QTableWidget::item:selected{
            <bool>true</bool>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>false</bool>
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>true</bool>
@@ -524,121 +524,16 @@ QTableWidget::item:selected{
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
           </attribute>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>新建行</string>
-           </property>
-          </row>
           <column>
            <property name="text">
-            <string>Datetime</string>
+            <string>标题</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Title</string>
+            <string>更新时间</string>
            </property>
           </column>
-          <item row="0" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="0" column="1">
-           <property name="text">
-            <string>做游戏究竟需要哪些技能呢.md</string>
-           </property>
-          </item>
-          <item row="1" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="1" column="1">
-           <property name="text">
-            <string>教你如何取消恶心的迅雷浏览器关联.md</string>
-           </property>
-          </item>
-          <item row="2" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="2" column="1">
-           <property name="text">
-            <string>关于番羽弓虽访问Google的方法.md</string>
-           </property>
-          </item>
-          <item row="3" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="3" column="1">
-           <property name="text">
-            <string>在同个工程中使用-Swift-和-Objective-C(Swift-and-Objective-C-in-the-Same-Project).md</string>
-           </property>
-          </item>
-          <item row="4" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="4" column="1">
-           <property name="text">
-            <string>关于学习-iOS-Swift-开发的一点感悟.md</string>
-           </property>
-          </item>
-          <item row="5" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="5" column="1">
-           <property name="text">
-            <string>学习使用-Swift-编写-iOS-应用程序教程-1.md</string>
-           </property>
-          </item>
-          <item row="6" column="0">
-           <property name="text">
-            <string>2017年08月11日14:10:07</string>
-           </property>
-          </item>
-          <item row="6" column="1">
-           <property name="text">
-            <string>iOS-SwiftUIImageView-loading-webImg.md</string>
-           </property>
-          </item>
          </widget>
         </item>
        </layout>
