@@ -42,7 +42,8 @@ SOURCES += \
     models/notetablemodel.cpp \
     models/categoriestablemodel.cpp \
     models/tagtablemodel.cpp \
-    controllers/appconfig.cpp
+    controllers/appconfig.cpp \
+    models/configtablemodel.cpp
 
 HEADERS += \
         controllers/mainwindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     models/notetablemodel.h \
     models/categoriestablemodel.h \
     models/tagtablemodel.h \
-    controllers/appconfig.h
+    controllers/appconfig.h \
+    models/configtablemodel.h
 
 FORMS += \
         views/mainwindow.ui \

@@ -1,0 +1,46 @@
+#ifndef CONFIGTABLEMODEL_H
+#define CONFIGTABLEMODEL_H
+
+#include <QObject>
+
+class ConfigTableModel : public QObject
+{
+public:
+    explicit ConfigTableModel(QString version = "", QString repoDir = "", QString repoUrl = "", QString repoUsername = "",
+                              QString repoPassword = "", QString openNotesUuid = "");
+
+
+    void setVersion(const QString &version);
+
+    void setRepoDir(const QString &repoDir);
+
+    void setRepoUrl(const QString &repoUrl);
+
+    void setRepoUsername(const QString &repoUsername);
+
+    void setRepoPassword(const QString &repoPassword);
+
+    void setOpenNotesUuid(const QString &openNotesUuid);
+
+    const QString &getVersion() const;
+
+    const QString &getRepoDir() const;
+
+    const QString &getRepoUrl() const;
+
+    const QString &getRepoUsername() const;
+
+    const QString &getRepoPassword() const;
+
+    const QString &getOpenNotesUuid() const;
+
+private:
+    QString version;
+    QString repoDir;
+    QString repoUrl;
+    QString repoUsername;
+    QString repoPassword;
+    QString openNotesUuid;
+};
+
+#endif // CONFIGTABLEMODEL_H

@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
         models/notetablemodel.h
         models/categoriestablemodel.h
         models/tagtablemodel.h
+        models/configtablemodel.h
 
         controllers/mainwindow.cpp
         controllers/previewpage.cpp
@@ -47,7 +48,7 @@ add_executable(${PROJECT_NAME}
         models/notetablemodel.cpp
         models/categoriestablemodel.cpp
         models/tagtablemodel.cpp
-
+        models/configtablemodel.cpp
 
         resources/resources.qrc
 
