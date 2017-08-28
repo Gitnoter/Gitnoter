@@ -13,15 +13,44 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    configTableModel = new ConfigTableModel();
+    // 初始化数据
     database = new Database();
-    sidebarNoteList = database->getSidebarNotes();
-
-    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde");
 
     this->initNotesToDatabases();
+
+    sidebarNoteList = database->getSidebarNotes();
+    configTableModel = new ConfigTableModel();
+    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde");
+
     this->setDefaultNote();
     this->setSidebarTable();
+
+    // 初始化菜单快捷键
+    ui->action_newFile->setShortcut(Qt::CTRL | Qt::Key_N);
+    ui->action_newCategories->setShortcut(Qt::META | Qt::CTRL | Qt::Key_C);
+    ui->action_newTags->setShortcut(Qt::META | Qt::CTRL | Qt::Key_T);
+
+    ui->action_save->setShortcut(Qt::CTRL | Qt::Key_S);
+    ui->action_quit->setShortcut(Qt::CTRL | Qt::Key_W);
+
+    ui->action_synch->setShortcut(Qt::META | Qt::CTRL | Qt::Key_S);
+
+    ui->action_repeal->setShortcut(Qt::CTRL | Qt::Key_Z);
+    ui->action_reform->setShortcut(Qt::SHIFT | Qt::CTRL | Qt::Key_Z);
+
+    ui->action_cut->setShortcut(Qt::CTRL | Qt::Key_X);
+    ui->action_copy->setShortcut(Qt::CTRL | Qt::Key_C);
+    ui->action_paste->setShortcut(Qt::CTRL | Qt::Key_V);
+    ui->action_selectAll->setShortcut(Qt::CTRL | Qt::Key_A);
+
+    ui->action_notes->setShortcut(Qt::ALT | Qt::CTRL | Qt::Key_F);
+    ui->action_noteText->setShortcut(Qt::CTRL | Qt::Key_F);
+
+//    ui->action_toUppercase->setShortcut(Qt::CTRL | Qt::Key_N);
+//    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
+//    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
+
+    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::onFileSave);
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -155,4 +184,23 @@ void MainWindow::setEditText()
     // 监听编辑器中文本是否有更改
     connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
+}
+
+void MainWindow::onFileSave()
+{
+    qDebug() << "text";
+//    if (m_filePath.isEmpty()) {
+//        onFileSaveAs();
+//        return;
+//    }
+//
+//    QFile f(m_filePath);
+//    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))  {
+//        QMessageBox::warning(this, windowTitle(),
+//                             tr("Could not write to file %1: %2").arg(
+//                                 QDir::toNativeSeparators(m_filePath), f.errorString()));
+//        return;
+//    }
+//    QTextStream str(&f);
+//    str << ui->plainTextEdit_editor->toPlainText();
 }

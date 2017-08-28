@@ -31,6 +31,8 @@ private slots:
     void on_pushButton_clicked();
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
+    void onFileSave();
+
 signals:
     void resizeChildWindow(QSize size);
 

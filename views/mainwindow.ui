@@ -917,7 +917,143 @@ QTableWidget::item:selected{
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="action_newFile"/>
+    <addaction name="action_newCategories"/>
+    <addaction name="action_newTags"/>
+    <addaction name="separator"/>
+    <addaction name="action_save"/>
+    <addaction name="action_quit"/>
+    <addaction name="separator"/>
+    <addaction name="action_synch"/>
+   </widget>
+   <widget class="QMenu" name="menu_edit">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+    <widget class="QMenu" name="menu_search">
+     <property name="title">
+      <string>搜索</string>
+     </property>
+     <addaction name="action_notes"/>
+     <addaction name="action_noteText"/>
+    </widget>
+    <widget class="QMenu" name="menu_switch">
+     <property name="title">
+      <string>转换</string>
+     </property>
+     <addaction name="action_toUppercase"/>
+     <addaction name="action_toLowercase"/>
+     <addaction name="action_toUppercaseAtFirst"/>
+    </widget>
+    <addaction name="action_repeal"/>
+    <addaction name="action_reform"/>
+    <addaction name="separator"/>
+    <addaction name="action_cut"/>
+    <addaction name="action_copy"/>
+    <addaction name="action_paste"/>
+    <addaction name="action_selectAll"/>
+    <addaction name="separator"/>
+    <addaction name="menu_search"/>
+    <addaction name="menu_switch"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_file"/>
+   <addaction name="menu_edit"/>
   </widget>
+  <action name="action_newFile">
+   <property name="text">
+    <string>新建笔记</string>
+   </property>
+  </action>
+  <action name="action_newCategories">
+   <property name="text">
+    <string>新建笔记本</string>
+   </property>
+  </action>
+  <action name="action_newTags">
+   <property name="text">
+    <string>新建标签</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="action_quit">
+   <property name="text">
+    <string>关闭</string>
+   </property>
+  </action>
+  <action name="action_synch">
+   <property name="text">
+    <string>同步笔记</string>
+   </property>
+  </action>
+  <action name="action_repeal">
+   <property name="text">
+    <string>撤销</string>
+   </property>
+  </action>
+  <action name="action_reform">
+   <property name="text">
+    <string>重做</string>
+   </property>
+  </action>
+  <action name="action_cut">
+   <property name="text">
+    <string>剪切</string>
+   </property>
+  </action>
+  <action name="action_copy">
+   <property name="text">
+    <string>复制</string>
+   </property>
+  </action>
+  <action name="action_paste">
+   <property name="text">
+    <string>粘贴</string>
+   </property>
+  </action>
+  <action name="action_selectAll">
+   <property name="text">
+    <string>全选</string>
+   </property>
+  </action>
+  <action name="action_notes">
+   <property name="text">
+    <string>搜索笔记</string>
+   </property>
+  </action>
+  <action name="action_noteText">
+   <property name="text">
+    <string>在笔记中搜索</string>
+   </property>
+  </action>
+  <action name="action_toUppercase">
+   <property name="text">
+    <string>使用大写字母</string>
+   </property>
+  </action>
+  <action name="action_toLowercase">
+   <property name="text">
+    <string>使用小写字母</string>
+   </property>
+  </action>
+  <action name="action_toUppercaseAtFirst">
+   <property name="text">
+    <string>开头字母大写</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
