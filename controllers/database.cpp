@@ -196,7 +196,7 @@ bool Database::updateNotesTableByUuid(NoteTableModel *noteTableModel)
                     ("body", noteTableModel->getBody().toStdString())
                     ("create_date", noteTableModel->getCreateDate())
                     ("update_date", noteTableModel->getUpdateDate())
-                    ("file_path", noteTableModel->getFilePath())
+                    ("file_path", noteTableModel->getFilePath().toStdString())
             .where(column("uuid") == noteTableModel->getUuid().toStdString());
     QString sql = QString::fromStdString(updateBuilder.str());
     query.exec(sql);
