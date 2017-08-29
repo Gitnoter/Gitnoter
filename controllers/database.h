@@ -45,13 +45,13 @@ private:
     CategoriseTableModel* selectCategoriesTableById(QString name);
 
     int insertNJTTable(QString notesUuid, int tagsId);
-    bool deleteNJTTableById(int id);
+    bool deleteNJTTableByNotesUuid(QString notesUuid);
     bool deleteNJTTableById(QString notesUuid, int tagsId);
     QList<TagTableModel *>* selectNJTTableByNotesUuid(QString notesUuid);
     QList<TagTableModel *> selectNJTTableByTagsId(int tagsId);
 
     int insertNJCTable(QString notesUuid, int categoriesId);
-    bool deleteNJCTableById(int id);
+    bool deleteNJCTableByNotesUuid(QString notesUuid);
     bool deleteNJCTableById(QString notesUuid, int categoriesId);
     QList<CategoriseTableModel *> selectNJCTableByNotesUuid(QString notesUuid);
     QList<CategoriseTableModel *> selectNJCTableByTagsId(int categoriesId);

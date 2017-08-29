@@ -65,3 +65,30 @@ bool Tools::compareVersions(const QString string, const QString string1)
 
     return versionNumber == versionNumber1;
 }
+
+QStringList Tools::splitNotesData(QString string)
+{
+    bool split = false;
+    QStringList list;
+
+    if (string.isEmpty()) {
+        return list;
+    }
+
+    list << "" << "";
+
+    for (int i = 0; i < string.length(); ++i) {
+        if (!split && string[i] == ":") {
+            split = true;
+            continue;
+        }
+
+        if (!split) {
+            list[0] += string[i];
+        }
+        else {
+            list[1] += string[i];
+        }
+    }
+    return list;
+}

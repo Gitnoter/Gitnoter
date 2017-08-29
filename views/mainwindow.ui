@@ -820,7 +820,7 @@ QTableWidget::item:selected{
                   <enum>QLineEdit::Normal</enum>
                  </property>
                  <property name="placeholderText">
-                  <string>Title...</string>
+                  <string>无标题</string>
                  </property>
                  <property name="cursorMoveStyle">
                   <enum>Qt::LogicalMoveStyle</enum>

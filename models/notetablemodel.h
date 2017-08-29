@@ -8,12 +8,12 @@ class NoteTableModel : public QObject
 public:
     NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body = "", QString filePath = "");
 
-    void setUuid(QString uuid);
+    void setUuid(QString uuid = "");
     void setTitle(QString title);
-    void setCreateDate(QString createDate);
-    void setCreateDate(int createDate);
-    void setUpdateDate(QString updateDate);
-    void setUpdateDate(int updateDate);
+    void setCreateDate(QString createDate = "");
+    void setCreateDate(int createDate = 0);
+    void setUpdateDate(QString updateDate = "");
+    void setUpdateDate(int updateDate = 0);
     void setBody(QString body);
     void setFilePath(const QString &filePath);
 

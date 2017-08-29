@@ -1,12 +1,14 @@
 #include "notetablemodel.h"
 #include "tools.h"
 
+#include <QDateTime>
+
 NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
-    this->uuid = uuid;
+    this->setUuid(uuid);
+    this->setCreateDate(createDate);
+    this->setUpdateDate(updateDate);
     this->title = title;
-    this->createDate = createDate;
-    this->updateDate = updateDate;
     this->body = body;
     this->filePath = filePath;
 }
@@ -23,22 +25,24 @@ void NoteTableModel::setTitle(const QString title)
 
 void NoteTableModel::setCreateDate(const QString createDate)
 {
-    this->createDate = Tools::timestampFromDateTime(createDate);
+    this->createDate = createDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+                                            : Tools::timestampFromDateTime(createDate);
 }
 
 void NoteTableModel::setCreateDate(int createDate)
 {
-    this->createDate = createDate;
+    this->createDate = createDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : createDate;
 }
 
 void NoteTableModel::setUpdateDate(const QString updateDate)
 {
-    this->updateDate = Tools::timestampFromDateTime(updateDate);
+    this->updateDate = updateDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+                                            : Tools::timestampFromDateTime(updateDate);
 }
 
 void NoteTableModel::setUpdateDate(int updateDate)
 {
-    this->updateDate = updateDate;
+    this->updateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
 }
 
 void NoteTableModel::setBody(const QString body)
@@ -47,7 +51,7 @@ void NoteTableModel::setBody(const QString body)
 }
 
 void NoteTableModel::setUuid(QString uuid) {
-    this->uuid = uuid;
+    this->uuid = uuid.isEmpty() ? Tools::getUuid() : uuid;
 }
 
 QString NoteTableModel::getTitle()

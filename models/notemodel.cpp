@@ -4,50 +4,50 @@
 
 NoteModel::NoteModel(QString noteText, QString filePath) {
     QTextStream in(&noteText);
-    QString uuid;
-    QString title;
-    int createDate = 0;
-    int updateDate = 0;
+    bool bodyStart = false;
     QString body;
-    QStringList tags;
-    QString categories;
+    QMap<QString, QString> map;
+    map["uuid"] = "";
+    map["title"] = "";
+    map["createDate"] = "";
+    map["updateDate"] = "";
+    map["tags"] = "";
+    map["categories"] = "";
 
-    int i = 0;
     while(!in.atEnd()) {
-        QString noteLine = in.readLine();
+        QString noteLine = in.readLine().trimmed();
 
-        if (i == 0) {
-            uuid = noteLine.mid(6);
+        if (!bodyStart) {
+            if (noteLine.mid(0, 1) == "#" || noteLine.mid(0, 2) == "##" || noteLine.mid(0, 3) == "###") {
+                bodyStart = true;
+            }
+            if (noteLine == "---") {
+                bodyStart = true;
+                continue;
+            }
         }
-        else if (i == 1) {
-            title = noteLine.mid(7);
-        }
-        else if (i == 2) {
-            createDate = Tools::timestampFromDateTime(noteLine.mid(12));
-        }
-        else if (i == 3) {
-            updateDate = Tools::timestampFromDateTime(noteLine.mid(12));
-        }
-        else if (i == 4) {
-            tags = noteLine.mid(6).split(AppConfig::tagSplit);
-        }
-        else if (i == 5) {
-            categories = noteLine.mid(12);
-        }
-        else if (i == 6 || i == 7 || i == 8) {
 
+        if (!bodyStart && noteLine.isEmpty()) {
+            continue;
+        }
+
+        if (!bodyStart) {
+            QStringList stringList = Tools::splitNotesData(noteLine);
+            if (stringList.length() == 2) {
+                map[stringList[0]] = stringList[1].trimmed();
+            }
         }
         else {
             body += noteLine + "\n";
         }
-        i += 1;
     }
-    body.chop(2);
-    this->noteTableModel = new NoteTableModel(uuid, title, createDate, updateDate, body, filePath);
-    this->categoriesTableModel = new CategoriseTableModel(categories);
+    this->noteTableModel = new NoteTableModel(map["uuid"], map["title"], Tools::timestampFromDateTime(map["createDate"])
+            , Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(), filePath);
+    this->categoriesTableModel = new CategoriseTableModel(map["categories"]);
     this->tagTableList = new QList<TagTableModel *>;
+    QStringList tags = map["tags"].split(QRegExp(AppConfig::tagSplit + "?"));
     for (auto &&tag : tags) {
-        this->tagTableList->append(new TagTableModel(tag));
+        this->tagTableList->append(new TagTableModel(tag.trimmed()));
     }
 }
 
@@ -61,16 +61,17 @@ NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tag
 QString NoteModel::getNote()
 {
     QString note;
+    note += "uuid: " + this->noteTableModel->getUuid() + "\n";
     note += "title: " + this->noteTableModel->getTitle() + "\n";
     note += "createDate: " + Tools::timestampToDateTime(this->noteTableModel->getCreateDate()) + "\n";
     note += "updateDate" + Tools::timestampToDateTime(this->noteTableModel->getUpdateDate()) + "\n";
     note += "categories: " + this->categoriesTableModel->getName() + "\n";
 
-    note += "notes: ";
+    note += "tags: ";
     for (auto &&tagTableModel : *(this->tagTableList)) {
-        note += tagTableModel->getName() + "\n";
+        note += tagTableModel->getName() + AppConfig::tagSplit;
     }
-    note.chop(2);
+    note.chop(AppConfig::tagSplit.length());
 
     note += "\n\n---\n\n" + this->noteTableModel->getBody();
 

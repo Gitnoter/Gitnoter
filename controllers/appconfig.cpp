@@ -1,9 +1,9 @@
 #include "appconfig.h"
 #include <QDir>
 
-QString AppConfig::dateFormat = "";
-QString AppConfig::tagSplit = "";
-QString AppConfig::version = "";
+QString AppConfig::dateFormat = "yyyy/MM/dd hh:mm:ss";
+QString AppConfig::tagSplit = ", ";
+QString AppConfig::version = "1.0.0";
 QString AppConfig::dbPath = "";
 QString AppConfig::dbName = "";
 QString AppConfig::repoPath = "";
@@ -38,10 +38,6 @@ void AppConfig::init(QString appConfigLocation, QString version, QString repoDir
 }
 
 void AppConfig::defaultInit() {
-    dateFormat = "yyyy/MM/dd hh:mm:ss";
-    tagSplit = ", ";
-    version = "1.0.0";
-
     dbPath = QDir(appConfigLocation).filePath("db/");
     dbName = "gitnoter.db";
 

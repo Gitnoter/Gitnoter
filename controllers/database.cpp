@@ -38,7 +38,7 @@ void Database::addNoteText(NoteModel *noteModel) {
     NoteTableModel *noteTableModel = this->selectNotesTableByUuid(noteModel->noteTableModel->getUuid());
     QString uuid = "";
     if (noteTableModel) {
-        this->updateNotesTableByUuid(noteTableModel);
+        this->updateNotesTableByUuid(noteModel->noteTableModel);
         uuid = noteTableModel->getUuid();
     }
     else {
@@ -46,6 +46,7 @@ void Database::addNoteText(NoteModel *noteModel) {
     }
 
     // 插入 tags
+    this->deleteNJTTableByNotesUuid(uuid);
     for (auto &&item : *noteModel->tagTableList) {
         TagTableModel *tagTableModel = this->selectTagsTableByName(item->getName());
         int tagId = tagTableModel ? tagTableModel->getTagsId() : this->insertTagsTable(item->getName());
@@ -53,6 +54,7 @@ void Database::addNoteText(NoteModel *noteModel) {
     }
 
     // 插入 categories
+    this->deleteNJCTableByNotesUuid(uuid);
     CategoriseTableModel *categoriseTableModel = this->selectCategoriesTableById(
             noteModel->categoriesTableModel->getName());
     int categoriesId = categoriseTableModel ? categoriseTableModel->getCategoriesId()
@@ -470,10 +472,10 @@ int Database::insertNJTTable(QString notesUuid, int tagsId)
     return insertId;
 }
 
-bool Database::deleteNJTTableById(int id)
+bool Database::deleteNJTTableByNotesUuid(QString notesUuid)
 {
     DeleteModel deleteBuilder;
-    deleteBuilder._delete().from("notes_join_tags").where(column("id") == id);
+    deleteBuilder._delete().from("notes_join_tags").where(column("notes_uuid") == notesUuid.toStdString());
     QString sql = QString::fromStdString(deleteBuilder.str());
     query.exec(sql);
 
@@ -562,10 +564,10 @@ int Database::insertNJCTable(QString notesUuid, int categoriesId)
     return insertId;
 }
 
-bool Database::deleteNJCTableById(int id)
+bool Database::deleteNJCTableByNotesUuid(QString notesUuid)
 {
     DeleteModel deleteBuilder;
-    deleteBuilder._delete().from("notes_join_categories").where(column("id") == id);
+    deleteBuilder._delete().from("notes_join_categories").where(column("notes_uuid") == notesUuid.toStdString());
     QString sql = QString::fromStdString(deleteBuilder.str());
     query.exec(sql);
 

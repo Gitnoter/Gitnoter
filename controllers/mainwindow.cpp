@@ -6,12 +6,22 @@
 #include "ui_mainwindow.h"
 
 #include <QWebChannel>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+//    QFile defaultTextFile(":/marked/default.md");
+//    defaultTextFile.open(QIODevice::ReadOnly);
+//    QString defaultText = QString(defaultTextFile.readAll());
+//
+//    noteModel = new NoteModel(defaultText);
+//
+//
+//    return;
 
     // 初始化数据
     database = new Database();
@@ -20,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     sidebarNoteList = database->getSidebarNotes();
     configTableModel = new ConfigTableModel();
-    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde");
+    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde0");
 
     this->setDefaultNote();
     this->setSidebarTable();
@@ -50,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
 
-    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::onFileSave);
+    connect(ui->action_save, &QAction::triggered, this, &MainWindow::onFileSave);
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -91,7 +101,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::textChanged()
 {
-    noteModel->noteTableModel->setTitle(ui->lineEdit_title->displayText());
+    noteModel->noteTableModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
+                                        ? ui->lineEdit_title->placeholderText()
+                                        : ui->lineEdit_title->displayText());
     noteModel->noteTableModel->setBody(ui->plainTextEdit_editor->toPlainText());
     this->updatePreview();
 }
@@ -188,19 +200,22 @@ void MainWindow::setEditText()
 
 void MainWindow::onFileSave()
 {
-    qDebug() << "text";
-//    if (m_filePath.isEmpty()) {
-//        onFileSaveAs();
-//        return;
-//    }
-//
-//    QFile f(m_filePath);
-//    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))  {
-//        QMessageBox::warning(this, windowTitle(),
-//                             tr("Could not write to file %1: %2").arg(
-//                                 QDir::toNativeSeparators(m_filePath), f.errorString()));
-//        return;
-//    }
-//    QTextStream str(&f);
-//    str << ui->plainTextEdit_editor->toPlainText();
+    if (noteModel->noteTableModel->getFilePath().isEmpty()) {
+        return;
+    }
+
+    QFile f(noteModel->noteTableModel->getFilePath());
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))  {
+        QMessageBox::warning(this, windowTitle(),
+                             tr("Could not write to file %1: %2").arg(
+                                 QDir::toNativeSeparators(noteModel->noteTableModel->getFilePath()), f.errorString()));
+        return;
+    }
+
+    QTextStream str(&f);
+    str << noteModel->getNote();
+
+    database->addNoteText(noteModel);
+
+    f.close();
 }
