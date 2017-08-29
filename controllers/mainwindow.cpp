@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
 
-    connect(ui->action_save, &QAction::triggered, this, &MainWindow::onFileSave);
+    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::onNewFile);
+    connect(ui->action_save, &QAction::triggered, this, &MainWindow::onSaveFile);
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -92,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 设置编辑器文本
     this->setEditText();
+    this->setModified(false);
 }
 
 MainWindow::~MainWindow()
@@ -105,6 +107,7 @@ void MainWindow::textChanged()
                                         ? ui->lineEdit_title->placeholderText()
                                         : ui->lineEdit_title->displayText());
     noteModel->noteTableModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    noteModel->noteTableModel->setUpdateDate(0);
     this->updatePreview();
 }
 
@@ -182,6 +185,7 @@ void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
     configTableModel->setOpenNotesUuid(uuid);
     this->setDefaultNote();
     this->setEditText();
+    this->setModified(false);
 }
 
 void MainWindow::setEditText()
@@ -191,6 +195,8 @@ void MainWindow::setEditText()
 
     ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
     ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
+
+    this->setModified(true);
     this->updatePreview();
 
     // 监听编辑器中文本是否有更改
@@ -198,9 +204,9 @@ void MainWindow::setEditText()
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 }
 
-void MainWindow::onFileSave()
+void MainWindow::onSaveFile()
 {
-    if (noteModel->noteTableModel->getFilePath().isEmpty()) {
+    if (!this->isModified()) {
         return;
     }
 
@@ -216,6 +222,27 @@ void MainWindow::onFileSave()
     str << noteModel->getNote();
 
     database->addNoteText(noteModel);
+    this->setSidebarTable();
 
     f.close();
+}
+
+void MainWindow::onNewFile()
+{
+    this->onSaveFile();
+
+    noteModel->clear();
+    this->setEditText();
+    this->setModified(false);
+}
+
+bool MainWindow::isModified()
+{
+    return ui->lineEdit_title->isModified() || ui->plainTextEdit_editor->document()->isModified();
+}
+
+void MainWindow::setModified(bool m)
+{
+    ui->lineEdit_title->setModified(m);
+    ui->plainTextEdit_editor->document()->setModified(m);
 }

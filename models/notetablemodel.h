@@ -6,7 +6,7 @@
 class NoteTableModel : public QObject
 {
 public:
-    NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body = "", QString filePath = "");
+    NoteTableModel(QString uuid = "", QString title = "", int createDate = 0, int updateDate = 0, QString body = "", QString filePath = "");
 
     void setUuid(QString uuid = "");
     void setTitle(QString title);

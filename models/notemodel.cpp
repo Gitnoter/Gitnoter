@@ -64,7 +64,7 @@ QString NoteModel::getNote()
     note += "uuid: " + this->noteTableModel->getUuid() + "\n";
     note += "title: " + this->noteTableModel->getTitle() + "\n";
     note += "createDate: " + Tools::timestampToDateTime(this->noteTableModel->getCreateDate()) + "\n";
-    note += "updateDate" + Tools::timestampToDateTime(this->noteTableModel->getUpdateDate()) + "\n";
+    note += "updateDate: " + Tools::timestampToDateTime(this->noteTableModel->getUpdateDate()) + "\n";
     note += "categories: " + this->categoriesTableModel->getName() + "\n";
 
     note += "tags: ";
@@ -76,4 +76,11 @@ QString NoteModel::getNote()
     note += "\n\n---\n\n" + this->noteTableModel->getBody();
 
     return note;
+}
+
+void NoteModel::clear()
+{
+    this->noteTableModel = new NoteTableModel();
+    this->tagTableList = new QList<TagTableModel *>();
+    this->categoriesTableModel = new CategoriseTableModel();
 }

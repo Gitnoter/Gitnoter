@@ -6,6 +6,7 @@
 class AppConfig : public QObject
 {
 public:
+    static QString version;
     static QString dateFormat;
     static QString tagSplit;
     static QString dbPath;
@@ -18,17 +19,7 @@ public:
 
     static QString appConfigLocation;
 
-    // database -> config
-    static QString version;
-    static QString repoDir;
-    static QString repoUrl;
-    static QString repoUsername;
-    static QString repoPassword;
-
     static void init(QString appConfigLocation);
-    static void init(QString appConfigLocation, QString version, QString repoDir, QString repoUrl,
-                     QString repoUsername, QString repoPassword);
-    static void defaultInit();
 };
 
 #endif // APPCONFIG_H

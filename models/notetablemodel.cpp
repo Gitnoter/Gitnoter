@@ -1,16 +1,17 @@
 #include "notetablemodel.h"
 #include "tools.h"
+#include "appconfig.h"
 
 #include <QDateTime>
 
 NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
     this->setUuid(uuid);
+    this->setTitle(title);
     this->setCreateDate(createDate);
     this->setUpdateDate(updateDate);
-    this->title = title;
+    this->setFilePath(filePath);
     this->body = body;
-    this->filePath = filePath;
 }
 
 QString NoteTableModel::getUuid()
@@ -81,5 +82,9 @@ const QString &NoteTableModel::getFilePath() const
 
 void NoteTableModel::setFilePath(const QString &filePath)
 {
-    NoteTableModel::filePath = filePath;
+    NoteTableModel::filePath = filePath.isEmpty() ?
+                               QString("%1/%2/%3-%4.md").arg(
+                                       AppConfig::repoPath, AppConfig::noteFolderName,
+                                       this->title.isEmpty() ? "无标题" : this->title, this->uuid)
+                                                  : filePath;
 }

@@ -31,7 +31,8 @@ private slots:
     void on_pushButton_clicked();
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
-    void onFileSave();
+    void onSaveFile();
+    void onNewFile();
 
 signals:
     void resizeChildWindow(QSize size);
@@ -54,6 +55,9 @@ private:
     void setDefaultNote();
     void setSidebarTable();
     void setEditText();
+
+    bool isModified();
+    void setModified(bool m);
 };
 
 #endif // MAINWINDOW_H

@@ -17,10 +17,11 @@ public:
 
     QString getNote();
 
-public:
     NoteTableModel *noteTableModel;
     QList<TagTableModel *> *tagTableList;
     CategoriseTableModel *categoriesTableModel;
+
+    void clear();
 
 };
 
