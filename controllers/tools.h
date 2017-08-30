@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDir>
+#include <QGraphicsDropShadowEffect>
 
 class Tools : public QObject
 {
@@ -18,6 +19,8 @@ public:
 
     static bool compareVersions(const QString string, const QString string1);
     static QStringList splitNotesData(QString string);
+
+    static QGraphicsDropShadowEffect* createShadowEffect();
 };
 
 #endif // TOOLS_H

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="dockNestingEnabled">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="minimumSize">
     <size>
@@ -902,11 +905,6 @@ QTableWidget::item:selected{
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

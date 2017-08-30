@@ -92,3 +92,13 @@ QStringList Tools::splitNotesData(QString string)
     }
     return list;
 }
+
+QGraphicsDropShadowEffect* Tools::createShadowEffect()
+{
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect();
+    effect->setBlurRadius(40);
+    effect->setColor(QColor(51, 51, 51));
+    effect->setOffset(0, 0);
+
+    return effect;
+}

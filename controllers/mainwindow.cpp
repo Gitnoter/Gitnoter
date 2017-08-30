@@ -141,9 +141,6 @@ void MainWindow::menuPushButtonClicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    if (categoriesWidget) {
-        categoriesWidget->close();
-    }
     categoriesWidget = new CategoriesWidget(this);
     categoriesWidget->show();
 

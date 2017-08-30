@@ -2,26 +2,392 @@
 <ui version="4.0">
  <class>CategoriesWidget</class>
  <widget class="QWidget" name="CategoriesWidget">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>500</width>
+    <height>440</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>PushButton</string>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+    <widget class="QWidget" name="widget_2" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>440</width>
+       <height>440</height>
+      </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>440</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#widget_2{
+	background-color:#F6F6F6;
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>-1</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="leftMargin">
+       <number>16</number>
+      </property>
+      <property name="topMargin">
+       <number>8</number>
+      </property>
+      <property name="rightMargin">
+       <number>16</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string>查找笔记本</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listWidget_data">
+        <property name="styleSheet">
+         <string notr="true">QListWidget#listWidget_data{
+	border: 0px solid;border-top: 1px solid #F6F6F6;
+	background-color:#F6F6F6
+}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>新建项目</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_cancel">
+           <property name="text">
+            <string>取消</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_move">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>移动</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

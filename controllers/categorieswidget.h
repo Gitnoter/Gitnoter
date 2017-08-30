@@ -21,7 +21,9 @@ public slots:
     void resizeWindow(QSize size);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_cancel_clicked();
+
+    void animationFinished();
 
 private:
     Ui::CategoriesWidget *ui;
