@@ -18,6 +18,7 @@ public:
 
     void addNoteText(NoteModel *noteModel);
     NoteModel* getNoteByUuid(QString uuid);
+    void deleteNoteByUuid(QString uuid);
     QList<NoteTableModel *>* getSidebarNotes();
 
 private:

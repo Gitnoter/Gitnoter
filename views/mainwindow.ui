@@ -701,7 +701,7 @@ QTableWidget::item:selected{
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="pushButton_deleteNote">
                <property name="text">
                 <string>Delete</string>
                </property>

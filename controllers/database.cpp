@@ -88,6 +88,13 @@ NoteModel* Database::getNoteByUuid(QString uuid)
     return new NoteModel(noteTableModel, tagTableList, categoriseTableModel);
 }
 
+void Database::deleteNoteByUuid(QString uuid)
+{
+    this->deleteNotesTableByUuid(uuid);
+    this->deleteNJTTableByNotesUuid(uuid);
+    this->deleteNJCTableByNotesUuid(uuid);
+}
+
 QList<NoteTableModel *> *Database::getSidebarNotes()
 {
     QList<NoteTableModel *> *result = new QList<NoteTableModel *>();
@@ -634,5 +641,3 @@ QList<CategoriseTableModel *> Database::selectNJCTableByTagsId(int categoriesId)
 
     return result;
 }
-
-

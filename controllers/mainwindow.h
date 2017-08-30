@@ -33,6 +33,11 @@ private slots:
 
     void onSaveFile();
     void onNewFile();
+    void onRemoveFile();
+
+    void on_pushButton_deleteNote_clicked();
+
+    void on_tableWidget_list_clicked(const QModelIndex &index);
 
 signals:
     void resizeChildWindow(QSize size);

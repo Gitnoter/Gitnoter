@@ -7,6 +7,7 @@
 
 #include <QWebChannel>
 #include <QMessageBox>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,9 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->initNotesToDatabases();
 
-    sidebarNoteList = database->getSidebarNotes();
     configTableModel = new ConfigTableModel();
-    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde0");
+    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
 
     this->setDefaultNote();
     this->setSidebarTable();
@@ -159,7 +159,12 @@ void MainWindow::initNotesToDatabases()
 
 void MainWindow::setDefaultNote()
 {
-    if (sidebarNoteList->length() == 0 && configTableModel->getOpenNotesUuid().isEmpty()) {
+    if (configTableModel->getOpenNotesUuid().isEmpty()) {
+        if (sidebarNoteList->length() != 0) {
+            configTableModel->setOpenNotesUuid(sidebarNoteList->at(0)->getUuid());
+            this->setDefaultNote();
+            return;
+        }
         noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
@@ -169,14 +174,18 @@ void MainWindow::setDefaultNote()
 
 void MainWindow::setSidebarTable()
 {
+    sidebarNoteList = database->getSidebarNotes();
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());
     for (int i = 0; i < sidebarNoteList->length(); ++i) {
         ui->tableWidget_list->setItem(i, 0, new QTableWidgetItem(sidebarNoteList->at(i)->getTitle()));
         ui->tableWidget_list->setItem(i, 1, new QTableWidgetItem(Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate())));
+        if (sidebarNoteList->at(i)->getUuid() == configTableModel->getOpenNotesUuid()) {
+            ui->tableWidget_list->selectRow(i);
+        }
     }
 }
 
-void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
+void MainWindow::on_tableWidget_list_clicked(const QModelIndex &index)
 {
     QString uuid = sidebarNoteList->at(index.row())->getUuid();
     if (configTableModel->getOpenNotesUuid() == uuid) {
@@ -186,6 +195,11 @@ void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
     this->setDefaultNote();
     this->setEditText();
     this->setModified(false);
+}
+
+void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
+{
+
 }
 
 void MainWindow::setEditText()
@@ -245,4 +259,22 @@ void MainWindow::setModified(bool m)
 {
     ui->lineEdit_title->setModified(m);
     ui->plainTextEdit_editor->document()->setModified(m);
+}
+
+void MainWindow::on_pushButton_deleteNote_clicked()
+{
+    this->onRemoveFile();
+}
+
+void MainWindow::onRemoveFile()
+{
+    database->deleteNoteByUuid(noteModel->noteTableModel->getUuid());
+    QFile::remove(noteModel->noteTableModel->getFilePath());
+    configTableModel->setOpenNotesUuid("");
+    noteModel->clear();
+
+    this->setSidebarTable();
+    this->setDefaultNote();
+    this->setEditText();
+    this->setModified(false);
 }
