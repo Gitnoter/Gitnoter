@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //
 //    return;
 
+//    qDebug() << Qt::DescendingOrder;
+
     // 初始化数据
     database = new Database();
 
@@ -31,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     configTableModel = new ConfigTableModel();
     configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
+    configTableModel->setSidebarSortKey(1);
+    configTableModel->setSidebarSortValue("DESC");
 
     this->setDefaultNote();
     this->setSidebarTable();
@@ -62,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::onNewFile);
     connect(ui->action_save, &QAction::triggered, this, &MainWindow::onSaveFile);
+
+    connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
+            this, &MainWindow::on_headerView_sortIndicatorChanged);
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -178,11 +185,18 @@ void MainWindow::setSidebarTable()
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());
     for (int i = 0; i < sidebarNoteList->length(); ++i) {
         ui->tableWidget_list->setItem(i, 0, new QTableWidgetItem(sidebarNoteList->at(i)->getTitle()));
-        ui->tableWidget_list->setItem(i, 1, new QTableWidgetItem(Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate())));
+        ui->tableWidget_list->setItem(i, 1, new QTableWidgetItem(
+                Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate())));
         if (sidebarNoteList->at(i)->getUuid() == configTableModel->getOpenNotesUuid()) {
             ui->tableWidget_list->selectRow(i);
         }
     }
+
+    int sidebarSortKey = configTableModel->getSidebarSortKey();
+    Qt::SortOrder sidebarSortValue = configTableModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
+                                                                                      : Qt::AscendingOrder;
+    ui->tableWidget_list->horizontalHeader()->sortIndicatorChanged(sidebarSortKey, sidebarSortValue);
+    ui->tableWidget_list->horizontalHeader()->setSortIndicator(sidebarSortKey, sidebarSortValue);
 }
 
 void MainWindow::on_tableWidget_list_clicked(const QModelIndex &index)
@@ -277,4 +291,10 @@ void MainWindow::onRemoveFile()
     this->setDefaultNote();
     this->setEditText();
     this->setModified(false);
+}
+
+void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
+{
+    configTableModel->setSidebarSortKey(logicalIndex);
+    configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
 }

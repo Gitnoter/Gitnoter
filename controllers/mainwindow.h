@@ -36,8 +36,9 @@ private slots:
     void onRemoveFile();
 
     void on_pushButton_deleteNote_clicked();
-
     void on_tableWidget_list_clicked(const QModelIndex &index);
+
+    void on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
 signals:
     void resizeChildWindow(QSize size);

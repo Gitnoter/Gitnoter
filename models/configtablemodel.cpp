@@ -70,3 +70,23 @@ const QString &ConfigTableModel::getOpenNotesUuid() const
 {
     return openNotesUuid;
 }
+
+int ConfigTableModel::getSidebarSortKey() const
+{
+    return sidebarSortKey;
+}
+
+void ConfigTableModel::setSidebarSortKey(int sidebarSortKey)
+{
+    ConfigTableModel::sidebarSortKey = sidebarSortKey;
+}
+
+const QString &ConfigTableModel::getSidebarSortValue() const
+{
+    return sidebarSortValue;
+}
+
+void ConfigTableModel::setSidebarSortValue(const QString &sidebarSortValue)
+{
+    ConfigTableModel::sidebarSortValue = sidebarSortValue;
+}
