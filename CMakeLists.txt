@@ -31,7 +31,7 @@ add_executable(${PROJECT_NAME}
         controllers/document.h
         controllers/categorieswidget.h
         controllers/database.h
-        controllers/appconfig.h
+        controllers/globals.h
         models/notemodel.h
         models/notetablemodel.h
         models/categoriestablemodel.h
@@ -43,7 +43,7 @@ add_executable(${PROJECT_NAME}
         controllers/document.cpp
         controllers/categorieswidget.cpp
         controllers/database.cpp
-        controllers/appconfig.cpp
+        controllers/globals.cpp
         models/notemodel.cpp
         models/notetablemodel.cpp
         models/categoriestablemodel.cpp

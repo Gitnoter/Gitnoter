@@ -1,6 +1,11 @@
 #include "notemodel.h"
 #include "tools.h"
-#include "appconfig.h"
+#include "globals.h"
+
+NoteModel::NoteModel()
+{
+    this->clear();
+}
 
 NoteModel::NoteModel(QString noteText, QString filePath) {
     QTextStream in(&noteText);
@@ -45,7 +50,7 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
             , Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(), filePath);
     this->categoriesTableModel = new CategoriseTableModel(map["categories"]);
     this->tagTableList = new QList<TagTableModel *>;
-    QStringList tags = map["tags"].split(QRegExp(AppConfig::tagSplit + "?"));
+    QStringList tags = map["tags"].split(QRegExp(g_tagSplit + "?"));
     for (auto &&tag : tags) {
         this->tagTableList->append(new TagTableModel(tag.trimmed()));
     }
@@ -69,9 +74,9 @@ QString NoteModel::getNote()
 
     note += "tags: ";
     for (auto &&tagTableModel : *(this->tagTableList)) {
-        note += tagTableModel->getName() + AppConfig::tagSplit;
+        note += tagTableModel->getName() + g_tagSplit;
     }
-    note.chop(AppConfig::tagSplit.length());
+    note.chop(g_tagSplit.length());
 
     note += "\n\n---\n\n" + this->noteTableModel->getBody();
 

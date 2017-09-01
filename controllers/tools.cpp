@@ -1,10 +1,5 @@
 #include "tools.h"
-#include "appconfig.h"
-
-#include <QDebug>
-#include <QUuid>
-#include <QDateTime>
-#include <QVersionNumber>
+#include "globals.h"
 
 QFileInfoList Tools::getFilesPath(const QString path)
 {
@@ -32,12 +27,12 @@ QString Tools::getUuid() {
 
 int Tools::timestampFromDateTime(const QString dateTime)
 {
-    return QDateTime::fromString(dateTime, AppConfig::dateFormat).toTime_t();
+    return QDateTime::fromString(dateTime, g_dateFormat).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(AppConfig::dateFormat);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(g_dateFormat);
 }
 
 QString Tools::readerFile(QString path) {

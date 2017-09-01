@@ -1,6 +1,6 @@
 #include "notetablemodel.h"
 #include "tools.h"
-#include "appconfig.h"
+#include "globals.h"
 
 #include <QDateTime>
 
@@ -84,7 +84,7 @@ void NoteTableModel::setFilePath(const QString &filePath)
 {
     NoteTableModel::filePath = filePath.isEmpty() ?
                                QString("%1/%2/%3-%4.md").arg(
-                                       AppConfig::repoPath, AppConfig::noteFolderName,
+                                       g_repoPath, g_noteFolderName,
                                        this->title.isEmpty() ? "无标题" : this->title, this->uuid)
                                                   : filePath;
 }

@@ -28,6 +28,8 @@ private slots:
 private:
     Ui::CategoriesWidget *ui;
 
+    void setListData();
+
 };
 
 #endif // CATEGORIESWIDGET_H

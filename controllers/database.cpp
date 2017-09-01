@@ -1,13 +1,13 @@
 #include "database.h"
 #include "tools.h"
 #include "sqlquerybuilder.h"
-#include "appconfig.h"
+#include "globals.h"
 
 using namespace SqlQueryBuilder;
 
 Database::Database()
 {
-    this->connect(AppConfig::dbName);
+    this->connect(g_dbName);
 }
 
 Database::Database(const QString filename)
@@ -24,7 +24,7 @@ void Database::initTables()
 {
     if (query.exec("select version from config") && query.first()) {
         QString version = query.value(0).toString();
-        if (version != AppConfig::version) {
+        if (version != g_version) {
             this->createTables();
         }
     }
@@ -121,9 +121,9 @@ QList<NoteTableModel *> *Database::getSidebarNotes()
 
 void Database::connect(const QString filename)
 {
-    QDir dir(AppConfig::dbPath);
+    QDir dir(g_dbPath);
     if (!dir.exists()) {
-        dir.mkpath(AppConfig::dbPath);
+        dir.mkpath(g_dbPath);
         qDebug() << "dir is not exists";
     }
 

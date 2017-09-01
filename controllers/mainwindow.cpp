@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "previewpage.h"
 #include "tools.h"
-#include "appconfig.h"
+#include "globals.h"
 
 #include "ui_mainwindow.h"
 
@@ -25,9 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    return;
 
 //    qDebug() << Qt::DescendingOrder;
-
-    // 初始化数据
-    database = new Database();
 
     this->initNotesToDatabases();
 
@@ -98,9 +95,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
 
-    // 设置编辑器文本
-    this->setEditText();
-    this->setModified(false);
+    this->setMainWindowData();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -110,21 +107,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::textChanged()
 {
-    noteModel->noteTableModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
+    g_noteModel->noteTableModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
                                         ? ui->lineEdit_title->placeholderText()
                                         : ui->lineEdit_title->displayText());
-    noteModel->noteTableModel->setBody(ui->plainTextEdit_editor->toPlainText());
-    noteModel->noteTableModel->setUpdateDate(0);
+    g_noteModel->noteTableModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    g_noteModel->noteTableModel->setUpdateDate(0);
     this->updatePreview();
 }
 
 void MainWindow::updatePreview()
 {
-    if (noteModel->noteTableModel->getTitle().isEmpty()) {
-        m_content.setText(noteModel->noteTableModel->getBody());
+    if (g_noteModel->noteTableModel->getTitle().isEmpty()) {
+        m_content.setText(g_noteModel->noteTableModel->getBody());
     }
     else {
-        m_content.setText("# " + noteModel->noteTableModel->getTitle() + "\n\n" + noteModel->noteTableModel->getBody());
+        m_content.setText("# " + g_noteModel->noteTableModel->getTitle() + "\n\n" + g_noteModel->noteTableModel->getBody());
     }
 }
 
@@ -139,7 +136,7 @@ void MainWindow::menuPushButtonClicked()
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_categories_clicked()
 {
     categoriesWidget = new CategoriesWidget(this);
     categoriesWidget->show();
@@ -153,11 +150,11 @@ void MainWindow::resizeEvent(QResizeEvent *size) {
 
 void MainWindow::initNotesToDatabases()
 {
-    QString notesPath = QDir(AppConfig::repoPath).filePath(AppConfig::noteFolderName);
+    QString notesPath = QDir(g_repoPath).filePath(g_noteFolderName);
     QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
     for (auto &&fileInfo : fileInfoList) {
         NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()), fileInfo.absoluteFilePath());
-        database->addNoteText(noteModel);
+        g_database->addNoteText(noteModel);
     }
 }
 
@@ -169,16 +166,16 @@ void MainWindow::setDefaultNote()
             this->setDefaultNote();
             return;
         }
-        noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+        g_noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-        noteModel = database->getNoteByUuid(configTableModel->getOpenNotesUuid());
+        g_noteModel = g_database->getNoteByUuid(configTableModel->getOpenNotesUuid());
     }
 }
 
 void MainWindow::setSidebarTable()
 {
-    sidebarNoteList = database->getSidebarNotes();
+    sidebarNoteList = g_database->getSidebarNotes();
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());
     for (int i = 0; i < sidebarNoteList->length(); ++i) {
         ui->tableWidget_list->setItem(i, 0, new QTableWidgetItem(sidebarNoteList->at(i)->getTitle()));
@@ -204,8 +201,7 @@ void MainWindow::on_tableWidget_list_clicked(const QModelIndex &index)
     }
     configTableModel->setOpenNotesUuid(uuid);
     this->setDefaultNote();
-    this->setEditText();
-    this->setModified(false);
+    this->setMainWindowData();
 }
 
 void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
@@ -218,8 +214,8 @@ void MainWindow::setEditText()
     disconnect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     disconnect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 
-    ui->lineEdit_title->setText(noteModel->noteTableModel->getTitle());
-    ui->plainTextEdit_editor->setPlainText(noteModel->noteTableModel->getBody());
+    ui->lineEdit_title->setText(g_noteModel->noteTableModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(g_noteModel->noteTableModel->getBody());
 
     this->setModified(true);
     this->updatePreview();
@@ -235,18 +231,18 @@ void MainWindow::onSaveFile()
         return;
     }
 
-    QFile f(noteModel->noteTableModel->getFilePath());
+    QFile f(g_noteModel->noteTableModel->getFilePath());
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text))  {
         QMessageBox::warning(this, windowTitle(),
                              tr("Could not write to file %1: %2").arg(
-                                 QDir::toNativeSeparators(noteModel->noteTableModel->getFilePath()), f.errorString()));
+                                 QDir::toNativeSeparators(g_noteModel->noteTableModel->getFilePath()), f.errorString()));
         return;
     }
 
     QTextStream str(&f);
-    str << noteModel->getNote();
+    str << g_noteModel->getNote();
 
-    database->addNoteText(noteModel);
+    g_database->addNoteText(g_noteModel);
     this->setSidebarTable();
 
     f.close();
@@ -256,9 +252,8 @@ void MainWindow::onNewFile()
 {
     this->onSaveFile();
 
-    noteModel->clear();
-    this->setEditText();
-    this->setModified(false);
+    g_noteModel->clear();
+    this->setMainWindowData();
 }
 
 bool MainWindow::isModified()
@@ -279,19 +274,37 @@ void MainWindow::on_pushButton_deleteNote_clicked()
 
 void MainWindow::onRemoveFile()
 {
-    database->deleteNoteByUuid(noteModel->noteTableModel->getUuid());
-    QFile::remove(noteModel->noteTableModel->getFilePath());
+    g_database->deleteNoteByUuid(g_noteModel->noteTableModel->getUuid());
+    QFile::remove(g_noteModel->noteTableModel->getFilePath());
     configTableModel->setOpenNotesUuid("");
-    noteModel->clear();
+    g_noteModel->clear();
 
     this->setSidebarTable();
     this->setDefaultNote();
-    this->setEditText();
-    this->setModified(false);
+    this->setMainWindowData();
 }
 
 void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
     configTableModel->setSidebarSortKey(logicalIndex);
     configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
+}
+
+void MainWindow::setTagsdata()
+{
+    QString tagsString;
+    for (auto &&item : *g_noteModel->tagTableList) {
+        tagsString += item->getName() + g_tagSplit;
+    }
+    tagsString.chop(g_tagSplit.length());
+    ui->pushButton_tags_2->setText(tagsString);
+}
+
+void MainWindow::setMainWindowData()
+{
+    this->setEditText();
+    this->setModified(false);
+
+    this->setTagsdata();
+    ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
 }

@@ -594,32 +594,16 @@ QTableWidget::item:selected{
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="pushButton_categories">
                <property name="text">
                 <string>Categories</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_2">
+              <widget class="QPushButton" name="pushButton_tags_2">
                <property name="text">
                 <string>Tags</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_2">
-               <property name="styleSheet">
-                <string notr="true">border: 0px;</string>
-               </property>
-               <property name="frame">
-                <bool>false</bool>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Click add tags</string>
                </property>
               </widget>
              </item>

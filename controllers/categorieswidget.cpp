@@ -2,8 +2,8 @@
 #include "mainwindow.h"
 #include "ui_categorieswidget.h"
 #include "tools.h"
+#include "globals.h"
 
-#include <QGraphicsDropShadowEffect>
 #include <QDebug>
 
 CategoriesWidget::CategoriesWidget(QWidget *parent) :
@@ -23,6 +23,8 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
     pAnimation->setEndValue(QRect(0, 0, width(), height()));
     pAnimation->setEasingCurve(QEasingCurve::Linear);
     pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+    this->setListData();
 }
 
 CategoriesWidget::~CategoriesWidget()
@@ -50,4 +52,12 @@ void CategoriesWidget::on_pushButton_cancel_clicked()
 void CategoriesWidget::animationFinished()
 {
     this->close();
+}
+
+void CategoriesWidget::setListData()
+{
+    auto tagsList = g_database->selectTagsTable();
+    for (auto &&item : tagsList) {
+        ui->listWidget_data->addItem(item->getName());
+    }
 }

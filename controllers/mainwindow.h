@@ -4,7 +4,6 @@
 #include "document.h"
 #include "categorieswidget.h"
 #include "notemodel.h"
-#include "database.h"
 #include "configtablemodel.h"
 
 #include <QMainWindow>
@@ -28,7 +27,6 @@ protected:
     void resizeEvent(QResizeEvent *size);
 
 private slots:
-    void on_pushButton_clicked();
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
     void onSaveFile();
@@ -40,6 +38,8 @@ private slots:
 
     void on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
+    void on_pushButton_categories_clicked();
+
 signals:
     void resizeChildWindow(QSize size);
 
@@ -48,9 +48,7 @@ private:
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
-    NoteModel *noteModel;
     ConfigTableModel *configTableModel;
-    Database *database;
     QList<NoteTableModel *> *sidebarNoteList;
 
     void textChanged();
@@ -64,6 +62,9 @@ private:
 
     bool isModified();
     void setModified(bool m);
+
+    void setTagsdata();
+    void setMainWindowData();
 };
 
 #endif // MAINWINDOW_H

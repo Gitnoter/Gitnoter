@@ -42,7 +42,7 @@ SOURCES += \
     models/notetablemodel.cpp \
     models/categoriestablemodel.cpp \
     models/tagtablemodel.cpp \
-    controllers/appconfig.cpp \
+    controllers/globals.cpp \
     models/configtablemodel.cpp
 
 HEADERS += \
@@ -57,7 +57,7 @@ HEADERS += \
     models/notetablemodel.h \
     models/categoriestablemodel.h \
     models/tagtablemodel.h \
-    controllers/appconfig.h \
+    controllers/globals.h \
     models/configtablemodel.h
 
 FORMS += \
