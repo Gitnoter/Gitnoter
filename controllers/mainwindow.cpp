@@ -142,6 +142,7 @@ void MainWindow::on_pushButton_categories_clicked()
     categoriesWidget->show();
 
     connect(this, &MainWindow::resizeChildWindow, categoriesWidget, &CategoriesWidget::resizeWindow);
+    connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *size) {
@@ -306,5 +307,10 @@ void MainWindow::setMainWindowData()
     this->setModified(false);
 
     this->setTagsdata();
+    ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
+}
+
+void MainWindow::onChangeCategories()
+{
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
 }

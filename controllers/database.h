@@ -21,7 +21,7 @@ public:
     void deleteNoteByUuid(QString uuid);
     QList<NoteTableModel *>* getSidebarNotes();
 
-private:
+public:
     void connect(QString filename);
     void createTables();
 

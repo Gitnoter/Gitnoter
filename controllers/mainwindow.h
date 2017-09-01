@@ -26,6 +26,9 @@ public:
 protected:
     void resizeEvent(QResizeEvent *size);
 
+public slots:
+    void onChangeCategories();
+
 private slots:
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 

@@ -1,3 +1,4 @@
+uuid: 2315125123531235
 title: WebEngine Markdown Editor Example
 createDate: 2015/06/19 10:51:59
 updateDate: 2017/08/11 14:32:21
@@ -9,11 +10,11 @@ categories: Think
 ## WebEngine Markdown Editor Example
 
 ```javascript
-var str = 'hello';
+var str = 'hello';\n
 console.log(str);
 ```
 
-This example uses [QWebEngineView](http://doc.qt.io/qt-5/qwebengineview.html)
+This example uses \r\n [QWebEngineView](http://doc.qt.io/qt-5/qwebengineview.html)
 to preview text written using the [Markdown](https://en.wikipedia.org/wiki/Markdown)
 syntax.
 

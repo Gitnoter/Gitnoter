@@ -37,8 +37,34 @@ void CategoriesWidget::resizeWindow(QSize size)
     setGeometry(x(), y(), size.width(), size.height());
 }
 
-void CategoriesWidget::on_pushButton_cancel_clicked()
+void CategoriesWidget::animationFinished()
 {
+    this->close();
+}
+
+void CategoriesWidget::setListData()
+{
+    tagsList = g_database->selectCategoriesTable();
+    for (int i = 0; i < tagsList.length(); ++i) {
+        ui->listWidget_data->addItem(tagsList[i]->getName());
+
+        if (g_noteModel->categoriesTableModel->getName() == tagsList[i]->getName()) {
+            ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
+        }
+    }
+}
+
+void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
+{
+    g_noteModel->categoriesTableModel = tagsList[index.row()];
+}
+
+void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    QWidget::mouseReleaseEvent(event);
+
+    emit changeCategories();
+
     QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
     pAnimation->setDuration(250);
     pAnimation->setEndValue(QRect(0, -height(), width(), height()));
@@ -47,17 +73,4 @@ void CategoriesWidget::on_pushButton_cancel_clicked()
     pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
     connect(pAnimation, &QPropertyAnimation::finished, this, &CategoriesWidget::animationFinished);
-}
-
-void CategoriesWidget::animationFinished()
-{
-    this->close();
-}
-
-void CategoriesWidget::setListData()
-{
-    auto tagsList = g_database->selectTagsTable();
-    for (auto &&item : tagsList) {
-        ui->listWidget_data->addItem(item->getName());
-    }
 }
