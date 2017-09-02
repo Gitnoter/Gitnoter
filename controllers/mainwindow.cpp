@@ -173,6 +173,7 @@ void MainWindow::setDefaultNote()
 
 void MainWindow::setSidebarTable()
 {
+    ui->tableWidget_list->clear();
 
     sidebarNoteList = g_database->getSidebarNotes();
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());

@@ -10,6 +10,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QPushButton>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -37,7 +38,7 @@ private slots:
     void onRemoveFile();
 
     void on_pushButton_deleteNote_clicked();
-    void on_tableWidget_list_clicked(const QModelIndex &index);
+    void on_tableWidget_list_itemClicked(QTableWidgetItem *item);
 
     void on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
@@ -51,7 +52,6 @@ private:
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
-    ConfigTableModel *configTableModel;
     QList<NoteTableModel *> *sidebarNoteList;
 
     void textChanged();
