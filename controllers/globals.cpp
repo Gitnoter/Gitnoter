@@ -15,3 +15,4 @@ QString g_videosFolderName = "files/videos";
 
 Database *g_database = new Database();
 NoteModel *g_noteModel = new NoteModel();
+ConfigTableModel *g_configTableModel = new ConfigTableModel();

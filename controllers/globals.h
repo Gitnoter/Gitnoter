@@ -3,6 +3,7 @@
 
 #include "notemodel.h"
 #include "database.h"
+#include "configtablemodel.h"
 
 #include <QObject>
 
@@ -21,6 +22,7 @@ extern QString g_appDataLocation;
 
 extern Database *g_database;
 extern NoteModel *g_noteModel;
+extern ConfigTableModel *g_configTableModel;
 
 
 #endif // APPDATA_H

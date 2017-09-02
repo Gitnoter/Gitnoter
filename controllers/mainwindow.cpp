@@ -28,10 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->initNotesToDatabases();
 
-    configTableModel = new ConfigTableModel();
-    configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
-    configTableModel->setSidebarSortKey(1);
-    configTableModel->setSidebarSortValue("DESC");
+    g_configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
+    g_configTableModel->setSidebarSortKey(1);
+    g_configTableModel->setSidebarSortValue("DESC");
 
     this->setDefaultNote();
     this->setSidebarTable();
@@ -96,8 +95,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
 
     this->setMainWindowData();
-
-
 }
 
 MainWindow::~MainWindow()
@@ -161,46 +158,52 @@ void MainWindow::initNotesToDatabases()
 
 void MainWindow::setDefaultNote()
 {
-    if (configTableModel->getOpenNotesUuid().isEmpty()) {
+    if (g_configTableModel->getOpenNotesUuid().isEmpty()) {
         if (sidebarNoteList->length() != 0) {
-            configTableModel->setOpenNotesUuid(sidebarNoteList->at(0)->getUuid());
+            g_configTableModel->setOpenNotesUuid(sidebarNoteList->at(0)->getUuid());
             this->setDefaultNote();
             return;
         }
         g_noteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-        g_noteModel = g_database->getNoteByUuid(configTableModel->getOpenNotesUuid());
+        g_noteModel = g_database->getNoteByUuid(g_configTableModel->getOpenNotesUuid());
     }
 }
 
 void MainWindow::setSidebarTable()
 {
+
     sidebarNoteList = g_database->getSidebarNotes();
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());
     for (int i = 0; i < sidebarNoteList->length(); ++i) {
-        ui->tableWidget_list->setItem(i, 0, new QTableWidgetItem(sidebarNoteList->at(i)->getTitle()));
-        ui->tableWidget_list->setItem(i, 1, new QTableWidgetItem(
-                Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate())));
-        if (sidebarNoteList->at(i)->getUuid() == configTableModel->getOpenNotesUuid()) {
+        auto *tableWidgetitem0 = new QTableWidgetItem(sidebarNoteList->at(i)->getTitle());
+        tableWidgetitem0->setData(Qt::UserRole, i);
+        auto *tableWidgetitem1 = new QTableWidgetItem(
+                    Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate()));
+        tableWidgetitem1->setData(Qt::UserRole, i);
+        ui->tableWidget_list->setItem(i, 0, tableWidgetitem0);
+        ui->tableWidget_list->setItem(i, 1, tableWidgetitem1);
+        if (sidebarNoteList->at(i)->getUuid() == g_configTableModel->getOpenNotesUuid()) {
             ui->tableWidget_list->selectRow(i);
         }
     }
 
-    int sidebarSortKey = configTableModel->getSidebarSortKey();
-    Qt::SortOrder sidebarSortValue = configTableModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
+    int sidebarSortKey = g_configTableModel->getSidebarSortKey();
+    Qt::SortOrder sidebarSortValue = g_configTableModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
                                                                                       : Qt::AscendingOrder;
     ui->tableWidget_list->horizontalHeader()->sortIndicatorChanged(sidebarSortKey, sidebarSortValue);
     ui->tableWidget_list->horizontalHeader()->setSortIndicator(sidebarSortKey, sidebarSortValue);
 }
 
-void MainWindow::on_tableWidget_list_clicked(const QModelIndex &index)
+void MainWindow::on_tableWidget_list_itemClicked(QTableWidgetItem *item)
 {
-    QString uuid = sidebarNoteList->at(index.row())->getUuid();
-    if (configTableModel->getOpenNotesUuid() == uuid) {
+    qDebug() << "on_tableWidget_list_itemClicked: " << item->data(Qt::UserRole);
+    QString uuid = sidebarNoteList->at(item->data(Qt::UserRole).toInt())->getUuid();
+    if (g_configTableModel->getOpenNotesUuid() == uuid) {
         return;
     }
-    configTableModel->setOpenNotesUuid(uuid);
+    g_configTableModel->setOpenNotesUuid(uuid);
     this->setDefaultNote();
     this->setMainWindowData();
 }
@@ -277,7 +280,7 @@ void MainWindow::onRemoveFile()
 {
     g_database->deleteNoteByUuid(g_noteModel->noteTableModel->getUuid());
     QFile::remove(g_noteModel->noteTableModel->getFilePath());
-    configTableModel->setOpenNotesUuid("");
+    g_configTableModel->setOpenNotesUuid("");
     g_noteModel->clear();
 
     this->setSidebarTable();
@@ -287,8 +290,8 @@ void MainWindow::onRemoveFile()
 
 void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
-    configTableModel->setSidebarSortKey(logicalIndex);
-    configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
+    g_configTableModel->setSidebarSortKey(logicalIndex);
+    g_configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
 }
 
 void MainWindow::setTagsdata()
