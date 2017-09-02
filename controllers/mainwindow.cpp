@@ -313,4 +313,6 @@ void MainWindow::setMainWindowData()
 void MainWindow::onChangeCategories()
 {
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
+    this->setModified(true);
+    this->onSaveFile();
 }

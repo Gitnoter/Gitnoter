@@ -32,6 +32,8 @@ private slots:
     void on_pushButton_add_clicked();
     void on_lineEdit_textChanged(const QString &arg1);
 
+    void on_listWidget_data_doubleClicked(const QModelIndex &index);
+
 protected:
     void mouseReleaseEvent(QMouseEvent * event) override;
 

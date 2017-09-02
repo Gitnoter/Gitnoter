@@ -42,6 +42,7 @@ void CategoriesWidget::resizeWindow(QSize size)
 void CategoriesWidget::animationFinished()
 {
     this->close();
+    emit changeCategories();
 }
 
 void CategoriesWidget::setListData()
@@ -58,14 +59,40 @@ void CategoriesWidget::setListData()
 
 void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 {
-    g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
+    if (ui->lineEdit->displayText().isEmpty()) {
+        g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
+    }
+    else {
+        int i = 0;
+        for (auto &&item : m_categoriesSearchList) {
+            if (i == index.row()) {
+                g_noteModel->categoriesTableModel = item;
+            }
+            i += 1;
+        }
+    }
+}
+
+void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
+{
+    if (ui->lineEdit->displayText().isEmpty()) {
+        g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
+    }
+    else {
+        int i = 0;
+        for (auto &&item : m_categoriesSearchList) {
+            if (i == index.row()) {
+                g_noteModel->categoriesTableModel = item;
+            }
+            i += 1;
+        }
+    }
+    this->animationFinished();
 }
 
 void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
-
-    emit changeCategories();
 
     QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
     pAnimation->setDuration(250);
@@ -78,7 +105,11 @@ void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
 }
 void CategoriesWidget::on_pushButton_add_clicked()
 {
-
+    if (!ui->lineEdit->displayText().isEmpty()) {
+        g_database->insertCategoriesTable(ui->lineEdit->displayText());
+        m_categoriesList = g_database->selectCategoriesTable();
+        ui->lineEdit->clear();
+    }
 }
 
 void CategoriesWidget::on_lineEdit_textChanged(const QString &arg1)
