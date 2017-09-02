@@ -29,16 +29,19 @@ private slots:
     void animationFinished();
 
     void on_listWidget_data_clicked(const QModelIndex &index);
+    void on_pushButton_add_clicked();
+    void on_lineEdit_textChanged(const QString &arg1);
 
 protected:
     void mouseReleaseEvent(QMouseEvent * event) override;
 
 private:
     Ui::CategoriesWidget *ui;
-    QList<CategoriseTableModel *> tagsList;
+    QList<CategoriseTableModel *> m_categoriesList;
+    QMultiMap<int, CategoriseTableModel *> m_categoriesSearchList;
 
     void setListData();
-
+    void setSearchData(const QString &string);
 };
 
 #endif // CATEGORIESWIDGET_H
