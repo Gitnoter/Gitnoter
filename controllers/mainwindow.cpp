@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 屏蔽选中时的边框颜色
     ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->listWidget_categories->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     // 初始化编辑器
     ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
