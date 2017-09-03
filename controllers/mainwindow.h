@@ -51,6 +51,8 @@ private slots:
 
     void on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_pushButton_notes_clicked();
+
 signals:
     void resizeChildWindow(QSize size);
 

@@ -378,3 +378,8 @@ void MainWindow::on_listWidget_categories_itemDoubleClicked(QListWidgetItem *ite
 {
     qDebug() << "on_listWidget_categories_itemDoubleClicked";
 }
+
+void MainWindow::on_pushButton_notes_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
