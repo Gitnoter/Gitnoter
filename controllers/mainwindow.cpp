@@ -2,6 +2,7 @@
 #include "previewpage.h"
 #include "tools.h"
 #include "globals.h"
+#include "categorieslistcell.h"
 
 #include "ui_mainwindow.h"
 
@@ -14,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // 不接受拖放 ui编辑器编辑无用必须代码, 可能是bug
+    ui->listWidget_categories->setAcceptDrops(false);
 
 //    QFile defaultTextFile(":/marked/default.md");
 //    defaultTextFile.open(QIODevice::ReadOnly);
@@ -31,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     g_configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
     g_configTableModel->setSidebarSortKey(1);
     g_configTableModel->setSidebarSortValue("DESC");
+    g_configTableModel->setCategoriesId(1);
 
     this->setDefaultNote();
     this->setSidebarTable();
@@ -319,4 +324,51 @@ void MainWindow::onChangeCategories()
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
     this->setModified(true);
     this->onSaveFile();
+}
+
+void MainWindow::on_pushButton_folder_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+    m_categoriesList = g_database->selectCategoriesTable();
+
+    for (auto &&datum : m_categoriesList) {
+        datum->setCount(g_database->selectNJCTableByCategoriesId(datum->getCategoriesId()).length());
+        QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
+        ui->listWidget_categories->addItem(item);
+        CategoriesListCell *categoriesListCell = new CategoriesListCell(datum);
+        item->setSizeHint(categoriesListCell->sizeHint());
+        ui->listWidget_categories->setItemWidget(item, categoriesListCell);
+    }
+}
+
+void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
+{
+    QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget_3");
+
+    if (item->checkState() == Qt::CheckState::Unchecked) {
+        for (int i = 0; i < ui->listWidget_categories->count(); ++i) {
+            QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
+            QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget_3");
+            widget2->setStyleSheet("QWidget#widget_3{"
+                                     "background-color:#FFFFFF;"
+                                     "border-width: 1px;"
+                                     "border-style: solid;"
+                                     "border-radius: 4px;"
+                                     "border-color:#DFDFE0;}");
+            listWidgetItem->setCheckState(Qt::CheckState::Unchecked);
+        }
+
+        item->setCheckState(Qt::CheckState::Checked);
+        widget->setStyleSheet("QWidget#widget_3{"
+                                           "background-color:#FFFFFF;"
+                                           "border-width: 2px;"
+                                           "border-style: solid;"
+                                           "border-radius: 4px;"
+                                           "border-color:#7EBFF5;}");
+    }
+}
+
+void MainWindow::on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item)
+{
+    qDebug() << "on_listWidget_categories_itemDoubleClicked";
 }

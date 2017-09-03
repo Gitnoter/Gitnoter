@@ -14,13 +14,13 @@ public:
     NoteModel();
     NoteModel(QString noteText, QString filePath = "");
     NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
-              CategoriseTableModel *categoriesTableModel);
+              CategoriesTableModel *categoriesTableModel);
 
     QString getNote();
 
     NoteTableModel *noteTableModel;
     QList<TagTableModel *> *tagTableList;
-    CategoriseTableModel *categoriesTableModel;
+    CategoriesTableModel *categoriesTableModel;
 
     void clear();
 

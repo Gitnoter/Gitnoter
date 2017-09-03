@@ -3,17 +3,17 @@
 
 #include <QObject>
 
-class CategoriseTableModel : public QObject
+class CategoriesTableModel : public QObject
 {
 public:
-    explicit CategoriseTableModel();
-    CategoriseTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
+    explicit CategoriesTableModel();
+    CategoriesTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
                                   int updateDate, int isDefault);
-    CategoriseTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
-    CategoriseTableModel(int id, int categoriesId, QString notesUuid, int createDate);
-    CategoriseTableModel(QString name);
+    CategoriesTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
+    CategoriesTableModel(int id, int categoriesId, QString notesUuid, int createDate);
+    CategoriesTableModel(QString name);
 
-    CategoriseTableModel* operator+(CategoriseTableModel & categoriseTableModel);
+    CategoriesTableModel* operator+(CategoriesTableModel & categoriseTableModel);
 
     int getId();
     int getCategoriesId();
@@ -22,6 +22,7 @@ public:
     int getCreateDate();
     int getUpdateDate();
     int getIsDefault();
+    int getCount() const;
 
     void setId(int id);
     void setCategoriesId(int categoriesId);
@@ -30,6 +31,7 @@ public:
     void setCreateDate(int createDate);
     void setUpdateDate(int updateDate);
     void setIsDefault(int isDefault);
+    void setCount(int count);
 
 private:
     int id;
@@ -39,6 +41,8 @@ private:
     int createDate;
     int updateDate;
     int isDefault;
+    int count;
+
 };
 
 #endif // CATEGORISETABLEMODEL_H

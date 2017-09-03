@@ -39,8 +39,8 @@ protected:
 
 private:
     Ui::CategoriesWidget *ui;
-    QList<CategoriseTableModel *> m_categoriesList;
-    QMultiMap<int, CategoriseTableModel *> m_categoriesSearchList;
+    QList<CategoriesTableModel *> m_categoriesList;
+    QMultiMap<int, CategoriesTableModel *> m_categoriesSearchList;
 
     void setListData();
     void setSearchData(const QString &string);

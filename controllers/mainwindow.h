@@ -11,6 +11,7 @@
 #include <QtGui>
 #include <QPushButton>
 #include <QTableWidgetItem>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +45,12 @@ private slots:
 
     void on_pushButton_categories_clicked();
 
+    void on_pushButton_folder_clicked();
+
+    void on_listWidget_categories_itemClicked(QListWidgetItem *item);
+
+    void on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item);
+
 signals:
     void resizeChildWindow(QSize size);
 
@@ -53,6 +60,7 @@ private:
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
     QList<NoteTableModel *> *sidebarNoteList;
+    QList<CategoriesTableModel *> m_categoriesList;
 
     void textChanged();
     void updatePreview();

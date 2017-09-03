@@ -1,6 +1,6 @@
 #include "categoriestablemodel.h"
 
-CategoriseTableModel::CategoriseTableModel()
+CategoriesTableModel::CategoriesTableModel()
 {
     this->id = 0;
     this->categoriesId = 0;
@@ -11,7 +11,7 @@ CategoriseTableModel::CategoriseTableModel()
     this->isDefault = 0;
 }
 
-CategoriseTableModel::CategoriseTableModel(int id, int categoriesId,  QString notesUuid, QString name, int createDate, int updateDate, int isDefault)
+CategoriesTableModel::CategoriesTableModel(int id, int categoriesId,  QString notesUuid, QString name, int createDate, int updateDate, int isDefault)
 {
     this->id = id;
     this->categoriesId = categoriesId;
@@ -22,7 +22,7 @@ CategoriseTableModel::CategoriseTableModel(int id, int categoriesId,  QString no
     this->isDefault = isDefault;
 }
 
-CategoriseTableModel::CategoriseTableModel(int id, int categoriesId, QString notesUuid, int createDate)
+CategoriesTableModel::CategoriesTableModel(int id, int categoriesId, QString notesUuid, int createDate)
 {
     this->id = id;
     this->categoriesId = categoriesId;
@@ -33,7 +33,7 @@ CategoriseTableModel::CategoriseTableModel(int id, int categoriesId, QString not
     this->isDefault = 0;
 }
 
-CategoriseTableModel::CategoriseTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault)
+CategoriesTableModel::CategoriesTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault)
 {
     this->id = 0;
     this->categoriesId = categoriesId;
@@ -44,7 +44,7 @@ CategoriseTableModel::CategoriseTableModel(int categoriesId, QString name, int c
     this->isDefault = isDefault;
 }
 
-CategoriseTableModel::CategoriseTableModel(QString name)
+CategoriesTableModel::CategoriesTableModel(QString name)
 {
     this->id = 0;
     this->categoriesId = 0;
@@ -55,7 +55,7 @@ CategoriseTableModel::CategoriseTableModel(QString name)
     this->isDefault = 0;
 }
 
-CategoriseTableModel* CategoriseTableModel::operator+(CategoriseTableModel & categoriseTableModel)
+CategoriesTableModel* CategoriesTableModel::operator+(CategoriesTableModel & categoriseTableModel)
 {
     int id = this->getId() != 0 ? this->getId() : categoriseTableModel.getId();
     int categoriesId = this->getCategoriesId() != 0 ? this->getCategoriesId() : categoriseTableModel.getCategoriesId();
@@ -65,75 +65,85 @@ CategoriseTableModel* CategoriseTableModel::operator+(CategoriseTableModel & cat
     int updateDate = this->getUpdateDate() != 0 ? this->getUpdateDate() : categoriseTableModel.getUpdateDate();
     int isDefault = this->getIsDefault() != 0 ? this->getIsDefault() : categoriseTableModel.getIsDefault();
 
-    return new CategoriseTableModel(id, categoriesId, notesUuid, name, createDate, updateDate, isDefault);
+    return new CategoriesTableModel(id, categoriesId, notesUuid, name, createDate, updateDate, isDefault);
 }
 
-QString CategoriseTableModel::getName()
+QString CategoriesTableModel::getName()
 {
     return this->name;
 }
 
-int CategoriseTableModel::getCreateDate()
+int CategoriesTableModel::getCreateDate()
 {
     return this->createDate;
 }
 
-int CategoriseTableModel::getIsDefault()
+int CategoriesTableModel::getIsDefault()
 {
     return this->isDefault;
 }
 
-void CategoriseTableModel::setName(QString name)
+void CategoriesTableModel::setName(QString name)
 {
     this->name = name;
 }
 
-void CategoriseTableModel::setCreateDate(int createDate)
+void CategoriesTableModel::setCreateDate(int createDate)
 {
     this->createDate = createDate;
 }
 
-void CategoriseTableModel::setIsDefault(int isDefault)
+void CategoriesTableModel::setIsDefault(int isDefault)
 {
     this->isDefault = isDefault;
 }
 
-int CategoriseTableModel::getId()
+int CategoriesTableModel::getId()
 {
     return this->id;
 }
 
-void CategoriseTableModel::setId(int id)
+void CategoriesTableModel::setId(int id)
 {
     this->id = id;
 }
 
-QString CategoriseTableModel::getNotesUuid()
+QString CategoriesTableModel::getNotesUuid()
 {
     return this->notesUuid;
 }
 
-void CategoriseTableModel::setNotesUuid(QString notesUuid)
+void CategoriesTableModel::setNotesUuid(QString notesUuid)
 {
     this->notesUuid = notesUuid;
 }
 
-int CategoriseTableModel::getCategoriesId()
+int CategoriesTableModel::getCategoriesId()
 {
     return this->categoriesId;
 }
 
-int CategoriseTableModel::getUpdateDate()
+int CategoriesTableModel::getUpdateDate()
 {
     return this->updateDate;
 }
 
-void CategoriseTableModel::setCategoriesId(int categoriesId)
+void CategoriesTableModel::setCategoriesId(int categoriesId)
 {
     this->categoriesId = categoriesId;
 }
 
-void CategoriseTableModel::setUpdateDate(int updateDate)
+void CategoriesTableModel::setUpdateDate(int updateDate)
 {
     this->updateDate = updateDate;
+}
+
+int CategoriesTableModel::getCount() const
+{
+    return count;
+}
+
+void CategoriesTableModel::setCount(int count)
+{
+    CategoriesTableModel::count = count;
 }

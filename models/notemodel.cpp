@@ -48,7 +48,7 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
     }
     this->noteTableModel = new NoteTableModel(map["uuid"], map["title"], Tools::timestampFromDateTime(map["createDate"])
             , Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(), filePath);
-    this->categoriesTableModel = new CategoriseTableModel(map["categories"]);
+    this->categoriesTableModel = new CategoriesTableModel(map["categories"]);
     this->tagTableList = new QList<TagTableModel *>;
     QStringList tags = map["tags"].split(QRegExp(g_tagSplit + "?"));
     for (auto &&tag : tags) {
@@ -57,7 +57,7 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
 }
 
 NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
-                     CategoriseTableModel *categoriesTableModel) {
+                     CategoriesTableModel *categoriesTableModel) {
     this->noteTableModel = noteTableModel;
     this->tagTableList = tagTableList;
     this->categoriesTableModel = categoriesTableModel;
@@ -87,5 +87,5 @@ void NoteModel::clear()
 {
     this->noteTableModel = new NoteTableModel();
     this->tagTableList = new QList<TagTableModel *>();
-    this->categoriesTableModel = new CategoriseTableModel();
+    this->categoriesTableModel = new CategoriesTableModel();
 }

@@ -90,3 +90,13 @@ void ConfigTableModel::setSidebarSortValue(const QString &sidebarSortValue)
 {
     ConfigTableModel::sidebarSortValue = sidebarSortValue;
 }
+
+int ConfigTableModel::getCategoriesId() const
+{
+    return categoriesId;
+}
+
+void ConfigTableModel::setCategoriesId(int categoriesId)
+{
+    ConfigTableModel::categoriesId = categoriesId;
+}

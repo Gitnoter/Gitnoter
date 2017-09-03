@@ -41,9 +41,9 @@ public:
     int insertCategoriesTable(QString name);
     bool deleteCategoriesTableByName(QString name);
     bool updateCategoriesTableByName(QString name, QString whereName);
-    QList<CategoriseTableModel *> selectCategoriesTable();
-    CategoriseTableModel* selectCategoriesTableById(int id);
-    CategoriseTableModel* selectCategoriesTableById(QString name);
+    QList<CategoriesTableModel *> selectCategoriesTable();
+    CategoriesTableModel* selectCategoriesTableById(int id);
+    CategoriesTableModel* selectCategoriesTableById(QString name);
 
     int insertNJTTable(QString notesUuid, int tagsId);
     bool deleteNJTTableByNotesUuid(QString notesUuid);
@@ -54,8 +54,8 @@ public:
     int insertNJCTable(QString notesUuid, int categoriesId);
     bool deleteNJCTableByNotesUuid(QString notesUuid);
     bool deleteNJCTableById(QString notesUuid, int categoriesId);
-    QList<CategoriseTableModel *> selectNJCTableByNotesUuid(QString notesUuid);
-    QList<CategoriseTableModel *> selectNJCTableByTagsId(int categoriesId);
+    QList<CategoriesTableModel *> selectNJCTableByNotesUuid(QString notesUuid);
+    QList<CategoriesTableModel *> selectNJCTableByCategoriesId(int categoriesId);
 
 
 private:

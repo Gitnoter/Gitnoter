@@ -38,6 +38,11 @@ private:
     QString openNotesUuid;
     int sidebarSortKey;
     QString sidebarSortValue;
+    int categoriesId;
+public:
+    int getCategoriesId() const;
+
+    void setCategoriesId(int categoriesId);
 
 };
 
