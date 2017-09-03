@@ -329,6 +329,11 @@ void MainWindow::onChangeCategories()
 void MainWindow::on_pushButton_folder_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
+
+    if (ui->listWidget_categories->count() > 0) {
+        return;
+    }
+
     m_categoriesList = g_database->selectCategoriesTable();
 
     for (auto &&datum : m_categoriesList) {
@@ -345,7 +350,7 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget_3");
 
-    if (item->checkState() == Qt::CheckState::Unchecked) {
+    if (item->data(Qt::UserRole).isNull()) {
         for (int i = 0; i < ui->listWidget_categories->count(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
             QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget_3");
@@ -355,10 +360,10 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
                                      "border-style: solid;"
                                      "border-radius: 4px;"
                                      "border-color:#DFDFE0;}");
-            listWidgetItem->setCheckState(Qt::CheckState::Unchecked);
+            listWidgetItem->setData(Qt::UserRole, QVariant());
         }
 
-        item->setCheckState(Qt::CheckState::Checked);
+        item->setData(Qt::UserRole, 1);
         widget->setStyleSheet("QWidget#widget_3{"
                                            "background-color:#FFFFFF;"
                                            "border-width: 2px;"
