@@ -20,9 +20,9 @@ include_directories(${PROJECT_SOURCE_DIR}/views)
 # endif()
 
 qt5_wrap_ui(UIS_HDRS
-    views/mainwindow.ui
-    views/categorieswidget.ui
-)
+        views/mainwindow.ui
+        views/categorieswidget.ui
+        views/categorieslistcell.ui)
 
 add_executable(${PROJECT_NAME}
         main.cpp
@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
         controllers/categorieswidget.h
         controllers/database.h
         controllers/globals.h
+        controllers/categorieslistcell.h
         models/notemodel.h
         models/notetablemodel.h
         models/categoriestablemodel.h
@@ -44,6 +45,7 @@ add_executable(${PROJECT_NAME}
         controllers/categorieswidget.cpp
         controllers/database.cpp
         controllers/globals.cpp
+        controllers/categorieslistcell.cpp
         models/notemodel.cpp
         models/notetablemodel.cpp
         models/categoriestablemodel.cpp
