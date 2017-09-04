@@ -97,3 +97,10 @@ QGraphicsDropShadowEffect* Tools::createShadowEffect()
 
     return effect;
 }
+
+
+void Tools::changeWidgetBorder(QWidget *widget, const QString color, int width)
+{
+    widget->setStyleSheet(widget->styleSheet().replace(QRegExp("border-color: ?#[A-Z0-9]{6}"),"border-color: " + color));
+    widget->setStyleSheet(widget->styleSheet().replace(QRegExp("border-width: ?[0-9]+px"), tr("border-width: %1px").arg(width)));
+}

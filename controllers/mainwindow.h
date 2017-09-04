@@ -34,9 +34,9 @@ public slots:
 private slots:
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
-    void onSaveFile();
-    void onNewFile();
-    void onRemoveFile();
+    void on_action_saveFile_triggered();
+    void on_action_newFile_triggered();
+    void on_action_removeFile_triggered();
 
     void on_pushButton_deleteNote_clicked();
     void on_tableWidget_list_itemClicked(QTableWidgetItem *item);
@@ -52,6 +52,16 @@ private slots:
     void on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item);
 
     void on_pushButton_notes_clicked();
+
+    void on_action_nameSort_triggered();
+    void on_action_countSort_triggered();
+    void on_action_timeSort_triggered();
+
+    void on_pushButton_addCategories_clicked();
+    void on_pushButton_removeCategories_clicked();
+    void on_action_renameCategories_triggered();
+
+    void on_listWidget_categories_customContextMenuRequested(const QPoint &pos);
 
 signals:
     void resizeChildWindow(QSize size);
@@ -79,6 +89,10 @@ private:
 
     void setTagsData();
     void setMainWindowData();
+    void resetListWidgetCategoriesBorder();
+
+    QMenu* createListWidgetCategoriesMenu();
+
 };
 
 #endif // MAINWINDOW_H

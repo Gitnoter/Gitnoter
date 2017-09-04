@@ -461,13 +461,13 @@
               <property name="minimumSize">
                <size>
                 <width>220</width>
-                <height>32</height>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>920</width>
-                <height>32</height>
+                <height>46</height>
                </size>
               </property>
               <property name="font">
@@ -969,17 +969,78 @@ QTableWidget::item:selected{
          <number>0</number>
         </property>
         <item>
+         <widget class="QWidget" name="widget_title" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>46</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>46</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QWidget#widget_title{
+	background-color:#F4F4F4;
+}</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QPushButton" name="pushButton_addCategories">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_searchCategories">
+             <property name="placeholderText">
+              <string> 搜索笔记本</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_removeCategories">
+             <property name="text">
+              <string>删除笔记本</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QListWidget" name="listWidget_categories">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
           <property name="styleSheet">
            <string notr="true">QListWidget#listWidget_categories{
 	background-color:#F2F2F2;
+	border: 0px solid;border-top: 1px solid #D3D3D3;
 }</string>
           </property>
           <property name="autoScroll">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="showDropIndicator" stdset="0">
            <bool>false</bool>
@@ -1004,6 +1065,9 @@ QTableWidget::item:selected{
           </property>
           <property name="viewMode">
            <enum>QListView::IconMode</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>false</bool>
           </property>
          </widget>
         </item>

@@ -65,8 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
 
-    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::onNewFile);
-    connect(ui->action_save, &QAction::triggered, this, &MainWindow::onSaveFile);
+    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::on_action_newFile_triggered);
+    connect(ui->action_save, &QAction::triggered, this, &MainWindow::on_action_saveFile_triggered);
 
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::on_headerView_sortIndicatorChanged);
@@ -251,7 +251,7 @@ void MainWindow::setEditText()
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 }
 
-void MainWindow::onSaveFile()
+void MainWindow::on_action_saveFile_triggered()
 {
     if (!this->isModified()) {
         return;
@@ -274,9 +274,9 @@ void MainWindow::onSaveFile()
     f.close();
 }
 
-void MainWindow::onNewFile()
+void MainWindow::on_action_newFile_triggered()
 {
-    this->onSaveFile();
+    this->on_action_saveFile_triggered();
 
     g_noteModel->clear();
     this->setMainWindowData();
@@ -295,10 +295,10 @@ void MainWindow::setModified(bool m)
 
 void MainWindow::on_pushButton_deleteNote_clicked()
 {
-    this->onRemoveFile();
+    this->on_action_removeFile_triggered();
 }
 
-void MainWindow::onRemoveFile()
+void MainWindow::on_action_removeFile_triggered()
 {
     g_database->deleteNoteByUuid(g_noteModel->noteTableModel->getUuid());
     QFile::remove(g_noteModel->noteTableModel->getFilePath());
@@ -339,7 +339,7 @@ void MainWindow::onChangeCategories()
 {
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
     this->setModified(true);
-    this->onSaveFile();
+    this->on_action_saveFile_triggered();
 }
 
 void MainWindow::on_pushButton_folder_clicked()
@@ -367,25 +367,9 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
     QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget_3");
 
     if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < ui->listWidget_categories->count(); ++i) {
-            QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
-            QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget_3");
-            widget2->setStyleSheet("QWidget#widget_3{"
-                                     "background-color:#FFFFFF;"
-                                     "border-width: 1px;"
-                                     "border-style: solid;"
-                                     "border-radius: 4px;"
-                                     "border-color:#DFDFE0;}");
-            listWidgetItem->setData(Qt::UserRole, QVariant());
-        }
-
+        resetListWidgetCategoriesBorder();
         item->setData(Qt::UserRole, 1);
-        widget->setStyleSheet("QWidget#widget_3{"
-                                           "background-color:#FFFFFF;"
-                                           "border-width: 2px;"
-                                           "border-style: solid;"
-                                           "border-radius: 4px;"
-                                           "border-color:#7EBFF5;}");
+        Tools::changeWidgetBorder(widget, "#7EBFF5", 2);
     }
 }
 
@@ -397,4 +381,98 @@ void MainWindow::on_listWidget_categories_itemDoubleClicked(QListWidgetItem *ite
 void MainWindow::on_pushButton_notes_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+QMenu* MainWindow::createListWidgetCategoriesMenu()
+{
+    QMenu* popMenu = new QMenu(this);
+
+    QAction *action_createCategories;
+    QAction *action_renameCategories;
+    QAction *action_removeCategories;
+    QAction *action_nameSort;
+    QAction *action_countSort;
+    QAction *action_timeSort;
+
+    action_createCategories = new QAction("新建文件夹", this);
+    action_renameCategories = new QAction("重命名笔记本", this);
+    action_removeCategories = new QAction("删除笔记本", this);
+    action_nameSort = new QAction("按笔记本名称排序", this);
+    action_countSort = new QAction("按笔记数量排序", this);
+    action_timeSort = new QAction("按笔记更新时间排序", this);
+
+    action_createCategories->setObjectName(QStringLiteral("action_createCategories"));
+    action_renameCategories->setObjectName(QStringLiteral("action_renameCategories"));
+    action_removeCategories->setObjectName(QStringLiteral("action_removeCategories"));
+    action_nameSort->setObjectName(QStringLiteral("action_nameSort"));
+    action_countSort->setObjectName(QStringLiteral("action_countSort"));
+    action_timeSort->setObjectName(QStringLiteral("action_timeSort"));
+
+    popMenu->addAction(action_createCategories);
+    popMenu->addAction(action_renameCategories);
+    popMenu->addAction(action_removeCategories);
+    popMenu->addSeparator();
+    popMenu->addAction(action_nameSort);
+    popMenu->addAction(action_countSort);
+    popMenu->addAction(action_timeSort);
+
+    connect(action_createCategories, &QAction::triggered, this, &MainWindow::on_pushButton_addCategories_clicked);
+    connect(action_renameCategories, &QAction::triggered, this, &MainWindow::on_action_renameCategories_triggered);
+    connect(action_removeCategories, &QAction::triggered, this, &MainWindow::on_pushButton_removeCategories_clicked);
+    connect(action_nameSort, &QAction::triggered, this, &MainWindow::on_action_nameSort_triggered);
+    connect(action_countSort, &QAction::triggered, this, &MainWindow::on_action_countSort_triggered);
+    connect(action_timeSort, &QAction::triggered, this, &MainWindow::on_action_timeSort_triggered);
+
+    return popMenu;
+}
+
+void MainWindow::on_action_nameSort_triggered()
+{
+    qDebug() << "on_action_nameSort_triggered";
+}
+
+void MainWindow::on_action_countSort_triggered()
+{
+
+}
+
+void MainWindow::on_action_timeSort_triggered()
+{
+    qDebug() << "on_action_timeSort_triggered";
+}
+
+void MainWindow::on_pushButton_addCategories_clicked()
+{
+
+}
+
+void MainWindow::on_action_renameCategories_triggered()
+{
+
+}
+
+void MainWindow::on_pushButton_removeCategories_clicked()
+{
+
+}
+
+void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoint &pos)
+{
+    if(ui->listWidget_categories->itemAt(pos) != NULL) {
+        on_listWidget_categories_itemClicked(ui->listWidget_categories->itemAt(pos));
+        createListWidgetCategoriesMenu()->exec(ui->listWidget_categories->mapToGlobal(pos));
+    }
+    else if(ui->tableWidget_list->itemAt(pos) != NULL) {
+
+    }
+}
+
+void MainWindow::resetListWidgetCategoriesBorder()
+{
+    for (int i = 0; i < ui->listWidget_categories->count(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
+        QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget_3");
+        Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
+        listWidgetItem->setData(Qt::UserRole, QVariant());
+    }
 }

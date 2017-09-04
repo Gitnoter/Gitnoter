@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDir>
 #include <QGraphicsDropShadowEffect>
+#include <QWidget>
 
 class Tools : public QObject
 {
@@ -21,6 +22,8 @@ public:
     static QStringList splitNotesData(QString string);
 
     static QGraphicsDropShadowEffect* createShadowEffect();
+
+    static void changeWidgetBorder(QWidget *widget, const QString color, int width);
 };
 
 #endif // TOOLS_H
