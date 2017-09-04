@@ -148,7 +148,8 @@ void MainWindow::on_pushButton_categories_clicked()
     connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }
 
-void MainWindow::resizeEvent(QResizeEvent *size) {
+void MainWindow::resizeEvent(QResizeEvent *size)
+{
     emit resizeChildWindow(size->size());
 }
 
@@ -165,8 +166,8 @@ void MainWindow::initNotesToDatabases()
 void MainWindow::setDefaultNote()
 {
     if (g_configTableModel->getOpenNotesUuid().isEmpty()) {
-        if (sidebarNoteList->length() != 0) {
-            g_configTableModel->setOpenNotesUuid(sidebarNoteList->at(0)->getUuid());
+        if (m_sidebarNoteList->length() != 0) {
+            g_configTableModel->setOpenNotesUuid(m_sidebarNoteList->at(0)->getUuid());
             this->setDefaultNote();
             return;
         }
@@ -180,17 +181,31 @@ void MainWindow::setDefaultNote()
 void MainWindow::setSidebarTable()
 {
     ui->tableWidget_list->clear();
+    m_sidebarNoteList = g_database->getSidebarNotes();
+    auto *sidebarNoteList = new QList<NoteTableModel *>();
+    if (g_configTableModel->getCategoriesId() == 0) {
+        sidebarNoteList = m_sidebarNoteList;
+    }
+    else {
+        auto categoriesList = g_database->selectNJCTableByCategoriesId(g_configTableModel->getCategoriesId());
+        for (auto &&item : categoriesList) {
+            for (auto &&list : *m_sidebarNoteList) {
+                if (item->getNotesUuid() == list->getUuid()) {
+                    sidebarNoteList->append(list);
+                }
+            }
+        }
+    }
 
-    sidebarNoteList = g_database->getSidebarNotes();
     ui->tableWidget_list->setRowCount(sidebarNoteList->length());
     for (int i = 0; i < sidebarNoteList->length(); ++i) {
-        auto *tableWidgetitem0 = new QTableWidgetItem(sidebarNoteList->at(i)->getTitle());
-        tableWidgetitem0->setData(Qt::UserRole, i);
-        auto *tableWidgetitem1 = new QTableWidgetItem(
+        auto *tableWidgetItem0 = new QTableWidgetItem(sidebarNoteList->at(i)->getTitle());
+        tableWidgetItem0->setData(Qt::UserRole, i);
+        auto *tableWidgetItem1 = new QTableWidgetItem(
                     Tools::timestampToDateTime(sidebarNoteList->at(i)->getUpdateDate()));
-        tableWidgetitem1->setData(Qt::UserRole, i);
-        ui->tableWidget_list->setItem(i, 0, tableWidgetitem0);
-        ui->tableWidget_list->setItem(i, 1, tableWidgetitem1);
+        tableWidgetItem1->setData(Qt::UserRole, i);
+        ui->tableWidget_list->setItem(i, 0, tableWidgetItem0);
+        ui->tableWidget_list->setItem(i, 1, tableWidgetItem1);
         if (sidebarNoteList->at(i)->getUuid() == g_configTableModel->getOpenNotesUuid()) {
             ui->tableWidget_list->selectRow(i);
         }
@@ -206,7 +221,7 @@ void MainWindow::setSidebarTable()
 void MainWindow::on_tableWidget_list_itemClicked(QTableWidgetItem *item)
 {
     qDebug() << "on_tableWidget_list_itemClicked: " << item->data(Qt::UserRole);
-    QString uuid = sidebarNoteList->at(item->data(Qt::UserRole).toInt())->getUuid();
+    QString uuid = m_sidebarNoteList->at(item->data(Qt::UserRole).toInt())->getUuid();
     if (g_configTableModel->getOpenNotesUuid() == uuid) {
         return;
     }

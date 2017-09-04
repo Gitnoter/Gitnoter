@@ -61,7 +61,8 @@ private:
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
-    QList<NoteTableModel *> *sidebarNoteList;
+    QList<NoteTableModel *> *m_sidebarNoteList;
+    QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
     QList<CategoriesTableModel *> m_categoriesList;
 
     void textChanged();
