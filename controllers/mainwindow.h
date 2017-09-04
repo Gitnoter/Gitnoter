@@ -77,7 +77,7 @@ private:
     bool isModified();
     void setModified(bool m);
 
-    void setTagsdata();
+    void setTagsData();
     void setMainWindowData();
 };
 

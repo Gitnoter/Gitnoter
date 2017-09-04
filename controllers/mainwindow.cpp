@@ -316,7 +316,7 @@ void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOr
     g_configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
 }
 
-void MainWindow::setTagsdata()
+void MainWindow::setTagsData()
 {
     QString tagsString;
     for (auto &&item : *g_noteModel->tagTableList) {
@@ -331,7 +331,7 @@ void MainWindow::setMainWindowData()
     this->setEditText();
     this->setModified(false);
 
-    this->setTagsdata();
+    this->setTagsData();
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
 }
 
