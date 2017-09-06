@@ -32,36 +32,36 @@ public slots:
     void onChangeCategories();
 
 private slots:
-    void on_tableWidget_list_doubleClicked(const QModelIndex &index);
-
     void on_action_saveFile_triggered();
     void on_action_newFile_triggered();
     void on_action_removeFile_triggered();
 
-    void on_pushButton_deleteNote_clicked();
-    void on_tableWidget_list_itemClicked(QTableWidgetItem *item);
+    // sidebar 0
+    void on_pushButton_notes_clicked();
 
+    void on_tableWidget_list_doubleClicked(const QModelIndex &index);
+    void on_tableWidget_list_itemClicked(QTableWidgetItem *item);
     void on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
+    void on_pushButton_deleteNote_clicked();
     void on_pushButton_categories_clicked();
 
+    // sidebar 1
     void on_pushButton_folder_clicked();
 
     void on_listWidget_categories_itemClicked(QListWidgetItem *item);
-
-    void on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item);
-
-    void on_pushButton_notes_clicked();
-
-    void on_action_nameSort_triggered();
-    void on_action_countSort_triggered();
-    void on_action_timeSort_triggered();
+    void on_listWidget_categories_doubleClicked(const QModelIndex &index);
+    void on_listWidget_categories_customContextMenuRequested(const QPoint &pos);
 
     void on_pushButton_addCategories_clicked();
     void on_pushButton_removeCategories_clicked();
     void on_action_renameCategories_triggered();
 
-    void on_listWidget_categories_customContextMenuRequested(const QPoint &pos);
+    void on_action_nameSort_triggered();
+    void on_action_countSort_triggered();
+    void on_action_timeSort_triggered();
+
+    void on_lineEdit_name_editingFinished();
 
 signals:
     void resizeChildWindow(QSize size);
@@ -90,6 +90,8 @@ private:
     void setTagsData();
     void setMainWindowData();
     void resetListWidgetCategoriesBorder();
+
+    void setCategoriesList();
 
     QMenu* createListWidgetCategoriesMenu();
 

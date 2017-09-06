@@ -16,7 +16,7 @@ CategoriesListCell::CategoriesListCell(CategoriesTableModel *categoriesTableMode
     ui->setupUi(this);
 
     m_categoriesTableModel = categoriesTableModel;
-    ui->label_name->setText(m_categoriesTableModel->getName());
+    ui->lineEdit_name->setText(m_categoriesTableModel->getName());
     ui->label_noteCount->setText(QString::number(m_categoriesTableModel->getCount()));
 }
 

@@ -13,6 +13,7 @@ public:
     static QString getUuid();
 
     static QString readerFile(QString path);
+    static bool writerFile(QString path, QString text);
     static QStringList textToStringList(QString text);
 
     static int timestampFromDateTime(QString dateTime);

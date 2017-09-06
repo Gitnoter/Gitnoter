@@ -855,6 +855,9 @@ QTableWidget::item:selected{
                      <property name="focusPolicy">
                       <enum>Qt::ClickFocus</enum>
                      </property>
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true"/>
                      </property>
@@ -991,7 +994,7 @@ QTableWidget::item:selected{
            <item>
             <widget class="QPushButton" name="pushButton_addCategories">
              <property name="text">
-              <string>PushButton</string>
+              <string>新建笔记本</string>
              </property>
             </widget>
            </item>
@@ -1104,8 +1107,8 @@ QTableWidget::item:selected{
     <addaction name="action_newCategories"/>
     <addaction name="action_newTags"/>
     <addaction name="separator"/>
-    <addaction name="action_save"/>
-    <addaction name="action_quit"/>
+    <addaction name="action_saveFile"/>
+    <addaction name="action_quitFile"/>
     <addaction name="separator"/>
     <addaction name="action_synch"/>
    </widget>
@@ -1158,12 +1161,12 @@ QTableWidget::item:selected{
     <string>新建标签</string>
    </property>
   </action>
-  <action name="action_save">
+  <action name="action_saveFile">
    <property name="text">
     <string>保存</string>
    </property>
   </action>
-  <action name="action_quit">
+  <action name="action_quitFile">
    <property name="text">
     <string>关闭</string>
    </property>

@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->action_newCategories->setShortcut(Qt::META | Qt::CTRL | Qt::Key_C);
     ui->action_newTags->setShortcut(Qt::META | Qt::CTRL | Qt::Key_T);
 
-    ui->action_save->setShortcut(Qt::CTRL | Qt::Key_S);
-    ui->action_quit->setShortcut(Qt::CTRL | Qt::Key_W);
+    ui->action_saveFile->setShortcut(Qt::CTRL | Qt::Key_S);
+    ui->action_quitFile->setShortcut(Qt::CTRL | Qt::Key_W);
 
     ui->action_synch->setShortcut(Qt::META | Qt::CTRL | Qt::Key_S);
 
@@ -65,8 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
 
-    connect(ui->action_newFile, &QAction::triggered, this, &MainWindow::on_action_newFile_triggered);
-    connect(ui->action_save, &QAction::triggered, this, &MainWindow::on_action_saveFile_triggered);
+    connect(ui->action_newFile, SIGNAL(triggered()), this, SLOT(on_action_newFile_triggered()));
+    connect(ui->action_saveFile, SIGNAL(triggered()), this, SLOT(on_action_saveFile_triggered()));
 
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::on_headerView_sortIndicatorChanged);
@@ -257,21 +257,9 @@ void MainWindow::on_action_saveFile_triggered()
         return;
     }
 
-    QFile f(g_noteModel->noteTableModel->getFilePath());
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))  {
-        QMessageBox::warning(this, windowTitle(),
-                             tr("Could not write to file %1: %2").arg(
-                                 QDir::toNativeSeparators(g_noteModel->noteTableModel->getFilePath()), f.errorString()));
-        return;
-    }
-
-    QTextStream str(&f);
-    str << g_noteModel->getNote();
-
+    Tools::writerFile(g_noteModel->noteTableModel->getFilePath(), g_noteModel->getNote());
     g_database->addNoteText(g_noteModel);
     this->setSidebarTable();
-
-    f.close();
 }
 
 void MainWindow::on_action_newFile_triggered()
@@ -350,16 +338,7 @@ void MainWindow::on_pushButton_folder_clicked()
         return;
     }
 
-    m_categoriesList = g_database->selectCategoriesTable();
-
-    for (auto &&datum : m_categoriesList) {
-        datum->setCount(g_database->selectNJCTableByCategoriesId(datum->getCategoriesId()).length());
-        QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
-        ui->listWidget_categories->addItem(item);
-        CategoriesListCell *categoriesListCell = new CategoriesListCell(datum);
-        item->setSizeHint(categoriesListCell->sizeHint());
-        ui->listWidget_categories->setItemWidget(item, categoriesListCell);
-    }
+    setCategoriesList();
 }
 
 void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
@@ -371,11 +350,6 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
         item->setData(Qt::UserRole, 1);
         Tools::changeWidgetBorder(widget, "#7EBFF5", 2);
     }
-}
-
-void MainWindow::on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item)
-{
-    qDebug() << "on_listWidget_categories_itemDoubleClicked";
 }
 
 void MainWindow::on_pushButton_notes_clicked()
@@ -441,19 +415,60 @@ void MainWindow::on_action_timeSort_triggered()
     qDebug() << "on_action_timeSort_triggered";
 }
 
+void MainWindow::on_lineEdit_name_editingFinished()
+{
+    int index = ui->listWidget_categories->selectionModel()->selectedIndexes()[0].row();
+    QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
+    QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget_3")->findChild<QLineEdit *>("lineEdit_name");
+
+    if(lineEdit_name->displayText().isEmpty()) {
+        lineEdit_name->setText(m_categoriesList[index]->getName());
+    }
+    else {
+        if (g_database->updateCategoriesTableByName(lineEdit_name->displayText(), m_categoriesList[index]->getName())) {
+            auto categoriesList = g_database->selectNJCTableByCategoriesId(m_categoriesList[index]->getCategoriesId());
+            for (auto &&item : categoriesList) {
+                auto *note = g_database->getNoteByUuid(item->getNotesUuid());
+                Tools::writerFile(note->noteTableModel->getFilePath(), note->getNote());
+            }
+
+            m_categoriesList[index]->setName(lineEdit_name->displayText());
+        }
+    }
+    lineEdit_name->setEnabled(false);
+}
+
 void MainWindow::on_pushButton_addCategories_clicked()
 {
-
+    for (int i = 0; i < 100; ++i) {
+        if (g_database->insertCategoriesTable(tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i))) != 0) {
+            ui->listWidget_categories->clear();
+            setCategoriesList();
+            return;
+        }
+    }
 }
 
 void MainWindow::on_action_renameCategories_triggered()
 {
-
+    QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
+    QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget_3")->findChild<QLineEdit *>("lineEdit_name");
+    lineEdit_name->setEnabled(true);
+    lineEdit_name->setFocus();
+    lineEdit_name->selectAll();
+    connect(lineEdit_name, SIGNAL(editingFinished()), this, SLOT(on_lineEdit_name_editingFinished()));
 }
 
 void MainWindow::on_pushButton_removeCategories_clicked()
 {
-
+    int index = ui->listWidget_categories->selectionModel()->selectedIndexes()[0].row();
+    if (m_categoriesList[index]->getCount() == 0) {
+        g_database->deleteCategoriesTableByName(m_categoriesList[index]->getName());
+        setCategoriesList();
+    }
+    else {
+        QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请先移除笔记"));
+    }
 }
 
 void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoint &pos)
@@ -461,9 +476,6 @@ void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoin
     if(ui->listWidget_categories->itemAt(pos) != NULL) {
         on_listWidget_categories_itemClicked(ui->listWidget_categories->itemAt(pos));
         createListWidgetCategoriesMenu()->exec(ui->listWidget_categories->mapToGlobal(pos));
-    }
-    else if(ui->tableWidget_list->itemAt(pos) != NULL) {
-
     }
 }
 
@@ -475,4 +487,23 @@ void MainWindow::resetListWidgetCategoriesBorder()
         Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
         listWidgetItem->setData(Qt::UserRole, QVariant());
     }
+}
+
+void MainWindow::setCategoriesList()
+{
+    ui->listWidget_categories->clear();
+    m_categoriesList = g_database->selectCategoriesTable();
+    for (auto &&datum : m_categoriesList) {
+        datum->setCount(g_database->selectNJCTableByCategoriesId(datum->getCategoriesId()).length());
+        QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
+        ui->listWidget_categories->addItem(item);
+        CategoriesListCell *categoriesListCell = new CategoriesListCell(datum);
+        item->setSizeHint(categoriesListCell->sizeHint());
+        ui->listWidget_categories->setItemWidget(item, categoriesListCell);
+    }
+}
+
+void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
+{
+    g_configTableModel->setCategoriesId(m_categoriesList[index.row()]->getCategoriesId());
 }
