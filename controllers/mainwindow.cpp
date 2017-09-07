@@ -180,7 +180,7 @@ void MainWindow::setDefaultNote()
 
 void MainWindow::setSidebarTable()
 {
-    ui->tableWidget_list->clear();
+    ui->tableWidget_list->clearContents();
     m_sidebarNoteList = g_database->getSidebarNotes();
     auto *sidebarNoteList = new QList<NoteTableModel *>();
     if (g_configTableModel->getCategoriesId() == 0) {
