@@ -45,8 +45,24 @@ void CategoriesWidget::animationFinished()
     emit changeCategories();
 }
 
-void CategoriesWidget::setListData()
+void CategoriesWidget::setListData(bool reread, const QString &string)
 {
+    if (!string.isEmpty()) {
+        m_categoriesSearchList.clear();
+        for (int i = 0; i < m_categoriesList.length(); ++i) {
+            int searchIndex = m_categoriesList[i]->getName().indexOf(string);
+            if (searchIndex != -1) {
+                m_categoriesSearchList.append(m_categoriesList[i]);
+            }
+        }
+    }
+    else {
+        if (reread) {
+            m_categoriesList = g_database->selectCategoriesTable();
+        }
+        m_categoriesSearchList = m_categoriesList;
+    }
+
     ui->listWidget_data->clear();
     for (int i = 0; i < m_categoriesList.length(); ++i) {
         ui->listWidget_data->addItem(m_categoriesList[i]->getName());
@@ -114,26 +130,6 @@ void CategoriesWidget::on_pushButton_add_clicked()
 
 void CategoriesWidget::on_lineEdit_textChanged(const QString &arg1)
 {
-    arg1.isEmpty() ? setListData() : setSearchData(arg1);
+    arg1.isEmpty() ? setListData() : setListData(false, arg1);
     ui->pushButton_add->setHidden(ui->listWidget_data->count() != 0);
-}
-
-void CategoriesWidget::setSearchData(const QString &string)
-{
-    ui->listWidget_data->clear();
-    m_categoriesSearchList.clear();
-
-    for (int i = 0; i < m_categoriesList.length(); ++i) {
-        int searchIndex = m_categoriesList[i]->getName().indexOf(string);
-        if (searchIndex != -1) {
-            m_categoriesSearchList.insertMulti(searchIndex, m_categoriesList[i]);
-        }
-    }
-
-    for (auto iterator = m_categoriesSearchList.begin(); iterator != m_categoriesSearchList.end(); ++iterator) {
-        ui->listWidget_data->addItem(iterator.value()->getName());
-        if (g_noteModel->categoriesTableModel->getName() == iterator.value()->getName()) {
-            ui->listWidget_data->setItemSelected(ui->listWidget_data->item(ui->listWidget_data->count() - 1), true);
-        }
-    }
 }

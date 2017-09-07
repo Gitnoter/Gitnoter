@@ -40,10 +40,9 @@ protected:
 private:
     Ui::CategoriesWidget *ui;
     QList<CategoriesTableModel *> m_categoriesList;
-    QMultiMap<int, CategoriesTableModel *> m_categoriesSearchList;
+    QList<CategoriesTableModel *> m_categoriesSearchList;
 
-    void setListData();
-    void setSearchData(const QString &string);
+    void setListData(bool reread = true, const QString &string = "");
 };
 
 #endif // CATEGORIESWIDGET_H
