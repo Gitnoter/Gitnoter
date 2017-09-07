@@ -434,6 +434,9 @@ void MainWindow::on_lineEdit_name_editingFinished()
 
             m_categoriesList[index]->setName(lineEdit_name->displayText());
         }
+        else {
+            lineEdit_name->setText(m_categoriesList[index]->getName());
+        }
     }
     lineEdit_name->setEnabled(false);
 }
@@ -461,13 +464,16 @@ void MainWindow::on_action_renameCategories_triggered()
 
 void MainWindow::on_pushButton_removeCategories_clicked()
 {
-    int index = ui->listWidget_categories->selectionModel()->selectedIndexes()[0].row();
-    if (m_categoriesList[index]->getCount() == 0) {
-        g_database->deleteCategoriesTableByName(m_categoriesList[index]->getName());
-        setCategoriesList();
-    }
-    else {
-        QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请先移除笔记"));
+    auto selectedIndexes = ui->listWidget_categories->selectionModel()->selectedIndexes();
+    if (selectedIndexes.length() != 0) {
+        int index = selectedIndexes[0].row();
+        if (m_categoriesList[index]->getCount() == 0) {
+            g_database->deleteCategoriesTableByName(m_categoriesList[index]->getName());
+            setCategoriesList();
+        }
+        else {
+            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
+        }
     }
 }
 
@@ -489,11 +495,26 @@ void MainWindow::resetListWidgetCategoriesBorder()
     }
 }
 
-void MainWindow::setCategoriesList()
+void MainWindow::setCategoriesList(bool reread, const QString &string)
 {
+    if (!string.isEmpty()) {
+        m_categoriesSearchList.clear();
+        for (int i = 0; i < m_categoriesList.length(); ++i) {
+            int searchIndex = m_categoriesList[i]->getName().indexOf(string);
+            if (searchIndex != -1) {
+                m_categoriesSearchList.append(m_categoriesList[i]);
+            }
+        }
+    }
+    else {
+        if (reread) {
+            m_categoriesList = g_database->selectCategoriesTable();
+        }
+        m_categoriesSearchList = m_categoriesList;
+    }
+
     ui->listWidget_categories->clear();
-    m_categoriesList = g_database->selectCategoriesTable();
-    for (auto &&datum : m_categoriesList) {
+    for (auto &&datum : m_categoriesSearchList) {
         datum->setCount(g_database->selectNJCTableByCategoriesId(datum->getCategoriesId()).length());
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
         ui->listWidget_categories->addItem(item);
@@ -506,4 +527,9 @@ void MainWindow::setCategoriesList()
 void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
 {
     g_configTableModel->setCategoriesId(m_categoriesList[index.row()]->getCategoriesId());
+}
+
+void MainWindow::on_lineEdit_searchCategories_textChanged(const QString &arg1)
+{
+    arg1.isEmpty() ? setCategoriesList() : setCategoriesList(false, arg1);
 }

@@ -54,8 +54,8 @@
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">QListWidget#listWidget_categories{
-	background-color:#F2F2F2;
+       <string notr="true">QWidget#widget_menu{
+	background-color:rgb(56, 70, 77);
 }</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -565,7 +565,7 @@ QTableWidget::item:selected{
                <bool>true</bool>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="horizontalHeaderCascadingSectionResizes">
                <bool>true</bool>
@@ -993,6 +993,9 @@ QTableWidget::item:selected{
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
             <widget class="QPushButton" name="pushButton_addCategories">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
              <property name="text">
               <string>新建笔记本</string>
              </property>
@@ -1000,6 +1003,9 @@ QTableWidget::item:selected{
            </item>
            <item>
             <widget class="QLineEdit" name="lineEdit_searchCategories">
+             <property name="focusPolicy">
+              <enum>Qt::ClickFocus</enum>
+             </property>
              <property name="placeholderText">
               <string> 搜索笔记本</string>
              </property>
@@ -1020,6 +1026,9 @@ QTableWidget::item:selected{
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_removeCategories">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
              <property name="text">
               <string>删除笔记本</string>
              </property>

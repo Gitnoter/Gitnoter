@@ -26,8 +26,6 @@ public:
 
     void setCategoriesTableModel(CategoriesTableModel *categoriesTableModel);
 
-private slots:
-    void on_pushButton_clicked();
 };
 
 #endif // CATEGORIESLISTCELL_H

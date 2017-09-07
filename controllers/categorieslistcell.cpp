@@ -2,8 +2,6 @@
 #include "ui_categorieslistcell.h"
 #include "globals.h"
 
-#include <QListWidgetItem>
-
 CategoriesListCell::CategoriesListCell(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CategoriesListCell)
@@ -33,9 +31,4 @@ CategoriesTableModel *CategoriesListCell::getCategoriesTableModel() const
 void CategoriesListCell::setCategoriesTableModel(CategoriesTableModel *categoriesTableModel)
 {
     m_categoriesTableModel = categoriesTableModel;
-}
-
-void CategoriesListCell::on_pushButton_clicked()
-{
-
 }

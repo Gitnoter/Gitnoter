@@ -63,6 +63,8 @@ private slots:
 
     void on_lineEdit_name_editingFinished();
 
+    void on_lineEdit_searchCategories_textChanged(const QString &arg1);
+
 signals:
     void resizeChildWindow(QSize size);
 
@@ -74,6 +76,7 @@ private:
     QList<NoteTableModel *> *m_sidebarNoteList;
     QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
     QList<CategoriesTableModel *> m_categoriesList;
+    QList<CategoriesTableModel *> m_categoriesSearchList;
 
     void textChanged();
     void updatePreview();
@@ -91,9 +94,9 @@ private:
     void setMainWindowData();
     void resetListWidgetCategoriesBorder();
 
-    void setCategoriesList();
+    void setCategoriesList(bool reread = true, const QString &string = "");
 
-    QMenu* createListWidgetCategoriesMenu();
+    QMenu* createListWidgetCategoriesMenu();;
 
 };
 
