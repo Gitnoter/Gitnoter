@@ -1,6 +1,6 @@
 #include "categorieslistcell.h"
 #include "ui_categorieslistcell.h"
-#include "globals.h"
+#include "tools/globals.h"
 
 CategoriesListCell::CategoriesListCell(QWidget *parent) :
     QWidget(parent),

@@ -121,3 +121,13 @@ int TagTableModel::getUpdateDate()
 {
     return this->updateDate;
 }
+
+int TagTableModel::getCount() const
+{
+    return count;
+}
+
+void TagTableModel::setCount(int count)
+{
+    TagTableModel::count = count;
+}

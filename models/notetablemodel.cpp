@@ -1,6 +1,6 @@
 #include "notetablemodel.h"
-#include "tools.h"
-#include "globals.h"
+#include "tools/tools.h"
+#include "tools/globals.h"
 
 #include <QDateTime>
 

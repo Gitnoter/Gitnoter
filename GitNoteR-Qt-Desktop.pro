@@ -44,7 +44,9 @@ SOURCES += \
     models/tagtablemodel.cpp \
     controllers/globals.cpp \
     models/configtablemodel.cpp \
-    controllers/categorieslistcell.cpp
+    controllers/categorieslistcell.cpp \
+    controllers/categorieslistcell.cpp \
+    controllers/tagslistcell.cpp
 
 HEADERS += \
         controllers/mainwindow.h \
@@ -60,12 +62,16 @@ HEADERS += \
     models/tagtablemodel.h \
     controllers/globals.h \
     models/configtablemodel.h \
-    controllers/categorieslistcell.h
+    controllers/categorieslistcell.h    \
+    controllers/tagslistcell.h  \
+    controllers/tagswidget.h
 
 FORMS += \
         views/mainwindow.ui \
     views/categorieswidget.ui \
-    views/categorieslistcell.ui
+    views/categorieslistcell.ui \
+    views/tagslistcell.ui \
+    views/tagswidget.ui
 
 RESOURCES += \
     resources/resources.qrc

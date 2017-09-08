@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "document.h"
+#include "tools/document.h"
 #include "categorieswidget.h"
 #include "notemodel.h"
 #include "configtablemodel.h"

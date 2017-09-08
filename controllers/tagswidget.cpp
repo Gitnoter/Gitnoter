@@ -1,14 +1,14 @@
-#include "categorieswidget.h"
+#include "tagswidget.h"
 #include "mainwindow.h"
-#include "ui_categorieswidget.h"
+#include "ui_tagswidget.h"
 #include "tools/tools.h"
 #include "tools/globals.h"
 
 #include <QDebug>
 
-CategoriesWidget::CategoriesWidget(QWidget *parent) :
+TagsWidget::TagsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::CategoriesWidget)
+    ui(new Ui::TagsWidget)
 {
     ui->setupUi(this);
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -29,23 +29,23 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
     this->setListData();
 }
 
-CategoriesWidget::~CategoriesWidget()
+TagsWidget::~TagsWidget()
 {
     delete ui;
 }
 
-void CategoriesWidget::resizeWindow(QSize size)
+void TagsWidget::resizeWindow(QSize size)
 {
     setGeometry(x(), y(), size.width(), size.height());
 }
 
-void CategoriesWidget::animationFinished()
+void TagsWidget::animationFinished()
 {
     this->close();
     emit changeCategories();
 }
 
-void CategoriesWidget::setListData(bool reread, const QString &string)
+void TagsWidget::setListData(bool reread, const QString &string)
 {
     if (!string.isEmpty()) {
         m_categoriesSearchList.clear();
@@ -73,7 +73,7 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
     }
 }
 
-void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
+void TagsWidget::on_listWidget_data_clicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
         g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
@@ -89,7 +89,7 @@ void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
     }
 }
 
-void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
+void TagsWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
         g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
@@ -106,7 +106,7 @@ void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index
     this->animationFinished();
 }
 
-void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
+void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
 
@@ -117,9 +117,9 @@ void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
     pAnimation->setEasingCurve(QEasingCurve::Linear);
     pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    connect(pAnimation, &QPropertyAnimation::finished, this, &CategoriesWidget::animationFinished);
+    connect(pAnimation, &QPropertyAnimation::finished, this, &TagsWidget::animationFinished);
 }
-void CategoriesWidget::on_pushButton_add_clicked()
+void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
         g_database->insertCategoriesTable(ui->lineEdit->displayText());
@@ -128,7 +128,7 @@ void CategoriesWidget::on_pushButton_add_clicked()
     }
 }
 
-void CategoriesWidget::on_lineEdit_textChanged(const QString &arg1)
+void TagsWidget::on_lineEdit_textChanged(const QString &arg1)
 {
     arg1.isEmpty() ? setListData() : setListData(false, arg1);
     ui->pushButton_add->setHidden(ui->listWidget_data->count() != 0);

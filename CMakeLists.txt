@@ -10,6 +10,7 @@ find_package(Qt5 COMPONENTS Core Gui WebEngineWidgets WebChannel Sql REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/models)
+include_directories(${PROJECT_SOURCE_DIR}/tools)
 include_directories(${PROJECT_SOURCE_DIR}/views)
 
 # if (WIN32)
@@ -22,40 +23,33 @@ include_directories(${PROJECT_SOURCE_DIR}/views)
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
         views/categorieswidget.ui
-        views/categorieslistcell.ui)
+        views/categorieslistcell.ui
+        views/tagslistcell.ui
+        views/tagswidget.ui)
 
 add_executable(${PROJECT_NAME}
+        ${UIS_HDRS}
         main.cpp
-        controllers/mainwindow.h
-        controllers/previewpage.h
-        controllers/document.h
-        controllers/categorieswidget.h
-        controllers/database.h
-        controllers/globals.h
-        controllers/categorieslistcell.h
-        models/notemodel.h
-        models/notetablemodel.h
-        models/categoriestablemodel.h
-        models/tagtablemodel.h
-        models/configtablemodel.h
-
-        controllers/mainwindow.cpp
-        controllers/previewpage.cpp
-        controllers/document.cpp
-        controllers/categorieswidget.cpp
-        controllers/database.cpp
-        controllers/globals.cpp
-        controllers/categorieslistcell.cpp
-        models/notemodel.cpp
-        models/notetablemodel.cpp
-        models/categoriestablemodel.cpp
-        models/tagtablemodel.cpp
-        models/configtablemodel.cpp
-
         resources/resources.qrc
 
-        ${UIS_HDRS}
-        controllers/tools.cpp controllers/tools.h
-        controllers/sqlquerybuilder.h)
+        controllers/mainwindow.h            controllers/mainwindow.cpp
+        controllers/categorieswidget.h      controllers/categorieswidget.cpp
+        controllers/categorieslistcell.h    controllers/categorieslistcell.cpp
+        controllers/tagslistcell.h          controllers/tagslistcell.cpp
+        controllers/tagswidget.h            controllers/tagswidget.cpp
+
+        models/notemodel.h              models/notemodel.cpp
+        models/notetablemodel.h         models/notetablemodel.cpp
+        models/categoriestablemodel.h   models/categoriestablemodel.cpp
+        models/tagtablemodel.h          models/tagtablemodel.cpp
+        models/configtablemodel.h       models/configtablemodel.cpp
+
+        tools/sqlquerybuilder.h
+        tools/previewpage.h     tools/previewpage.cpp
+        tools/document.h        tools/document.cpp
+        tools/database.h        tools/database.cpp
+        tools/globals.h         tools/globals.cpp
+        tools/tools.h           tools/tools.cpp)
+
 # target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick git2)
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql)

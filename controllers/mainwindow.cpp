@@ -1,7 +1,7 @@
 #include "mainwindow.h"
-#include "previewpage.h"
-#include "tools.h"
-#include "globals.h"
+#include "tools/previewpage.h"
+#include "tools/tools.h"
+#include "tools/globals.h"
 #include "categorieslistcell.h"
 
 #include "ui_mainwindow.h"

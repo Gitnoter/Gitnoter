@@ -35,6 +35,12 @@ private:
     QString name;
     int createDate;
     int updateDate;
+
+    int count;
+public:
+    int getCount() const;
+
+    void setCount(int count);
 };
 
 #endif // TAGTABLEMODEL_H
