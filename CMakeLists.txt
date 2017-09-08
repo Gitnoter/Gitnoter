@@ -10,7 +10,7 @@ find_package(Qt5 COMPONENTS Core Gui WebEngineWidgets WebChannel Sql REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/models)
-include_directories(${PROJECT_SOURCE_DIR}/tools)
+include_directories(${PROJECT_SOURCE_DIR}/helps)
 include_directories(${PROJECT_SOURCE_DIR}/views)
 
 # if (WIN32)
@@ -44,12 +44,12 @@ add_executable(${PROJECT_NAME}
         models/tagtablemodel.h          models/tagtablemodel.cpp
         models/configtablemodel.h       models/configtablemodel.cpp
 
-        tools/sqlquerybuilder.h
-        tools/previewpage.h     tools/previewpage.cpp
-        tools/document.h        tools/document.cpp
-        tools/database.h        tools/database.cpp
-        tools/globals.h         tools/globals.cpp
-        tools/tools.h           tools/tools.cpp)
+        helps/sqlquerybuilder.h
+        helps/previewpage.h     helps/previewpage.cpp
+        helps/document.h        helps/document.cpp
+        helps/database.h        helps/database.cpp
+        helps/globals.h         helps/globals.cpp
+        helps/tools.h           helps/tools.cpp)
 
 # target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick git2)
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql)
