@@ -1,6 +1,6 @@
 #include "tagslistcell.h"
 #include "ui_tagslistcell.h"
-#include "tools/globals.h"
+#include "globals.h"
 
 TagsListCell::TagsListCell(QWidget *parent) :
     QWidget(parent),

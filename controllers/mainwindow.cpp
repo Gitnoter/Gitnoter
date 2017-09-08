@@ -1,7 +1,7 @@
 #include "mainwindow.h"
-#include "tools/previewpage.h"
-#include "tools/tools.h"
-#include "tools/globals.h"
+#include "previewpage.h"
+#include "tools.h"
+#include "globals.h"
 #include "categorieslistcell.h"
 
 #include "ui_mainwindow.h"
@@ -41,12 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setSidebarTable();
 
     // 初始化菜单快捷键
-    ui->action_newFile->setShortcut(Qt::CTRL | Qt::Key_N);
+    ui->action_newNote->setShortcut(Qt::CTRL | Qt::Key_N);
     ui->action_newCategories->setShortcut(Qt::META | Qt::CTRL | Qt::Key_C);
     ui->action_newTags->setShortcut(Qt::META | Qt::CTRL | Qt::Key_T);
 
-    ui->action_saveFile->setShortcut(Qt::CTRL | Qt::Key_S);
-    ui->action_quitFile->setShortcut(Qt::CTRL | Qt::Key_W);
+    ui->action_saveNote->setShortcut(Qt::CTRL | Qt::Key_S);
+    ui->action_quitNote->setShortcut(Qt::CTRL | Qt::Key_W);
 
     ui->action_synch->setShortcut(Qt::META | Qt::CTRL | Qt::Key_S);
 
@@ -64,9 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toUppercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
-
-    connect(ui->action_newFile, SIGNAL(triggered()), this, SLOT(on_action_newFile_triggered()));
-    connect(ui->action_saveFile, SIGNAL(triggered()), this, SLOT(on_action_saveFile_triggered()));
 
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::on_headerView_sortIndicatorChanged);
@@ -251,7 +248,7 @@ void MainWindow::setEditText()
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 }
 
-void MainWindow::on_action_saveFile_triggered()
+void MainWindow::on_action_saveNote_triggered()
 {
     if (!this->isModified()) {
         return;
@@ -262,9 +259,9 @@ void MainWindow::on_action_saveFile_triggered()
     this->setSidebarTable();
 }
 
-void MainWindow::on_action_newFile_triggered()
+void MainWindow::on_action_newNote_triggered()
 {
-    this->on_action_saveFile_triggered();
+    this->on_action_saveNote_triggered();
 
     g_noteModel->clear();
     this->setMainWindowData();
@@ -283,10 +280,10 @@ void MainWindow::setModified(bool m)
 
 void MainWindow::on_pushButton_deleteNote_clicked()
 {
-    this->on_action_removeFile_triggered();
+    this->on_action_deleteNote_triggered();
 }
 
-void MainWindow::on_action_removeFile_triggered()
+void MainWindow::on_action_deleteNote_triggered()
 {
     g_database->deleteNoteByUuid(g_noteModel->noteTableModel->getUuid());
     QFile::remove(g_noteModel->noteTableModel->getFilePath());
@@ -302,6 +299,8 @@ void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOr
 {
     g_configTableModel->setSidebarSortKey(logicalIndex);
     g_configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
+
+    qDebug() << "on_headerView_sortIndicatorChanged";
 }
 
 void MainWindow::setTagsData()
@@ -327,7 +326,7 @@ void MainWindow::onChangeCategories()
 {
     ui->pushButton_categories->setText(g_noteModel->categoriesTableModel->getName());
     this->setModified(true);
-    this->on_action_saveFile_triggered();
+    this->on_action_saveNote_triggered();
 }
 
 void MainWindow::on_pushButton_folder_clicked()
@@ -391,31 +390,31 @@ QMenu* MainWindow::createListWidgetCategoriesMenu()
     popMenu->addAction(action_timeSort);
 
     connect(action_createCategories, &QAction::triggered, this, &MainWindow::on_pushButton_addCategories_clicked);
-    connect(action_renameCategories, &QAction::triggered, this, &MainWindow::on_action_renameCategories_triggered);
+    connect(action_renameCategories, &QAction::triggered, this, &MainWindow::onActionRenameCategoriesTriggered);
     connect(action_removeCategories, &QAction::triggered, this, &MainWindow::on_pushButton_removeCategories_clicked);
-    connect(action_nameSort, &QAction::triggered, this, &MainWindow::on_action_nameSort_triggered);
-    connect(action_countSort, &QAction::triggered, this, &MainWindow::on_action_countSort_triggered);
-    connect(action_timeSort, &QAction::triggered, this, &MainWindow::on_action_timeSort_triggered);
+    connect(action_nameSort, &QAction::triggered, this, &MainWindow::onActionNameSortTriggered);
+    connect(action_countSort, &QAction::triggered, this, &MainWindow::onActionCountSortTriggered);
+    connect(action_timeSort, &QAction::triggered, this, &MainWindow::onActionTimeSortTriggered);
 
     return popMenu;
 }
 
-void MainWindow::on_action_nameSort_triggered()
+void MainWindow::onActionNameSortTriggered()
 {
     qDebug() << "on_action_nameSort_triggered";
 }
 
-void MainWindow::on_action_countSort_triggered()
+void MainWindow::onActionCountSortTriggered()
 {
 
 }
 
-void MainWindow::on_action_timeSort_triggered()
+void MainWindow::onActionTimeSortTriggered()
 {
-    qDebug() << "on_action_timeSort_triggered";
+    qDebug() << "onActionTimeSortTriggered";
 }
 
-void MainWindow::on_lineEdit_name_editingFinished()
+void MainWindow::onLineEditNameEditingFinished()
 {
     int index = ui->listWidget_categories->selectionModel()->selectedIndexes()[0].row();
     QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
@@ -452,14 +451,14 @@ void MainWindow::on_pushButton_addCategories_clicked()
     }
 }
 
-void MainWindow::on_action_renameCategories_triggered()
+void MainWindow::onActionRenameCategoriesTriggered()
 {
     QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget_3")->findChild<QLineEdit *>("lineEdit_name");
     lineEdit_name->setEnabled(true);
     lineEdit_name->setFocus();
     lineEdit_name->selectAll();
-    connect(lineEdit_name, SIGNAL(editingFinished()), this, SLOT(on_lineEdit_name_editingFinished()));
+    connect(lineEdit_name, SIGNAL(editingFinished()), this, SLOT(onLineEditNameEditingFinished()));
 }
 
 void MainWindow::on_pushButton_removeCategories_clicked()

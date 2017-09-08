@@ -1,6 +1,6 @@
 #include "notemodel.h"
-#include "tools/tools.h"
-#include "tools/globals.h"
+#include "tools.h"
+#include "globals.h"
 
 NoteModel::NoteModel()
 {

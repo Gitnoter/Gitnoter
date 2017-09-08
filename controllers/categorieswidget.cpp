@@ -1,8 +1,8 @@
 #include "categorieswidget.h"
 #include "mainwindow.h"
 #include "ui_categorieswidget.h"
-#include "tools/tools.h"
-#include "tools/globals.h"
+#include "tools.h"
+#include "globals.h"
 
 #include <QDebug>
 

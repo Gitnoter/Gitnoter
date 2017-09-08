@@ -24,50 +24,52 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += $$PWD/controllers \
     $$PWD/view \
-    $$PWD/models
+    $$PWD/models \
+    $$PWD/helps
 
 DEPENDPATH += $$PWD/controllers \
     $$PWD/view \
-    $$PWD/models
+    $$PWD/models \
+    $$PWD/helps
 
 SOURCES += \
-        main.cpp \
-        controllers/mainwindow.cpp \
-        controllers/previewpage.cpp \
-        controllers/document.cpp \
-    controllers/categorieswidget.cpp \
-    controllers/database.cpp \
-    models/notemodel.cpp \
-    controllers/tools.cpp \
-    models/notetablemodel.cpp \
-    models/categoriestablemodel.cpp \
-    models/tagtablemodel.cpp \
-    controllers/globals.cpp \
-    models/configtablemodel.cpp \
-    controllers/categorieslistcell.cpp \
-    controllers/categorieslistcell.cpp \
-    controllers/tagslistcell.cpp
+    main.cpp \
+    controllers/mainwindow.cpp  \
+    controllers/categorieswidget.cpp  \
+    controllers/categorieslistcell.cpp  \
+    controllers/tagslistcell.cpp  \
+    controllers/tagswidget.cpp  \
+    models/notemodel.cpp  \
+    models/notetablemodel.cpp  \
+    models/categoriestablemodel.cpp  \
+    models/tagtablemodel.cpp  \
+    models/configtablemodel.cpp  \
+    helps/previewpage.cpp  \
+    helps/document.cpp  \
+    helps/database.cpp  \
+    helps/globals.cpp  \
+    helps/tools.cpp
 
 HEADERS += \
-        controllers/mainwindow.h \
-        controllers/previewpage.h \
-        controllers/document.h \
-    controllers/categorieswidget.h \
-    controllers/database.h \
-    models/notemodel.h \
-    controllers/tools.h \
-    controllers/sqlquerybuilder.h \
-    models/notetablemodel.h \
-    models/categoriestablemodel.h \
-    models/tagtablemodel.h \
-    controllers/globals.h \
-    models/configtablemodel.h \
-    controllers/categorieslistcell.h    \
+        controllers/mainwindow.h  \
+    controllers/categorieswidget.h  \
+    controllers/categorieslistcell.h  \
     controllers/tagslistcell.h  \
-    controllers/tagswidget.h
+    controllers/tagswidget.h  \
+    models/notemodel.h  \
+    models/notetablemodel.h  \
+    models/categoriestablemodel.h  \
+    models/tagtablemodel.h  \
+    models/configtablemodel.h  \
+    helps/sqlquerybuilder.h  \
+    helps/previewpage.h  \
+    helps/document.h  \
+    helps/database.h  \
+    helps/globals.h  \
+    helps/tools.h
 
 FORMS += \
-        views/mainwindow.ui \
+    views/mainwindow.ui \
     views/categorieswidget.ui \
     views/categorieslistcell.ui \
     views/tagslistcell.ui \
