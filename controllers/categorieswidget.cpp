@@ -64,10 +64,10 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
     }
 
     ui->listWidget_data->clear();
-    for (int i = 0; i < m_categoriesList.length(); ++i) {
-        ui->listWidget_data->addItem(m_categoriesList[i]->getName());
+    for (int i = 0; i < m_categoriesSearchList.length(); ++i) {
+        ui->listWidget_data->addItem(m_categoriesSearchList[i]->getName());
 
-        if (g_noteModel->categoriesTableModel->getName() == m_categoriesList[i]->getName()) {
+        if (g_noteModel->categoriesTableModel->getName() == m_categoriesSearchList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
