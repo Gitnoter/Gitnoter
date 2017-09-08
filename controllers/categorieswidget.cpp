@@ -12,7 +12,7 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->widget_2->setGraphicsEffect(Tools::createShadowEffect());
+    ui->widget->setGraphicsEffect(Tools::createShadowEffect());
     ui->pushButton_add->setHidden(true);
 
     auto *mainWindow = (MainWindow *) parentWidget();

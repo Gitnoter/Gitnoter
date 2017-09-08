@@ -4,6 +4,7 @@
 #include "notemodel.h"
 #include "database.h"
 #include "configtablemodel.h"
+#include "tagtablemodel.h"
 
 #include <QObject>
 

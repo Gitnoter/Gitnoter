@@ -63,7 +63,7 @@
     <number>0</number>
    </property>
    <item alignment="Qt::AlignHCenter|Qt::AlignTop">
-    <widget class="QWidget" name="widget_2" native="true">
+    <widget class="QWidget" name="widget" native="true">
      <property name="minimumSize">
       <size>
        <width>440</width>
@@ -103,7 +103,7 @@
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
           <property name="placeholderText">
-           <string>查找笔记本</string>
+           <string>查找标签</string>
           </property>
           <property name="clearButtonEnabled">
            <bool>true</bool>
@@ -129,6 +129,12 @@
 	border: 0px solid;border-top: 1px solid #F6F6F6;
 	background-color:#F6F6F6
 }</string>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
        </widget>
       </item>

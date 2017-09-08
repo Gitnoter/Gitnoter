@@ -5,6 +5,7 @@
 #include "categorieswidget.h"
 #include "notemodel.h"
 #include "configtablemodel.h"
+#include "tagswidget.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -48,6 +49,7 @@ private slots:
 
     void on_pushButton_deleteNote_clicked();
     void on_pushButton_categories_clicked();
+    void on_pushButton_changeTags_clicked();
 
     // 菜单分页第二页
     void on_listWidget_categories_itemClicked(QListWidgetItem *item);
@@ -74,6 +76,7 @@ private:
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
     CategoriesWidget *categoriesWidget;
+    TagsWidget *tagWidget;
     QList<NoteTableModel *> *m_sidebarNoteList;
     QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
     QList<CategoriesTableModel *> m_categoriesList;
@@ -97,7 +100,7 @@ private:
 
     void setCategoriesList(bool reread = true, const QString &string = "");
 
-    QMenu* createListWidgetCategoriesMenu();;
+    QMenu* createListWidgetCategoriesMenu();
 
 };
 

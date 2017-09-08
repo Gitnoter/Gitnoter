@@ -1,7 +1,7 @@
 #ifndef TAGSWIDGET_H
 #define TAGSWIDGET_H
 
-#include "categoriestablemodel.h"
+#include "tagtablemodel.h"
 
 #include <QWidget>
 #include <QPropertyAnimation>
@@ -28,21 +28,20 @@ public slots:
 private slots:
     void animationFinished();
 
-    void on_listWidget_data_clicked(const QModelIndex &index);
     void on_pushButton_add_clicked();
     void on_lineEdit_textChanged(const QString &arg1);
-
-    void on_listWidget_data_doubleClicked(const QModelIndex &index);
 
 protected:
     void mouseReleaseEvent(QMouseEvent * event) override;
 
 private:
     Ui::TagsWidget *ui;
-    QList<CategoriesTableModel *> m_categoriesList;
-    QList<CategoriesTableModel *> m_categoriesSearchList;
+    QList<TagTableModel *> m_tagTableModelList;
+    QList<TagTableModel *> m_tagTableModelSearchList;
 
     void setListData(bool reread = true, const QString &string = "");
+
+
 };
 
 #endif // TagsWidget_H

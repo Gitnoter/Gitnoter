@@ -565,7 +565,7 @@ QTableWidget::item:selected{
                <bool>true</bool>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>true</bool>
+               <bool>false</bool>
               </attribute>
               <attribute name="horizontalHeaderCascadingSectionResizes">
                <bool>true</bool>
@@ -662,7 +662,7 @@ QTableWidget::item:selected{
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_tags_2">
+                  <widget class="QPushButton" name="pushButton_changeTags">
                    <property name="text">
                     <string>Tags</string>
                    </property>

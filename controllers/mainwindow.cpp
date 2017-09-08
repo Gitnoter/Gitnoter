@@ -310,7 +310,7 @@ void MainWindow::setTagsData()
         tagsString += item->getName() + g_tagSplit;
     }
     tagsString.chop(g_tagSplit.length());
-    ui->pushButton_tags_2->setText(tagsString);
+    ui->pushButton_changeTags->setText(tagsString);
 }
 
 void MainWindow::setMainWindowData()
@@ -531,4 +531,13 @@ void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index
 void MainWindow::on_lineEdit_searchCategories_textChanged(const QString &arg1)
 {
     arg1.isEmpty() ? setCategoriesList() : setCategoriesList(false, arg1);
+}
+
+void MainWindow::on_pushButton_changeTags_clicked()
+{
+    tagWidget = new TagsWidget(this);
+    tagWidget->show();
+
+    connect(this, &MainWindow::resizeChildWindow, tagWidget, &TagsWidget::resizeWindow);
+    connect(tagWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }

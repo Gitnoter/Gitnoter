@@ -12,7 +12,7 @@ TagsWidget::TagsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->widget_2->setGraphicsEffect(Tools::createShadowEffect());
+    ui->widget->setGraphicsEffect(Tools::createShadowEffect());
     ui->pushButton_add->setHidden(true);
 
     auto *mainWindow = (MainWindow *) parentWidget();
@@ -25,8 +25,7 @@ TagsWidget::TagsWidget(QWidget *parent) :
     pAnimation->setEasingCurve(QEasingCurve::Linear);
     pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    m_categoriesList = g_database->selectCategoriesTable();
-    this->setListData();
+    this->setListData(true);
 }
 
 TagsWidget::~TagsWidget()
@@ -41,6 +40,10 @@ void TagsWidget::resizeWindow(QSize size)
 
 void TagsWidget::animationFinished()
 {
+    auto selectedIndexes = ui->listWidget_data->selectionModel()->selectedIndexes();
+    for (auto &&index : selectedIndexes) {
+
+    }
     this->close();
     emit changeCategories();
 }
@@ -48,62 +51,29 @@ void TagsWidget::animationFinished()
 void TagsWidget::setListData(bool reread, const QString &string)
 {
     if (!string.isEmpty()) {
-        m_categoriesSearchList.clear();
-        for (int i = 0; i < m_categoriesList.length(); ++i) {
-            int searchIndex = m_categoriesList[i]->getName().indexOf(string);
+        m_tagTableModelList.clear();
+        for (int i = 0; i < m_tagTableModelList.length(); ++i) {
+            int searchIndex = m_tagTableModelList[i]->getName().indexOf(string);
             if (searchIndex != -1) {
-                m_categoriesSearchList.append(m_categoriesList[i]);
+                m_tagTableModelSearchList.append(m_tagTableModelList[i]);
             }
         }
     }
     else {
-        if (reread) {
-            m_categoriesList = g_database->selectCategoriesTable();
+        if (m_tagTableModelList.length() == 0 || reread) {
+            m_tagTableModelList = g_database->selectTagsTable();
         }
-        m_categoriesSearchList = m_categoriesList;
+        m_tagTableModelSearchList = m_tagTableModelList;
     }
 
     ui->listWidget_data->clear();
-    for (int i = 0; i < m_categoriesSearchList.length(); ++i) {
-        ui->listWidget_data->addItem(m_categoriesSearchList[i]->getName());
+    for (int i = 0; i < m_tagTableModelList.length(); ++i) {
+        ui->listWidget_data->addItem(m_tagTableModelList[i]->getName());
 
-        if (g_noteModel->categoriesTableModel->getName() == m_categoriesSearchList[i]->getName()) {
+        if (g_noteModel->categoriesTableModel->getName() == m_tagTableModelList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
-}
-
-void TagsWidget::on_listWidget_data_clicked(const QModelIndex &index)
-{
-    if (ui->lineEdit->displayText().isEmpty()) {
-        g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
-    }
-    else {
-        int i = 0;
-        for (auto &&item : m_categoriesSearchList) {
-            if (i == index.row()) {
-                g_noteModel->categoriesTableModel = item;
-            }
-            i += 1;
-        }
-    }
-}
-
-void TagsWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
-{
-    if (ui->lineEdit->displayText().isEmpty()) {
-        g_noteModel->categoriesTableModel = m_categoriesList[index.row()];
-    }
-    else {
-        int i = 0;
-        for (auto &&item : m_categoriesSearchList) {
-            if (i == index.row()) {
-                g_noteModel->categoriesTableModel = item;
-            }
-            i += 1;
-        }
-    }
-    this->animationFinished();
 }
 
 void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -122,14 +92,14 @@ void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
 void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        g_database->insertCategoriesTable(ui->lineEdit->displayText());
-        m_categoriesList = g_database->selectCategoriesTable();
+        g_database->insertTagsTable(ui->lineEdit->displayText());
+        setListData(true);
         ui->lineEdit->clear();
     }
 }
 
 void TagsWidget::on_lineEdit_textChanged(const QString &arg1)
 {
-    arg1.isEmpty() ? setListData() : setListData(false, arg1);
+    setListData(false, arg1);
     ui->pushButton_add->setHidden(ui->listWidget_data->count() != 0);
 }
