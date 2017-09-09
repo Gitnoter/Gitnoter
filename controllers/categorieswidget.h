@@ -39,8 +39,8 @@ protected:
 
 private:
     Ui::CategoriesWidget *ui;
-    QList<CategoriesTableModel *> m_categoriesList;
-    QList<CategoriesTableModel *> m_categoriesSearchList;
+    QList<CategoriesTableModel *> m_categoriesModelList;
+    QList<CategoriesTableModel *> m_categoriesModelSearchList;
 
     void setListData(bool reread = true, const QString &string = "");
 };

@@ -18,14 +18,15 @@ TagsWidget::TagsWidget(QWidget *parent) :
     auto *mainWindow = (MainWindow *) parentWidget();
     resizeWindow(mainWindow->geometry().size());
 
-    QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
-    pAnimation->setDuration(250);
-    pAnimation->setStartValue(QRect(0, -height(), width(), height()));
-    pAnimation->setEndValue(QRect(0, 0, width(), height()));
-    pAnimation->setEasingCurve(QEasingCurve::Linear);
-    pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+    animation->setDuration(250);
+    animation->setStartValue(QRect(0, -height(), width(), height()));
+    animation->setEndValue(QRect(0, 0, width(), height()));
+    animation->setEasingCurve(QEasingCurve::Linear);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 
     this->setListData(true);
+    ui->listWidget_data->setFocus();
 }
 
 TagsWidget::~TagsWidget()
@@ -38,40 +39,44 @@ void TagsWidget::resizeWindow(QSize size)
     setGeometry(x(), y(), size.width(), size.height());
 }
 
-void TagsWidget::animationFinished()
+void TagsWidget::onAnimationFinished()
 {
     auto selectedIndexes = ui->listWidget_data->selectionModel()->selectedIndexes();
+    g_noteModel->tagTableList->clear();
     for (auto &&index : selectedIndexes) {
-
+        g_noteModel->tagTableList->append(m_tagTableModelList[index.row()]);
     }
     this->close();
-    emit changeCategories();
+    emit changeTags();
 }
 
 void TagsWidget::setListData(bool reread, const QString &string)
 {
+    if (m_tagTableModelList.length() == 0 || reread) {
+        m_tagTableModelList = g_database->selectTagsTable();
+    }
+
     if (!string.isEmpty()) {
-        m_tagTableModelList.clear();
+        m_tagTableModelSearchList.clear();
         for (int i = 0; i < m_tagTableModelList.length(); ++i) {
-            int searchIndex = m_tagTableModelList[i]->getName().indexOf(string);
+            int searchIndex = m_tagTableModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
             if (searchIndex != -1) {
                 m_tagTableModelSearchList.append(m_tagTableModelList[i]);
             }
         }
     }
     else {
-        if (m_tagTableModelList.length() == 0 || reread) {
-            m_tagTableModelList = g_database->selectTagsTable();
-        }
         m_tagTableModelSearchList = m_tagTableModelList;
     }
 
     ui->listWidget_data->clear();
-    for (int i = 0; i < m_tagTableModelList.length(); ++i) {
-        ui->listWidget_data->addItem(m_tagTableModelList[i]->getName());
+    for (int i = 0; i < m_tagTableModelSearchList.length(); ++i) {
+        ui->listWidget_data->addItem(m_tagTableModelSearchList[i]->getName());
 
-        if (g_noteModel->categoriesTableModel->getName() == m_tagTableModelList[i]->getName()) {
-            ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
+        for (auto &&item : *g_noteModel->tagTableList) {
+            if (item->getName() == m_tagTableModelSearchList[i]->getName()) {
+                ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
+            }
         }
     }
 }
@@ -80,15 +85,16 @@ void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
 
-    QPropertyAnimation *pAnimation = new QPropertyAnimation(this, "geometry");
-    pAnimation->setDuration(250);
-    pAnimation->setEndValue(QRect(0, -height(), width(), height()));
-    pAnimation->setStartValue(QRect(0, 0, width(), height()));
-    pAnimation->setEasingCurve(QEasingCurve::Linear);
-    pAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+    animation->setDuration(250);
+    animation->setEndValue(QRect(0, -height(), width(), height()));
+    animation->setStartValue(QRect(0, 0, width(), height()));
+    animation->setEasingCurve(QEasingCurve::Linear);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    connect(pAnimation, &QPropertyAnimation::finished, this, &TagsWidget::animationFinished);
+    connect(animation, &QPropertyAnimation::finished, this, &TagsWidget::onAnimationFinished);
 }
+
 void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {

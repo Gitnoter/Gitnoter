@@ -77,7 +77,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget#widget_2{
+      <string notr="true">QWidget#widget{
 	background-color:#F6F6F6;
 }</string>
      </property>

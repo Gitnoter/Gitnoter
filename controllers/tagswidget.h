@@ -20,13 +20,13 @@ public:
     ~TagsWidget() override;
 
 signals:
-    void changeCategories();
+    void changeTags();
 
 public slots:
     void resizeWindow(QSize size);
 
 private slots:
-    void animationFinished();
+    void onAnimationFinished();
 
     void on_pushButton_add_clicked();
     void on_lineEdit_textChanged(const QString &arg1);

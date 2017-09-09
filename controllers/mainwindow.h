@@ -31,6 +31,7 @@ protected:
 
 public slots:
     void onChangeCategories();
+    void onChangeTags();
 
 private slots:
     // 系统菜单栏

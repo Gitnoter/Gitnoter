@@ -66,6 +66,7 @@ NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tag
 QString NoteModel::getNote()
 {
     QString note;
+    QString tags;
     note += "uuid: " + this->noteTableModel->getUuid() + "\n";
     note += "title: " + this->noteTableModel->getTitle() + "\n";
     note += "createDate: " + Tools::timestampToDateTime(this->noteTableModel->getCreateDate()) + "\n";
@@ -74,9 +75,10 @@ QString NoteModel::getNote()
 
     note += "tags: ";
     for (auto &&tagTableModel : *(this->tagTableList)) {
-        note += tagTableModel->getName() + g_tagSplit;
+        tags += tagTableModel->getName() + g_tagSplit;
     }
-    note.chop(g_tagSplit.length());
+    tags.chop(g_tagSplit.length());
+    note += tags;
 
     note += "\n\n---\n\n" + this->noteTableModel->getBody();
 

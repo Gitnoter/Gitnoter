@@ -499,7 +499,7 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
     if (!string.isEmpty()) {
         m_categoriesSearchList.clear();
         for (int i = 0; i < m_categoriesList.length(); ++i) {
-            int searchIndex = m_categoriesList[i]->getName().indexOf(string);
+            int searchIndex = m_categoriesList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
             if (searchIndex != -1) {
                 m_categoriesSearchList.append(m_categoriesList[i]);
             }
@@ -539,5 +539,12 @@ void MainWindow::on_pushButton_changeTags_clicked()
     tagWidget->show();
 
     connect(this, &MainWindow::resizeChildWindow, tagWidget, &TagsWidget::resizeWindow);
-    connect(tagWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
+    connect(tagWidget, SIGNAL(changeTags()), this, SLOT(onChangeTags()));
+}
+
+void MainWindow::onChangeTags()
+{
+    setTagsData();
+    this->setModified(true);
+    this->on_action_saveNote_triggered();
 }
