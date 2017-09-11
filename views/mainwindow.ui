@@ -1007,6 +1007,7 @@ QTableWidget::item:selected{
               <enum>Qt::ClickFocus</enum>
              </property>
              <property name="placeholderText">
+              <string>搜索笔记本</string>
              </property>
             </widget>
            </item>
@@ -1084,7 +1085,137 @@ QTableWidget::item:selected{
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="stackedWidgetPage_2"/>
+      <widget class="QWidget" name="stackedWidgetPage_2">
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QWidget" name="widget_title_2" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>46</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>46</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QWidget#widget_title{
+      	background-color:#F4F4F4;
+      }</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QPushButton" name="pushButton_addTags">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="text">
+              <string>新建标签</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_searchTags">
+             <property name="focusPolicy">
+              <enum>Qt::ClickFocus</enum>
+             </property>
+             <property name="placeholderText">
+              <string>搜索标记</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_removeTags">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="text">
+              <string>删除标记</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="listWidget_tags">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QListWidget#listWidget_categories{
+      	background-color:#F2F2F2;
+      	border: 0px solid;border-top: 1px solid #D3D3D3;
+      }</string>
+          </property>
+          <property name="autoScroll">
+           <bool>true</bool>
+          </property>
+          <property name="showDropIndicator" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::DragDrop</enum>
+          </property>
+          <property name="movement">
+           <enum>QListView::Free</enum>
+          </property>
+          <property name="flow">
+           <enum>QListView::TopToBottom</enum>
+          </property>
+          <property name="resizeMode">
+           <enum>QListView::Fixed</enum>
+          </property>
+          <property name="layoutMode">
+           <enum>QListView::Batched</enum>
+          </property>
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::IconMode</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="stackedWidgetPage_3"/>
       <widget class="QWidget" name="stackedWidgetPage_4"/>
       <widget class="QWidget" name="stackedWidgetPage_5"/>
