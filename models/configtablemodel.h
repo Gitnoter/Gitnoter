@@ -29,6 +29,12 @@ public:
     const QString &getSidebarSortValue() const;
     void setSidebarSortValue(const QString &sidebarSortValue);
 
+    int getCategoriesId() const;
+    void setCategoriesId(int categoriesId);
+
+    int getTagsId() const;
+    void setTagsId(int tagsId);
+
 private:
     QString version;
     QString repoDir;
@@ -39,10 +45,7 @@ private:
     int sidebarSortKey;
     QString sidebarSortValue;
     int categoriesId;
-public:
-    int getCategoriesId() const;
-
-    void setCategoriesId(int categoriesId);
+    int tagsId;
 
 };
 
