@@ -14,7 +14,7 @@ TagsListCell::TagsListCell(TagTableModel *tagTableModel) : ui(new Ui::TagsListCe
     ui->setupUi(this);
 
     m_tagTableModel = tagTableModel;
-    ui->lineEdit_name->setText(m_tagTableModel->getName());
+    ui->lineEdit_nameTags->setText(m_tagTableModel->getName());
     ui->label_noteCount->setText(QString::number(m_tagTableModel->getCount()));
 }
 
