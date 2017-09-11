@@ -100,3 +100,13 @@ void ConfigTableModel::setCategoriesId(int categoriesId)
 {
     ConfigTableModel::categoriesId = categoriesId;
 }
+
+int ConfigTableModel::getTagsId() const
+{
+    return tagsId;
+}
+
+void ConfigTableModel::setTagsId(int tagsId)
+{
+    ConfigTableModel::tagsId = tagsId;
+}

@@ -42,6 +42,7 @@ private slots:
     // 左侧菜单栏
     void on_pushButton_notes_clicked();
     void on_pushButton_folder_clicked();
+    void on_pushButton_tags_clicked();
 
     // 菜单分页第一页
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
@@ -69,6 +70,23 @@ private slots:
 
     void on_lineEdit_searchCategories_textChanged(const QString &arg1);
 
+    // 菜单分页第二页
+    void on_listWidget_tags_itemClicked(QListWidgetItem *item);
+    void on_listWidget_tags_doubleClicked(const QModelIndex &index);
+    void on_listWidget_tags_customContextMenuRequested(const QPoint &pos);
+
+    void on_pushButton_addTags_clicked();
+    void on_pushButton_removeTags_clicked();
+
+    void onActionRenameTagsTriggered();
+//    void onActionNameSortTagsTriggered();
+//    void onActionCountSortTagsTriggered();
+//    void onActionTimeSortTagsTriggered();
+
+    void onLineEditNameTagsEditingFinished();
+
+    void on_lineEdit_searchTags_textChanged(const QString &arg1);
+
 signals:
     void resizeChildWindow(QSize size);
 
@@ -80,8 +98,10 @@ private:
     TagsWidget *tagWidget;
     QList<NoteTableModel *> *m_sidebarNoteList;
     QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
-    QList<CategoriesTableModel *> m_categoriesList;
-    QList<CategoriesTableModel *> m_categoriesSearchList;
+    QList<CategoriesTableModel *> m_categoriesModelList;
+    QList<CategoriesTableModel *> m_categoriesModelSearchList;
+    QList<TagTableModel *> m_tagTableModelList;
+    QList<TagTableModel *> m_tagTableModelSearchList;
 
     void textChanged();
     void updatePreview();
@@ -97,11 +117,12 @@ private:
 
     void setTagsData();
     void setMainWindowData();
-    void resetListWidgetCategoriesBorder();
 
     void setCategoriesList(bool reread = true, const QString &string = "");
+    void setTagsList(bool reread = true, const QString &string = "");
 
     QMenu* createListWidgetCategoriesMenu();
+    QMenu* createListWidgetTagsMenu();
 
 };
 
