@@ -565,7 +565,7 @@ QTableWidget::item:selected{
                <bool>true</bool>
               </property>
               <attribute name="horizontalHeaderVisible">
-               <bool>false</bool>
+               <bool>true</bool>
               </attribute>
               <attribute name="horizontalHeaderCascadingSectionResizes">
                <bool>true</bool>
@@ -1007,7 +1007,6 @@ QTableWidget::item:selected{
               <enum>Qt::ClickFocus</enum>
              </property>
              <property name="placeholderText">
-              <string> 搜索笔记本</string>
              </property>
             </widget>
            </item>
