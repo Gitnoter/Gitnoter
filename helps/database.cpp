@@ -269,7 +269,7 @@ bool Database::deleteTagsTableByName(QString name)
 bool Database::updateTagsTableByName(QString name, QString whereName)
 {
     UpdateModel updateBuilder;
-    updateBuilder.update("notes")
+    updateBuilder.update("tags")
             .set("name", name.toStdString())
                     ("update_date", QDateTime::currentSecsSinceEpoch())
             .where(column("name") == whereName.toStdString());
