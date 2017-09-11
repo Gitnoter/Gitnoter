@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
 
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
-            this, &MainWindow::on_headerView_sortIndicatorChanged);
+            this, &MainWindow::onHeaderViewSortIndicatorChanged);
 
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
@@ -295,7 +295,7 @@ void MainWindow::on_action_deleteNote_triggered()
     this->setMainWindowData();
 }
 
-void MainWindow::on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
+void MainWindow::onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
     g_configTableModel->setSidebarSortKey(logicalIndex);
     g_configTableModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");

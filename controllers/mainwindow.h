@@ -46,7 +46,7 @@ private slots:
     // 菜单分页第一页
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
     void on_tableWidget_list_itemClicked(QTableWidgetItem *item);
-    void on_headerView_sortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
+    void onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrder order);
 
     void on_pushButton_deleteNote_clicked();
     void on_pushButton_categories_clicked();
