@@ -450,12 +450,15 @@ void MainWindow::onLineEditNameEditingFinished()
         }
     }
     lineEdit_name->setEnabled(false);
+
+    setCategoriesListEnabled(true);
 }
 
 void MainWindow::on_pushButton_addCategories_clicked()
 {
     QString categoriesName;
     QString lineEditSearchCategories = ui->lineEdit_searchCategories->displayText();
+
     for (int i = 0; i < 100; ++i) {
         categoriesName = lineEditSearchCategories.isEmpty()
                          ? tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i))
@@ -472,7 +475,12 @@ void MainWindow::on_pushButton_addCategories_clicked()
             }
 
             onActionRenameCategoriesTriggered();
-            return;
+            setCategoriesListEnabled(false);
+            break;
+        }
+
+        if (!lineEditSearchCategories.isEmpty()) {
+            break;
         }
     }
 }
@@ -492,8 +500,6 @@ void MainWindow::on_pushButton_removeCategories_clicked()
     auto selectedIndexes = ui->listWidget_categories->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        auto *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->item(index));
-        widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name")->clearFocus();
 
         if (m_categoriesModelList[index]->getCount() == 0) {
             g_database->deleteCategoriesTableByName(m_categoriesModelList[index]->getName());
@@ -686,6 +692,7 @@ void MainWindow::on_pushButton_addTags_clicked()
 {
     QString tagName;
     QString lineEditSearchTags = ui->lineEdit_searchTags->displayText();
+
     for (int i = 0; i < 100; ++i) {
         tagName = lineEditSearchTags.isEmpty() ? tr("新建标签%1").arg(i == 0 ? "" : QString::number(i))
                                                : lineEditSearchTags;
@@ -701,7 +708,12 @@ void MainWindow::on_pushButton_addTags_clicked()
             }
 
             onActionRenameTagsTriggered();
-            return;
+            setTagsListEnabled(false);
+            break;
+        }
+
+        if (!lineEditSearchTags.isEmpty()) {
+            break;
         }
     }
 }
@@ -711,8 +723,6 @@ void MainWindow::on_pushButton_removeTags_clicked()
     auto selectedIndexes = ui->listWidget_tags->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        auto *widget = ui->listWidget_tags->itemWidget(ui->listWidget_tags->item(index));
-        widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags")->clearFocus();
 
         if (m_tagTableModelList[index]->getCount() == 0) {
             g_database->deleteTagsTableByName(m_tagTableModelList[index]->getName());
@@ -758,10 +768,28 @@ void MainWindow::onLineEditNameTagsEditingFinished()
             lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
         }
     }
-    lineEdit_nameTags->setEnabled(false);
+    lineEdit_nameTags->setEnabled(true);
+
+    setTagsListEnabled(true);
 }
 
 void MainWindow::on_lineEdit_searchTags_textChanged(const QString &arg1)
 {
     arg1.isEmpty() ? setTagsList() : setTagsList(false, arg1);
+}
+
+void MainWindow::setCategoriesListEnabled(bool b)
+{
+    ui->pushButton_addCategories->setEnabled(b);
+    ui->lineEdit_searchCategories->setEnabled(b);
+    ui->pushButton_removeCategories->setEnabled(b);
+
+}
+
+void MainWindow::setTagsListEnabled(bool b)
+{
+    ui->pushButton_addTags->setEnabled(b);
+    ui->lineEdit_searchTags->setEnabled(b);
+    ui->pushButton_removeTags->setEnabled(b);
+
 }

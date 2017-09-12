@@ -122,6 +122,8 @@ private:
     QMenu* createListWidgetCategoriesMenu();
     QMenu* createListWidgetTagsMenu();
 
+    void setCategoriesListEnabled(bool b);
+    void setTagsListEnabled(bool b);
 };
 
 #endif // MAINWINDOW_H
