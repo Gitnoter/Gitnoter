@@ -99,9 +99,7 @@ private:
     QList<NoteTableModel *> *m_sidebarNoteList;
     QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
     QList<CategoriesTableModel *> m_categoriesModelList;
-    QList<CategoriesTableModel *> m_categoriesModelSearchList;
     QList<TagTableModel *> m_tagTableModelList;
-    QList<TagTableModel *> m_tagTableModelSearchList;
 
     void textChanged();
     void updatePreview();

@@ -431,22 +431,22 @@ void MainWindow::onLineEditNameEditingFinished()
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name");
 
     if(lineEdit_name->displayText().isEmpty()) {
-        lineEdit_name->setText(m_categoriesModelSearchList[index]->getName());
+        lineEdit_name->setText(m_categoriesModelList[index]->getName());
     }
     else {
         if (g_database->updateCategoriesTableByName(lineEdit_name->displayText(),
-                                                    m_categoriesModelSearchList[index]->getName())) {
+                                                    m_categoriesModelList[index]->getName())) {
             auto categoriesList = g_database->selectNJCTableByCategoriesId(
-                    m_categoriesModelSearchList[index]->getCategoriesId());
+                    m_categoriesModelList[index]->getCategoriesId());
             for (auto &&item : categoriesList) {
                 auto *note = g_database->getNoteByUuid(item->getNotesUuid());
                 Tools::writerFile(note->noteTableModel->getFilePath(), note->getNote());
             }
 
-            m_categoriesModelSearchList[index]->setName(lineEdit_name->displayText());
+            m_categoriesModelList[index]->setName(lineEdit_name->displayText());
         }
         else {
-            lineEdit_name->setText(m_categoriesModelSearchList[index]->getName());
+            lineEdit_name->setText(m_categoriesModelList[index]->getName());
         }
     }
     lineEdit_name->setEnabled(false);
@@ -455,20 +455,23 @@ void MainWindow::onLineEditNameEditingFinished()
 void MainWindow::on_pushButton_addCategories_clicked()
 {
     QString categoriesName;
+    QString lineEditSearchCategories = ui->lineEdit_searchCategories->displayText();
     for (int i = 0; i < 100; ++i) {
-        categoriesName = tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i));
-        if (g_database->insertCategoriesTable(categoriesName) != 0) {
-            setCategoriesList();
+        categoriesName = lineEditSearchCategories.isEmpty()
+                         ? tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i))
+                         : lineEditSearchCategories;
 
-            for (int j = 0; j < m_categoriesModelSearchList.length(); ++j) {
-                if (m_categoriesModelSearchList[j]->getName() == categoriesName) {
+        if (g_database->insertCategoriesTable(categoriesName) != 0) {
+            setCategoriesList(true, lineEditSearchCategories);
+
+            for (int j = 0; j < m_categoriesModelList.length(); ++j) {
+                if (m_categoriesModelList[j]->getName() == categoriesName) {
                     on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
                     break;
                 }
             }
 
             onActionRenameCategoriesTriggered();
-
             return;
         }
     }
@@ -489,8 +492,11 @@ void MainWindow::on_pushButton_removeCategories_clicked()
     auto selectedIndexes = ui->listWidget_categories->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        if (m_categoriesModelSearchList[index]->getCount() == 0) {
-            g_database->deleteCategoriesTableByName(m_categoriesModelSearchList[index]->getName());
+        auto *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->item(index));
+        widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name")->clearFocus();
+
+        if (m_categoriesModelList[index]->getCount() == 0) {
+            g_database->deleteCategoriesTableByName(m_categoriesModelList[index]->getName());
             setCategoriesList(true, ui->lineEdit_searchCategories->displayText());
         }
         else {
@@ -509,26 +515,24 @@ void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoin
 
 void MainWindow::setCategoriesList(bool reread, const QString &string)
 {
+    QList<CategoriesTableModel *> categoriesModelSearchList;
+
     if (m_categoriesModelList.length() == 0 || reread) {
         m_categoriesModelList = g_database->selectCategoriesTable();
-        m_categoriesModelSearchList = m_categoriesModelList;
     }
 
     if (!string.isEmpty()) {
-        m_categoriesModelSearchList.clear();
         for (int i = 0; i < m_categoriesModelList.length(); ++i) {
             int searchIndex = m_categoriesModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
             if (searchIndex != -1) {
-                m_categoriesModelSearchList.append(m_categoriesModelList[i]);
+                categoriesModelSearchList.append(m_categoriesModelList[i]);
             }
         }
-    }
-    else {
-        m_categoriesModelSearchList = m_categoriesModelList;
+        m_categoriesModelList = categoriesModelSearchList;
     }
 
     ui->listWidget_categories->clear();
-    for (auto &&datum : m_categoriesModelSearchList) {
+    for (auto &&datum : m_categoriesModelList) {
         datum->setCount(g_database->selectNJCTableByCategoriesId(datum->getCategoriesId()).length());
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
         ui->listWidget_categories->addItem(item);
@@ -540,7 +544,7 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 
 void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
 {
-    g_configTableModel->setCategoriesId(m_categoriesModelSearchList[index.row()]->getCategoriesId());
+    g_configTableModel->setCategoriesId(m_categoriesModelList[index.row()]->getCategoriesId());
 }
 
 void MainWindow::on_lineEdit_searchCategories_textChanged(const QString &arg1)
@@ -577,26 +581,24 @@ void MainWindow::on_pushButton_tags_clicked()
 
 void MainWindow::setTagsList(bool reread, const QString &string)
 {
+    QList<TagTableModel *> tagTableModelSearchList;
+
     if (m_tagTableModelList.length() == 0 || reread) {
         m_tagTableModelList = g_database->selectTagsTable();
-        m_tagTableModelSearchList = m_tagTableModelList;
     }
 
     if (!string.isEmpty()) {
-        m_tagTableModelSearchList.clear();
         for (int i = 0; i < m_tagTableModelList.length(); ++i) {
             int searchIndex = m_tagTableModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
             if (searchIndex != -1) {
-                m_tagTableModelSearchList.append(m_tagTableModelList[i]);
+                tagTableModelSearchList.append(m_tagTableModelList[i]);
             }
         }
-    }
-    else {
-        m_tagTableModelSearchList = m_tagTableModelList;
+        m_tagTableModelList = tagTableModelSearchList;
     }
 
     ui->listWidget_tags->clear();
-    for (auto &&datum : m_tagTableModelSearchList) {
+    for (auto &&datum : m_tagTableModelList) {
         datum->setCount(g_database->selectNJTTableByTagsId(datum->getTagsId()).length());
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget_tags);
         ui->listWidget_tags->addItem(item);
@@ -626,7 +628,7 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
-    g_configTableModel->setTagsId(m_tagTableModelSearchList[index.row()]->getTagsId());
+    g_configTableModel->setTagsId(m_tagTableModelList[index.row()]->getTagsId());
 }
 
 void MainWindow::on_listWidget_tags_customContextMenuRequested(const QPoint &pos)
@@ -683,10 +685,13 @@ QMenu *MainWindow::createListWidgetTagsMenu()
 void MainWindow::on_pushButton_addTags_clicked()
 {
     QString tagName;
+    QString lineEditSearchTags = ui->lineEdit_searchTags->displayText();
     for (int i = 0; i < 100; ++i) {
-        tagName = tr("新建标签%1").arg(i == 0 ? "" : QString::number(i));
+        tagName = lineEditSearchTags.isEmpty() ? tr("新建标签%1").arg(i == 0 ? "" : QString::number(i))
+                                               : lineEditSearchTags;
+
         if (g_database->insertTagsTable(tagName) != 0) {
-            setTagsList();
+            setTagsList(true, lineEditSearchTags);
 
             for (int j = 0; j < m_tagTableModelList.length(); ++j) {
                 if (m_tagTableModelList[j]->getName() == tagName) {
@@ -696,7 +701,6 @@ void MainWindow::on_pushButton_addTags_clicked()
             }
 
             onActionRenameTagsTriggered();
-
             return;
         }
     }
@@ -707,8 +711,11 @@ void MainWindow::on_pushButton_removeTags_clicked()
     auto selectedIndexes = ui->listWidget_tags->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        if (m_tagTableModelSearchList[index]->getCount() == 0) {
-            g_database->deleteTagsTableByName(m_tagTableModelSearchList[index]->getName());
+        auto *widget = ui->listWidget_tags->itemWidget(ui->listWidget_tags->item(index));
+        widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags")->clearFocus();
+
+        if (m_tagTableModelList[index]->getCount() == 0) {
+            g_database->deleteTagsTableByName(m_tagTableModelList[index]->getName());
             setTagsList(true, ui->lineEdit_searchTags->displayText());
         }
         else {
@@ -734,21 +741,21 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     QLineEdit *lineEdit_nameTags = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
 
     if(lineEdit_nameTags->displayText().isEmpty()) {
-        lineEdit_nameTags->setText(m_tagTableModelSearchList[index]->getName());
+        lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
     }
     else {
         if (g_database->updateTagsTableByName(lineEdit_nameTags->displayText(),
-                                              m_tagTableModelSearchList[index]->getName())) {
-            auto tagsList = g_database->selectNJTTableByTagsId(m_tagTableModelSearchList[index]->getTagsId());
+                                              m_tagTableModelList[index]->getName())) {
+            auto tagsList = g_database->selectNJTTableByTagsId(m_tagTableModelList[index]->getTagsId());
             for (auto &&item : tagsList) {
                 auto *note = g_database->getNoteByUuid(item->getNotesUuid());
                 Tools::writerFile(note->noteTableModel->getFilePath(), note->getNote());
             }
 
-            m_tagTableModelSearchList[index]->setName(lineEdit_nameTags->displayText());
+            m_tagTableModelList[index]->setName(lineEdit_nameTags->displayText());
         }
         else {
-            lineEdit_nameTags->setText(m_tagTableModelSearchList[index]->getName());
+            lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
         }
     }
     lineEdit_nameTags->setEnabled(false);
