@@ -218,7 +218,8 @@ NoteTableModel* Database::selectNotesTableByUuid(QString uuid)
     SelectModel selectBuilder;
     selectBuilder.select("title", "create_date", "update_date", "body", "file_path")
             .from("notes")
-            .where(column("uuid") == uuid.toStdString());
+            .where(column("uuid") == uuid.toStdString())
+            .order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     NoteTableModel *result = nullptr;
@@ -282,7 +283,7 @@ bool Database::updateTagsTableByName(QString name, QString whereName)
 QList<TagTableModel *> Database::selectTagsTable()
 {
     SelectModel selectBuilder;
-    selectBuilder.select("id", "name", "create_date", "update_date").from("tags");
+    selectBuilder.select("id", "name", "create_date", "update_date").from("tags").order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<TagTableModel *> result;
@@ -391,7 +392,8 @@ bool Database::updateCategoriesTableByName(QString name, QString whereName)
 QList<CategoriesTableModel *> Database::selectCategoriesTable()
 {
     SelectModel selectBuilder;
-    selectBuilder.select("id", "name", "create_date", "update_date", "is_default").from("categories");
+    selectBuilder.select("id", "name", "create_date", "update_date", "is_default").from("categories")
+            .order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<CategoriesTableModel *> result;
@@ -504,7 +506,7 @@ QList<TagTableModel *>* Database::selectNJTTableByNotesUuid(QString notesUuid)
 {
     SelectModel selectBuilder;
     selectBuilder.select("id", "tags_id", "create_date").from("notes_join_tags")
-            .where(column("notes_uuid") == notesUuid.toStdString());
+            .where(column("notes_uuid") == notesUuid.toStdString()).order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<TagTableModel *> *result = new QList<TagTableModel *>();
@@ -530,7 +532,7 @@ QList<TagTableModel *> Database::selectNJTTableByTagsId(int tagsId)
 {
     SelectModel selectBuilder;
     selectBuilder.select("id", "notes_Uuid", "create_date").from("notes_join_tags")
-            .where(column("tags_id") == tagsId);
+            .where(column("tags_id") == tagsId).order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<TagTableModel *> result;
@@ -596,7 +598,7 @@ QList<CategoriesTableModel *> Database::selectNJCTableByNotesUuid(QString notesU
 {
     SelectModel selectBuilder;
     selectBuilder.select("id", "categories_id", "create_date").from("notes_join_categories")
-            .where(column("notes_uuid") == notesUuid.toStdString());
+            .where(column("notes_uuid") == notesUuid.toStdString()).order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<CategoriesTableModel *> result;
@@ -621,7 +623,7 @@ QList<CategoriesTableModel *> Database::selectNJCTableByCategoriesId(int categor
 {
     SelectModel selectBuilder;
     selectBuilder.select("id", "notes_uuid", "create_date").from("notes_join_categories")
-            .where(column("categories_id") == categoriesId);
+            .where(column("categories_id") == categoriesId).order_by("create_date desc");
     QString sql = QString::fromStdString(selectBuilder.str());
 
     QList<CategoriesTableModel *> result;
