@@ -431,20 +431,22 @@ void MainWindow::onLineEditNameEditingFinished()
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name");
 
     if(lineEdit_name->displayText().isEmpty()) {
-        lineEdit_name->setText(m_categoriesModelList[index]->getName());
+        lineEdit_name->setText(m_categoriesModelSearchList[index]->getName());
     }
     else {
-        if (g_database->updateCategoriesTableByName(lineEdit_name->displayText(), m_categoriesModelList[index]->getName())) {
-            auto categoriesList = g_database->selectNJCTableByCategoriesId(m_categoriesModelList[index]->getCategoriesId());
+        if (g_database->updateCategoriesTableByName(lineEdit_name->displayText(),
+                                                    m_categoriesModelSearchList[index]->getName())) {
+            auto categoriesList = g_database->selectNJCTableByCategoriesId(
+                    m_categoriesModelSearchList[index]->getCategoriesId());
             for (auto &&item : categoriesList) {
                 auto *note = g_database->getNoteByUuid(item->getNotesUuid());
                 Tools::writerFile(note->noteTableModel->getFilePath(), note->getNote());
             }
 
-            m_categoriesModelList[index]->setName(lineEdit_name->displayText());
+            m_categoriesModelSearchList[index]->setName(lineEdit_name->displayText());
         }
         else {
-            lineEdit_name->setText(m_categoriesModelList[index]->getName());
+            lineEdit_name->setText(m_categoriesModelSearchList[index]->getName());
         }
     }
     lineEdit_name->setEnabled(false);
@@ -458,8 +460,8 @@ void MainWindow::on_pushButton_addCategories_clicked()
         if (g_database->insertCategoriesTable(categoriesName) != 0) {
             setCategoriesList();
 
-            for (int j = 0; j < m_categoriesModelList.length(); ++j) {
-                if (m_categoriesModelList[j]->getName() == categoriesName) {
+            for (int j = 0; j < m_categoriesModelSearchList.length(); ++j) {
+                if (m_categoriesModelSearchList[j]->getName() == categoriesName) {
                     on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
                     break;
                 }
@@ -487,9 +489,9 @@ void MainWindow::on_pushButton_removeCategories_clicked()
     auto selectedIndexes = ui->listWidget_categories->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        if (m_categoriesModelList[index]->getCount() == 0) {
-            g_database->deleteCategoriesTableByName(m_categoriesModelList[index]->getName());
-            setCategoriesList();
+        if (m_categoriesModelSearchList[index]->getCount() == 0) {
+            g_database->deleteCategoriesTableByName(m_categoriesModelSearchList[index]->getName());
+            setCategoriesList(true, ui->lineEdit_searchCategories->displayText());
         }
         else {
             QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
@@ -509,6 +511,7 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 {
     if (m_categoriesModelList.length() == 0 || reread) {
         m_categoriesModelList = g_database->selectCategoriesTable();
+        m_categoriesModelSearchList = m_categoriesModelList;
     }
 
     if (!string.isEmpty()) {
@@ -537,7 +540,7 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 
 void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
 {
-    g_configTableModel->setCategoriesId(m_categoriesModelList[index.row()]->getCategoriesId());
+    g_configTableModel->setCategoriesId(m_categoriesModelSearchList[index.row()]->getCategoriesId());
 }
 
 void MainWindow::on_lineEdit_searchCategories_textChanged(const QString &arg1)
@@ -576,6 +579,7 @@ void MainWindow::setTagsList(bool reread, const QString &string)
 {
     if (m_tagTableModelList.length() == 0 || reread) {
         m_tagTableModelList = g_database->selectTagsTable();
+        m_tagTableModelSearchList = m_tagTableModelList;
     }
 
     if (!string.isEmpty()) {
@@ -622,7 +626,7 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
-    g_configTableModel->setTagsId(m_tagTableModelList[index.row()]->getTagsId());
+    g_configTableModel->setTagsId(m_tagTableModelSearchList[index.row()]->getTagsId());
 }
 
 void MainWindow::on_listWidget_tags_customContextMenuRequested(const QPoint &pos)
@@ -703,9 +707,9 @@ void MainWindow::on_pushButton_removeTags_clicked()
     auto selectedIndexes = ui->listWidget_tags->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-        if (m_tagTableModelList[index]->getCount() == 0) {
-            g_database->deleteTagsTableByName(m_tagTableModelList[index]->getName());
-            setTagsList();
+        if (m_tagTableModelSearchList[index]->getCount() == 0) {
+            g_database->deleteTagsTableByName(m_tagTableModelSearchList[index]->getName());
+            setTagsList(true, ui->lineEdit_searchTags->displayText());
         }
         else {
             QMessageBox::about(this, tr("消息提醒"), tr("该标签内存在笔记, 请先移出"));
@@ -730,21 +734,21 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     QLineEdit *lineEdit_nameTags = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
 
     if(lineEdit_nameTags->displayText().isEmpty()) {
-        lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
+        lineEdit_nameTags->setText(m_tagTableModelSearchList[index]->getName());
     }
     else {
         if (g_database->updateTagsTableByName(lineEdit_nameTags->displayText(),
-                                                    m_tagTableModelList[index]->getName())) {
-            auto tagsList = g_database->selectNJTTableByTagsId(m_tagTableModelList[index]->getTagsId());
+                                              m_tagTableModelSearchList[index]->getName())) {
+            auto tagsList = g_database->selectNJTTableByTagsId(m_tagTableModelSearchList[index]->getTagsId());
             for (auto &&item : tagsList) {
                 auto *note = g_database->getNoteByUuid(item->getNotesUuid());
                 Tools::writerFile(note->noteTableModel->getFilePath(), note->getNote());
             }
 
-            m_tagTableModelList[index]->setName(lineEdit_nameTags->displayText());
+            m_tagTableModelSearchList[index]->setName(lineEdit_nameTags->displayText());
         }
         else {
-            lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
+            lineEdit_nameTags->setText(m_tagTableModelSearchList[index]->getName());
         }
     }
     lineEdit_nameTags->setEnabled(false);
