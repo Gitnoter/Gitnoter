@@ -39,8 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     g_configTableModel->setSidebarSortValue("DESC");
     g_configTableModel->setCategoriesId(1);
 
-    this->setDefaultNote();
     this->setSidebarTable();
+    this->setDefaultNote();
 
     // 初始化菜单快捷键
     ui->action_newNote->setShortcut(Qt::CTRL | Qt::Key_N);
@@ -347,7 +347,7 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget");
     if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < ui->listWidget_categories->count(); ++i) {
+        for (int i = 0; i < m_categoriesModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
             QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
@@ -546,6 +546,13 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
         item->setSizeHint(categoriesListCell->sizeHint());
         ui->listWidget_categories->setItemWidget(item, categoriesListCell);
     }
+
+    // todo: 为了修复一个listWidget的bug而添加的一段无用代码
+    //       因为最后一个item会出现有一半不响应型号, 所以在最后添加了一个无用的item占位
+    if (m_categoriesModelList.length() != 0) {
+        ui->listWidget_categories->addItem("bug");
+        ui->listWidget_categories->item(m_categoriesModelList.length())->setHidden(true);
+    }
 }
 
 void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
@@ -612,13 +619,20 @@ void MainWindow::setTagsList(bool reread, const QString &string)
         item->setSizeHint(tagsListCell->sizeHint());
         ui->listWidget_tags->setItemWidget(item, tagsListCell);
     }
+
+    // todo: 为了修复一个listWidget的bug而添加的一段无用代码
+    //       因为最后一个item会出现有一半不响应型号, 所以在最后添加了一个无用的item占位
+    if (m_tagTableModelList.length() != 0) {
+        ui->listWidget_tags->addItem("bug");
+        ui->listWidget_tags->item(m_tagTableModelList.length())->setHidden(true);
+    }
 }
 
 void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_tags->itemWidget(item)->findChild<QWidget *>("widget");
     if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < ui->listWidget_tags->count(); ++i) {
+        for (int i = 0; i < m_tagTableModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
             QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
@@ -635,6 +649,7 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
     g_configTableModel->setTagsId(m_tagTableModelList[index.row()]->getTagsId());
+
 }
 
 void MainWindow::on_listWidget_tags_customContextMenuRequested(const QPoint &pos)
