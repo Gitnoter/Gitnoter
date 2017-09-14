@@ -97,7 +97,6 @@ private:
     CategoriesWidget *categoriesWidget;
     TagsWidget *tagWidget;
     QList<NoteTableModel *> *m_sidebarNoteList;
-    QList<NoteTableModel *> *m_sidebarNoteListByCategoriesId;
     QList<CategoriesTableModel *> m_categoriesModelList;
     QList<TagTableModel *> m_tagTableModelList;
 

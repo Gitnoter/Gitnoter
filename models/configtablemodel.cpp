@@ -98,6 +98,7 @@ int ConfigTableModel::getCategoriesId() const
 
 void ConfigTableModel::setCategoriesId(int categoriesId)
 {
+    ConfigTableModel::tagsId = 0;
     ConfigTableModel::categoriesId = categoriesId;
 }
 
@@ -108,5 +109,6 @@ int ConfigTableModel::getTagsId() const
 
 void ConfigTableModel::setTagsId(int tagsId)
 {
+    ConfigTableModel::categoriesId = 0;
     ConfigTableModel::tagsId = tagsId;
 }
