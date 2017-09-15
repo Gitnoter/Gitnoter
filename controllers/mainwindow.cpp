@@ -821,7 +821,7 @@ void MainWindow::onLineEditNameTagsEditingFinished()
             lineEdit_nameTags->setText(m_tagTableModelList[index]->getName());
         }
     }
-    lineEdit_nameTags->setEnabled(true);
+    lineEdit_nameTags->setEnabled(false);
 
     setTagsListEnabled(true);
 }
