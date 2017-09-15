@@ -26,9 +26,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-protected:
-    void resizeEvent(QResizeEvent *size);
-
 public slots:
     void onChangeCategories();
     void onChangeTags();
@@ -89,6 +86,10 @@ private slots:
 
 signals:
     void resizeChildWindow(QSize size);
+
+protected:
+    void resizeEvent(QResizeEvent *size) override;
+    void mouseReleaseEvent(QMouseEvent * event) override;
 
 private:
     Ui::MainWindow *ui;

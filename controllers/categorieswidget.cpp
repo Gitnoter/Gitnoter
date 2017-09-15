@@ -119,6 +119,7 @@ void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
 
     connect(pAnimation, &QPropertyAnimation::finished, this, &CategoriesWidget::animationFinished);
 }
+
 void CategoriesWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {

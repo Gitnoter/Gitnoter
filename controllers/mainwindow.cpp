@@ -148,11 +148,6 @@ void MainWindow::on_pushButton_categories_clicked()
     connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }
 
-void MainWindow::resizeEvent(QResizeEvent *size)
-{
-    emit resizeChildWindow(size->size());
-}
-
 void MainWindow::initNotesToDatabases()
 {
     QString notesPath = QDir(g_repoPath).filePath(g_noteFolderName);
@@ -845,4 +840,35 @@ void MainWindow::setTagsListEnabled(bool b)
     ui->lineEdit_searchTags->setEnabled(b);
     ui->pushButton_removeTags->setEnabled(b);
 
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    QWidget::mouseReleaseEvent(event);
+
+    if (ui->stackedWidget->currentIndex() == 1) {
+        for (int i = 0; i < m_categoriesModelList.length(); ++i) {
+            QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
+            QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
+            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
+            listWidgetItem->setData(Qt::UserRole, QVariant());
+            ui->listWidget_categories->setItemSelected(listWidgetItem, false);
+        }
+    }
+    else if (ui->stackedWidget->currentIndex() == 2) {
+        for (int i = 0; i < m_tagTableModelList.length(); ++i) {
+            QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
+            QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
+            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
+            listWidgetItem->setData(Qt::UserRole, QVariant());
+            ui->listWidget_tags->setItemSelected(listWidgetItem, false);
+        }
+    }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *size)
+{
+    QWidget::resizeEvent(size);
+
+    emit resizeChildWindow(size->size());
 }
