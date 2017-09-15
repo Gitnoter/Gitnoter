@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    qDebug() << Qt::DescendingOrder;
 
+    ui->lineEdit_searchNote->setHidden(true);
+
     this->initNotesToDatabases();
 
     g_configTableModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
@@ -73,10 +75,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // 左侧菜单栏
     this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
     this->menuPushButtons.insert("pushButton_notes", ui->pushButton_notes);
-    this->menuPushButtons.insert("pushButton_search", ui->pushButton_search);
-    this->menuPushButtons.insert("pushButton_sync", ui->pushButton_sync);
     this->menuPushButtons.insert("pushButton_tags", ui->pushButton_tags);
-    this->menuPushButtons.insert("pushButton_Trash", ui->pushButton_Trash);
+    this->menuPushButtons.insert("pushButton_trash", ui->pushButton_trash);
+    this->menuPushButtons.insert("pushButton_sync", ui->pushButton_sync);
 
     for (auto itr = menuPushButtons.begin(); itr != menuPushButtons.end(); ++itr) {
         connect(itr.value(), &QPushButton::clicked, this, &MainWindow::menuPushButtonClicked);
@@ -173,7 +174,7 @@ void MainWindow::setDefaultNote()
     }
 }
 
-void MainWindow::setSidebarTable()
+void MainWindow::setSidebarTable(QString text)
 {
     ui->tableWidget_list->clearContents();
     m_sidebarNoteList = g_database->getSidebarNotes();
@@ -200,6 +201,16 @@ void MainWindow::setSidebarTable()
             }
         }
         m_sidebarNoteList = sidebarNoteList;
+    }
+
+    if (!text.isEmpty()) {
+        auto *sidebarNoteList2 = new QList<NoteTableModel *>();
+        for (auto &&item : *m_sidebarNoteList) {
+            if (item->getTitle().indexOf(text, 0, Qt::CaseInsensitive) != -1) {
+                sidebarNoteList2->append(item);
+            }
+        }
+        m_sidebarNoteList = sidebarNoteList2;
     }
 
     ui->tableWidget_list->setRowCount(m_sidebarNoteList->length());
@@ -871,4 +882,9 @@ void MainWindow::resizeEvent(QResizeEvent *size)
     QWidget::resizeEvent(size);
 
     emit resizeChildWindow(size->size());
+}
+
+void MainWindow::on_lineEdit_searchNoteList_textChanged(const QString &arg1)
+{
+    setSidebarTable(arg1);
 }

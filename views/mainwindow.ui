@@ -225,49 +225,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_search">
-         <property name="minimumSize">
-          <size>
-           <width>55</width>
-           <height>37</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>55</width>
-           <height>37</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string>QListWidget#listWidget_categories{
-	background-color:#F2F2F2;
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <selectedoff>:/images/select.jpg</selectedoff>
-           <selectedon>:/images/selected.jpg</selectedon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>55</width>
-           <height>37</height>
-          </size>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_sync">
+        <widget class="QPushButton" name="pushButton_trash">
          <property name="minimumSize">
           <size>
            <width>55</width>
@@ -327,7 +285,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_Trash">
+        <widget class="QPushButton" name="pushButton_sync">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -503,6 +461,9 @@
                <set>Qt::LinksAccessibleByMouse</set>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_searchNoteList"/>
             </item>
             <item>
              <widget class="QTableWidget" name="tableWidget_list">
@@ -682,7 +643,10 @@ QTableWidget::item:selected{
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit">
+                  <widget class="QLineEdit" name="lineEdit_searchNote">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
                    <property name="frame">
                     <bool>true</bool>
                    </property>

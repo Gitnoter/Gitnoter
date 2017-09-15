@@ -84,6 +84,8 @@ private slots:
 
     void on_lineEdit_searchTags_textChanged(const QString &arg1);
 
+    void on_lineEdit_searchNoteList_textChanged(const QString &arg1);
+
 signals:
     void resizeChildWindow(QSize size);
 
@@ -107,7 +109,7 @@ private:
 
     void initNotesToDatabases();
     void setDefaultNote();
-    void setSidebarTable();
+    void setSidebarTable(QString text = "");
     void setEditText();
 
     bool isModified();
