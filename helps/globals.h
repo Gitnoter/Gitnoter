@@ -1,10 +1,11 @@
-#ifndef APPDATA_H
-#define APPDATA_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
 #include "notemodel.h"
 #include "database.h"
 #include "configtablemodel.h"
 #include "tagtablemodel.h"
+#include "gitmanager.h"
 
 #include <QObject>
 
@@ -24,6 +25,7 @@ extern QString g_appDataLocation;
 extern Database *g_database;
 extern NoteModel *g_noteModel;
 extern ConfigTableModel *g_configTableModel;
+extern GitManager *g_gitManager;
 
 
-#endif // APPDATA_H
+#endif // GLOBALS_H
