@@ -8,7 +8,7 @@ GitManager::GitManager()
     init();
 }
 
-GitManager::GitManager(QString username, QString password)
+GitManager::GitManager(const char *username, const char *password)
 {
     git_libgit2_init();
     init();
@@ -146,7 +146,7 @@ int GitManager::setUrlRemote(const char * name, const char * url, bool push)
                 : git_remote_set_url(mRepo, name, url);
 }
 
-QList<git_remote *> GitManager::getRemoteList()
+std::vector<git_remote *> GitManager::getRemoteList()
 {
     const char *name, *fetch, *push;
     git_strarray remotes = {0};
@@ -154,11 +154,11 @@ QList<git_remote *> GitManager::getRemoteList()
 
     git_remote_list(&remotes, mRepo);
 
-    QList<git_remote *> list = {};
+    std::vector<git_remote *> list = {};
     for (int i = 0; i < (int) remotes.count; i++) {
         name = remotes.strings[i];
         git_remote_lookup(&remote, mRepo, name);
-        list.append(remote);
+        list.push_back(remote);
 //        QMap<QString, QString> map = {};
 //        fetch = git_remote_url(remote);
 //        if (fetch) {
@@ -185,14 +185,14 @@ QList<git_remote *> GitManager::getRemoteList()
     return list;
 }
 
-QList<git_status_entry> GitManager::getStatusList()
+std::vector<git_status_entry> GitManager::getStatusList()
 {
     git_status_list *status = {0};
     size_t maxi = git_status_list_entrycount(status);
 
-    QList<git_status_entry> list = {};
+    std::vector<git_status_entry> list = {};
     for (size_t i = 0; i < maxi; ++i) {
-        list.append(*git_status_byindex(status, i));
+        list.push_back(*git_status_byindex(status, i));
     }
 
     git_status_list_free(status);
@@ -219,8 +219,8 @@ void GitManager::addAll()
 
 bool GitManager::commit()
 {
-    QList<git_status_entry> statusList = getStatusList();
-    if (statusList.length() == 0) {
+    std::vector<git_status_entry> statusList = getStatusList();
+    if (statusList.size() == 0) {
         qDebug() << "Nothing to it...";
         return true;
     }
@@ -280,8 +280,9 @@ bool GitManager::commit()
 
 void GitManager::push()
 {
-    QList<git_remote *> remoteList = getRemoteList();
-    if (remoteList.length() == 0) {
+    std::vector<git_remote *> remoteList = getRemoteList();
+
+    if (remoteList.size() == 0) {
         return;
     }
 

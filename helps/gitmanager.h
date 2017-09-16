@@ -1,10 +1,7 @@
 #ifndef GITMANAGER_H
 #define GITMANAGER_H
 
-#include <QObject>
-#include <QMap>
-#include <QList>
-
+#include <vector>
 #include <git2.h>
 
 struct print_payload {
@@ -12,12 +9,11 @@ struct print_payload {
     git_repository *repo;
 };
 
-
-class GitManager : public QObject
+class GitManager
 {
 public:
     GitManager();
-    GitManager(QString username, QString password);
+    GitManager(const char *username, const char *password);
     ~GitManager();
 
     void setUserPass(const char *username, const char *password);
@@ -31,9 +27,9 @@ public:
     int removeRemote(const char * name);
     int renameRemote(const char * name, const char * newName);
     int setUrlRemote(const char * name, const char * url, bool push);
-    QList<git_remote *> getRemoteList();
+    std::vector<git_remote *> getRemoteList();
 
-    QList<git_status_entry> getStatusList();
+    std::vector<git_status_entry> getStatusList();
 
     void addAll();
     bool commit();
@@ -44,7 +40,6 @@ private:
     git_cred_userpass_payload mUserPass;
 
     void createInitialCommit();
-
     void init();
 };
 
