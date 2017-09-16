@@ -1,28 +1,48 @@
 #ifndef GITMANAGER_H
 #define GITMANAGER_H
 
+#include <QObject>
+#include <QMap>
+#include <QList>
+
 #include <git2.h>
 
-class GitManager
+struct print_payload {
+    int options;
+    git_repository *repo;
+};
+
+
+class GitManager : public QObject
 {
 public:
-    git_repository *mRepo;
-    git_clone_options mOpts;
-
     GitManager();
-    GitManager(char *username, char *password);
+    GitManager(QString username, QString password);
     ~GitManager();
 
-    void setUserPass(char *username, char *password);
+    void setUserPass(const char *username, const char *password);
 
-    int initLocalRepo(const char *repoDirectory, bool initialCommit = false);
-    int clone(const char *url, const char *path);
+    int initLocalRepo(const char * repoDirectory, bool initialCommit = false);
+    int clone(const char * url, const char * path);
 
-    int addRemote();
+    int open(const char * repoDirectory);
 
+    int addRemote(const char * name, const char * url);
+    int removeRemote(const char * name);
+    int renameRemote(const char * name, const char * newName);
+    int setUrlRemote(const char * name, const char * url, bool push);
+    QList<git_remote *> getRemoteList();
+
+    QList<git_status_entry> getStatusList();
+
+    void add();
+    bool commit();
+    void push();
 
 private:
+    git_repository *mRepo;
     git_cred_userpass_payload mUserPass;
+
     void createInitialCommit();
 
     void init();
