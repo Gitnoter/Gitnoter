@@ -200,7 +200,7 @@ QList<git_status_entry> GitManager::getStatusList()
     return list;
 }
 
-void GitManager::add()
+void GitManager::addAll()
 {
     git_index *index;
     git_strarray array = {0};

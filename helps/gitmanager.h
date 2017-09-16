@@ -35,7 +35,7 @@ public:
 
     QList<git_status_entry> getStatusList();
 
-    void add();
+    void addAll();
     bool commit();
     void push();
 
