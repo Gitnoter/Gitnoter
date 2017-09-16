@@ -12,13 +12,11 @@ include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/models)
 include_directories(${PROJECT_SOURCE_DIR}/helps)
 include_directories(${PROJECT_SOURCE_DIR}/views)
+include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
 
-# if (WIN32)
-#     find_library(git2 libgit2.dll.a)
-# elseif (APPLE)
-#     find_library(git2 libgit2.dylib)
-# elseif (UNIX)
-# endif()
+link_directories(${PROJECT_SOURCE_DIR}/libraries/lib/)
+
+#find_library(git2 libgit2)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
@@ -49,7 +47,7 @@ add_executable(${PROJECT_NAME}
         helps/document.h        helps/document.cpp
         helps/database.h        helps/database.cpp
         helps/globals.h         helps/globals.cpp
-        helps/tools.h           helps/tools.cpp)
+        helps/tools.h           helps/tools.cpp
+        helps/gitmanager.h      helps/gitmanager.cpp)
 
-# target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick git2)
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql git2)

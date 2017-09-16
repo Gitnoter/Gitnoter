@@ -48,7 +48,8 @@ SOURCES += \
     helps/document.cpp  \
     helps/database.cpp  \
     helps/globals.cpp  \
-    helps/tools.cpp
+    helps/tools.cpp \
+    helps/gitmanager.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -66,7 +67,8 @@ HEADERS += \
     helps/document.h  \
     helps/database.h  \
     helps/globals.h  \
-    helps/tools.h
+    helps/tools.h \
+    helps/gitmanager.h
 
 FORMS += \
     views/mainwindow.ui \
@@ -77,3 +79,8 @@ FORMS += \
 
 RESOURCES += \
     resources/resources.qrc
+
+unix|win32: LIBS += -L$$PWD/libraries/lib/ -lgit2
+
+INCLUDEPATH += $$PWD/libraries/include
+DEPENDPATH += $$PWD/libraries/include
