@@ -35,6 +35,9 @@ public:
     int getTagsId() const;
     void setTagsId(int tagsId);
 
+    int getIsLocalRepo() const;
+    void setIsLocalRepo(int isLocalRepo);
+
 private:
     QString version;
     QString repoDir;
@@ -42,10 +45,11 @@ private:
     QString repoUsername;
     QString repoPassword;
     QString openNotesUuid;
-    int sidebarSortKey;
     QString sidebarSortValue;
+    int sidebarSortKey;
     int categoriesId;
     int tagsId;
+    int isLocalRepo;
 
 };
 

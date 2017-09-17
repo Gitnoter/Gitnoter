@@ -112,3 +112,13 @@ void ConfigTableModel::setTagsId(int tagsId)
     ConfigTableModel::categoriesId = 0;
     ConfigTableModel::tagsId = tagsId;
 }
+
+int ConfigTableModel::getIsLocalRepo() const
+{
+    return isLocalRepo;
+}
+
+void ConfigTableModel::setIsLocalRepo(int isLocalRepo)
+{
+    ConfigTableModel::isLocalRepo = isLocalRepo;
+}

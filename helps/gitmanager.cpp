@@ -1,6 +1,5 @@
+#include <libraries/include/git2/remote.h>
 #include "gitmanager.h"
-
-#include <qDebug>
 
 GitManager::GitManager()
 {
@@ -47,9 +46,6 @@ int GitManager::clone(const char * url, const char * path)
 {
     git_clone_options opts;
 
-    git_checkout_options dummy_opts = GIT_CHECKOUT_OPTIONS_INIT;
-    git_fetch_options dummy_fetch = GIT_FETCH_OPTIONS_INIT;
-
     memset(&(opts), 0, sizeof(git_clone_options));
     opts.version = GIT_CLONE_OPTIONS_VERSION;
     opts.checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
@@ -71,13 +67,13 @@ void GitManager::createInitialCommit()
     /** First use the config to initialize a commit signature for the user. */
 
     if (git_signature_default(&sig, mRepo) < 0) {
-        qDebug() << "Unable to create a commit signature. Perhaps 'user.name' and 'user.email' are not set";
+        printf("Unable to create a commit signature. Perhaps 'user.name' and 'user.email' are not set");
     }
 
     /* Now let's create an empty tree for this commit */
 
     if (git_repository_index(&index, mRepo) < 0) {
-        qDebug() << "Could not open repository index";
+        printf("Could not open repository index");
     }
 
     /**
@@ -87,13 +83,13 @@ void GitManager::createInitialCommit()
      */
 
     if (git_index_write_tree(&tree_id, index) < 0) {
-        qDebug() << "Unable to write initial tree from index";
+        printf("Unable to write initial tree from index");
     }
 
     git_index_free(index);
 
     if (git_tree_lookup(&tree, mRepo, &tree_id) < 0) {
-        qDebug() << "Could not look up initial tree";
+        printf("Could not look up initial tree");
     }
 
     /**
@@ -107,7 +103,7 @@ void GitManager::createInitialCommit()
     if (git_commit_create_v(
             &commit_id, mRepo, "HEAD", sig, sig,
             NULL, "Initial commit", tree, 0) < 0) {
-        qDebug() << "Could not create the initial commit";
+        printf("Could not create the initial commit");
     }
 
     /** Clean up so we don't leak memory. */
@@ -135,9 +131,9 @@ int GitManager::removeRemote(const char * name)
 
 int GitManager::renameRemote(const char * name, const char * newName)
 {
-    git_strarray *problems = {0};
+    git_strarray problems = {0};
 
-    return git_remote_rename(problems, mRepo, name, newName);;
+    return git_remote_rename(&problems, mRepo, name, newName);
 }
 
 int GitManager::setUrlRemote(const char * name, const char * url, bool push)
@@ -187,7 +183,11 @@ std::vector<git_remote *> GitManager::getRemoteList()
 
 std::vector<git_status_entry> GitManager::getStatusList()
 {
-    git_status_list *status = {0};
+    git_status_list *status;
+    git_status_options statusopt = GIT_STATUS_OPTIONS_INIT;
+
+    git_status_list_new(&status, mRepo, &statusopt);
+
     size_t maxi = git_status_list_entrycount(status);
 
     std::vector<git_status_entry> list = {};
@@ -206,7 +206,7 @@ void GitManager::addAll()
     git_strarray array = {0};
 
     if (git_repository_index(&index, mRepo)) {
-        qDebug() << "Could not open repository index";
+        printf("Could not open repository index");
     }
 
     struct print_payload payload = {2, mRepo};
@@ -217,25 +217,25 @@ void GitManager::addAll()
     git_index_free(index);
 }
 
-bool GitManager::commit()
+int GitManager::commit()
 {
     std::vector<git_status_entry> statusList = getStatusList();
     if (statusList.size() == 0) {
-        qDebug() << "Nothing to it...";
-        return true;
+        printf("Nothing to it...");
+        return 2;
     }
     for (auto &&item : statusList) {
         if (GIT_STATUS_INDEX_NEW <= item.status && item.status <= GIT_STATUS_INDEX_TYPECHANGE) {
             continue;
         }
-        qDebug() << "Changes not staged for commit: ser \"git add . \" ";
-        return false;
+        printf("Changes not staged for commit: ser \"git add . \" ");
+        return 1;
     }
 
     git_index *index;
 
     if (git_repository_index(&index, mRepo)) {
-        qDebug() << "Could not open repository index";
+        printf("Could not open repository index");
     }
 
     //end random: list references
@@ -275,24 +275,59 @@ bool GitManager::commit()
 	git_tree_free(tree);
 	git_commit_free(parent);
 
-    return true;
+    return 0;
 }
 
-void GitManager::push()
+int GitManager::push()
 {
-    std::vector<git_remote *> remoteList = getRemoteList();
+    git_remote *remote;
 
-    if (remoteList.size() == 0) {
-        return;
+    if (git_remote_lookup(&remote, mRepo, "origin") != 0) {
+        return 1;
     }
 
-    git_strarray *refspecs = {0};
     git_push_options opts = GIT_PUSH_OPTIONS_INIT;
-
-    memset(&(opts), 0, sizeof(git_clone_options));
-    opts.version = GIT_CLONE_OPTIONS_VERSION;
     opts.callbacks.credentials = git_cred_userpass;
     opts.callbacks.payload = &mUserPass;
 
-    git_remote_push(remoteList[0], refspecs, &opts);
+    const char *refs[] = {"refs/heads/master:refs/heads/master"};
+    git_strarray refspecs = {(char**)refs, 1};
+
+    return git_remote_push(remote, &refspecs, &opts);
+}
+
+void GitManager::test()
+{
+    const char *purl = "https://git.oschina.net/make/libgit2-test.git";
+    const char *prepo_directory = "/Users/MakeHui/Desktop/test2";
+
+    const char *username = "makehuir@gmail.com";
+    const char *password = "oschinaMail003";
+
+    setUserPass(username, password);
+
+
+//    clone(purl, prepo_directory);
+
+//    addRemote("o1", "https://git.oschina.net/make/libgit2-test.git");
+//    addRemote("o2", "https://git.oschina.net/make/libgit2-test.git");
+//
+//    removeRemote("o1");
+//    renameRemote("o2", "o3");
+//    setUrlRemote("o4", "https://git.oschina.net/make/libgit2-test.git");
+//    setUrlRemote("o5", "https://git.oschina.net/make/libgit2-test.git", true);
+//
+//    std::vector<git_remote *> remoteList = getRemoteList();
+//    printf("remoteList: %lu\n", remoteList.size());
+//
+//    std::vector<git_status_entry> statusList = getStatusList();
+//    printf("statusList: %lu\n", statusList.size());
+//
+//    addAll();
+//    if (commit() == 0) {
+//        push();
+//    }
+
+    open(prepo_directory);
+    printf("xxxx: %d", push());
 }

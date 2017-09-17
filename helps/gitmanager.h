@@ -26,14 +26,16 @@ public:
     int addRemote(const char * name, const char * url);
     int removeRemote(const char * name);
     int renameRemote(const char * name, const char * newName);
-    int setUrlRemote(const char * name, const char * url, bool push);
+    int setUrlRemote(const char * name, const char * url, bool push = false);
     std::vector<git_remote *> getRemoteList();
 
     std::vector<git_status_entry> getStatusList();
 
     void addAll();
-    bool commit();
-    void push();
+    int commit();
+    int push();
+
+    void test();
 
 private:
     git_repository *mRepo;
@@ -41,6 +43,7 @@ private:
 
     void createInitialCommit();
     void init();
+
 };
 
 #endif // GITMANAGER_H

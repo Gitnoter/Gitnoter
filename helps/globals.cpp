@@ -16,4 +16,4 @@ QString g_videosFolderName = "files/videos";
 Database *g_database = new Database();
 NoteModel *g_noteModel = new NoteModel();
 ConfigTableModel *g_configTableModel = new ConfigTableModel();
-GitManager *g_gitManager = new GitManager();
+GitManager *gGitManager = new GitManager();
