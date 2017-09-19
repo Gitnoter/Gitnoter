@@ -1,17 +1,17 @@
 #include <libraries/include/git2/remote.h>
+#include <libraries/include/git2.h>
 #include "gitmanager.h"
 
 GitManager::GitManager()
 {
-    git_libgit2_init();
     init();
 }
 
-GitManager::GitManager(const char *username, const char *password)
+GitManager::GitManager(const char *username, const char *password, const char *email)
 {
-    git_libgit2_init();
     init();
     setUserPass(username, password);
+    setSignature(username, email);
 }
 
 GitManager::~GitManager()
@@ -25,8 +25,15 @@ void GitManager::setUserPass(const char *username, const char *password)
     mUserPass.password = password;
 }
 
+void GitManager::setSignature(const char *username, const char *email)
+{
+    git_signature_now(&mSignature, username, email);
+}
+
 void GitManager::init()
 {
+    git_libgit2_init();
+
     mRepo = NULL;
     mUserPass = {};
 }
@@ -203,21 +210,18 @@ std::vector<git_status_entry> GitManager::getStatusList()
 void GitManager::addAll()
 {
     git_index *index;
-    git_strarray array = {0};
 
     if (git_repository_index(&index, mRepo)) {
         printf("Could not open repository index");
     }
 
-    struct print_payload payload = {2, mRepo};
-
-    git_index_add_all(index, &array, 0, NULL, &payload);
+    git_index_add_all(index, NULL, GIT_INDEX_ADD_DEFAULT, NULL, NULL);
 
     git_index_write(index);
     git_index_free(index);
 }
 
-int GitManager::commit()
+int GitManager::commit(const char* message)
 {
     std::vector<git_status_entry> statusList = getStatusList();
     if (statusList.size() == 0) {
@@ -238,40 +242,21 @@ int GitManager::commit()
         printf("Could not open repository index");
     }
 
-    //end random: list references
-
-	//for a commit, we need:
-	// -repo (obviously)
-	// - name of ref (usually "HEAD")
-	// - author commiter sig
-	// - encoding+ message
-	// - root tree (pointer
-	// - parent count+parents (why? can have multiple parents)
-
 	git_tree *tree;
 	git_oid tree_id, parent_id, commit_id;
 
 	git_index_write_tree(&tree_id, index); //we need to put index into a tree object for commit
 	git_tree_lookup(&tree, mRepo, &tree_id);
 
-	//tree_id = *git_object_id((git_object*)tree);
 	git_commit *parent;
 
 	//get HEAD and use it as parent of commit, put it in parent
 	git_reference_name_to_id(&parent_id, mRepo, "HEAD");
 	git_commit_lookup(&parent, mRepo, &parent_id);
 
-
-	//do commit
-	git_signature* sig;
-	git_signature_now(&sig, "johnty", "info@johnty.ca");
-
-	const char* msg = "Test Commit Message";
-
-	git_commit_create_v(&commit_id, mRepo, "HEAD", sig, sig, NULL, msg, tree, 1, parent);
+	git_commit_create_v(&commit_id, mRepo, "HEAD", mSignature, mSignature, NULL, message, tree, 1, parent);
 
 	git_index_free(index);
-	git_signature_free(sig);
 	git_tree_free(tree);
 	git_commit_free(parent);
 
@@ -296,15 +281,59 @@ int GitManager::push()
     return git_remote_push(remote, &refspecs, &opts);
 }
 
+int GitManager::fetch(bool prune)
+{
+    git_remote* remote;
+    git_fetch_options opts = GIT_FETCH_OPTIONS_INIT;
+
+    // get a remote
+    git_remote_lookup(&remote, mRepo, "origin");
+
+    // git fetch
+    if (prune) {
+        opts.prune = GIT_FETCH_PRUNE;
+    }
+    opts.callbacks.credentials = git_cred_userpass;
+    opts.callbacks.payload = &mUserPass;
+
+    return git_remote_fetch(remote, nullptr, &opts, nullptr);
+}
+
+int GitManager::merge()
+{
+
+    return 0;
+}
+
+int GitManager::resetHard()
+{
+    // TODO: target_oid 获取方式参考 resolve_refish
+//    git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
+//    git_object *object;
+//    git_object_lookup(&object, mRepo, target_oid, GIT_OBJ_COMMIT);
+//    git_reset(mRepo, object, GIT_RESET_HARD, &options);
+
+
+    return 0;
+}
+
+int GitManager::pull()
+{
+
+    return 0;
+}
+
 void GitManager::test()
 {
     const char *purl = "https://git.oschina.net/make/libgit2-test.git";
     const char *prepo_directory = "/Users/MakeHui/Desktop/test2";
 
-    const char *username = "makehuir@gmail.com";
+    const char *username = "MakeHui";
+    const char *email = "makehuir@gmail.com";
     const char *password = "oschinaMail003";
 
-    setUserPass(username, password);
+    setUserPass(email, password);
+    setSignature(username, email);
 
 
 //    clone(purl, prepo_directory);
@@ -329,5 +358,10 @@ void GitManager::test()
 //    }
 
     open(prepo_directory);
-    printf("xxxx: %d", push());
+    fetch();
+
+    GitMerge *gitMerge = new GitMerge();
+    gitMerge->merge(mRepo);
+
 }
+
