@@ -1,18 +1,18 @@
-#ifndef TAGTABLEMODEL_H
-#define TAGTABLEMODEL_H
+#ifndef TAGSTABLEMODEL_H
+#define TAGSTABLEMODEL_H
 
 #include <QObject>
 
-class TagTableModel : public QObject
+class TagsTableModel : public QObject
 {
 public:
-    explicit TagTableModel();
-    TagTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
-    TagTableModel(int tagsId, QString name, int createDate, int updateDate);
-    TagTableModel(int id, int tagsId, QString notesUuid, int createDate);
-    TagTableModel(QString name);
+    explicit TagsTableModel();
+    TagsTableModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
+    TagsTableModel(int tagsId, QString name, int createDate, int updateDate);
+    TagsTableModel(int id, int tagsId, QString notesUuid, int createDate);
+    TagsTableModel(QString name);
 
-    TagTableModel* operator + (TagTableModel &tagTableModel);
+    TagsTableModel* operator + (TagsTableModel &tagsTableModel);
 
     void setId(int id);
     void setTagsId(int tagsId);
@@ -43,4 +43,4 @@ public:
     void setCount(int count);
 };
 
-#endif // TAGTABLEMODEL_H
+#endif // TAGSTABLEMODEL_H

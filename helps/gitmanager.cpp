@@ -529,7 +529,7 @@ int GitManager::commitU(const char *message)
 
 void GitManager::test()
 {
-    const char *purl = "https://git.oschina.net/make/libgit2-test.git";
+    const char *purl = "https://git.oschina.net/make/libgit2-test2.git";
     const char *prepo_directory = "/Users/MakeHui/Desktop/test2";
 
     const char *username = "MakeHui";
@@ -538,7 +538,6 @@ void GitManager::test()
 
     setUserPass(email, password);
     setSignature(username, email);
-
 
 //    clone(purl, prepo_directory);
 
@@ -553,10 +552,15 @@ void GitManager::test()
 //    std::vector<git_remote *> remoteList = getRemoteList();
 //    printf("remoteList: %lu\n", remoteList.size());
 
-    open(prepo_directory);
+//    open(prepo_directory);
 //    printf("getStatusList().size: %lu\n", getStatusList().size());
 //    printf("commitA: %i\n", commitA("test commit~"));
 //    printf("push: %i\n", push());
-    printf("pull: %i\n", pull());
+//    printf("pull: %i\n", pull());
 //    printf("resetHard: %i\n", resetHard());
+
+//    initLocalRepo(prepo_directory, true);
+//    addRemote("origin", purl);
+//    pull();
+//    printf("push: %i\n", push());
 }

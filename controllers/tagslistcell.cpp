@@ -9,13 +9,13 @@ TagsListCell::TagsListCell(QWidget *parent) :
     ui->setupUi(this);
 }
 
-TagsListCell::TagsListCell(TagTableModel *tagTableModel) : ui(new Ui::TagsListCell)
+TagsListCell::TagsListCell(TagsTableModel *tagsTableModel) : ui(new Ui::TagsListCell)
 {
     ui->setupUi(this);
 
-    m_tagTableModel = tagTableModel;
-    ui->lineEdit_nameTags->setText(m_tagTableModel->getName());
-    ui->label_noteCount->setText(QString::number(m_tagTableModel->getCount()));
+    mTagsTableModel = tagsTableModel;
+    ui->lineEdit_nameTags->setText(mTagsTableModel->getName());
+    ui->label_noteCount->setText(QString::number(mTagsTableModel->getCount()));
 }
 
 TagsListCell::~TagsListCell()
@@ -23,10 +23,10 @@ TagsListCell::~TagsListCell()
     delete ui;
 }
 
-TagTableModel *TagsListCell::getTagTableModel() const {
-    return m_tagTableModel;
+TagsTableModel *TagsListCell::getTagsTableModel() const {
+    return mTagsTableModel;
 }
 
-void TagsListCell::setTagTableModel(TagTableModel *tagTableModel) {
-    m_tagTableModel = tagTableModel;
+void TagsListCell::setTagsTableModel(TagsTableModel *tagsTableModel) {
+    mTagsTableModel = tagsTableModel;
 }

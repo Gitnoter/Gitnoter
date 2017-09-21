@@ -34,9 +34,9 @@ public:
     int insertTagsTable(QString name);
     bool deleteTagsTableByName(QString name);
     bool updateTagsTableByName(QString name, QString whereName);
-    QList<TagTableModel *> selectTagsTable();
-    TagTableModel* selectTagsTableById(int id);
-    TagTableModel* selectTagsTableByName(QString name);
+    QList<TagsTableModel *> selectTagsTable();
+    TagsTableModel* selectTagsTableById(int id);
+    TagsTableModel* selectTagsTableByName(QString name);
 
     int insertCategoriesTable(QString name);
     bool deleteCategoriesTableByName(QString name);
@@ -48,8 +48,8 @@ public:
     int insertNJTTable(QString notesUuid, int tagsId);
     bool deleteNJTTableByNotesUuid(QString notesUuid);
     bool deleteNJTTableById(QString notesUuid, int tagsId);
-    QList<TagTableModel *>* selectNJTTableByNotesUuid(QString notesUuid);
-    QList<TagTableModel *> selectNJTTableByTagsId(int tagsId);
+    QList<TagsTableModel *>* selectNJTTableByNotesUuid(QString notesUuid);
+    QList<TagsTableModel *> selectNJTTableByTagsId(int tagsId);
 
     int insertNJCTable(QString notesUuid, int categoriesId);
     bool deleteNJCTableByNotesUuid(QString notesUuid);
@@ -59,8 +59,8 @@ public:
 
 
 private:
-    QSqlDatabase db;
-    QSqlQuery query;
+    QSqlDatabase mDb;
+    QSqlQuery mQuery;
 };
 
 #endif // DATABASE_H

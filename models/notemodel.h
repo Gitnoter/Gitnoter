@@ -2,7 +2,7 @@
 #define NOTEMODEL_H
 
 #include "notetablemodel.h"
-#include "tagtablemodel.h"
+#include "tagstablemodel.h"
 #include "categoriestablemodel.h"
 
 #include <QObject>
@@ -13,13 +13,13 @@ class NoteModel : public QObject
 public:
     NoteModel();
     NoteModel(QString noteText, QString filePath = "");
-    NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
+    NoteModel(NoteTableModel *noteTableModel, QList<TagsTableModel *> *tagTableList,
               CategoriesTableModel *categoriesTableModel);
 
     QString getNote();
 
     NoteTableModel *noteTableModel;
-    QList<TagTableModel *> *tagTableList;
+    QList<TagsTableModel *> *tagTableList;
     CategoriesTableModel *categoriesTableModel;
 
     void clear();

@@ -49,14 +49,14 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
     this->noteTableModel = new NoteTableModel(map["uuid"], map["title"], Tools::timestampFromDateTime(map["createDate"])
             , Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(), filePath);
     this->categoriesTableModel = new CategoriesTableModel(map["categories"]);
-    this->tagTableList = new QList<TagTableModel *>;
-    QStringList tags = map["tags"].split(QRegExp(g_tagSplit + "?"));
+    this->tagTableList = new QList<TagsTableModel *>;
+    QStringList tags = map["tags"].split(QRegExp(gTagSplit + "?"));
     for (auto &&tag : tags) {
-        this->tagTableList->append(new TagTableModel(tag.trimmed()));
+        this->tagTableList->append(new TagsTableModel(tag.trimmed()));
     }
 }
 
-NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagTableModel *> *tagTableList,
+NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagsTableModel *> *tagTableList,
                      CategoriesTableModel *categoriesTableModel) {
     this->noteTableModel = noteTableModel;
     this->tagTableList = tagTableList;
@@ -74,10 +74,10 @@ QString NoteModel::getNote()
     note += "categories: " + this->categoriesTableModel->getName() + "\n";
 
     note += "tags: ";
-    for (auto &&tagTableModel : *(this->tagTableList)) {
-        tags += tagTableModel->getName() + g_tagSplit;
+    for (auto &&tagsTableModel : *(this->tagTableList)) {
+        tags += tagsTableModel->getName() + gTagSplit;
     }
-    tags.chop(g_tagSplit.length());
+    tags.chop(gTagSplit.length());
     note += tags;
 
     note += "\n\n---\n\n" + this->noteTableModel->getBody();
@@ -88,6 +88,6 @@ QString NoteModel::getNote()
 void NoteModel::clear()
 {
     this->noteTableModel = new NoteTableModel();
-    this->tagTableList = new QList<TagTableModel *>();
+    this->tagTableList = new QList<TagsTableModel *>();
     this->categoriesTableModel = new CategoriesTableModel();
 }

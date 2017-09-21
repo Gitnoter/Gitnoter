@@ -42,7 +42,7 @@ SOURCES += \
     models/notemodel.cpp  \
     models/notetablemodel.cpp  \
     models/categoriestablemodel.cpp  \
-    models/tagtablemodel.cpp  \
+    models/tagstablemodel.cpp  \
     models/configtablemodel.cpp  \
     helps/previewpage.cpp  \
     helps/document.cpp  \
@@ -60,7 +60,7 @@ HEADERS += \
     models/notemodel.h  \
     models/notetablemodel.h  \
     models/categoriestablemodel.h  \
-    models/tagtablemodel.h  \
+    models/tagstablemodel.h  \
     models/configtablemodel.h  \
     helps/sqlquerybuilder.h  \
     helps/previewpage.h  \

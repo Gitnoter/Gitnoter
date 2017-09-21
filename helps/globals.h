@@ -4,27 +4,27 @@
 #include "notemodel.h"
 #include "database.h"
 #include "configtablemodel.h"
-#include "tagtablemodel.h"
+#include "tagstablemodel.h"
 #include "gitmanager.h"
 
 #include <QObject>
 
-extern QString g_packageName;
-extern QString g_version;
-extern QString g_dateFormat;
-extern QString g_tagSplit;
-extern QString g_dbPath;
-extern QString g_dbName;
-extern QString g_repoPath;
-extern QString g_noteFolderName;
-extern QString g_audiosFolderName;
-extern QString g_imagesFolderName;
-extern QString g_videosFolderName;
-extern QString g_appDataLocation;
+extern QString gPackageName;
+extern QString gVersion;
+extern QString gDateFormat;
+extern QString gTagSplit;
+extern QString gDbPath;
+extern QString gDbName;
+extern QString gRepoPath;
+extern QString gNoteFolderName;
+extern QString gAudiosFolderName;
+extern QString gImagesFolderName;
+extern QString gVideosFolderName;
+extern QString gAppDataLocation;
 
-extern Database *g_database;
-extern NoteModel *g_noteModel;
-extern ConfigTableModel *g_configTableModel;
+extern Database *gDatabase;
+extern NoteModel *gNoteModel;
+extern ConfigTableModel *gConfigTableModel;
 extern GitManager *gGitManager;
 
 

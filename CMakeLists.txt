@@ -39,7 +39,7 @@ add_executable(${PROJECT_NAME}
         models/notemodel.h              models/notemodel.cpp
         models/notetablemodel.h         models/notetablemodel.cpp
         models/categoriestablemodel.h   models/categoriestablemodel.cpp
-        models/tagtablemodel.h          models/tagtablemodel.cpp
+        models/tagstablemodel.h         models/tagstablemodel.cpp
         models/configtablemodel.h       models/configtablemodel.cpp
 
         helps/sqlquerybuilder.h

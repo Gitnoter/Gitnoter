@@ -101,7 +101,7 @@ private:
     TagsWidget *tagWidget;
     QList<NoteTableModel *> *m_sidebarNoteList;
     QList<CategoriesTableModel *> m_categoriesModelList;
-    QList<TagTableModel *> m_tagTableModelList;
+    QList<TagsTableModel *> mTagsTableModelList;
 
     void textChanged();
     void updatePreview();

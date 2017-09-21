@@ -84,7 +84,7 @@ void NoteTableModel::setFilePath(const QString &filePath)
 {
     NoteTableModel::filePath = filePath.isEmpty() ?
                                QString("%1/%2/%3-%4.md").arg(
-                                       g_repoPath, g_noteFolderName,
+                                       gRepoPath, gNoteFolderName,
                                        this->title.isEmpty() ? "无标题" : this->title, this->uuid)
                                                   : filePath;
 }

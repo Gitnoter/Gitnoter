@@ -1,7 +1,7 @@
 #ifndef TAGSWIDGET_H
 #define TAGSWIDGET_H
 
-#include "tagtablemodel.h"
+#include "tagstablemodel.h"
 
 #include <QWidget>
 #include <QPropertyAnimation>
@@ -36,8 +36,8 @@ protected:
 
 private:
     Ui::TagsWidget *ui;
-    QList<TagTableModel *> m_tagTableModelList;
-    QList<TagTableModel *> m_tagTableModelSearchList;
+    QList<TagsTableModel *> mTagsTableModelList;
+    QList<TagsTableModel *> mTagsTableModelSearchList;
 
     void setListData(bool reread = true, const QString &string = "");
 
