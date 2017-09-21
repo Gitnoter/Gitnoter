@@ -42,31 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setSidebarTable();
     this->setDefaultNote();
 
-    // 初始化菜单快捷键
-    ui->action_newNote->setShortcut(Qt::CTRL | Qt::Key_N);
-    ui->action_newCategories->setShortcut(Qt::META | Qt::CTRL | Qt::Key_C);
-    ui->action_newTags->setShortcut(Qt::META | Qt::CTRL | Qt::Key_T);
-
-    ui->action_saveNote->setShortcut(Qt::CTRL | Qt::Key_S);
-    ui->action_quitNote->setShortcut(Qt::CTRL | Qt::Key_W);
-
-    ui->action_synch->setShortcut(Qt::META | Qt::CTRL | Qt::Key_S);
-
-    ui->action_repeal->setShortcut(Qt::CTRL | Qt::Key_Z);
-    ui->action_reform->setShortcut(Qt::SHIFT | Qt::CTRL | Qt::Key_Z);
-
-    ui->action_cut->setShortcut(Qt::CTRL | Qt::Key_X);
-    ui->action_copy->setShortcut(Qt::CTRL | Qt::Key_C);
-    ui->action_paste->setShortcut(Qt::CTRL | Qt::Key_V);
-    ui->action_selectAll->setShortcut(Qt::CTRL | Qt::Key_A);
-
-    ui->action_notes->setShortcut(Qt::ALT | Qt::CTRL | Qt::Key_F);
-    ui->action_noteText->setShortcut(Qt::CTRL | Qt::Key_F);
-
-//    ui->action_toUppercase->setShortcut(Qt::CTRL | Qt::Key_N);
-//    ui->action_toLowercase->setShortcut(Qt::CTRL | Qt::Key_N);
-//    ui->action_toUppercaseAtFirst->setShortcut(Qt::CTRL | Qt::Key_N);
-
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::onHeaderViewSortIndicatorChanged);
 

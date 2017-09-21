@@ -1254,70 +1254,112 @@ QTableWidget::item:selected{
    <property name="text">
     <string>新建笔记</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_newCategories">
    <property name="text">
     <string>新建笔记本</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+N</string>
    </property>
   </action>
   <action name="action_newTags">
    <property name="text">
     <string>新建标签</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+T</string>
+   </property>
   </action>
   <action name="action_saveNote">
    <property name="text">
     <string>保存</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="action_quitNote">
    <property name="text">
     <string>关闭</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
   </action>
   <action name="action_synch">
    <property name="text">
     <string>同步笔记</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+S</string>
    </property>
   </action>
   <action name="action_repeal">
    <property name="text">
     <string>撤销</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="action_reform">
    <property name="text">
     <string>重做</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
    </property>
   </action>
   <action name="action_cut">
    <property name="text">
     <string>剪切</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="action_copy">
    <property name="text">
     <string>复制</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="action_paste">
    <property name="text">
     <string>粘贴</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="action_selectAll">
    <property name="text">
     <string>全选</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="action_notes">
    <property name="text">
     <string>搜索笔记</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
+   </property>
   </action>
   <action name="action_noteText">
    <property name="text">
     <string>在笔记中搜索</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="action_toUppercase">
