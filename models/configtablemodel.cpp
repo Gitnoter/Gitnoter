@@ -98,7 +98,7 @@ int ConfigTableModel::getCategoriesId() const
 
 void ConfigTableModel::setCategoriesId(int categoriesId)
 {
-    ConfigTableModel::tagsId = 0;
+    ConfigTableModel::isSelectedClasses = 1;
     ConfigTableModel::categoriesId = categoriesId;
 }
 
@@ -109,7 +109,7 @@ int ConfigTableModel::getTagsId() const
 
 void ConfigTableModel::setTagsId(int tagsId)
 {
-    ConfigTableModel::categoriesId = 0;
+    ConfigTableModel::isSelectedClasses = 2;
     ConfigTableModel::tagsId = tagsId;
 }
 
@@ -121,4 +121,14 @@ int ConfigTableModel::getIsLocalRepo() const
 void ConfigTableModel::setIsLocalRepo(int isLocalRepo)
 {
     ConfigTableModel::isLocalRepo = isLocalRepo;
+}
+
+int ConfigTableModel::getIsSelectedClasses() const
+{
+    return isSelectedClasses;
+}
+
+void ConfigTableModel::setIsSelectedClasses(int isSelectedClasses)
+{
+    ConfigTableModel::isSelectedClasses = isSelectedClasses;
 }

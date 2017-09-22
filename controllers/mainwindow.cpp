@@ -153,7 +153,7 @@ void MainWindow::setSidebarTable(QString text)
     m_sidebarNoteList = gDatabase->getSidebarNotes();
 
     auto *sidebarNoteList = new QList<NoteTableModel *>();
-    if (gConfigTableModel->getTagsId() != 0) {
+    if (gConfigTableModel->getIsSelectedClasses() == 2) {
         auto tagsList = gDatabase->selectNJTTableByTagsId(gConfigTableModel->getTagsId());
         for (auto &&item : tagsList) {
             for (auto &&list : *m_sidebarNoteList) {
@@ -164,7 +164,7 @@ void MainWindow::setSidebarTable(QString text)
         }
         m_sidebarNoteList = sidebarNoteList;
     }
-    else if (gConfigTableModel->getCategoriesId() != 0) {
+    else if (gConfigTableModel->getIsSelectedClasses() == 1) {
         auto categoriesList = gDatabase->selectNJCTableByCategoriesId(gConfigTableModel->getCategoriesId());
         for (auto &&item : categoriesList) {
             for (auto &&list : *m_sidebarNoteList) {
@@ -660,8 +660,6 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
     gConfigTableModel->setTagsId(mTagsTableModelList[index.row()]->getTagsId());
-    qDebug() << mTagsTableModelList[index.row()]->getTagsId();
-    qDebug() << gConfigTableModel->getTagsId();
     setSidebarTable();
     setDefaultNote();
     setMainWindowData();
