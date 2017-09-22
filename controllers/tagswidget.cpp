@@ -53,7 +53,7 @@ void TagsWidget::onAnimationFinished()
 void TagsWidget::setListData(bool reread, const QString &string)
 {
     if (mTagsModelList.length() == 0 || reread) {
-        mTagsModelList = gDatabase->selectTags();
+//        mTagsModelList = gDatabase->selectTags();
     }
 
     if (!string.isEmpty()) {
@@ -98,7 +98,7 @@ void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
 void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        gDatabase->insertTags(ui->lineEdit->displayText());
+//        gDatabase->insertTags(ui->lineEdit->displayText());
         setListData(true);
         ui->lineEdit->clear();
     }

@@ -14,7 +14,6 @@ QString gAudiosFolderName = "files/audios";
 QString gImagesFolderName = "files/images";
 QString gVideosFolderName = "files/videos";
 
-Database *gDatabase = new Database();
 QList<NoteModel *> gNoteModelList = {};
 NoteModel *gOpenNoteModel = new NoteModel();
 ConfigModel *gConfigModel = new ConfigModel();

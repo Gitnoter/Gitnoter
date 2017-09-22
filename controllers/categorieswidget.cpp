@@ -46,9 +46,9 @@ void CategoriesWidget::animationFinished()
 
 void CategoriesWidget::setListData(bool reread, const QString &string)
 {
-    if (mCategoriesModelList.length() == 0 || reread) {
-        mCategoriesModelList = gDatabase->selectCategories();
-    }
+//    if (mCategoriesModelList.length() == 0 || reread) {
+//        mCategoriesModelList = gDatabase->selectCategories();
+//    }
 
     if (!string.isEmpty()) {
         mCategoriesModelSearchList.clear();
@@ -123,9 +123,9 @@ void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
 void CategoriesWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        gDatabase->insertCategories(ui->lineEdit->displayText());
-        mCategoriesModelList = gDatabase->selectCategories();
-        ui->lineEdit->clear();
+//        gDatabase->insertCategories(ui->lineEdit->displayText());
+//        mCategoriesModelList = gDatabase->selectCategories();
+//        ui->lineEdit->clear();
     }
 }
 

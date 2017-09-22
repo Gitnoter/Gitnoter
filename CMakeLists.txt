@@ -45,7 +45,6 @@ add_executable(${PROJECT_NAME}
         helps/sqlquerybuilder.h
         helps/previewpage.h     helps/previewpage.cpp
         helps/document.h        helps/document.cpp
-        helps/database.h        helps/database.cpp
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp
         helps/gitmanager.h      helps/gitmanager.cpp)

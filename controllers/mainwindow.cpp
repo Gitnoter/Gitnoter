@@ -10,7 +10,6 @@
 
 #include <QWebChannel>
 #include <QMessageBox>
-#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -136,7 +135,7 @@ void MainWindow::setDefaultNote()
         gOpenNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-        gOpenNoteModel = gDatabase->getNoteByUuid(gConfigModel->getOpenNotesUuid());
+//        gOpenNoteModel = gDatabase->getNoteByUuid(gConfigModel->getOpenNotesUuid());
     }
 }
 
@@ -258,7 +257,7 @@ void MainWindow::on_action_saveNote_triggered()
     }
 
     Tools::writerFile(gOpenNoteModel->contentModel->getFilePath(), gOpenNoteModel->getNote());
-    gDatabase->addNoteText(gOpenNoteModel);
+//    gDatabase->addNoteText(gOpenNoteModel);
     this->setTableWidgetList();
 }
 
@@ -289,7 +288,7 @@ void MainWindow::on_pushButton_deleteNote_clicked()
 void MainWindow::on_action_deleteNote_triggered()
 {
     if (!gOpenNoteModel->contentModel->getUuid().isEmpty()) {
-        gDatabase->deleteNoteByUuid(gOpenNoteModel->contentModel->getUuid());
+//        gDatabase->deleteNoteByUuid(gOpenNoteModel->contentModel->getUuid());
         QFile::remove(gOpenNoteModel->contentModel->getFilePath());
     }
     gConfigModel->setOpenNotesUuid("");
@@ -436,20 +435,20 @@ void MainWindow::onLineEditNameEditingFinished()
         lineEdit_name->setText(mCategoriesModelList[index]->getName());
     }
     else {
-        if (gDatabase->updateCategoriesByName(lineEdit_name->displayText(),
-                                                    mCategoriesModelList[index]->getName())) {
+//        if (gDatabase->updateCategoriesByName(lineEdit_name->displayText(),
+//                                                    mCategoriesModelList[index]->getName())) {
 //            auto categoriesList = gDatabase->selectNJCByCategoriesId(
 //                    mCategoriesModelList[index]->getCategoriesId());
 //            for (auto &&item : categoriesList) {
 //                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
 //                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
 //            }
-
-            mCategoriesModelList[index]->setName(lineEdit_name->displayText());
-        }
-        else {
-            lineEdit_name->setText(mCategoriesModelList[index]->getName());
-        }
+//
+//            mCategoriesModelList[index]->setName(lineEdit_name->displayText());
+//        }
+//        else {
+//            lineEdit_name->setText(mCategoriesModelList[index]->getName());
+//        }
     }
     lineEdit_name->setEnabled(false);
 
@@ -466,20 +465,20 @@ void MainWindow::on_pushButton_addCategories_clicked()
                          ? tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i))
                          : lineEditSearchCategories;
 
-        if (gDatabase->insertCategories(categoriesName) != 0) {
-            setCategoriesList(true, lineEditSearchCategories);
-
-            for (int j = 0; j < mCategoriesModelList.length(); ++j) {
-                if (mCategoriesModelList[j]->getName() == categoriesName) {
-                    on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
-                    break;
-                }
-            }
-
-            onActionRenameCategoriesTriggered();
-            setCategoriesListEnabled(false);
-            break;
-        }
+//        if (gDatabase->insertCategories(categoriesName) != 0) {
+//            setCategoriesList(true, lineEditSearchCategories);
+//
+//            for (int j = 0; j < mCategoriesModelList.length(); ++j) {
+//                if (mCategoriesModelList[j]->getName() == categoriesName) {
+//                    on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
+//                    break;
+//                }
+//            }
+//
+//            onActionRenameCategoriesTriggered();
+//            setCategoriesListEnabled(false);
+//            break;
+//        }
 
         if (!lineEditSearchCategories.isEmpty()) {
             break;
@@ -503,13 +502,13 @@ void MainWindow::on_pushButton_removeCategories_clicked()
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
 
-        if (mCategoriesModelList[index]->getCount() == 0) {
-            gDatabase->deleteCategoriesByName(mCategoriesModelList[index]->getName());
-            setCategoriesList(true, ui->lineEdit_searchCategories->displayText());
-        }
-        else {
-            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
-        }
+//        if (mCategoriesModelList[index]->getCount() == 0) {
+//            gDatabase->deleteCategoriesByName(mCategoriesModelList[index]->getName());
+//            setCategoriesList(true, ui->lineEdit_searchCategories->displayText());
+//        }
+//        else {
+//            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
+//        }
     }
 }
 
@@ -525,9 +524,9 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 {
     QList<CategoriesModel *> categoriesModelSearchList;
 
-    if (mCategoriesModelList.length() == 0 || reread) {
-        mCategoriesModelList = gDatabase->selectCategories();
-    }
+//    if (mCategoriesModelList.length() == 0 || reread) {
+//        mCategoriesModelList = gDatabase->selectCategories();
+//    }
 
     if (!string.isEmpty()) {
         for (int i = 0; i < mCategoriesModelList.length(); ++i) {
@@ -605,7 +604,7 @@ void MainWindow::setTagsList(bool reread, const QString &string)
     QList<TagsModel *> tagsModelSearchList;
 
     if (mtagsModelList.length() == 0 || reread) {
-        mtagsModelList = gDatabase->selectTags();
+//        mtagsModelList = gDatabase->selectTags();
     }
 
     if (!string.isEmpty()) {
@@ -724,20 +723,20 @@ void MainWindow::on_pushButton_addTags_clicked()
         tagName = lineEditSearchTags.isEmpty() ? tr("新建标签%1").arg(i == 0 ? "" : QString::number(i))
                                                : lineEditSearchTags;
 
-        if (gDatabase->insertTags(tagName) != 0) {
-            setTagsList(true, lineEditSearchTags);
-
-            for (int j = 0; j < mtagsModelList.length(); ++j) {
-                if (mtagsModelList[j]->getName() == tagName) {
-                    on_listWidget_tags_itemClicked(ui->listWidget_tags->item(j));
-                    break;
-                }
-            }
-
-            onActionRenameTagsTriggered();
-            setTagsListEnabled(false);
-            break;
-        }
+//        if (gDatabase->insertTags(tagName) != 0) {
+//            setTagsList(true, lineEditSearchTags);
+//
+//            for (int j = 0; j < mtagsModelList.length(); ++j) {
+//                if (mtagsModelList[j]->getName() == tagName) {
+//                    on_listWidget_tags_itemClicked(ui->listWidget_tags->item(j));
+//                    break;
+//                }
+//            }
+//
+//            onActionRenameTagsTriggered();
+//            setTagsListEnabled(false);
+//            break;
+//        }
 
         if (!lineEditSearchTags.isEmpty()) {
             break;
@@ -751,13 +750,13 @@ void MainWindow::on_pushButton_removeTags_clicked()
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
 
-        if (mtagsModelList[index]->getCount() == 0) {
-            gDatabase->deleteTagsByName(mtagsModelList[index]->getName());
-            setTagsList(true, ui->lineEdit_searchTags->displayText());
-        }
-        else {
-            QMessageBox::about(this, tr("消息提醒"), tr("该标签内存在笔记, 请先移出"));
-        }
+//        if (mtagsModelList[index]->getCount() == 0) {
+//            gDatabase->deleteTagsByName(mtagsModelList[index]->getName());
+//            setTagsList(true, ui->lineEdit_searchTags->displayText());
+//        }
+//        else {
+//            QMessageBox::about(this, tr("消息提醒"), tr("该标签内存在笔记, 请先移出"));
+//        }
     }
 }
 
@@ -781,19 +780,19 @@ void MainWindow::onLineEditNameTagsEditingFinished()
         lineEdit_nameTags->setText(mtagsModelList[index]->getName());
     }
     else {
-        if (gDatabase->updateTagsByName(lineEdit_nameTags->displayText(),
-                                              mtagsModelList[index]->getName())) {
+//        if (gDatabase->updateTagsByName(lineEdit_nameTags->displayText(),
+//                                              mtagsModelList[index]->getName())) {
 //            auto tagsList = gDatabase->selectNJTByTagsId(mtagsModelList[index]->getTagsId());
 //            for (auto &&item : tagsList) {
 //                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
 //                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
 //            }
-
-            mtagsModelList[index]->setName(lineEdit_nameTags->displayText());
-        }
-        else {
-            lineEdit_nameTags->setText(mtagsModelList[index]->getName());
-        }
+//
+//            mtagsModelList[index]->setName(lineEdit_nameTags->displayText());
+//        }
+//        else {
+//            lineEdit_nameTags->setText(mtagsModelList[index]->getName());
+//        }
     }
     lineEdit_nameTags->setEnabled(false);
 

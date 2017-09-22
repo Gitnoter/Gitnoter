@@ -2,7 +2,6 @@
 #define GLOBALS_H
 
 #include "notemodel.h"
-#include "database.h"
 #include "configmodel.h"
 #include "tagsmodel.h"
 #include "gitmanager.h"
@@ -22,7 +21,6 @@ extern QString gImagesFolderName;
 extern QString gVideosFolderName;
 extern QString gAppDataLocation;
 
-extern Database *gDatabase;
 extern QList<NoteModel *> gNoteModelList;
 extern NoteModel *gOpenNoteModel;
 extern ConfigModel *gConfigModel;
