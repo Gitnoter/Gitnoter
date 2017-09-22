@@ -26,4 +26,10 @@ extern NoteModel *gOpenNoteModel;
 extern ConfigModel *gConfigModel;
 extern GitManager *gGitManager;
 
+void gInitNoteModelList();
+
+NoteModel *gGetNoteModelByUuid(const QString &uuid);
+
+void gInitConfigModel();
+
 #endif // GLOBALS_H

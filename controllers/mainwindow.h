@@ -50,6 +50,11 @@ private slots:
 
     void on_pushButton_tags_clicked();
 
+    void on_pushButton_trash_clicked();
+
+    void on_pushButton_sync_clicked();
+
+
     // 菜单分页第一页
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
@@ -86,7 +91,7 @@ private slots:
 
     void on_lineEdit_searchCategories_textChanged(const QString &arg1);
 
-    // 菜单分页第二页
+    // 菜单分页第三页
     void on_listWidget_tags_itemClicked(QListWidgetItem *item);
 
     void on_listWidget_tags_doubleClicked(const QModelIndex &index);
@@ -108,6 +113,10 @@ private slots:
 
     void on_lineEdit_searchNoteList_textChanged(const QString &arg1);
 
+    // 菜单分页第四页
+
+    // 菜单分页第五页
+
 signals:
 
     void resizeChildWindow(QSize size);
@@ -127,9 +136,8 @@ private:
     Ui::MainWindow *ui;
     CategoriesWidget *categoriesWidget;
     TagsWidget *tagWidget;
-    
+
     Document m_content;
-    QMap<QString, QPushButton *> menuPushButtons;
     QList<CategoriesModel *> mCategoriesModelList;
     QList<TagsModel *> mtagsModelList;
 
@@ -142,11 +150,9 @@ private:
 
     void menuPushButtonClicked();
 
-    void initNoteModelList();
+    void mSetOpenedNoteModel(bool initEditor = false);
 
-    void setDefaultNote();
-
-    void setTableWidgetList(QString text = "");
+    void mInitTableWidgetList(QString text = "");
 
     void filtrateTableWidgetList(QString text = "");
 
@@ -157,8 +163,6 @@ private:
     void setModified(bool m);
 
     void setTagsData();
-
-    void setMainWindowData();
 
     void setCategoriesList(bool reread = true, const QString &string = "");
 
@@ -171,6 +175,8 @@ private:
     void setCategoriesListEnabled(bool b);
 
     void setTagsListEnabled(bool b);
+
+    void mSelectedSidebarButtonByName(const QString &name);
 };
 
 #endif // MAINWINDOW_H

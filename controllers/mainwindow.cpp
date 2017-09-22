@@ -12,58 +12,26 @@
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+        QMainWindow(parent),
+        ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
 
-    initNoteModelList();
-
-    gConfigModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
-    gConfigModel->setSidebarSortKey(1);
-    gConfigModel->setSidebarSortValue("DESC");
-    gConfigModel->setCategoriesName("iOS");
-    gConfigModel->setIsSelectedClasses(1);
-
-    this->setTableWidgetList();
-    this->setDefaultNote();
-
-    connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
-            this, &MainWindow::onHeaderViewSortIndicatorChanged);
-
-    // 左侧菜单栏
-    this->menuPushButtons.insert("pushButton_folder", ui->pushButton_folder);
-    this->menuPushButtons.insert("pushButton_notes", ui->pushButton_notes);
-    this->menuPushButtons.insert("pushButton_tags", ui->pushButton_tags);
-    this->menuPushButtons.insert("pushButton_trash", ui->pushButton_trash);
-    this->menuPushButtons.insert("pushButton_sync", ui->pushButton_sync);
-
-    for (auto itr = menuPushButtons.begin(); itr != menuPushButtons.end(); ++itr) {
-        connect(itr.value(), &QPushButton::clicked, this, &MainWindow::menuPushButtonClicked);
-    }
-
     // 屏蔽选中时的边框颜色
     ui->lineEdit_title->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->listWidget_categories->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->listWidget_tags->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-    // 初始化编辑器
-    ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    ui->webEngineView_preview->setContextMenuPolicy(Qt::NoContextMenu);
+    connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
+            this, &MainWindow::onHeaderViewSortIndicatorChanged);
 
-    PreviewPage *page = new PreviewPage(this);
-    ui->webEngineView_preview->setPage(page);
-
-    QWebChannel *channel = new QWebChannel(this);
-    channel->registerObject(QStringLiteral("content"), &m_content);
-    page->setWebChannel(channel);
-
-    ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
-
-    this->setMainWindowData();
+    gInitNoteModelList();
+    gInitConfigModel();
+    mInitTableWidgetList();
+    mSetOpenedNoteModel(true);
 }
 
 MainWindow::~MainWindow()
@@ -74,11 +42,11 @@ MainWindow::~MainWindow()
 void MainWindow::textChanged()
 {
     gOpenNoteModel->contentModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
-                                        ? ui->lineEdit_title->placeholderText()
-                                        : ui->lineEdit_title->displayText());
+                                           ? ui->lineEdit_title->placeholderText()
+                                           : ui->lineEdit_title->displayText());
     gOpenNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
     gOpenNoteModel->contentModel->setUpdateDate(0);
-    this->updatePreview();
+    updatePreview();
 }
 
 void MainWindow::updatePreview()
@@ -87,18 +55,8 @@ void MainWindow::updatePreview()
         m_content.setText(gOpenNoteModel->contentModel->getBody());
     }
     else {
-        m_content.setText("# " + gOpenNoteModel->contentModel->getTitle() + "\n\n" + gOpenNoteModel->contentModel->getBody());
-    }
-}
-
-void MainWindow::menuPushButtonClicked()
-{
-    QString objectName = this->sender()->objectName();
-
-    // TODO: 选择这里需要优化, 重复点击同一个按钮会出现闪烁, 之后改成, 点击替换按钮图片, 避免闪烁
-    QMap<QString, QPushButton *>::Iterator itr;
-    for (itr = this->menuPushButtons.begin(); itr != this->menuPushButtons.end(); ++itr) {
-        itr.value()->setChecked(itr.key() == objectName);
+        m_content.setText("# " + gOpenNoteModel->contentModel->getTitle() + "\n\n"
+                          + gOpenNoteModel->contentModel->getBody());
     }
 }
 
@@ -111,35 +69,43 @@ void MainWindow::on_pushButton_categories_clicked()
     connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }
 
-void MainWindow::initNoteModelList()
-{
-    if (gNoteModelList.length() == 0) {
-        QString notesPath = QDir(gRepoPath).filePath(gNoteFolderName);
-        QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
-        gNoteModelList.clear();
-        for (auto &&fileInfo : fileInfoList) {
-            NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()), fileInfo.absoluteFilePath());
-            gNoteModelList.append(noteModel);
-        }
-    }
-}
-
-void MainWindow::setDefaultNote()
+void MainWindow::mSetOpenedNoteModel(bool initEditor)
 {
     if (gConfigModel->getOpenNotesUuid().isEmpty()) {
         if (gNoteModelList.length() != 0) {
             gConfigModel->setOpenNotesUuid(gNoteModelList.at(0)->contentModel->getUuid());
-            this->setDefaultNote();
+            mSetOpenedNoteModel();
             return;
         }
         gOpenNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-//        gOpenNoteModel = gDatabase->getNoteByUuid(gConfigModel->getOpenNotesUuid());
+        gOpenNoteModel = gGetNoteModelByUuid(gConfigModel->getOpenNotesUuid());
     }
+
+    // 初始化编辑器
+    if (initEditor) {
+        ui->webEngineView_preview->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+        ui->webEngineView_preview->setContextMenuPolicy(Qt::NoContextMenu);
+
+        PreviewPage *page = new PreviewPage(this);
+        ui->webEngineView_preview->setPage(page);
+
+        QWebChannel *channel = new QWebChannel(this);
+        channel->registerObject(QStringLiteral("content"), &m_content);
+        page->setWebChannel(channel);
+
+        ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
+    }
+
+    setEditText();
+    setModified(false);
+
+    setTagsData();
+    ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
 }
 
-void MainWindow::setTableWidgetList(QString text)
+void MainWindow::mInitTableWidgetList(QString text)
 {
     ui->tableWidget_list->clearContents();
 
@@ -148,7 +114,7 @@ void MainWindow::setTableWidgetList(QString text)
         auto *tableWidgetItem0 = new QTableWidgetItem(gNoteModelList[i]->contentModel->getTitle());
         tableWidgetItem0->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
         auto *tableWidgetItem1 = new QTableWidgetItem(
-                    Tools::timestampToDateTime(gNoteModelList[i]->contentModel->getUpdateDate()));
+                Tools::timestampToDateTime(gNoteModelList[i]->contentModel->getUpdateDate()));
         tableWidgetItem1->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
         ui->tableWidget_list->setItem(i, 0, tableWidgetItem0);
         ui->tableWidget_list->setItem(i, 1, tableWidgetItem1);
@@ -156,11 +122,9 @@ void MainWindow::setTableWidgetList(QString text)
 
     int sidebarSortKey = gConfigModel->getSidebarSortKey();
     Qt::SortOrder sidebarSortValue = gConfigModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
-                                                                                      : Qt::AscendingOrder;
+                                                                                   : Qt::AscendingOrder;
     ui->tableWidget_list->horizontalHeader()->sortIndicatorChanged(sidebarSortKey, sidebarSortValue);
     ui->tableWidget_list->horizontalHeader()->setSortIndicator(sidebarSortKey, sidebarSortValue);
-
-    filtrateTableWidgetList(text);
 }
 
 void MainWindow::filtrateTableWidgetList(QString text)
@@ -171,7 +135,7 @@ void MainWindow::filtrateTableWidgetList(QString text)
     for (int row = 0; row < ui->tableWidget_list->rowCount(); ++row) {
         for (int column = 0; column < ui->tableWidget_list->columnCount(); ++column) {
             QTableWidgetItem *tableWidgetItem = ui->tableWidget_list->item(row, column);
-            NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel*>();
+            NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel *>();
             bool hidden = true;
 
             if (gConfigModel->getIsSelectedClasses() == 1) {
@@ -208,7 +172,7 @@ void MainWindow::filtrateTableWidgetList(QString text)
 
     if (!hasOpenNoteInList && firstShowRowIndex > 0) {
         QTableWidgetItem *tableWidgetItem = ui->tableWidget_list->item(firstShowRowIndex, 0);
-        NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel*>();
+        NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel *>();
         gConfigModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
         ui->tableWidget_list->selectRow(firstShowRowIndex);
     }
@@ -220,13 +184,12 @@ void MainWindow::filtrateTableWidgetList(QString text)
 
 void MainWindow::on_tableWidget_list_itemClicked(QTableWidgetItem *item)
 {
-    QString uuid = item->data(Qt::UserRole).value<NoteModel*>()->contentModel->getUuid();
+    QString uuid = item->data(Qt::UserRole).value<NoteModel *>()->contentModel->getUuid();
     if (gConfigModel->getOpenNotesUuid() == uuid) {
         return;
     }
     gConfigModel->setOpenNotesUuid(uuid);
-    this->setDefaultNote();
-    this->setMainWindowData();
+    mSetOpenedNoteModel();
 }
 
 void MainWindow::on_tableWidget_list_doubleClicked(const QModelIndex &index)
@@ -242,8 +205,8 @@ void MainWindow::setEditText()
     ui->lineEdit_title->setText(gOpenNoteModel->contentModel->getTitle());
     ui->plainTextEdit_editor->setPlainText(gOpenNoteModel->contentModel->getBody());
 
-    this->setModified(true);
-    this->updatePreview();
+    setModified(true);
+    updatePreview();
 
     // 监听编辑器中文本是否有更改
     connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
@@ -252,21 +215,20 @@ void MainWindow::setEditText()
 
 void MainWindow::on_action_saveNote_triggered()
 {
-    if (!this->isModified()) {
+    if (!isModified()) {
         return;
     }
 
     Tools::writerFile(gOpenNoteModel->contentModel->getFilePath(), gOpenNoteModel->getNote());
 //    gDatabase->addNoteText(gOpenNoteModel);
-    this->setTableWidgetList();
+    mInitTableWidgetList();
 }
 
 void MainWindow::on_action_newNote_triggered()
 {
-    this->on_action_saveNote_triggered();
+    on_action_saveNote_triggered();
 
     gOpenNoteModel->clear();
-    this->setMainWindowData();
 }
 
 bool MainWindow::isModified()
@@ -282,7 +244,7 @@ void MainWindow::setModified(bool m)
 
 void MainWindow::on_pushButton_deleteNote_clicked()
 {
-    this->on_action_deleteNote_triggered();
+    on_action_deleteNote_triggered();
 }
 
 void MainWindow::on_action_deleteNote_triggered()
@@ -294,9 +256,8 @@ void MainWindow::on_action_deleteNote_triggered()
     gConfigModel->setOpenNotesUuid("");
     gOpenNoteModel->clear();
 
-    this->setTableWidgetList();
-    this->setDefaultNote();
-    this->setMainWindowData();
+    mInitTableWidgetList();
+    mSetOpenedNoteModel();
 }
 
 void MainWindow::onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
@@ -317,24 +278,16 @@ void MainWindow::setTagsData()
     ui->pushButton_changeTags->setText(tagsString);
 }
 
-void MainWindow::setMainWindowData()
-{
-    this->setEditText();
-    this->setModified(false);
-
-    this->setTagsData();
-    ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
-}
-
 void MainWindow::onChangeCategories()
 {
     ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
-    this->setModified(true);
-    this->on_action_saveNote_triggered();
+    setModified(true);
+    on_action_saveNote_triggered();
 }
 
 void MainWindow::on_pushButton_folder_clicked()
 {
+    mSelectedSidebarButtonByName(sender()->objectName());
     ui->stackedWidget->setCurrentIndex(1);
 
     if (ui->listWidget_categories->count() > 0) {
@@ -364,12 +317,13 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_pushButton_notes_clicked()
 {
+    mSelectedSidebarButtonByName(sender()->objectName());
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-QMenu* MainWindow::createListWidgetCategoriesMenu()
+QMenu *MainWindow::createListWidgetCategoriesMenu()
 {
-    QMenu* popMenu = new QMenu(this);
+    QMenu *popMenu = new QMenu(this);
 
     QAction *action_createCategories;
     QAction *action_renameCategories;
@@ -431,7 +385,7 @@ void MainWindow::onLineEditNameEditingFinished()
     QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name");
 
-    if(lineEdit_name->displayText().isEmpty()) {
+    if (lineEdit_name->displayText().isEmpty()) {
         lineEdit_name->setText(mCategoriesModelList[index]->getName());
     }
     else {
@@ -514,7 +468,7 @@ void MainWindow::on_pushButton_removeCategories_clicked()
 
 void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoint &pos)
 {
-    if(ui->listWidget_categories->itemAt(pos) != NULL) {
+    if (ui->listWidget_categories->itemAt(pos) != NULL) {
         on_listWidget_categories_itemClicked(ui->listWidget_categories->itemAt(pos));
         createListWidgetCategoriesMenu()->exec(ui->listWidget_categories->mapToGlobal(pos));
     }
@@ -560,9 +514,8 @@ void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index
 {
     gConfigModel->setCategoriesName(mCategoriesModelList[index.row()]->getName());
 
-    setTableWidgetList();
-    setDefaultNote();
-    setMainWindowData();
+    mInitTableWidgetList();
+    mSetOpenedNoteModel();
 
     ui->stackedWidget->setCurrentIndex(0);
 }
@@ -584,12 +537,13 @@ void MainWindow::on_pushButton_changeTags_clicked()
 void MainWindow::onChangeTags()
 {
     setTagsData();
-    this->setModified(true);
-    this->on_action_saveNote_triggered();
+    setModified(true);
+    on_action_saveNote_triggered();
 }
 
 void MainWindow::on_pushButton_tags_clicked()
 {
+    mSelectedSidebarButtonByName(sender()->objectName());
     ui->stackedWidget->setCurrentIndex(2);
 
     if (ui->listWidget_tags->count() > 0) {
@@ -597,6 +551,16 @@ void MainWindow::on_pushButton_tags_clicked()
     }
 
     setTagsList();
+}
+
+void MainWindow::on_pushButton_sync_clicked()
+{
+    mSelectedSidebarButtonByName(sender()->objectName());
+}
+
+void MainWindow::on_pushButton_trash_clicked()
+{
+    mSelectedSidebarButtonByName(sender()->objectName());
 }
 
 void MainWindow::setTagsList(bool reread, const QString &string)
@@ -656,16 +620,15 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
     gConfigModel->setTagsName(mtagsModelList[index.row()]->getName());
-    setTableWidgetList();
-    setDefaultNote();
-    setMainWindowData();
+    mInitTableWidgetList();
+    mSetOpenedNoteModel();
 
     ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_listWidget_tags_customContextMenuRequested(const QPoint &pos)
 {
-    if(ui->listWidget_tags->itemAt(pos) != NULL) {
+    if (ui->listWidget_tags->itemAt(pos) != NULL) {
         on_listWidget_tags_itemClicked(ui->listWidget_tags->itemAt(pos));
         createListWidgetTagsMenu()->exec(ui->listWidget_tags->mapToGlobal(pos));
     }
@@ -673,7 +636,7 @@ void MainWindow::on_listWidget_tags_customContextMenuRequested(const QPoint &pos
 
 QMenu *MainWindow::createListWidgetTagsMenu()
 {
-    QMenu* popMenu = new QMenu(this);
+    QMenu *popMenu = new QMenu(this);
 
     QAction *action_createTags;
     QAction *action_renameTags;
@@ -776,7 +739,7 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     QWidget *widget = ui->listWidget_tags->itemWidget(ui->listWidget_tags->selectedItems()[0]);
     QLineEdit *lineEdit_nameTags = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
 
-    if(lineEdit_nameTags->displayText().isEmpty()) {
+    if (lineEdit_nameTags->displayText().isEmpty()) {
         lineEdit_nameTags->setText(mtagsModelList[index]->getName());
     }
     else {
@@ -853,7 +816,7 @@ void MainWindow::resizeEvent(QResizeEvent *size)
 
 void MainWindow::on_lineEdit_searchNoteList_textChanged(const QString &arg1)
 {
-    setTableWidgetList(arg1);
+    mInitTableWidgetList(arg1);
 }
 
 
@@ -876,5 +839,20 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
     QWidget::dragMoveEvent(event);
 
     qDebug() << "3";
+}
+
+void MainWindow::mSelectedSidebarButtonByName(const QString &name)
+{
+    QMap<QString, QPushButton *>menuPushButtonList = {
+            {"pushButton_folder", ui->pushButton_folder},
+            {"pushButton_notes", ui->pushButton_notes},
+            {"pushButton_tags", ui->pushButton_tags},
+            {"pushButton_trash", ui->pushButton_trash},
+            {"pushButton_sync", ui->pushButton_sync}
+    };
+
+    for (auto iterator = menuPushButtonList.begin(); iterator != menuPushButtonList.end(); ++iterator) {
+        iterator.value()->setChecked(iterator.key() == name);
+    }
 }
 
