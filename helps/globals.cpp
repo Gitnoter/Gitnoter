@@ -14,6 +14,7 @@ QString gImagesFolderName = "files/images";
 QString gVideosFolderName = "files/videos";
 
 Database *gDatabase = new Database();
+QList<NoteModel *> gNoteModelList = {};
 NoteModel *gNoteModel = new NoteModel();
-ConfigTableModel *gConfigTableModel = new ConfigTableModel();
+ConfigModel *gConfigModel = new ConfigModel();
 GitManager *gGitManager = new GitManager();

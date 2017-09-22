@@ -36,11 +36,11 @@ add_executable(${PROJECT_NAME}
         controllers/tagslistcell.h          controllers/tagslistcell.cpp
         controllers/tagswidget.h            controllers/tagswidget.cpp
 
-        models/notemodel.h              models/notemodel.cpp
-        models/notetablemodel.h         models/notetablemodel.cpp
-        models/categoriestablemodel.h   models/categoriestablemodel.cpp
-        models/tagstablemodel.h         models/tagstablemodel.cpp
-        models/configtablemodel.h       models/configtablemodel.cpp
+        models/notemodel.h          models/notemodel.cpp
+        models/contentmodel.h       models/contentmodel.cpp
+        models/categoriesmodel.h    models/categoriesmodel.cpp
+        models/tagsmodel.h          models/tagsmodel.cpp
+        models/configmodel.h        models/configmodel.cpp
 
         helps/sqlquerybuilder.h
         helps/previewpage.h     helps/previewpage.cpp

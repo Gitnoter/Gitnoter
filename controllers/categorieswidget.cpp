@@ -47,7 +47,7 @@ void CategoriesWidget::animationFinished()
 void CategoriesWidget::setListData(bool reread, const QString &string)
 {
     if (mCategoriesModelList.length() == 0 || reread) {
-        mCategoriesModelList = gDatabase->selectCategoriesTable();
+        mCategoriesModelList = gDatabase->selectCategories();
     }
 
     if (!string.isEmpty()) {
@@ -67,7 +67,7 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
     for (int i = 0; i < mCategoriesModelSearchList.length(); ++i) {
         ui->listWidget_data->addItem(mCategoriesModelSearchList[i]->getName());
 
-        if (gNoteModel->categoriesTableModel->getName() == mCategoriesModelSearchList[i]->getName()) {
+        if (gNoteModel->categoriesModel->getName() == mCategoriesModelSearchList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
@@ -76,13 +76,13 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
 void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gNoteModel->categoriesTableModel = mCategoriesModelList[index.row()];
+        gNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelSearchList) {
             if (i == index.row()) {
-                gNoteModel->categoriesTableModel = item;
+                gNoteModel->categoriesModel = item;
             }
             i += 1;
         }
@@ -92,13 +92,13 @@ void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gNoteModel->categoriesTableModel = mCategoriesModelList[index.row()];
+        gNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelSearchList) {
             if (i == index.row()) {
-                gNoteModel->categoriesTableModel = item;
+                gNoteModel->categoriesModel = item;
             }
             i += 1;
         }
@@ -123,8 +123,8 @@ void CategoriesWidget::mouseReleaseEvent(QMouseEvent *event)
 void CategoriesWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        gDatabase->insertCategoriesTable(ui->lineEdit->displayText());
-        mCategoriesModelList = gDatabase->selectCategoriesTable();
+        gDatabase->insertCategories(ui->lineEdit->displayText());
+        mCategoriesModelList = gDatabase->selectCategories();
         ui->lineEdit->clear();
     }
 }

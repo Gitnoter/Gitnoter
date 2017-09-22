@@ -1,9 +1,9 @@
 #ifndef NOTEMODEL_H
 #define NOTEMODEL_H
 
-#include "notetablemodel.h"
-#include "tagstablemodel.h"
-#include "categoriestablemodel.h"
+#include "contentmodel.h"
+#include "tagsmodel.h"
+#include "categoriesmodel.h"
 
 #include <QObject>
 #include <QtCore>
@@ -11,16 +11,19 @@
 class NoteModel : public QObject
 {
 public:
+
+    ContentModel *contentModel;
+    QList<TagsModel *> *tagsModelList;
+    CategoriesModel *categoriesModel;
+
     NoteModel();
+
     NoteModel(QString noteText, QString filePath = "");
-    NoteModel(NoteTableModel *noteTableModel, QList<TagsTableModel *> *tagTableList,
-              CategoriesTableModel *categoriesTableModel);
+
+    NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
+              CategoriesModel *categoriesModel);
 
     QString getNote();
-
-    NoteTableModel *noteTableModel;
-    QList<TagsTableModel *> *tagTableList;
-    CategoriesTableModel *categoriesTableModel;
 
     void clear();
 

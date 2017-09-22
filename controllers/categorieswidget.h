@@ -1,7 +1,7 @@
 #ifndef CATEGORIESWIDGET_H
 #define CATEGORIESWIDGET_H
 
-#include "categoriestablemodel.h"
+#include "categoriesmodel.h"
 
 #include <QWidget>
 #include <QPropertyAnimation>
@@ -39,8 +39,8 @@ protected:
 
 private:
     Ui::CategoriesWidget *ui;
-    QList<CategoriesTableModel *> mCategoriesModelList;
-    QList<CategoriesTableModel *> mCategoriesModelSearchList;
+    QList<CategoriesModel *> mCategoriesModelList;
+    QList<CategoriesModel *> mCategoriesModelSearchList;
 
     void setListData(bool reread = true, const QString &string = "");
 };

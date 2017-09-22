@@ -1,10 +1,10 @@
-#include "notetablemodel.h"
+#include "contentmodel.h"
 #include "tools.h"
 #include "globals.h"
 
 #include <QDateTime>
 
-NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
+ContentModel::ContentModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
     this->setUuid(uuid);
     this->setTitle(title);
@@ -14,75 +14,75 @@ NoteTableModel::NoteTableModel(QString uuid, QString title, int createDate, int 
     this->body = body;
 }
 
-QString NoteTableModel::getUuid()
+QString ContentModel::getUuid()
 {
     return this->uuid;
 }
 
-void NoteTableModel::setTitle(const QString title)
+void ContentModel::setTitle(const QString title)
 {
     this->title = title;
 }
 
-void NoteTableModel::setCreateDate(const QString createDate)
+void ContentModel::setCreateDate(const QString createDate)
 {
     this->createDate = createDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
                                             : Tools::timestampFromDateTime(createDate);
 }
 
-void NoteTableModel::setCreateDate(int createDate)
+void ContentModel::setCreateDate(int createDate)
 {
     this->createDate = createDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : createDate;
 }
 
-void NoteTableModel::setUpdateDate(const QString updateDate)
+void ContentModel::setUpdateDate(const QString updateDate)
 {
     this->updateDate = updateDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
                                             : Tools::timestampFromDateTime(updateDate);
 }
 
-void NoteTableModel::setUpdateDate(int updateDate)
+void ContentModel::setUpdateDate(int updateDate)
 {
     this->updateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
 }
 
-void NoteTableModel::setBody(const QString body)
+void ContentModel::setBody(const QString body)
 {
     this->body = body;
 }
 
-void NoteTableModel::setUuid(QString uuid) {
+void ContentModel::setUuid(QString uuid) {
     this->uuid = uuid.isEmpty() ? Tools::getUuid() : uuid;
 }
 
-QString NoteTableModel::getTitle()
+QString ContentModel::getTitle()
 {
     return this->title;
 }
 
-int NoteTableModel::getCreateDate()
+int ContentModel::getCreateDate()
 {
     return this->createDate;
 }
 
-int NoteTableModel::getUpdateDate()
+int ContentModel::getUpdateDate()
 {
     return this->updateDate;
 }
 
-QString NoteTableModel::getBody()
+QString ContentModel::getBody()
 {
     return this->body;
 }
 
-const QString &NoteTableModel::getFilePath() const
+const QString &ContentModel::getFilePath() const
 {
     return filePath;
 }
 
-void NoteTableModel::setFilePath(const QString &filePath)
+void ContentModel::setFilePath(const QString &filePath)
 {
-    NoteTableModel::filePath = filePath.isEmpty() ?
+    ContentModel::filePath = filePath.isEmpty() ?
                                QString("%1/%2/%3-%4.md").arg(
                                        gRepoPath, gNoteFolderName,
                                        this->title.isEmpty() ? "无标题" : this->title, this->uuid)

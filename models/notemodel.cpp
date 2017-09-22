@@ -7,7 +7,8 @@ NoteModel::NoteModel()
     this->clear();
 }
 
-NoteModel::NoteModel(QString noteText, QString filePath) {
+NoteModel::NoteModel(QString noteText, QString filePath)
+{
     QTextStream in(&noteText);
     bool bodyStart = false;
     QString body;
@@ -19,7 +20,7 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
     map["tags"] = "";
     map["categories"] = "";
 
-    while(!in.atEnd()) {
+    while (!in.atEnd()) {
         QString noteLine = in.readLine().trimmed();
 
         if (!bodyStart) {
@@ -46,48 +47,51 @@ NoteModel::NoteModel(QString noteText, QString filePath) {
             body += noteLine + "\n";
         }
     }
-    this->noteTableModel = new NoteTableModel(map["uuid"], map["title"], Tools::timestampFromDateTime(map["createDate"])
-            , Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(), filePath);
-    this->categoriesTableModel = new CategoriesTableModel(map["categories"]);
-    this->tagTableList = new QList<TagsTableModel *>;
+    this->contentModel = new ContentModel(map["uuid"], map["title"],
+                                              Tools::timestampFromDateTime(map["createDate"]),
+                                              Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(),
+                                              filePath);
+    this->categoriesModel = new CategoriesModel(map["categories"]);
+    this->tagsModelList = new QList<TagsModel *>;
     QStringList tags = map["tags"].split(QRegExp(gTagSplit + "?"));
     for (auto &&tag : tags) {
-        this->tagTableList->append(new TagsTableModel(tag.trimmed()));
+        this->tagsModelList->append(new TagsModel(tag.trimmed()));
     }
 }
 
-NoteModel::NoteModel(NoteTableModel *noteTableModel, QList<TagsTableModel *> *tagTableList,
-                     CategoriesTableModel *categoriesTableModel) {
-    this->noteTableModel = noteTableModel;
-    this->tagTableList = tagTableList;
-    this->categoriesTableModel = categoriesTableModel;
+NoteModel::NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
+                     CategoriesModel *categoriesModel)
+{
+    this->contentModel = contentModel;
+    this->tagsModelList = tagList;
+    this->categoriesModel = categoriesModel;
 }
 
 QString NoteModel::getNote()
 {
     QString note;
     QString tags;
-    note += "uuid: " + this->noteTableModel->getUuid() + "\n";
-    note += "title: " + this->noteTableModel->getTitle() + "\n";
-    note += "createDate: " + Tools::timestampToDateTime(this->noteTableModel->getCreateDate()) + "\n";
-    note += "updateDate: " + Tools::timestampToDateTime(this->noteTableModel->getUpdateDate()) + "\n";
-    note += "categories: " + this->categoriesTableModel->getName() + "\n";
+    note += "uuid: " + this->contentModel->getUuid() + "\n";
+    note += "title: " + this->contentModel->getTitle() + "\n";
+    note += "createDate: " + Tools::timestampToDateTime(this->contentModel->getCreateDate()) + "\n";
+    note += "updateDate: " + Tools::timestampToDateTime(this->contentModel->getUpdateDate()) + "\n";
+    note += "categories: " + this->categoriesModel->getName() + "\n";
 
     note += "tags: ";
-    for (auto &&tagsTableModel : *(this->tagTableList)) {
-        tags += tagsTableModel->getName() + gTagSplit;
+    for (auto &&tagsModel : *(this->tagsModelList)) {
+        tags += tagsModel->getName() + gTagSplit;
     }
     tags.chop(gTagSplit.length());
     note += tags;
 
-    note += "\n\n---\n\n" + this->noteTableModel->getBody();
+    note += "\n\n---\n\n" + this->contentModel->getBody();
 
     return note;
 }
 
 void NoteModel::clear()
 {
-    this->noteTableModel = new NoteTableModel();
-    this->tagTableList = new QList<TagsTableModel *>();
-    this->categoriesTableModel = new CategoriesTableModel();
+    this->contentModel = new ContentModel();
+    this->tagsModelList = new QList<TagsModel *>();
+    this->categoriesModel = new CategoriesModel();
 }

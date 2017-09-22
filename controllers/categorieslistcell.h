@@ -1,7 +1,7 @@
 #ifndef CATEGORIESLISTCELL_H
 #define CATEGORIESLISTCELL_H
 
-#include "categoriestablemodel.h"
+#include "categoriesmodel.h"
 
 #include <QWidget>
 
@@ -15,16 +15,16 @@ class CategoriesListCell : public QWidget
 
 public:
     explicit CategoriesListCell(QWidget *parent = 0);
-    CategoriesListCell(CategoriesTableModel *categoriesTableModel);
+    CategoriesListCell(CategoriesModel *categoriesModel);
     ~CategoriesListCell();
 
 private:
     Ui::CategoriesListCell *ui;
-    CategoriesTableModel *m_categoriesTableModel;
+    CategoriesModel *m_categoriesModel;
 public:
-    CategoriesTableModel *getCategoriesTableModel() const;
+    CategoriesModel *getCategoriesModel() const;
 
-    void setCategoriesTableModel(CategoriesTableModel *categoriesTableModel);
+    void setCategoriesModel(CategoriesModel *categoriesModel);
 
 };
 

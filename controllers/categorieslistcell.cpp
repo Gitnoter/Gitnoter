@@ -9,13 +9,13 @@ CategoriesListCell::CategoriesListCell(QWidget *parent) :
     ui->setupUi(this);
 }
 
-CategoriesListCell::CategoriesListCell(CategoriesTableModel *categoriesTableModel) : ui(new Ui::CategoriesListCell)
+CategoriesListCell::CategoriesListCell(CategoriesModel *categoriesModel) : ui(new Ui::CategoriesListCell)
 {
     ui->setupUi(this);
 
-    m_categoriesTableModel = categoriesTableModel;
-    ui->lineEdit_name->setText(m_categoriesTableModel->getName());
-    ui->label_noteCount->setText(QString::number(m_categoriesTableModel->getCount()));
+    m_categoriesModel = categoriesModel;
+    ui->lineEdit_name->setText(m_categoriesModel->getName());
+    ui->label_noteCount->setText(QString::number(m_categoriesModel->getCount()));
 }
 
 CategoriesListCell::~CategoriesListCell()
@@ -23,12 +23,12 @@ CategoriesListCell::~CategoriesListCell()
     delete ui;
 }
 
-CategoriesTableModel *CategoriesListCell::getCategoriesTableModel() const
+CategoriesModel *CategoriesListCell::getCategoriesModel() const
 {
-    return m_categoriesTableModel;
+    return m_categoriesModel;
 }
 
-void CategoriesListCell::setCategoriesTableModel(CategoriesTableModel *categoriesTableModel)
+void CategoriesListCell::setCategoriesModel(CategoriesModel *categoriesModel)
 {
-    m_categoriesTableModel = categoriesTableModel;
+    m_categoriesModel = categoriesModel;
 }

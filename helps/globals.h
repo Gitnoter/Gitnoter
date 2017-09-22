@@ -3,8 +3,8 @@
 
 #include "notemodel.h"
 #include "database.h"
-#include "configtablemodel.h"
-#include "tagstablemodel.h"
+#include "configmodel.h"
+#include "tagsmodel.h"
 #include "gitmanager.h"
 
 #include <QObject>
@@ -23,8 +23,9 @@ extern QString gVideosFolderName;
 extern QString gAppDataLocation;
 
 extern Database *gDatabase;
+extern QList<NoteModel *> gNoteModelList;
 extern NoteModel *gNoteModel;
-extern ConfigTableModel *gConfigTableModel;
+extern ConfigModel *gConfigModel;
 extern GitManager *gGitManager;
 
 

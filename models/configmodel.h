@@ -1,12 +1,12 @@
-#ifndef CONFIGTABLEMODEL_H
-#define CONFIGTABLEMODEL_H
+#ifndef CONFIGMODEL_H
+#define CONFIGMODEL_H
 
 #include <QObject>
 
-class ConfigTableModel : public QObject
+class ConfigModel : public QObject
 {
 public:
-    explicit ConfigTableModel(QString version = "", QString repoDir = "", QString repoUrl = "",
+    explicit ConfigModel(QString version = "", QString repoDir = "", QString repoUrl = "",
                               QString repoUsername = "", QString repoPassword = "", QString openNotesUuid = "");
 
     void setVersion(const QString &version);
@@ -74,4 +74,4 @@ private:
 
 };
 
-#endif // CONFIGTABLEMODEL_H
+#endif // CONFIGMODEL_H

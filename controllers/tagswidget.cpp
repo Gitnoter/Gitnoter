@@ -42,9 +42,9 @@ void TagsWidget::resizeWindow(QSize size)
 void TagsWidget::onAnimationFinished()
 {
     auto selectedIndexes = ui->listWidget_data->selectionModel()->selectedIndexes();
-    gNoteModel->tagTableList->clear();
+    gNoteModel->tagsModelList->clear();
     for (auto &&index : selectedIndexes) {
-        gNoteModel->tagTableList->append(mTagsTableModelList[index.row()]);
+        gNoteModel->tagsModelList->append(mTagsModelList[index.row()]);
     }
     this->close();
     emit changeTags();
@@ -52,29 +52,29 @@ void TagsWidget::onAnimationFinished()
 
 void TagsWidget::setListData(bool reread, const QString &string)
 {
-    if (mTagsTableModelList.length() == 0 || reread) {
-        mTagsTableModelList = gDatabase->selectTagsTable();
+    if (mTagsModelList.length() == 0 || reread) {
+        mTagsModelList = gDatabase->selectTags();
     }
 
     if (!string.isEmpty()) {
-        mTagsTableModelSearchList.clear();
-        for (int i = 0; i < mTagsTableModelList.length(); ++i) {
-            int searchIndex = mTagsTableModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
+        mtagsModelSearchList.clear();
+        for (int i = 0; i < mTagsModelList.length(); ++i) {
+            int searchIndex = mTagsModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
             if (searchIndex != -1) {
-                mTagsTableModelSearchList.append(mTagsTableModelList[i]);
+                mtagsModelSearchList.append(mTagsModelList[i]);
             }
         }
     }
     else {
-        mTagsTableModelSearchList = mTagsTableModelList;
+        mtagsModelSearchList = mTagsModelList;
     }
 
     ui->listWidget_data->clear();
-    for (int i = 0; i < mTagsTableModelSearchList.length(); ++i) {
-        ui->listWidget_data->addItem(mTagsTableModelSearchList[i]->getName());
+    for (int i = 0; i < mtagsModelSearchList.length(); ++i) {
+        ui->listWidget_data->addItem(mtagsModelSearchList[i]->getName());
 
-        for (auto &&item : *gNoteModel->tagTableList) {
-            if (item->getName() == mTagsTableModelSearchList[i]->getName()) {
+        for (auto &&item : *gNoteModel->tagsModelList) {
+            if (item->getName() == mtagsModelSearchList[i]->getName()) {
                 ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
             }
         }
@@ -98,7 +98,7 @@ void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
 void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        gDatabase->insertTagsTable(ui->lineEdit->displayText());
+        gDatabase->insertTags(ui->lineEdit->displayText());
         setListData(true);
         ui->lineEdit->clear();
     }

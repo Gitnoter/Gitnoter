@@ -40,10 +40,10 @@ SOURCES += \
     controllers/tagslistcell.cpp  \
     controllers/tagswidget.cpp  \
     models/notemodel.cpp  \
-    models/notetablemodel.cpp  \
-    models/categoriestablemodel.cpp  \
-    models/tagstablemodel.cpp  \
-    models/configtablemodel.cpp  \
+    models/notemodel.cpp  \
+    models/categoriesmodel.cpp  \
+    models/tagsmodel.cpp  \
+    models/configmodel.cpp  \
     helps/previewpage.cpp  \
     helps/document.cpp  \
     helps/database.cpp  \
@@ -58,10 +58,10 @@ HEADERS += \
     controllers/tagslistcell.h  \
     controllers/tagswidget.h  \
     models/notemodel.h  \
-    models/notetablemodel.h  \
-    models/categoriestablemodel.h  \
-    models/tagstablemodel.h  \
-    models/configtablemodel.h  \
+    models/notemodel.h  \
+    models/categoriesmodel.h  \
+    models/tagsmodel.h  \
+    models/configmodel.h  \
     helps/sqlquerybuilder.h  \
     helps/previewpage.h  \
     helps/document.h  \

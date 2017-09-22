@@ -2,7 +2,7 @@
 #define TAGSLISTCELL_H
 
 #include "tagslistcell.h"
-#include "tagstablemodel.h"
+#include "tagsmodel.h"
 
 #include <QWidget>
 
@@ -16,15 +16,15 @@ class TagsListCell : public QWidget
 
 public:
     explicit TagsListCell(QWidget *parent = 0);
-    TagsListCell(TagsTableModel *tagsTableModel);
+    TagsListCell(TagsModel *tagsModel);
     ~TagsListCell();
 
-    TagsTableModel *getTagsTableModel() const;
-    void setTagsTableModel(TagsTableModel *tagsTableModel);
+    TagsModel *gettagsModel() const;
+    void settagsModel(TagsModel *tagsModel);
 
 private:
     Ui::TagsListCell *ui;
-    TagsTableModel *mTagsTableModel;
+    TagsModel *mtagsModel;
 
 };
 

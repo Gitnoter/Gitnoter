@@ -1,19 +1,19 @@
-#ifndef CATEGORISETABLEMODEL_H
-#define CATEGORISETABLEMODEL_H
+#ifndef CATEGORISEMODEL_H
+#define CATEGORISEMODEL_H
 
 #include <QObject>
 
-class CategoriesTableModel : public QObject
+class CategoriesModel : public QObject
 {
 public:
-    explicit CategoriesTableModel();
-    CategoriesTableModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
+    explicit CategoriesModel();
+    CategoriesModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
                                   int updateDate, int isDefault);
-    CategoriesTableModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
-    CategoriesTableModel(int id, int categoriesId, QString notesUuid, int createDate);
-    CategoriesTableModel(QString name);
+    CategoriesModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
+    CategoriesModel(int id, int categoriesId, QString notesUuid, int createDate);
+    CategoriesModel(QString name);
 
-    CategoriesTableModel* operator+(CategoriesTableModel & categoriseTableModel);
+    CategoriesModel* operator+(CategoriesModel & categoriseModel);
 
     int getId();
     int getCategoriesId();
@@ -45,4 +45,4 @@ private:
 
 };
 
-#endif // CATEGORISETABLEMODEL_H
+#endif // CATEGORISEMODEL_H

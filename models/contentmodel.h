@@ -1,12 +1,12 @@
-#ifndef NOTETABLEMODEL_H
-#define NOTETABLEMODEL_H
+#ifndef CONTENTMODEL_H
+#define CONTENTMODEL_H
 
 #include <QObject>
 
-class NoteTableModel : public QObject
+class ContentModel : public QObject
 {
 public:
-    NoteTableModel(QString uuid = "", QString title = "", int createDate = 0, int updateDate = 0, QString body = "", QString filePath = "");
+    ContentModel(QString uuid = "", QString title = "", int createDate = 0, int updateDate = 0, QString body = "", QString filePath = "");
 
     void setUuid(QString uuid = "");
     void setTitle(QString title);
@@ -34,4 +34,4 @@ private:
 
 };
 
-#endif // NOTETABLEMODEL_H
+#endif // CONTENTMODEL_H
