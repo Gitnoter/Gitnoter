@@ -5,39 +5,21 @@
 
 class TagsModel : public QObject
 {
+Q_OBJECT
+
 public:
-    explicit TagsModel();
-    TagsModel(int id, int tagsId, QString notesUuid, QString name, int createDate, int updateDate);
-    TagsModel(int tagsId, QString name, int createDate, int updateDate);
-    TagsModel(int id, int tagsId, QString notesUuid, int createDate);
-    TagsModel(QString name);
+    TagsModel(const QString &name = "", int count = 0);
 
-    TagsModel* operator + (TagsModel &tagsModel);
+    const QString &getName() const;
 
-    void setId(int id);
-    void setTagsId(int tagsId);
-    void setName(QString name);
-    void setNotesUuid(QString notesUuid);
-    void setCreateDate(int createDate);
-    void setUpdateDate(int updateDate);
-
-    int getId();
-    int getTagsId();
-    QString getName();
-    QString getNotesUuid();
-    int getCreateDate();
-    int getUpdateDate();
+    void setName(const QString &name);
 
     int getCount() const;
+
     void setCount(int count);
 
 private:
-    int id;
-    int tagsId;
-    QString notesUuid;
     QString name;
-    int createDate;
-    int updateDate;
     int count;
 
 };

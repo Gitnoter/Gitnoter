@@ -5,8 +5,10 @@
 
 class ConfigModel : public QObject
 {
+Q_OBJECT
+
 public:
-    explicit ConfigModel(QString version = "", QString repoDir = "", QString repoUrl = "",
+    ConfigModel(QString version = "", QString repoDir = "", QString repoUrl = "",
                               QString repoUsername = "", QString repoPassword = "", QString openNotesUuid = "");
 
     void setVersion(const QString &version);
@@ -41,13 +43,13 @@ public:
 
     void setSidebarSortValue(const QString &sidebarSortValue);
 
-    int getCategoriesId() const;
+    QString getCategoriesName() const;
 
-    void setCategoriesId(int categoriesId);
+    void setCategoriesName(const QString &categoriesName);
 
-    int getTagsId() const;
+    QString getTagsName() const;
 
-    void setTagsId(int tagsId);
+    void setTagsName(const QString &tagsName);
 
     int getIsLocalRepo() const;
 
@@ -67,11 +69,12 @@ private:
     QString openNotesUuid;
     QString sidebarSortValue;
     int sidebarSortKey;
-    int categoriesId;
-    int tagsId;
-    int isSelectedClasses;
-    int isLocalRepo;
 
+    int isSelectedClasses;
+
+    int isLocalRepo;
+    QString categoriesName;
+    QString tagsName;
 };
 
 #endif // CONFIGMODEL_H

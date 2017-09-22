@@ -67,7 +67,7 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
     for (int i = 0; i < mCategoriesModelSearchList.length(); ++i) {
         ui->listWidget_data->addItem(mCategoriesModelSearchList[i]->getName());
 
-        if (gNoteModel->categoriesModel->getName() == mCategoriesModelSearchList[i]->getName()) {
+        if (gOpenNoteModel->categoriesModel->getName() == mCategoriesModelSearchList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
@@ -76,13 +76,13 @@ void CategoriesWidget::setListData(bool reread, const QString &string)
 void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gNoteModel->categoriesModel = mCategoriesModelList[index.row()];
+        gOpenNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelSearchList) {
             if (i == index.row()) {
-                gNoteModel->categoriesModel = item;
+                gOpenNoteModel->categoriesModel = item;
             }
             i += 1;
         }
@@ -92,13 +92,13 @@ void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gNoteModel->categoriesModel = mCategoriesModelList[index.row()];
+        gOpenNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelSearchList) {
             if (i == index.row()) {
-                gNoteModel->categoriesModel = item;
+                gOpenNoteModel->categoriesModel = item;
             }
             i += 1;
         }

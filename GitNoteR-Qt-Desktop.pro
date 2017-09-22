@@ -39,7 +39,7 @@ SOURCES += \
     controllers/categorieslistcell.cpp  \
     controllers/tagslistcell.cpp  \
     controllers/tagswidget.cpp  \
-    models/notemodel.cpp  \
+    models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
     models/tagsmodel.cpp  \
@@ -57,7 +57,7 @@ HEADERS += \
     controllers/categorieslistcell.h  \
     controllers/tagslistcell.h  \
     controllers/tagswidget.h  \
-    models/notemodel.h  \
+    models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
     models/tagsmodel.h  \

@@ -130,7 +130,6 @@ private:
     
     Document m_content;
     QMap<QString, QPushButton *> menuPushButtons;
-    QList<ContentModel *> *mSidebarNoteList;
     QList<CategoriesModel *> mCategoriesModelList;
     QList<TagsModel *> mtagsModelList;
 
@@ -143,11 +142,13 @@ private:
 
     void menuPushButtonClicked();
 
-    void setNoteModelList();
+    void initNoteModelList();
 
     void setDefaultNote();
 
-    void setSidebar(QString text = "");
+    void setTableWidgetList(QString text = "");
+
+    void filtrateTableWidgetList(QString text = "");
 
     void setEditText();
 

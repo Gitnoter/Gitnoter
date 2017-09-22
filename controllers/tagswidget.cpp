@@ -42,9 +42,9 @@ void TagsWidget::resizeWindow(QSize size)
 void TagsWidget::onAnimationFinished()
 {
     auto selectedIndexes = ui->listWidget_data->selectionModel()->selectedIndexes();
-    gNoteModel->tagsModelList->clear();
+    gOpenNoteModel->tagsModelList->clear();
     for (auto &&index : selectedIndexes) {
-        gNoteModel->tagsModelList->append(mTagsModelList[index.row()]);
+        gOpenNoteModel->tagsModelList->append(mTagsModelList[index.row()]);
     }
     this->close();
     emit changeTags();
@@ -73,7 +73,7 @@ void TagsWidget::setListData(bool reread, const QString &string)
     for (int i = 0; i < mtagsModelSearchList.length(); ++i) {
         ui->listWidget_data->addItem(mtagsModelSearchList[i]->getName());
 
-        for (auto &&item : *gNoteModel->tagsModelList) {
+        for (auto &&item : *gOpenNoteModel->tagsModelList) {
             if (item->getName() == mtagsModelSearchList[i]->getName()) {
                 ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
             }

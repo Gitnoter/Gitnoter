@@ -10,8 +10,9 @@
 
 class NoteModel : public QObject
 {
-public:
+Q_OBJECT
 
+public:
     ContentModel *contentModel;
     QList<TagsModel *> *tagsModelList;
     CategoriesModel *categoriesModel;

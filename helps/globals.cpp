@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "tools.h"
 
 QString gPackageName = "com.huyaohui.gitnoter";
 QString gVersion = "1.0.0";
@@ -15,6 +16,6 @@ QString gVideosFolderName = "files/videos";
 
 Database *gDatabase = new Database();
 QList<NoteModel *> gNoteModelList = {};
-NoteModel *gNoteModel = new NoteModel();
+NoteModel *gOpenNoteModel = new NoteModel();
 ConfigModel *gConfigModel = new ConfigModel();
 GitManager *gGitManager = new GitManager();

@@ -21,14 +21,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
 
-    this->setNoteModelList();
+    initNoteModelList();
 
     gConfigModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
     gConfigModel->setSidebarSortKey(1);
     gConfigModel->setSidebarSortValue("DESC");
-    gConfigModel->setCategoriesId(1);
+    gConfigModel->setCategoriesName("iOS");
+    gConfigModel->setIsSelectedClasses(1);
 
-    this->setSidebar();
+    this->setTableWidgetList();
     this->setDefaultNote();
 
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
@@ -73,21 +74,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::textChanged()
 {
-    gNoteModel->contentModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
+    gOpenNoteModel->contentModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
                                         ? ui->lineEdit_title->placeholderText()
                                         : ui->lineEdit_title->displayText());
-    gNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
-    gNoteModel->contentModel->setUpdateDate(0);
+    gOpenNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    gOpenNoteModel->contentModel->setUpdateDate(0);
     this->updatePreview();
 }
 
 void MainWindow::updatePreview()
 {
-    if (gNoteModel->contentModel->getTitle().isEmpty()) {
-        m_content.setText(gNoteModel->contentModel->getBody());
+    if (gOpenNoteModel->contentModel->getTitle().isEmpty()) {
+        m_content.setText(gOpenNoteModel->contentModel->getBody());
     }
     else {
-        m_content.setText("# " + gNoteModel->contentModel->getTitle() + "\n\n" + gNoteModel->contentModel->getBody());
+        m_content.setText("# " + gOpenNoteModel->contentModel->getTitle() + "\n\n" + gOpenNoteModel->contentModel->getBody());
     }
 }
 
@@ -111,97 +112,47 @@ void MainWindow::on_pushButton_categories_clicked()
     connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
 }
 
-void MainWindow::setNoteModelList()
+void MainWindow::initNoteModelList()
 {
-    QString notesPath = QDir(gRepoPath).filePath(gNoteFolderName);
-    QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
-    gNoteModelList.clear();
-    for (auto &&fileInfo : fileInfoList) {
-        NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()), fileInfo.absoluteFilePath());
-        gNoteModelList.append(noteModel);
+    if (gNoteModelList.length() == 0) {
+        QString notesPath = QDir(gRepoPath).filePath(gNoteFolderName);
+        QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
+        gNoteModelList.clear();
+        for (auto &&fileInfo : fileInfoList) {
+            NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()), fileInfo.absoluteFilePath());
+            gNoteModelList.append(noteModel);
+        }
     }
 }
 
 void MainWindow::setDefaultNote()
 {
     if (gConfigModel->getOpenNotesUuid().isEmpty()) {
-        if (mSidebarNoteList->length() != 0) {
-            gConfigModel->setOpenNotesUuid(mSidebarNoteList->at(0)->getUuid());
+        if (gNoteModelList.length() != 0) {
+            gConfigModel->setOpenNotesUuid(gNoteModelList.at(0)->contentModel->getUuid());
             this->setDefaultNote();
             return;
         }
-        gNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+        gOpenNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-        gNoteModel = gDatabase->getNoteByUuid(gConfigModel->getOpenNotesUuid());
+        gOpenNoteModel = gDatabase->getNoteByUuid(gConfigModel->getOpenNotesUuid());
     }
 }
 
-void MainWindow::setSidebar(QString text)
+void MainWindow::setTableWidgetList(QString text)
 {
     ui->tableWidget_list->clearContents();
-    mSidebarNoteList = gDatabase->getSidebarNotes();
 
-    auto *sidebarNoteList = new QList<ContentModel *>();
-    if (gConfigModel->getIsSelectedClasses() == 2) {
-        auto tagsList = gDatabase->selectNJTByTagsId(gConfigModel->getTagsId());
-        for (auto &&item : tagsList) {
-            for (auto &&list : *mSidebarNoteList) {
-                if (item->getNotesUuid() == list->getUuid()) {
-                    sidebarNoteList->append(list);
-                }
-            }
-        }
-        mSidebarNoteList = sidebarNoteList;
-    }
-    else if (gConfigModel->getIsSelectedClasses() == 1) {
-        auto categoriesList = gDatabase->selectNJTByTagsId(gConfigModel->getCategoriesId());
-        for (auto &&item : categoriesList) {
-            for (auto &&list : *mSidebarNoteList) {
-                if (item->getNotesUuid() == list->getUuid()) {
-                    sidebarNoteList->append(list);
-                }
-            }
-        }
-        mSidebarNoteList = sidebarNoteList;
-    }
-
-    if (!text.isEmpty()) {
-        auto *sidebarNoteList2 = new QList<ContentModel *>();
-        for (auto &&item : *mSidebarNoteList) {
-            if (item->getTitle().indexOf(text, 0, Qt::CaseInsensitive) != -1) {
-                sidebarNoteList2->append(item);
-            }
-        }
-        mSidebarNoteList = sidebarNoteList2;
-    }
-
-    ui->tableWidget_list->setRowCount(mSidebarNoteList->length());
-    for (int i = 0; i < mSidebarNoteList->length(); ++i) {
-        auto *tableWidgetItem0 = new QTableWidgetItem(mSidebarNoteList->at(i)->getTitle());
-        tableWidgetItem0->setData(Qt::UserRole, i);
+    ui->tableWidget_list->setRowCount(gNoteModelList.length());
+    for (int i = 0; i < gNoteModelList.length(); ++i) {
+        auto *tableWidgetItem0 = new QTableWidgetItem(gNoteModelList[i]->contentModel->getTitle());
+        tableWidgetItem0->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
         auto *tableWidgetItem1 = new QTableWidgetItem(
-                    Tools::timestampToDateTime(mSidebarNoteList->at(i)->getUpdateDate()));
-        tableWidgetItem1->setData(Qt::UserRole, i);
+                    Tools::timestampToDateTime(gNoteModelList[i]->contentModel->getUpdateDate()));
+        tableWidgetItem1->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
         ui->tableWidget_list->setItem(i, 0, tableWidgetItem0);
         ui->tableWidget_list->setItem(i, 1, tableWidgetItem1);
-    }
-
-    QStringList uuidList;
-    for (auto &&item : *mSidebarNoteList) {
-        uuidList.append(item->getUuid());
-    }
-
-    if (uuidList.length() != 0) {
-        int index = uuidList.indexOf(gConfigModel->getOpenNotesUuid());
-        if (index == -1) {
-            gConfigModel->setOpenNotesUuid(uuidList[0]);
-        }
-        ui->tableWidget_list->selectRow(index == -1 ? 0 : index);
-    }
-    else {
-        gNoteModel->clear();
-        gConfigModel->setOpenNotesUuid("");
     }
 
     int sidebarSortKey = gConfigModel->getSidebarSortKey();
@@ -209,11 +160,68 @@ void MainWindow::setSidebar(QString text)
                                                                                       : Qt::AscendingOrder;
     ui->tableWidget_list->horizontalHeader()->sortIndicatorChanged(sidebarSortKey, sidebarSortValue);
     ui->tableWidget_list->horizontalHeader()->setSortIndicator(sidebarSortKey, sidebarSortValue);
+
+    filtrateTableWidgetList(text);
+}
+
+void MainWindow::filtrateTableWidgetList(QString text)
+{
+    int firstShowRowIndex = 0;
+    bool hasOpenNoteInList = false;
+
+    for (int row = 0; row < ui->tableWidget_list->rowCount(); ++row) {
+        for (int column = 0; column < ui->tableWidget_list->columnCount(); ++column) {
+            QTableWidgetItem *tableWidgetItem = ui->tableWidget_list->item(row, column);
+            NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel*>();
+            bool hidden = true;
+
+            if (gConfigModel->getIsSelectedClasses() == 1) {
+                if (noteModel->categoriesModel->getName() == gConfigModel->getCategoriesName()) {
+                    hidden = false;
+                }
+            }
+            else if (gConfigModel->getIsSelectedClasses() == 2) {
+                for (auto &&tagsModel : *noteModel->tagsModelList) {
+                    if (tagsModel->getName() == gConfigModel->getTagsName()) {
+                        hidden = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!text.isEmpty()) {
+                if (noteModel->contentModel->getTitle().indexOf(text, 0, Qt::CaseInsensitive) != -1) {
+                    hidden = false;
+                }
+            }
+
+            ui->tableWidget_list->setRowHidden(row, hidden);
+
+            if (!hidden) {
+                firstShowRowIndex = row;
+                if (!hasOpenNoteInList && noteModel->contentModel->getUuid() == gConfigModel->getOpenNotesUuid()) {
+                    ui->tableWidget_list->selectRow(row);
+                    hasOpenNoteInList = true;
+                }
+            }
+        }
+    }
+
+    if (!hasOpenNoteInList && firstShowRowIndex > 0) {
+        QTableWidgetItem *tableWidgetItem = ui->tableWidget_list->item(firstShowRowIndex, 0);
+        NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel*>();
+        gConfigModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
+        ui->tableWidget_list->selectRow(firstShowRowIndex);
+    }
+    else {
+        gOpenNoteModel->clear();
+        gConfigModel->setOpenNotesUuid("");
+    }
 }
 
 void MainWindow::on_tableWidget_list_itemClicked(QTableWidgetItem *item)
 {
-    QString uuid = mSidebarNoteList->at(item->data(Qt::UserRole).toInt())->getUuid();
+    QString uuid = item->data(Qt::UserRole).value<NoteModel*>()->contentModel->getUuid();
     if (gConfigModel->getOpenNotesUuid() == uuid) {
         return;
     }
@@ -232,8 +240,8 @@ void MainWindow::setEditText()
     disconnect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     disconnect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
 
-    ui->lineEdit_title->setText(gNoteModel->contentModel->getTitle());
-    ui->plainTextEdit_editor->setPlainText(gNoteModel->contentModel->getBody());
+    ui->lineEdit_title->setText(gOpenNoteModel->contentModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(gOpenNoteModel->contentModel->getBody());
 
     this->setModified(true);
     this->updatePreview();
@@ -249,16 +257,16 @@ void MainWindow::on_action_saveNote_triggered()
         return;
     }
 
-    Tools::writerFile(gNoteModel->contentModel->getFilePath(), gNoteModel->getNote());
-    gDatabase->addNoteText(gNoteModel);
-    this->setSidebar();
+    Tools::writerFile(gOpenNoteModel->contentModel->getFilePath(), gOpenNoteModel->getNote());
+    gDatabase->addNoteText(gOpenNoteModel);
+    this->setTableWidgetList();
 }
 
 void MainWindow::on_action_newNote_triggered()
 {
     this->on_action_saveNote_triggered();
 
-    gNoteModel->clear();
+    gOpenNoteModel->clear();
     this->setMainWindowData();
 }
 
@@ -280,14 +288,14 @@ void MainWindow::on_pushButton_deleteNote_clicked()
 
 void MainWindow::on_action_deleteNote_triggered()
 {
-    if (!gNoteModel->contentModel->getUuid().isEmpty()) {
-        gDatabase->deleteNoteByUuid(gNoteModel->contentModel->getUuid());
-        QFile::remove(gNoteModel->contentModel->getFilePath());
+    if (!gOpenNoteModel->contentModel->getUuid().isEmpty()) {
+        gDatabase->deleteNoteByUuid(gOpenNoteModel->contentModel->getUuid());
+        QFile::remove(gOpenNoteModel->contentModel->getFilePath());
     }
     gConfigModel->setOpenNotesUuid("");
-    gNoteModel->clear();
+    gOpenNoteModel->clear();
 
-    this->setSidebar();
+    this->setTableWidgetList();
     this->setDefaultNote();
     this->setMainWindowData();
 }
@@ -303,7 +311,7 @@ void MainWindow::onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrde
 void MainWindow::setTagsData()
 {
     QString tagsString;
-    for (auto &&item : *gNoteModel->tagsModelList) {
+    for (auto &&item : *gOpenNoteModel->tagsModelList) {
         tagsString += item->getName() + gTagSplit;
     }
     tagsString.chop(gTagSplit.length());
@@ -316,12 +324,12 @@ void MainWindow::setMainWindowData()
     this->setModified(false);
 
     this->setTagsData();
-    ui->pushButton_categories->setText(gNoteModel->categoriesModel->getName());
+    ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
 }
 
 void MainWindow::onChangeCategories()
 {
-    ui->pushButton_categories->setText(gNoteModel->categoriesModel->getName());
+    ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
     this->setModified(true);
     this->on_action_saveNote_triggered();
 }
@@ -430,12 +438,12 @@ void MainWindow::onLineEditNameEditingFinished()
     else {
         if (gDatabase->updateCategoriesByName(lineEdit_name->displayText(),
                                                     mCategoriesModelList[index]->getName())) {
-            auto categoriesList = gDatabase->selectNJCByCategoriesId(
-                    mCategoriesModelList[index]->getCategoriesId());
-            for (auto &&item : categoriesList) {
-                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
-                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
-            }
+//            auto categoriesList = gDatabase->selectNJCByCategoriesId(
+//                    mCategoriesModelList[index]->getCategoriesId());
+//            for (auto &&item : categoriesList) {
+//                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
+//                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
+//            }
 
             mCategoriesModelList[index]->setName(lineEdit_name->displayText());
         }
@@ -533,7 +541,7 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 
     ui->listWidget_categories->clear();
     for (auto &&datum : mCategoriesModelList) {
-        datum->setCount(gDatabase->selectNJCByCategoriesId(datum->getCategoriesId()).length());
+//        datum->setCount(gDatabase->selectNJCByCategoriesId(datum->getCategoriesId()).length());
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget_categories);
         ui->listWidget_categories->addItem(item);
         CategoriesListCell *categoriesListCell = new CategoriesListCell(datum);
@@ -551,9 +559,9 @@ void MainWindow::setCategoriesList(bool reread, const QString &string)
 
 void MainWindow::on_listWidget_categories_doubleClicked(const QModelIndex &index)
 {
-    gConfigModel->setCategoriesId(mCategoriesModelList[index.row()]->getCategoriesId());
+    gConfigModel->setCategoriesName(mCategoriesModelList[index.row()]->getName());
 
-    setSidebar();
+    setTableWidgetList();
     setDefaultNote();
     setMainWindowData();
 
@@ -612,7 +620,7 @@ void MainWindow::setTagsList(bool reread, const QString &string)
 
     ui->listWidget_tags->clear();
     for (auto &&datum : mtagsModelList) {
-        datum->setCount(gDatabase->selectNJTByTagsId(datum->getTagsId()).length());
+//        datum->setCount(gDatabase->selectNJTByTagsId(datum->getTagsId()).length());
         QListWidgetItem *item = new QListWidgetItem(ui->listWidget_tags);
         ui->listWidget_tags->addItem(item);
         TagsListCell *tagsListCell = new TagsListCell(datum);
@@ -648,8 +656,8 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_listWidget_tags_doubleClicked(const QModelIndex &index)
 {
-    gConfigModel->setTagsId(mtagsModelList[index.row()]->getTagsId());
-    setSidebar();
+    gConfigModel->setTagsName(mtagsModelList[index.row()]->getName());
+    setTableWidgetList();
     setDefaultNote();
     setMainWindowData();
 
@@ -775,11 +783,11 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     else {
         if (gDatabase->updateTagsByName(lineEdit_nameTags->displayText(),
                                               mtagsModelList[index]->getName())) {
-            auto tagsList = gDatabase->selectNJTByTagsId(mtagsModelList[index]->getTagsId());
-            for (auto &&item : tagsList) {
-                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
-                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
-            }
+//            auto tagsList = gDatabase->selectNJTByTagsId(mtagsModelList[index]->getTagsId());
+//            for (auto &&item : tagsList) {
+//                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
+//                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
+//            }
 
             mtagsModelList[index]->setName(lineEdit_nameTags->displayText());
         }
@@ -846,7 +854,7 @@ void MainWindow::resizeEvent(QResizeEvent *size)
 
 void MainWindow::on_lineEdit_searchNoteList_textChanged(const QString &arg1)
 {
-    setSidebar(arg1);
+    setTableWidgetList(arg1);
 }
 
 

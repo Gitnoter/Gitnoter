@@ -24,9 +24,8 @@ extern QString gAppDataLocation;
 
 extern Database *gDatabase;
 extern QList<NoteModel *> gNoteModelList;
-extern NoteModel *gNoteModel;
+extern NoteModel *gOpenNoteModel;
 extern ConfigModel *gConfigModel;
 extern GitManager *gGitManager;
-
 
 #endif // GLOBALS_H

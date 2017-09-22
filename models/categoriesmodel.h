@@ -5,43 +5,29 @@
 
 class CategoriesModel : public QObject
 {
+Q_OBJECT
+
 public:
-    explicit CategoriesModel();
-    CategoriesModel(int id, int categoriesId, QString notesUuid, QString name, int createDate,
-                                  int updateDate, int isDefault);
-    CategoriesModel(int categoriesId, QString name, int createDate, int updateDate, int isDefault);
-    CategoriesModel(int id, int categoriesId, QString notesUuid, int createDate);
-    CategoriesModel(QString name);
+    CategoriesModel(QString name = "", int count = 0, int isDefault = 0);
 
-    CategoriesModel* operator+(CategoriesModel & categoriseModel);
+    CategoriesModel *operator+(CategoriesModel &categoriseModel);
 
-    int getId();
-    int getCategoriesId();
     QString getName();
-    QString getNotesUuid();
-    int getCreateDate();
-    int getUpdateDate();
+
     int getIsDefault();
+
     int getCount() const;
 
-    void setId(int id);
-    void setCategoriesId(int categoriesId);
     void setName(QString name);
-    void setNotesUuid(QString notesUuid);
-    void setCreateDate(int createDate);
-    void setUpdateDate(int updateDate);
+
     void setIsDefault(int isDefault);
+
     void setCount(int count);
 
 private:
-    int id;
-    int categoriesId;
-    QString name;
-    QString notesUuid;
-    int createDate;
-    int updateDate;
-    int isDefault;
-    int count;
+    QString mName;
+    int mIsDefault;
+    int mCount;
 
 };
 

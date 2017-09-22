@@ -91,26 +91,26 @@ void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
     ConfigModel::sidebarSortValue = sidebarSortValue;
 }
 
-int ConfigModel::getCategoriesId() const
+QString ConfigModel::getCategoriesName() const
 {
-    return categoriesId;
+    return categoriesName;
 }
 
-void ConfigModel::setCategoriesId(int categoriesId)
+void ConfigModel::setCategoriesName(const QString &categoriesName)
 {
     ConfigModel::isSelectedClasses = 1;
-    ConfigModel::categoriesId = categoriesId;
+    ConfigModel::categoriesName = categoriesName;
 }
 
-int ConfigModel::getTagsId() const
+QString ConfigModel::getTagsName() const
 {
-    return tagsId;
+    return tagsName;
 }
 
-void ConfigModel::setTagsId(int tagsId)
+void ConfigModel::setTagsName(const QString &tagsName)
 {
     ConfigModel::isSelectedClasses = 2;
-    ConfigModel::tagsId = tagsId;
+    ConfigModel::tagsName = tagsName;
 }
 
 int ConfigModel::getIsLocalRepo() const
