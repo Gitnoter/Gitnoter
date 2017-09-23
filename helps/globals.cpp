@@ -50,7 +50,7 @@ void gInitConfigModel()
     gConfigModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
     gConfigModel->setSidebarSortKey(1);
     gConfigModel->setSidebarSortValue("DESC");
-    gConfigModel->setCategoriesName("iOS");
+    gConfigModel->setCategoriesName("test");
     gConfigModel->setIsSelectedClasses(1);
 
 }

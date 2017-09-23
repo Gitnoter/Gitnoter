@@ -54,7 +54,6 @@ private slots:
 
     void on_pushButton_sync_clicked();
 
-
     // 菜单分页第一页
     void on_tableWidget_list_doubleClicked(const QModelIndex &index);
 
@@ -71,7 +70,7 @@ private slots:
     // 菜单分页第二页
     void on_listWidget_categories_itemClicked(QListWidgetItem *item);
 
-    void on_listWidget_categories_doubleClicked(const QModelIndex &index);
+    void on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item);
 
     void on_listWidget_categories_customContextMenuRequested(const QPoint &pos);
 
@@ -94,7 +93,7 @@ private slots:
     // 菜单分页第三页
     void on_listWidget_tags_itemClicked(QListWidgetItem *item);
 
-    void on_listWidget_tags_doubleClicked(const QModelIndex &index);
+    void on_listWidget_tags_itemDoubleClicked(QListWidgetItem *item);
 
     void on_listWidget_tags_customContextMenuRequested(const QPoint &pos);
 
@@ -126,12 +125,6 @@ protected:
 
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
 
-    virtual void moveEvent(QMoveEvent *event) override;
-
-    virtual void dropEvent(QDropEvent *event) override;
-
-    virtual void dragMoveEvent(QDragMoveEvent *event) override;
-
 private:
     Ui::MainWindow *ui;
     CategoriesWidget *categoriesWidget;
@@ -139,34 +132,27 @@ private:
 
     Document m_content;
     QList<CategoriesModel *> mCategoriesModelList;
-    QList<TagsModel *> mtagsModelList;
-
-    QPoint mousePoint;      //鼠标相对于窗体的位置
-    bool isMousePressed;    //鼠标是否按下
+    QList<TagsModel *> mTagsModelList;
 
     void textChanged();
-
-    void updatePreview();
-
-    void menuPushButtonClicked();
 
     void mSetOpenedNoteModel(bool initEditor = false);
 
     void mInitTableWidgetList(QString text = "");
 
-    void filtrateTableWidgetList(QString text = "");
+    void mFiltrateTableWidgetList(QString text = "");
 
-    void setEditText();
+    bool isEditorModified();
 
-    bool isModified();
+    void mSetEditorModified(bool m);
 
-    void setModified(bool m);
+    void mInitCategoriesList();
 
-    void setTagsData();
+    void mFiltrateCategoriesList();
 
-    void setCategoriesList(bool reread = true, const QString &string = "");
+    void mInitTagsList();
 
-    void setTagsList(bool reread = true, const QString &string = "");
+    void mFiltrateTagsList();
 
     QMenu *createListWidgetCategoriesMenu();
 
@@ -176,7 +162,7 @@ private:
 
     void setTagsListEnabled(bool b);
 
-    void mSelectedSidebarButtonByName(const QString &name);
+    void mSelectedSidebarButtonByName(int i);
 };
 
 #endif // MAINWINDOW_H

@@ -46,7 +46,6 @@ SOURCES += \
     models/configmodel.cpp  \
     helps/previewpage.cpp  \
     helps/document.cpp  \
-    helps/database.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
     helps/gitmanager.cpp
@@ -65,7 +64,6 @@ HEADERS += \
     helps/sqlquerybuilder.h  \
     helps/previewpage.h  \
     helps/document.h  \
-    helps/database.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h

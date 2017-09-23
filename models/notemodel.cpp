@@ -48,9 +48,9 @@ NoteModel::NoteModel(QString noteText, QString filePath)
         }
     }
     this->contentModel = new ContentModel(map["uuid"], map["title"],
-                                              Tools::timestampFromDateTime(map["createDate"]),
-                                              Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(),
-                                              filePath);
+                                          Tools::timestampFromDateTime(map["createDate"]),
+                                          Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(),
+                                          filePath);
     this->categoriesModel = new CategoriesModel(map["categories"]);
     this->tagsModelList = new QList<TagsModel *>;
     QStringList tags = map["tags"].split(QRegExp(gTagSplit + "?"));
@@ -67,7 +67,7 @@ NoteModel::NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
     this->categoriesModel = categoriesModel;
 }
 
-QString NoteModel::getNote()
+QString NoteModel::getNote() const
 {
     QString note;
     QString tags;
@@ -87,6 +87,24 @@ QString NoteModel::getNote()
     note += "\n\n---\n\n" + this->contentModel->getBody();
 
     return note;
+}
+
+QString NoteModel::getDisplayNote() const
+{
+    return contentModel->getTitle().isEmpty()
+           ? contentModel->getBody()
+           : "# " + contentModel->getTitle() + "\n\n" + contentModel->getBody();
+}
+
+QString NoteModel::getTagsString() const
+{
+    QString tagsString;
+    for (auto &&item : *gOpenNoteModel->tagsModelList) {
+        tagsString += item->getName() + gTagSplit;
+    }
+    tagsString.chop(gTagSplit.length());
+
+    return tagsString;
 }
 
 void NoteModel::clear()

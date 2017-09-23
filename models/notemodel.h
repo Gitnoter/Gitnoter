@@ -24,7 +24,11 @@ public:
     NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
               CategoriesModel *categoriesModel);
 
-    QString getNote();
+    QString getNote() const;
+
+    QString getDisplayNote() const;
+
+    QString getTagsString() const;
 
     void clear();
 
