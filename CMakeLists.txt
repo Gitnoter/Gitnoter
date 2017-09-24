@@ -5,18 +5,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 find_package(Qt5 COMPONENTS Core Gui WebEngineWidgets WebChannel Sql REQUIRED)
 
-# include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
-# link_directories(${PROJECT_SOURCE_DIR}/libraries/lib)
+ include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
+ link_directories(${PROJECT_SOURCE_DIR}/libraries/lib)
 
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/models)
 include_directories(${PROJECT_SOURCE_DIR}/helps)
 include_directories(${PROJECT_SOURCE_DIR}/views)
-include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
-
-link_directories(${PROJECT_SOURCE_DIR}/libraries/lib/)
-
-#find_library(git2 libgit2)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
