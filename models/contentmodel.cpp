@@ -6,85 +6,83 @@
 
 ContentModel::ContentModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
-    this->setUuid(uuid);
-    this->setTitle(title);
-    this->setCreateDate(createDate);
-    this->setUpdateDate(updateDate);
-    this->setFilePath(filePath);
-    this->body = body;
+    setUuid(uuid);
+    setTitle(title);
+    setCreateDate(createDate);
+    setUpdateDate(updateDate);
+    setFilePath(filePath);
+    mBody = body;
 }
 
 QString ContentModel::getUuid()
 {
-    return this->uuid;
+    return mUuid;
 }
 
 void ContentModel::setTitle(const QString title)
 {
-    this->title = title;
+    mTitle = title;
 }
 
 void ContentModel::setCreateDate(const QString createDate)
 {
-    this->createDate = createDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
-                                            : Tools::timestampFromDateTime(createDate);
+    mCreateDate = createDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+                                       : Tools::timestampFromDateTime(createDate);
 }
 
 void ContentModel::setCreateDate(int createDate)
 {
-    this->createDate = createDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : createDate;
+    mCreateDate = createDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : createDate;
 }
 
 void ContentModel::setUpdateDate(const QString updateDate)
 {
-    this->updateDate = updateDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
-                                            : Tools::timestampFromDateTime(updateDate);
+    mUpdateDate = updateDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+                                       : Tools::timestampFromDateTime(updateDate);
 }
 
 void ContentModel::setUpdateDate(int updateDate)
 {
-    this->updateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
+    mUpdateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
 }
 
 void ContentModel::setBody(const QString body)
 {
-    this->body = body;
+    mBody = body;
 }
 
-void ContentModel::setUuid(QString uuid) {
-    this->uuid = uuid.isEmpty() ? Tools::getUuid() : uuid;
+void ContentModel::setUuid(QString uuid)
+{
+    mUuid = uuid.isEmpty() ? Tools::getUuid() : uuid;
 }
 
 QString ContentModel::getTitle()
 {
-    return this->title;
+    return mTitle;
 }
 
 int ContentModel::getCreateDate()
 {
-    return this->createDate;
+    return mCreateDate;
 }
 
 int ContentModel::getUpdateDate()
 {
-    return this->updateDate;
+    return mUpdateDate;
 }
 
 QString ContentModel::getBody()
 {
-    return this->body;
+    return mBody;
 }
 
 const QString &ContentModel::getFilePath() const
 {
-    return filePath;
+    return mFilePath;
 }
 
 void ContentModel::setFilePath(const QString &filePath)
 {
-    ContentModel::filePath = filePath.isEmpty() ?
-                               QString("%1/%2/%3-%4.md").arg(
-                                       gRepoPath, gNoteFolderName,
-                                       this->title.isEmpty() ? "无标题" : this->title, this->uuid)
-                                                  : filePath;
+    mFilePath = filePath.isEmpty() ? QString("%1/%2-%3.md").arg(Global::repoNotePath, mTitle.isEmpty() ? "无标题" : mTitle, mUuid)
+                                   : filePath;
 }

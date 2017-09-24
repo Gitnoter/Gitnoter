@@ -8,34 +8,44 @@
 
 #include <QObject>
 
-extern QString gPackageName;
-extern QString gVersion;
-extern QString gDateFormat;
-extern QString gTagSplit;
-extern QString gDbPath;
-extern QString gDbName;
-extern QString gRepoPath;
-extern QString gNoteFolderName;
-extern QString gAudiosFolderName;
-extern QString gImagesFolderName;
-extern QString gVideosFolderName;
-extern QString gAppDataLocation;
+class Global : public QObject
+{
+//Q_OBJECT
 
-extern QList<NoteModel *> gNoteModelList;
-extern QList<CategoriesModel *> gCategoriesModelList;
-extern QList<TagsModel *> gTagsModelList;
-extern NoteModel *gOpenNoteModel;
-extern ConfigModel *gConfigModel;
-extern GitManager *gGitManager;
+public:
+    static const QString packageName;
+    static const QString version;
+    static const QString dateFormat;
+    static const QString tagSplit;
 
-extern void gInitNoteModelList();
+    static const QString appDataLocation;
+    static const QString appDataPath;
+    static const QString appConfigPath;
+    static const QString repoPath;
+    static const QString repoNotePath;
+    static const QString repoResourcePath;
+    static const QString repoDataPath;
+    static const QString repoCategoriesListPath;
+    static const QString repoTagsListPath;
 
-extern void gInitCategoriesModelList();
+    static QList<NoteModel *> noteModelList;
+    static QList<CategoriesModel *> categoriesModelList;
+    static QList<TagsModel *> tagsModelList;
 
-extern void gInitTagsModelList();
+    static NoteModel *openNoteModel;
+    static ConfigModel *configModel;
+    static GitManager *gitManager;
 
-extern NoteModel *gGetNoteModelByUuid(const QString &uuid);
+    static void initNoteModelList();
 
-extern void gInitConfigModel();
+    static void initCategoriesModelList();
+
+    static void initTagsModelList();
+
+    static NoteModel *getNoteModelByUuid(const QString &uuid);
+
+    static void initConfigModel();
+
+};
 
 #endif // GLOBALS_H

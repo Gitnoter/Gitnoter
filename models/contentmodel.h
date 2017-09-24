@@ -5,6 +5,8 @@
 
 class ContentModel : public QObject
 {
+Q_OBJECT
+
 public:
     ContentModel(QString uuid = "", QString title = "", int createDate = 0, int updateDate = 0, QString body = "",
                  QString filePath = "");
@@ -38,12 +40,12 @@ public:
     const QString &getFilePath() const;
 
 private:
-    QString uuid;
-    QString title;
-    int createDate;
-    int updateDate;
-    QString body;
-    QString filePath;
+    QString mUuid;
+    QString mTitle;
+    int mCreateDate;
+    int mUpdateDate;
+    QString mBody;
+    QString mFilePath;
 
 };
 

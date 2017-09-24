@@ -15,6 +15,8 @@ public:
 
     static QString readerFile(QString path);
 
+    static QStringList readerFileToList(QString path);
+
     static bool writerFile(QString path, QString text);
 
     static QStringList textToStringList(QString text);

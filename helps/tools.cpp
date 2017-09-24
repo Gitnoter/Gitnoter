@@ -28,12 +28,12 @@ QString Tools::getUuid()
 
 int Tools::timestampFromDateTime(const QString dateTime)
 {
-    return QDateTime::fromString(dateTime, gDateFormat).toTime_t();
+    return QDateTime::fromString(dateTime, Global::dateFormat).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(gDateFormat);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(Global::dateFormat);
 }
 
 QString Tools::readerFile(QString path)
@@ -41,6 +41,19 @@ QString Tools::readerFile(QString path)
     QFile textFile(path);
     textFile.open(QIODevice::ReadOnly);
     return QString(textFile.readAll());
+}
+
+QStringList Tools::readerFileToList(QString path)
+{
+    QString str = readerFile(path);
+    QTextStream in(&str);
+    QStringList stringList;
+
+    while (!in.atEnd()) {
+        stringList.append(in.readLine().trimmed());
+    }
+
+    return stringList;
 }
 
 QStringList Tools::textToStringList(QString text)

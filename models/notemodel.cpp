@@ -53,7 +53,7 @@ NoteModel::NoteModel(QString noteText, QString filePath)
                                           filePath);
     this->categoriesModel = new CategoriesModel(map["categories"]);
     this->tagsModelList = new QList<TagsModel *>;
-    QStringList tags = map["tags"].split(QRegExp(gTagSplit + "?"));
+    QStringList tags = map["tags"].split(QRegExp(Global::tagSplit + "?"));
     for (auto &&tag : tags) {
         this->tagsModelList->append(new TagsModel(tag.trimmed()));
     }
@@ -79,9 +79,9 @@ QString NoteModel::getNote() const
 
     note += "tags: ";
     for (auto &&tagsModel : *(this->tagsModelList)) {
-        tags += tagsModel->getName() + gTagSplit;
+        tags += tagsModel->getName() + Global::tagSplit;
     }
-    tags.chop(gTagSplit.length());
+    tags.chop(Global::tagSplit.length());
     note += tags;
 
     note += "\n\n---\n\n" + this->contentModel->getBody();
@@ -99,10 +99,10 @@ QString NoteModel::getDisplayNote() const
 QString NoteModel::getTagsString() const
 {
     QString tagsString;
-    for (auto &&item : *gOpenNoteModel->tagsModelList) {
-        tagsString += item->getName() + gTagSplit;
+    for (auto &&item : *Global::openNoteModel->tagsModelList) {
+        tagsString += item->getName() + Global::tagSplit;
     }
-    tagsString.chop(gTagSplit.length());
+    tagsString.chop(Global::tagSplit.length());
 
     return tagsString;
 }

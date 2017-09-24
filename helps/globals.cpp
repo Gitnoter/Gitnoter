@@ -1,46 +1,49 @@
 #include "globals.h"
 #include "tools.h"
 
-QString gPackageName = "com.huyaohui.gitnoter";
-QString gVersion = "1.0.0";
-QString gDateFormat = "yyyy/MM/dd hh:mm:ss";
-QString gTagSplit = ", ";
-QString gAppDataLocation = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(
-        gPackageName);
-QString gDbPath = QDir(gAppDataLocation).filePath("db/");
-QString gDbName = "gitnoter.db";
-QString gRepoPath = QDir(gAppDataLocation).filePath("user/user.git");
-QString gNoteFolderName = "notes";
-QString gAudiosFolderName = "files/audios";
-QString gImagesFolderName = "files/images";
-QString gVideosFolderName = "files/videos";
+const QString Global::packageName = "com.huyaohui.gitnoter";
+const QString Global::version = "1.0.0";
+const QString Global::dateFormat = "yyyy/MM/dd hh:mm:ss";
+const QString Global::tagSplit = ", ";
 
-QList<NoteModel *> gNoteModelList = {};
-QList<CategoriesModel *> gCategoriesModelList = {};
-QList<TagsModel *> gTagsModelList = {};
-NoteModel *gOpenNoteModel = new NoteModel();
-ConfigModel *gConfigModel = new ConfigModel();
-GitManager *gGitManager = new GitManager();
+const QString Global::appDataLocation = QDir(
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(
+        packageName);
+const QString Global::appDataPath = QDir(appDataLocation).filePath("data");
+const QString Global::appConfigPath = QDir(appDataPath).filePath("appconfig");
+const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git");
+const QString Global::repoNotePath = QDir(repoPath).filePath("notes");
+const QString Global::repoResourcePath = QDir(repoPath).filePath("resources");
+const QString Global::repoDataPath = QDir(repoPath).filePath("data");
+const QString Global::repoCategoriesListPath = QDir(repoDataPath).filePath("categories.list");
+const QString Global::repoTagsListPath = QDir(repoDataPath).filePath("tags.list");
 
-void gInitNoteModelList()
+QList<NoteModel *> Global::noteModelList = {};
+QList<CategoriesModel *> Global::categoriesModelList = {};
+QList<TagsModel *> Global::tagsModelList = {};
+
+NoteModel *Global::openNoteModel = new NoteModel();
+ConfigModel *Global::configModel = new ConfigModel();
+GitManager *Global::gitManager = new GitManager();
+
+void Global::initNoteModelList()
 {
-    if (gNoteModelList.length() == 0) {
-        QString notesPath = QDir(gRepoPath).filePath(gNoteFolderName);
-        QFileInfoList fileInfoList = Tools::getFilesPath(notesPath);
-        gNoteModelList.clear();
+    if (noteModelList.length() == 0) {
+        QFileInfoList fileInfoList = Tools::getFilesPath(repoNotePath);
+        noteModelList.clear();
         for (auto &&fileInfo : fileInfoList) {
             NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()),
                                                  fileInfo.absoluteFilePath());
-            gNoteModelList.append(noteModel);
+            noteModelList.append(noteModel);
         }
     }
 }
 
-void gInitCategoriesModelList()
+void Global::initCategoriesModelList()
 {
-    if (gCategoriesModelList.length() == 0) {
+    if (categoriesModelList.length() == 0) {
         QMap<QString, CategoriesModel *> map;
-        for (auto &&noteModel : gNoteModelList) {
+        for (auto &&noteModel : noteModelList) {
             if (map.contains(noteModel->categoriesModel->getName())) {
                 auto *categoriesModel = map[noteModel->categoriesModel->getName()];
                 categoriesModel->setCount(categoriesModel->getCount() + 1);
@@ -50,15 +53,31 @@ void gInitCategoriesModelList()
                 map[noteModel->categoriesModel->getName()] = noteModel->categoriesModel;
             }
         }
-        gCategoriesModelList = map.values();
+
+        QStringList stringList = Tools::readerFileToList(repoCategoriesListPath);
+        for (auto &&str : stringList) {
+            if (!str.isEmpty() && !map.contains(str)) {
+                map[str] = new CategoriesModel(str);
+            }
+        }
+
+        categoriesModelList = map.values();
+
+        if (stringList.length() == 0 && categoriesModelList.length() > 0) {
+            QString str = "";
+            for (auto &&item : categoriesModelList) {
+                str += item->getName() + "\n";
+            }
+            Tools::writerFile(repoCategoriesListPath, str.trimmed());
+        }
     }
 }
 
-void gInitTagsModelList()
+void Global::initTagsModelList()
 {
-    if (gTagsModelList.length() == 0) {
+    if (tagsModelList.length() == 0) {
         QMap<QString, TagsModel *> map;
-        for (auto &&noteModel : gNoteModelList) {
+        for (auto &&noteModel : noteModelList) {
             for (auto &&tagsModel : *noteModel->tagsModelList) {
                 if (map.contains(tagsModel->getName())) {
                     auto *model = map[tagsModel->getName()];
@@ -70,13 +89,13 @@ void gInitTagsModelList()
                 }
             }
         }
-        gTagsModelList = map.values();
+        tagsModelList = map.values();
     }
 }
 
-NoteModel *gGetNoteModelByUuid(const QString &uuid)
+NoteModel *Global::getNoteModelByUuid(const QString &uuid)
 {
-    for (auto &&noteModel :gNoteModelList) {
+    for (auto &&noteModel :noteModelList) {
         if (noteModel->contentModel->getUuid() == uuid) {
             return noteModel;
         }
@@ -85,12 +104,12 @@ NoteModel *gGetNoteModelByUuid(const QString &uuid)
     return nullptr;
 }
 
-void gInitConfigModel()
+void Global::initConfigModel()
 {
-    gConfigModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
-    gConfigModel->setSidebarSortKey(1);
-    gConfigModel->setSidebarSortValue("DESC");
-    gConfigModel->setCategoriesName("test");
-    gConfigModel->setIsSelectedClasses(1);
+    configModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
+    configModel->setSidebarSortKey(1);
+    configModel->setSidebarSortValue("DESC");
+    configModel->setCategoriesName("test");
+    configModel->setIsSelectedClasses(1);
 
 }

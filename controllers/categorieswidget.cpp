@@ -50,7 +50,7 @@ void CategoriesWidget::mSetListWidgetList()
     for (int i = 0; i < mCategoriesModelList.length(); ++i) {
         ui->listWidget_data->addItem(mCategoriesModelList[i]->getName());
         ui->listWidget_data->item(i)->setData(Qt::UserRole, QVariant::fromValue(mCategoriesModelList[i]));
-        if (gOpenNoteModel->categoriesModel->getName() == mCategoriesModelList[i]->getName()) {
+        if (Global::openNoteModel->categoriesModel->getName() == mCategoriesModelList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
@@ -77,13 +77,13 @@ void CategoriesWidget::mFiltrateListWidgetList()
 void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gOpenNoteModel->categoriesModel = mCategoriesModelList[index.row()];
+        Global::openNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelList) {
             if (i == index.row()) {
-                gOpenNoteModel->categoriesModel = item;
+                Global::openNoteModel->categoriesModel = item;
             }
             i += 1;
         }
@@ -93,13 +93,13 @@ void CategoriesWidget::on_listWidget_data_clicked(const QModelIndex &index)
 void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
 {
     if (ui->lineEdit->displayText().isEmpty()) {
-        gOpenNoteModel->categoriesModel = mCategoriesModelList[index.row()];
+        Global::openNoteModel->categoriesModel = mCategoriesModelList[index.row()];
     }
     else {
         int i = 0;
         for (auto &&item : mCategoriesModelList) {
             if (i == index.row()) {
-                gOpenNoteModel->categoriesModel = item;
+                Global::openNoteModel->categoriesModel = item;
             }
             i += 1;
         }

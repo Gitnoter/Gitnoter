@@ -28,10 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::onHeaderViewSortIndicatorChanged);
 
-    gInitNoteModelList();
-    gInitCategoriesModelList();
-    gInitTagsModelList();
-    gInitConfigModel();
+    Global::initNoteModelList();
+    Global::initCategoriesModelList();
+    Global::initTagsModelList();
+    Global::initConfigModel();
+
     mSetTableWidgetList();
     mSetOpenedNoteModel(true);
 }
@@ -43,12 +44,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::textChanged()
 {
-    gOpenNoteModel->contentModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
+    Global::openNoteModel->contentModel->setTitle(ui->lineEdit_title->displayText().isEmpty()
                                            ? ui->lineEdit_title->placeholderText()
                                            : ui->lineEdit_title->displayText());
-    gOpenNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
-    gOpenNoteModel->contentModel->setUpdateDate(0);
-    m_content.setText(gOpenNoteModel->getDisplayNote());
+    Global::openNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
+    Global::openNoteModel->contentModel->setUpdateDate(0);
+    m_content.setText(Global::openNoteModel->getDisplayNote());
 }
 
 void MainWindow::on_pushButton_categories_clicked()
@@ -62,16 +63,16 @@ void MainWindow::on_pushButton_categories_clicked()
 
 void MainWindow::mSetOpenedNoteModel(bool initEditor)
 {
-    if (gConfigModel->getOpenNotesUuid().isEmpty()) {
-        if (gNoteModelList.length() != 0) {
-            gConfigModel->setOpenNotesUuid(gNoteModelList.at(0)->contentModel->getUuid());
+    if (Global::configModel->getOpenNotesUuid().isEmpty()) {
+        if (Global::noteModelList.length() != 0) {
+            Global::configModel->setOpenNotesUuid(Global::noteModelList.at(0)->contentModel->getUuid());
             mSetOpenedNoteModel();
             return;
         }
-        gOpenNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+        Global::openNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }
     else {
-        gOpenNoteModel = gGetNoteModelByUuid(gConfigModel->getOpenNotesUuid());
+        Global::openNoteModel = Global::getNoteModelByUuid(Global::configModel->getOpenNotesUuid());
     }
 
     // 初始化编辑器
@@ -89,36 +90,36 @@ void MainWindow::mSetOpenedNoteModel(bool initEditor)
         ui->webEngineView_preview->setUrl(QUrl("qrc:/marked/index.html"));
     }
 
-    ui->lineEdit_title->setText(gOpenNoteModel->contentModel->getTitle());
-    ui->plainTextEdit_editor->setPlainText(gOpenNoteModel->contentModel->getBody());
-    m_content.setText(gOpenNoteModel->getDisplayNote());
+    ui->lineEdit_title->setText(Global::openNoteModel->contentModel->getTitle());
+    ui->plainTextEdit_editor->setPlainText(Global::openNoteModel->contentModel->getBody());
+    m_content.setText(Global::openNoteModel->getDisplayNote());
 
     // 监听编辑器中文本是否有更改
     connect(ui->plainTextEdit_editor, &QPlainTextEdit::textChanged, this, &MainWindow::textChanged);
     connect(ui->lineEdit_title, &QLineEdit::textChanged, this, &MainWindow::textChanged);
     mSetEditorModified(false);
 
-    ui->pushButton_changeTags->setText(gOpenNoteModel->getTagsString());
-    ui->pushButton_categories->setText(gOpenNoteModel->categoriesModel->getName());
+    ui->pushButton_changeTags->setText(Global::openNoteModel->getTagsString());
+    ui->pushButton_categories->setText(Global::openNoteModel->categoriesModel->getName());
 }
 
 void MainWindow::mSetTableWidgetList()
 {
     ui->tableWidget_list->clearContents();
 
-    ui->tableWidget_list->setRowCount(gNoteModelList.length());
-    for (int i = 0; i < gNoteModelList.length(); ++i) {
-        auto *tableWidgetItem0 = new QTableWidgetItem(gNoteModelList[i]->contentModel->getTitle());
-        tableWidgetItem0->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
+    ui->tableWidget_list->setRowCount(Global::noteModelList.length());
+    for (int i = 0; i < Global::noteModelList.length(); ++i) {
+        auto *tableWidgetItem0 = new QTableWidgetItem(Global::noteModelList[i]->contentModel->getTitle());
+        tableWidgetItem0->setData(Qt::UserRole, QVariant::fromValue(Global::noteModelList[i]));
         auto *tableWidgetItem1 = new QTableWidgetItem(
-                Tools::timestampToDateTime(gNoteModelList[i]->contentModel->getUpdateDate()));
-        tableWidgetItem1->setData(Qt::UserRole, QVariant::fromValue(gNoteModelList[i]));
+                Tools::timestampToDateTime(Global::noteModelList[i]->contentModel->getUpdateDate()));
+        tableWidgetItem1->setData(Qt::UserRole, QVariant::fromValue(Global::noteModelList[i]));
         ui->tableWidget_list->setItem(i, 0, tableWidgetItem0);
         ui->tableWidget_list->setItem(i, 1, tableWidgetItem1);
     }
 
-    int sidebarSortKey = gConfigModel->getSidebarSortKey();
-    Qt::SortOrder sidebarSortValue = gConfigModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
+    int sidebarSortKey = Global::configModel->getSidebarSortKey();
+    Qt::SortOrder sidebarSortValue = Global::configModel->getSidebarSortValue() == "DESC" ? Qt::DescendingOrder
                                                                                    : Qt::AscendingOrder;
     ui->tableWidget_list->horizontalHeader()->sortIndicatorChanged(sidebarSortKey, sidebarSortValue);
     ui->tableWidget_list->horizontalHeader()->setSortIndicator(sidebarSortKey, sidebarSortValue);
@@ -137,18 +138,18 @@ void MainWindow::mFiltrateTableWidgetList()
         NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel *>();
         bool hidden = true;
 
-        qDebug() << noteModel->categoriesModel->getName() << "==" << gConfigModel->getCategoriesName();
-        if (gConfigModel->getIsSelectedClasses() == 1) {
-            if (noteModel->categoriesModel->getName() == gConfigModel->getCategoriesName()) {
+        qDebug() << noteModel->categoriesModel->getName() << "==" << Global::configModel->getCategoriesName();
+        if (Global::configModel->getIsSelectedClasses() == 1) {
+            if (noteModel->categoriesModel->getName() == Global::configModel->getCategoriesName()) {
                 hidden = false;
                 if (!text.isEmpty()) {
                     hidden = noteModel->contentModel->getTitle().indexOf(text, 0, Qt::CaseInsensitive) == -1;
                 }
             }
         }
-        else if (gConfigModel->getIsSelectedClasses() == 2) {
+        else if (Global::configModel->getIsSelectedClasses() == 2) {
             for (auto &&tagsModel : *noteModel->tagsModelList) {
-                if (tagsModel->getName() == gConfigModel->getTagsName()) {
+                if (tagsModel->getName() == Global::configModel->getTagsName()) {
                     hidden = false;
                     if (!text.isEmpty()) {
                         hidden = noteModel->contentModel->getTitle().indexOf(text, 0, Qt::CaseInsensitive) == -1;
@@ -162,7 +163,7 @@ void MainWindow::mFiltrateTableWidgetList()
 
         if (!hidden) {
             firstShowRowIndex = row;
-            if (!hasOpenNoteInList && noteModel->contentModel->getUuid() == gConfigModel->getOpenNotesUuid()) {
+            if (!hasOpenNoteInList && noteModel->contentModel->getUuid() == Global::configModel->getOpenNotesUuid()) {
                 ui->tableWidget_list->selectRow(row);
                 hasOpenNoteInList = true;
             }
@@ -172,21 +173,21 @@ void MainWindow::mFiltrateTableWidgetList()
     if (!hasOpenNoteInList && firstShowRowIndex > 0) {
         QTableWidgetItem *tableWidgetItem = ui->tableWidget_list->item(firstShowRowIndex, 0);
         NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        gConfigModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
+        Global::configModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
         ui->tableWidget_list->selectRow(firstShowRowIndex);
     }
     else {
-        gConfigModel->setOpenNotesUuid("");
+        Global::configModel->setOpenNotesUuid("");
     }
 }
 
 void MainWindow::on_tableWidget_list_itemClicked(QTableWidgetItem *item)
 {
     QString uuid = item->data(Qt::UserRole).value<NoteModel *>()->contentModel->getUuid();
-    if (gConfigModel->getOpenNotesUuid() == uuid) {
+    if (Global::configModel->getOpenNotesUuid() == uuid) {
         return;
     }
-    gConfigModel->setOpenNotesUuid(uuid);
+    Global::configModel->setOpenNotesUuid(uuid);
     mSetOpenedNoteModel();
 }
 
@@ -201,14 +202,13 @@ void MainWindow::on_action_saveNote_triggered()
         return;
     }
 
-    Tools::writerFile(gOpenNoteModel->contentModel->getFilePath(), gOpenNoteModel->getNote());
+    Tools::writerFile(Global::openNoteModel->contentModel->getFilePath(), Global::openNoteModel->getNote());
     mSetTableWidgetList();
 }
 
 void MainWindow::on_action_newNote_triggered()
 {
     on_action_saveNote_triggered();
-    gOpenNoteModel->clear();
 }
 
 bool MainWindow::isEditorModified()
@@ -229,10 +229,10 @@ void MainWindow::on_pushButton_deleteNote_clicked()
 
 void MainWindow::on_action_deleteNote_triggered()
 {
-    if (!gOpenNoteModel->contentModel->getUuid().isEmpty()) {
-        QFile::remove(gOpenNoteModel->contentModel->getFilePath());
+    if (!Global::openNoteModel->contentModel->getUuid().isEmpty()) {
+        QFile::remove(Global::openNoteModel->contentModel->getFilePath());
     }
-    gConfigModel->setOpenNotesUuid("");
+    Global::configModel->setOpenNotesUuid("");
 
     mSetTableWidgetList();
     mSetOpenedNoteModel();
@@ -240,8 +240,8 @@ void MainWindow::on_action_deleteNote_triggered()
 
 void MainWindow::onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrder order)
 {
-    gConfigModel->setSidebarSortKey(logicalIndex);
-    gConfigModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
+    Global::configModel->setSidebarSortKey(logicalIndex);
+    Global::configModel->setSidebarSortValue(order == Qt::DescendingOrder ? "DESC" : "ASC");
 
     qDebug() << "on_headerView_sortIndicatorChanged";
 }
@@ -268,7 +268,7 @@ void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget");
     if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < gCategoriesModelList.length(); ++i) {
+        for (int i = 0; i < Global::categoriesModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
             QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
@@ -352,7 +352,7 @@ void MainWindow::onLineEditNameEditingFinished()
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name");
 
     if (lineEdit_name->displayText().isEmpty()) {
-        lineEdit_name->setText(gCategoriesModelList[index]->getName());
+        lineEdit_name->setText(Global::categoriesModelList[index]->getName());
     }
     else {
 //        if (gDatabase->updateCategoriesByName(lineEdit_name->displayText(),
@@ -443,7 +443,7 @@ void MainWindow::on_listWidget_categories_customContextMenuRequested(const QPoin
 void MainWindow::mSetCategoriesListWidgetList()
 {
     ui->listWidget_categories->clear();
-    for (auto &&categoriesModel : gCategoriesModelList) {
+    for (auto &&categoriesModel : Global::categoriesModelList) {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_categories);
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(categoriesModel));
         ui->listWidget_categories->addItem(listWidgetItem);
@@ -455,17 +455,17 @@ void MainWindow::mSetCategoriesListWidgetList()
 
     // todo: 为了修复一个listWidget的bug而添加的一段无用代码
     //       因为最后一个item会出现有一半不响应型号, 所以在最后添加了一个无用的item占位
-    if (gCategoriesModelList.length() != 0) {
+    if (Global::categoriesModelList.length() != 0) {
         ui->listWidget_categories->addItem("bug");
-        ui->listWidget_categories->item(gCategoriesModelList.length())->setHidden(true);
+        ui->listWidget_categories->item(Global::categoriesModelList.length())->setHidden(true);
     }
 }
 
 void MainWindow::mFiltrateCategoriesListWidgetList()
 {
     QString text = ui->lineEdit_searchCategories->displayText();
-    for (int i = 0; i < gCategoriesModelList.length(); ++i) {
-        int index = gCategoriesModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
+    for (int i = 0; i < Global::categoriesModelList.length(); ++i) {
+        int index = Global::categoriesModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
         QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
         listWidgetItem->setHidden(text.isEmpty() ? false : index == -1);
     }
@@ -473,7 +473,7 @@ void MainWindow::mFiltrateCategoriesListWidgetList()
 
 void MainWindow::on_listWidget_categories_itemDoubleClicked(QListWidgetItem *item)
 {
-    gConfigModel->setCategoriesName(item->data(Qt::UserRole).value<CategoriesModel *>()->getName());
+    Global::configModel->setCategoriesName(item->data(Qt::UserRole).value<CategoriesModel *>()->getName());
 
     mSetTableWidgetList();
     mSetOpenedNoteModel();
@@ -525,7 +525,7 @@ void MainWindow::on_pushButton_sync_clicked()
 void MainWindow::mSetTagsListWidgetList()
 {
     ui->listWidget_tags->clear();
-    for (auto &&tagsModel : gTagsModelList) {
+    for (auto &&tagsModel : Global::tagsModelList) {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget_tags);
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(tagsModel));
         ui->listWidget_tags->addItem(listWidgetItem);
@@ -537,17 +537,17 @@ void MainWindow::mSetTagsListWidgetList()
 
     // todo: 为了修复一个listWidget的bug而添加的一段无用代码
     //       因为最后一个item会出现有一半不响应型号, 所以在最后添加了一个无用的item占位
-    if (gTagsModelList.length() != 0) {
+    if (Global::tagsModelList.length() != 0) {
         ui->listWidget_tags->addItem("bug");
-        ui->listWidget_tags->item(gTagsModelList.length())->setHidden(true);
+        ui->listWidget_tags->item(Global::tagsModelList.length())->setHidden(true);
     }
 }
 
 void MainWindow::mFiltrateTagsListWidgetList()
 {
     QString text = ui->lineEdit_searchTags->displayText();
-    for (int i = 0; i < gTagsModelList.length(); ++i) {
-        int index = gTagsModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
+    for (int i = 0; i < Global::tagsModelList.length(); ++i) {
+        int index = Global::tagsModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
         QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
         listWidgetItem->setHidden(text.isEmpty() ? false : index == -1);
     }
@@ -557,7 +557,7 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_tags->itemWidget(item)->findChild<QWidget *>("widget");
     if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < gTagsModelList.length(); ++i) {
+        for (int i = 0; i < Global::tagsModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
             QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
@@ -573,7 +573,7 @@ void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_listWidget_tags_itemDoubleClicked(QListWidgetItem *item)
 {
-    gConfigModel->setTagsName(item->data(Qt::UserRole).value<TagsModel *>()->getName());
+    Global::configModel->setTagsName(item->data(Qt::UserRole).value<TagsModel *>()->getName());
 
     mSetTableWidgetList();
     mSetOpenedNoteModel();
@@ -694,7 +694,7 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     QLineEdit *lineEdit_nameTags = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
 
     if (lineEdit_nameTags->displayText().isEmpty()) {
-        lineEdit_nameTags->setText(gTagsModelList[index]->getName());
+        lineEdit_nameTags->setText(Global::tagsModelList[index]->getName());
     }
     else {
 //        if (gDatabase->updateTagsByName(lineEdit_nameTags->displayText(),
@@ -742,7 +742,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
 
     if (ui->stackedWidget->currentIndex() == 1) {
-        for (int i = 0; i < gCategoriesModelList.length(); ++i) {
+        for (int i = 0; i < Global::categoriesModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
             QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
@@ -751,7 +751,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         }
     }
     else if (ui->stackedWidget->currentIndex() == 2) {
-        for (int i = 0; i < gTagsModelList.length(); ++i) {
+        for (int i = 0; i < Global::tagsModelList.length(); ++i) {
             QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
             QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
             Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
