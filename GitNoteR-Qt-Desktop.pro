@@ -48,7 +48,10 @@ SOURCES += \
     helps/document.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
-    helps/gitmanager.cpp
+    helps/gitmanager.cpp \
+    helps/json.cpp \
+    helps/qtinyaes/aes.c \
+    helps/qtinyaes/qtinyaes.cpp \
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -65,7 +68,10 @@ HEADERS += \
     helps/document.h  \
     helps/globals.h  \
     helps/tools.h \
-    helps/gitmanager.h
+    helps/gitmanager.h \
+    helps/json.h \
+    helps/qtinyaes/aes.h \
+    helps/qtinyaes/qtinyaes.h
 
 FORMS += \
     views/mainwindow.ui \

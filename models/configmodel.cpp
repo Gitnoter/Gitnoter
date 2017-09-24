@@ -1,134 +1,180 @@
 #include "configmodel.h"
+#include "json.h"
+
+
+ConfigModel::ConfigModel(const QString &jsonString)
+{
+    unserialize(jsonString);
+}
 
 ConfigModel::ConfigModel(QString version, QString repoDir, QString repoUrl, QString repoUsername,
-                                   QString repoPassword, QString openNotesUuid)
+                         QString repoPassword, QString openNotesUuid)
 {
-    this->version = version;
-    this->repoDir = repoDir;
-    this->repoUrl = repoUrl;
-    this->repoUsername = repoUsername;
-    this->repoPassword = repoPassword;
-    this->openNotesUuid = openNotesUuid;
+    mVersion = version;
+    mRepoDir = repoDir;
+    mRepoUrl = repoUrl;
+    mRepoUsername = repoUsername;
+    mRepoPassword = repoPassword;
+    mOpenNotesUuid = openNotesUuid;
+}
+
+QString ConfigModel::serialize()
+{
+    QtJson::JsonObject contributor;
+    contributor["version"] = mVersion;
+
+    contributor["version"] = mVersion;
+    contributor["repoDir"] = mRepoDir;
+    contributor["repoUrl"] = mRepoUrl;
+    contributor["repoUsername"] = mRepoUsername;
+    contributor["repoPassword"] = mRepoPassword;
+    contributor["openNotesUuid"] = mOpenNotesUuid;
+    contributor["sidebarSortValue"] = mSidebarSortValue;
+    contributor["sidebarSortKey"] = mSidebarSortKey;
+    contributor["isSelectedClasses"] = mIsSelectedClasses;
+    contributor["isLocalRepo"] = mIsLocalRepo;
+    contributor["categoriesName"] = mCategoriesName;
+    contributor["tagsName"] = mTagsName;
+
+    return QString(QtJson::serialize(contributor).data());
+}
+
+void ConfigModel::unserialize(const QString &jsonString)
+{
+    QtJson::JsonObject result = QtJson::parse(jsonString).toMap();
+
+    mVersion = result["version"].toString();
+    mRepoDir = result["repoDir"].toString();
+    mRepoUrl = result["repoUrl"].toString();
+    mRepoUsername = result["repoUsername"].toString();
+    mRepoPassword = result["repoPassword"].toString();
+    mOpenNotesUuid = result["openNotesUuid"].toString();
+    mSidebarSortValue = result["sidebarSortValue"].toString();
+    mSidebarSortKey = result["sidebarSortKey"].toInt();
+    mIsSelectedClasses = result["isSelectedClasses"].toInt();
+    mIsLocalRepo = result["isLocalRepo"].toInt();
+    mCategoriesName = result["categoriesName"].toString();
+    mTagsName = result["tagsName"].toString();
 }
 
 void ConfigModel::setVersion(const QString &version)
 {
-    ConfigModel::version = version;
+    ConfigModel::mVersion = version;
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)
 {
-    ConfigModel::repoDir = repoDir;
+    ConfigModel::mRepoDir = repoDir;
 }
 
 void ConfigModel::setRepoUrl(const QString &repoUrl)
 {
-    ConfigModel::repoUrl = repoUrl;
+    ConfigModel::mRepoUrl = repoUrl;
 }
 
 void ConfigModel::setRepoUsername(const QString &repoUsername)
 {
-    ConfigModel::repoUsername = repoUsername;
+    ConfigModel::mRepoUsername = repoUsername;
 }
 
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
-    ConfigModel::repoPassword = repoPassword;
+    ConfigModel::mRepoPassword = repoPassword;
 }
 
 void ConfigModel::setOpenNotesUuid(const QString &openNotesUuid)
 {
-    ConfigModel::openNotesUuid = openNotesUuid;
+    ConfigModel::mOpenNotesUuid = openNotesUuid;
 }
 
 const QString &ConfigModel::getVersion() const
 {
-    return version;
+    return mVersion;
 }
 
 const QString &ConfigModel::getRepoDir() const
 {
-    return repoDir;
+    return mRepoDir;
 }
 
 const QString &ConfigModel::getRepoUrl() const
 {
-    return repoUrl;
+    return mRepoUrl;
 }
 
 const QString &ConfigModel::getRepoUsername() const
 {
-    return repoUsername;
+    return mRepoUsername;
 }
 
 const QString &ConfigModel::getRepoPassword() const
 {
-    return repoPassword;
+    return mRepoPassword;
 }
 
 const QString &ConfigModel::getOpenNotesUuid() const
 {
-    return openNotesUuid;
+    return mOpenNotesUuid;
 }
 
 int ConfigModel::getSidebarSortKey() const
 {
-    return sidebarSortKey;
+    return mSidebarSortKey;
 }
 
 void ConfigModel::setSidebarSortKey(int sidebarSortKey)
 {
-    ConfigModel::sidebarSortKey = sidebarSortKey;
+    ConfigModel::mSidebarSortKey = sidebarSortKey;
 }
 
 const QString &ConfigModel::getSidebarSortValue() const
 {
-    return sidebarSortValue;
+    return mSidebarSortValue;
 }
 
 void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
 {
-    ConfigModel::sidebarSortValue = sidebarSortValue;
+    ConfigModel::mSidebarSortValue = sidebarSortValue;
 }
 
 QString ConfigModel::getCategoriesName() const
 {
-    return categoriesName;
+    return mCategoriesName;
 }
 
 void ConfigModel::setCategoriesName(const QString &categoriesName)
 {
-    ConfigModel::isSelectedClasses = 1;
-    ConfigModel::categoriesName = categoriesName;
+    ConfigModel::mIsSelectedClasses = 1;
+    ConfigModel::mCategoriesName = categoriesName;
 }
 
 QString ConfigModel::getTagsName() const
 {
-    return tagsName;
+    return mTagsName;
 }
 
 void ConfigModel::setTagsName(const QString &tagsName)
 {
-    ConfigModel::isSelectedClasses = 2;
-    ConfigModel::tagsName = tagsName;
+    ConfigModel::mIsSelectedClasses = 2;
+    ConfigModel::mTagsName = tagsName;
 }
 
 int ConfigModel::getIsLocalRepo() const
 {
-    return isLocalRepo;
+    return mIsLocalRepo;
 }
 
 void ConfigModel::setIsLocalRepo(int isLocalRepo)
 {
-    ConfigModel::isLocalRepo = isLocalRepo;
+    ConfigModel::mIsLocalRepo = isLocalRepo;
 }
 
 int ConfigModel::getIsSelectedClasses() const
 {
-    return isSelectedClasses;
+    return mIsSelectedClasses;
 }
 
 void ConfigModel::setIsSelectedClasses(int isSelectedClasses)
 {
-    ConfigModel::isSelectedClasses = isSelectedClasses;
+    ConfigModel::mIsSelectedClasses = isSelectedClasses;
 }

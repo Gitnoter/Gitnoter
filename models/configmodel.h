@@ -8,8 +8,14 @@ class ConfigModel : public QObject
 Q_OBJECT
 
 public:
+    ConfigModel(const QString &jsonString);
+
     ConfigModel(QString version = "", QString repoDir = "", QString repoUrl = "",
-                              QString repoUsername = "", QString repoPassword = "", QString openNotesUuid = "");
+                QString repoUsername = "", QString repoPassword = "", QString openNotesUuid = "");
+
+    QString serialize();
+
+    void unserialize(const QString &jsonString);
 
     void setVersion(const QString &version);
 
@@ -55,26 +61,23 @@ public:
 
     void setIsLocalRepo(int isLocalRepo);
 
-
     int getIsSelectedClasses() const;
 
     void setIsSelectedClasses(int isSelectedClasses);
 
 private:
-    QString version;
-    QString repoDir;
-    QString repoUrl;
-    QString repoUsername;
-    QString repoPassword;
-    QString openNotesUuid;
-    QString sidebarSortValue;
-    int sidebarSortKey;
-
-    int isSelectedClasses;
-
-    int isLocalRepo;
-    QString categoriesName;
-    QString tagsName;
+    QString mVersion;
+    QString mRepoDir;
+    QString mRepoUrl;
+    QString mRepoUsername;
+    QString mRepoPassword;
+    QString mOpenNotesUuid;
+    QString mSidebarSortValue;
+    int mSidebarSortKey;
+    int mIsSelectedClasses;
+    int mIsLocalRepo;
+    QString mCategoriesName;
+    QString mTagsName;
 };
 
 #endif // CONFIGMODEL_H

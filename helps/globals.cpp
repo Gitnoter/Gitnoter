@@ -132,17 +132,17 @@ NoteModel *Global::getNoteModelByUuid(const QString &uuid)
 
 void Global::initConfigModel()
 {
+    configModel->unserialize(Tools::readerFile(appConfigPath));
+
     configModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
     configModel->setSidebarSortKey(1);
     configModel->setSidebarSortValue("DESC");
     configModel->setCategoriesName("test");
     configModel->setIsSelectedClasses(1);
-
 }
 
 void Global::setConfigModel()
 {
-
-    Tools::writerFile(appConfigPath, );
+    Tools::writerFile(appConfigPath, configModel->serialize());
 }
 

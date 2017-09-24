@@ -8,10 +8,10 @@ find_package(Qt5 COMPONENTS Core Gui WebEngineWidgets WebChannel Sql REQUIRED)
  include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
  link_directories(${PROJECT_SOURCE_DIR}/libraries/lib)
 
-include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/models)
-include_directories(${PROJECT_SOURCE_DIR}/helps)
 include_directories(${PROJECT_SOURCE_DIR}/views)
+include_directories(${PROJECT_SOURCE_DIR}/controllers)
+include_directories(${PROJECT_SOURCE_DIR}/helps)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
@@ -42,6 +42,8 @@ add_executable(${PROJECT_NAME}
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp
         helps/gitmanager.h      helps/gitmanager.cpp
-        helps/json.h            helps/json.cpp)
+        helps/json.h            helps/json.cpp
+        helps/qtinyaes/aes.h    helps/qtinyaes/aes.c
+        helps/qtinyaes/qtinyaes.h helps/qtinyaes/qtinyaes.cpp)
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql git2)
