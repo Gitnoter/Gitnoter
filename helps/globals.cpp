@@ -63,14 +63,19 @@ void Global::initCategoriesModelList()
 
         categoriesModelList = map.values();
 
-        if (stringList.length() == 0 && categoriesModelList.length() > 0) {
-            QString str = "";
-            for (auto &&item : categoriesModelList) {
-                str += item->getName() + "\n";
-            }
-            Tools::writerFile(repoCategoriesListPath, str.trimmed());
+        if (stringList.length() == 0) {
+            setCategoriesModelList();
         }
     }
+}
+
+void Global::setCategoriesModelList()
+{
+    QString str = "";
+    for (auto &&item : categoriesModelList) {
+        str += item->getName() + "\n";
+    }
+    Tools::writerFile(repoCategoriesListPath, str.trimmed());
 }
 
 void Global::initTagsModelList()
@@ -89,8 +94,29 @@ void Global::initTagsModelList()
                 }
             }
         }
+
+        QStringList stringList = Tools::readerFileToList(repoTagsListPath);
+        for (auto &&str : stringList) {
+            if (!str.isEmpty() && !map.contains(str)) {
+                map[str] = new TagsModel(str);
+            }
+        }
+
         tagsModelList = map.values();
+
+        if (stringList.length() == 0) {
+            setTagsModelList();
+        }
     }
+}
+
+void Global::setTagsModelList()
+{
+    QString str = "";
+    for (auto &&item : tagsModelList) {
+        str += item->getName() + "\n";
+    }
+    Tools::writerFile(repoTagsListPath, str.trimmed());
 }
 
 NoteModel *Global::getNoteModelByUuid(const QString &uuid)
@@ -113,3 +139,10 @@ void Global::initConfigModel()
     configModel->setIsSelectedClasses(1);
 
 }
+
+void Global::setConfigModel()
+{
+
+    Tools::writerFile(appConfigPath, );
+}
+

@@ -10,7 +10,7 @@
 
 class Global : public QObject
 {
-//Q_OBJECT
+Q_OBJECT
 
 public:
     static const QString packageName;
@@ -40,11 +40,17 @@ public:
 
     static void initCategoriesModelList();
 
+    static void setCategoriesModelList();
+
     static void initTagsModelList();
+
+    static void setTagsModelList();
 
     static NoteModel *getNoteModelByUuid(const QString &uuid);
 
     static void initConfigModel();
+
+    static void setConfigModel();
 
 };
 
