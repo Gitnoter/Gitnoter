@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME}
         helps/document.h        helps/document.cpp
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp
-        helps/gitmanager.h      helps/gitmanager.cpp)
+        helps/gitmanager.h      helps/gitmanager.cpp
+        helps/json.h            helps/json.cpp)
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel Qt5::Sql git2)
