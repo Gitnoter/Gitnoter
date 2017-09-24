@@ -42,7 +42,6 @@ add_executable(${PROJECT_NAME}
         models/tagsmodel.h          models/tagsmodel.cpp
         models/configmodel.h        models/configmodel.cpp
 
-        helps/sqlquerybuilder.h
         helps/previewpage.h     helps/previewpage.cpp
         helps/document.h        helps/document.cpp
         helps/globals.h         helps/globals.cpp

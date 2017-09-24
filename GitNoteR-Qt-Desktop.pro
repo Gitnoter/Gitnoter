@@ -61,7 +61,6 @@ HEADERS += \
     models/categoriesmodel.h  \
     models/tagsmodel.h  \
     models/configmodel.h  \
-    helps/sqlquerybuilder.h  \
     helps/previewpage.h  \
     helps/document.h  \
     helps/globals.h  \
