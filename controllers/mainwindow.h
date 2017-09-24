@@ -131,28 +131,26 @@ private:
     TagsWidget *tagWidget;
 
     Document m_content;
-    QList<CategoriesModel *> mCategoriesModelList;
-    QList<TagsModel *> mTagsModelList;
 
     void textChanged();
 
     void mSetOpenedNoteModel(bool initEditor = false);
 
-    void mInitTableWidgetList(QString text = "");
+    void mSetTableWidgetList();
 
-    void mFiltrateTableWidgetList(QString text = "");
+    void mFiltrateTableWidgetList();
 
     bool isEditorModified();
 
     void mSetEditorModified(bool m);
 
-    void mInitCategoriesList();
+    void mSetCategoriesListWidgetList();
 
-    void mFiltrateCategoriesList();
+    void mFiltrateCategoriesListWidgetList();
 
-    void mInitTagsList();
+    void mSetTagsListWidgetList();
 
-    void mFiltrateTagsList();
+    void mFiltrateTagsListWidgetList();
 
     QMenu *createListWidgetCategoriesMenu();
 

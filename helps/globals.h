@@ -22,14 +22,20 @@ extern QString gVideosFolderName;
 extern QString gAppDataLocation;
 
 extern QList<NoteModel *> gNoteModelList;
+extern QList<CategoriesModel *> gCategoriesModelList;
+extern QList<TagsModel *> gTagsModelList;
 extern NoteModel *gOpenNoteModel;
 extern ConfigModel *gConfigModel;
 extern GitManager *gGitManager;
 
-void gInitNoteModelList();
+extern void gInitNoteModelList();
 
-NoteModel *gGetNoteModelByUuid(const QString &uuid);
+extern void gInitCategoriesModelList();
 
-void gInitConfigModel();
+extern void gInitTagsModelList();
+
+extern NoteModel *gGetNoteModelByUuid(const QString &uuid);
+
+extern void gInitConfigModel();
 
 #endif // GLOBALS_H

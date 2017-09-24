@@ -8,11 +8,11 @@ class CategoriesModel : public QObject
 Q_OBJECT
 
 public:
-    CategoriesModel(QString name = "", int count = 0, int isDefault = 0);
+    CategoriesModel(const QString &name = "", int count = 0, int isDefault = 0);
 
     CategoriesModel *operator+(CategoriesModel &categoriseModel);
 
-    QString getName();
+    QString getName() const;
 
     int getIsDefault();
 

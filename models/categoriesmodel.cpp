@@ -1,6 +1,6 @@
 #include "categoriesmodel.h"
 
-CategoriesModel::CategoriesModel(QString name, int count, int isDefault)
+CategoriesModel::CategoriesModel(const QString &name, int count, int isDefault)
 {
     mName = name;
     mCount = count;
@@ -16,7 +16,7 @@ CategoriesModel *CategoriesModel::operator+(CategoriesModel &categoriseModel)
     return new CategoriesModel(name, count, isDefault);
 }
 
-QString CategoriesModel::getName()
+QString CategoriesModel::getName() const
 {
     return mName;
 }

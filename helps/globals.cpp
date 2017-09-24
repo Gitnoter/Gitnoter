@@ -16,6 +16,8 @@ QString gImagesFolderName = "files/images";
 QString gVideosFolderName = "files/videos";
 
 QList<NoteModel *> gNoteModelList = {};
+QList<CategoriesModel *> gCategoriesModelList = {};
+QList<TagsModel *> gTagsModelList = {};
 NoteModel *gOpenNoteModel = new NoteModel();
 ConfigModel *gConfigModel = new ConfigModel();
 GitManager *gGitManager = new GitManager();
@@ -31,6 +33,44 @@ void gInitNoteModelList()
                                                  fileInfo.absoluteFilePath());
             gNoteModelList.append(noteModel);
         }
+    }
+}
+
+void gInitCategoriesModelList()
+{
+    if (gCategoriesModelList.length() == 0) {
+        QMap<QString, CategoriesModel *> map;
+        for (auto &&noteModel : gNoteModelList) {
+            if (map.contains(noteModel->categoriesModel->getName())) {
+                auto *categoriesModel = map[noteModel->categoriesModel->getName()];
+                categoriesModel->setCount(categoriesModel->getCount() + 1);
+            }
+            else {
+                noteModel->categoriesModel->setCount(noteModel->categoriesModel->getCount() + 1);
+                map[noteModel->categoriesModel->getName()] = noteModel->categoriesModel;
+            }
+        }
+        gCategoriesModelList = map.values();
+    }
+}
+
+void gInitTagsModelList()
+{
+    if (gTagsModelList.length() == 0) {
+        QMap<QString, TagsModel *> map;
+        for (auto &&noteModel : gNoteModelList) {
+            for (auto &&tagsModel : *noteModel->tagsModelList) {
+                if (map.contains(tagsModel->getName())) {
+                    auto *model = map[tagsModel->getName()];
+                    model->setCount(model->getCount() + 1);
+                }
+                else {
+                    tagsModel->setCount(tagsModel->getCount() + 1);
+                    map[tagsModel->getName()] = tagsModel;
+                }
+            }
+        }
+        gTagsModelList = map.values();
     }
 }
 
