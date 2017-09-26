@@ -54,11 +54,11 @@ void MainWindow::textChanged()
 
 void MainWindow::on_pushButton_categories_clicked()
 {
-    categoriesWidget = new CategoriesWidget(this);
-    categoriesWidget->show();
 
-    connect(this, &MainWindow::resizeChildWindow, categoriesWidget, &CategoriesWidget::resizeWindow);
-    connect(categoriesWidget, SIGNAL(changeCategories()), this, SLOT(onChangeCategories()));
+    categoriesWidget = new CategoriesWidget(this);
+    categoriesWidget->open();
+
+    connect(categoriesWidget, SIGNAL(categoriesChanged()), this, SLOT(onChangeCategories()));
 }
 
 void MainWindow::mSetOpenedNoteModel(bool initEditor)
