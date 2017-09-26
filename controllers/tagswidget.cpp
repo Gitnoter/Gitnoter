@@ -7,26 +7,15 @@
 #include <QDebug>
 
 TagsWidget::TagsWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::TagsWidget)
+        QDialog(parent),
+        ui(new Ui::TagsWidget)
 {
     ui->setupUi(this);
+
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->widget->setGraphicsEffect(Tools::createShadowEffect());
     ui->pushButton_add->setHidden(true);
 
-    auto *mainWindow = (MainWindow *) parentWidget();
-    resizeWindow(mainWindow->geometry().size());
-
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-    animation->setDuration(250);
-    animation->setStartValue(QRect(0, -height(), width(), height()));
-    animation->setEndValue(QRect(0, 0, width(), height()));
-    animation->setEasingCurve(QEasingCurve::Linear);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
-
-    this->setListData(true);
-    ui->listWidget_data->setFocus();
+    mSetListWidgetList();
 }
 
 TagsWidget::~TagsWidget()
@@ -34,78 +23,60 @@ TagsWidget::~TagsWidget()
     delete ui;
 }
 
-void TagsWidget::resizeWindow(QSize size)
+void TagsWidget::mSetListWidgetList()
 {
-    setGeometry(x(), y(), size.width(), size.height());
-}
-
-void TagsWidget::onAnimationFinished()
-{
-    auto selectedIndexes = ui->listWidget_data->selectionModel()->selectedIndexes();
-    Global::openNoteModel->tagsModelList->clear();
-    for (auto &&index : selectedIndexes) {
-        Global::openNoteModel->tagsModelList->append(mTagsModelList[index.row()]);
-    }
-    this->close();
-    emit changeTags();
-}
-
-void TagsWidget::setListData(bool reread, const QString &string)
-{
-    if (mTagsModelList.length() == 0 || reread) {
-//        mTagsModelList = gDatabase->selectTags();
-    }
-
-    if (!string.isEmpty()) {
-        mtagsModelSearchList.clear();
-        for (int i = 0; i < mTagsModelList.length(); ++i) {
-            int searchIndex = mTagsModelList[i]->getName().indexOf(string, 0, Qt::CaseInsensitive);
-            if (searchIndex != -1) {
-                mtagsModelSearchList.append(mTagsModelList[i]);
-            }
-        }
-    }
-    else {
-        mtagsModelSearchList = mTagsModelList;
-    }
-
     ui->listWidget_data->clear();
-    for (int i = 0; i < mtagsModelSearchList.length(); ++i) {
-        ui->listWidget_data->addItem(mtagsModelSearchList[i]->getName());
-
+    for (int i = 0; i < Global::tagsModelList.length(); ++i) {
+        ui->listWidget_data->addItem(Global::tagsModelList[i]->getName());
+        ui->listWidget_data->item(i)->setData(Qt::UserRole, QVariant::fromValue(Global::tagsModelList[i]));
         for (auto &&item : *Global::openNoteModel->tagsModelList) {
-            if (item->getName() == mtagsModelSearchList[i]->getName()) {
+            if (item->getName() == Global::tagsModelList[i]->getName()) {
                 ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
             }
         }
     }
 }
 
-void TagsWidget::mouseReleaseEvent(QMouseEvent *event)
+void TagsWidget::mFiltrateListWidgetList()
 {
-    QWidget::mouseReleaseEvent(event);
+    int showCount = 0;
+    QString text = ui->lineEdit->displayText();
+    for (int i = 0; i < Global::tagsModelList.length(); ++i) {
+        int index = Global::tagsModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
+        QListWidgetItem *listWidgetItem = ui->listWidget_data->item(i);
 
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-    animation->setDuration(250);
-    animation->setEndValue(QRect(0, -height(), width(), height()));
-    animation->setStartValue(QRect(0, 0, width(), height()));
-    animation->setEasingCurve(QEasingCurve::Linear);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
+        bool isHidden = text.isEmpty() ? false : index == -1;
+        listWidgetItem->setHidden(isHidden);
+        if (!isHidden) showCount += 1;
+    }
 
-    connect(animation, &QPropertyAnimation::finished, this, &TagsWidget::onAnimationFinished);
+    ui->pushButton_add->setHidden(showCount != 0);
 }
 
 void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-//        gDatabase->insertTags(ui->lineEdit->displayText());
-        setListData(true);
+        Global::tagsModelList.append(new TagsModel(ui->lineEdit->displayText()));
+        Global::setTagsModelList();
+        mSetListWidgetList();
+        ui->listWidget_data->sortItems(Qt::AscendingOrder);
         ui->lineEdit->clear();
     }
 }
 
 void TagsWidget::on_lineEdit_textChanged(const QString &arg1)
 {
-    setListData(false, arg1);
-    ui->pushButton_add->setHidden(ui->listWidget_data->count() != 0);
+    mFiltrateListWidgetList();
 }
+
+void TagsWidget::on_buttonBox_accepted()
+{
+    auto selectItemList = ui->listWidget_data->selectedItems();
+    Global::openNoteModel->tagsModelList->clear();
+    for (auto &&item : selectItemList) {
+        Global::openNoteModel->tagsModelList->append(item->data(Qt::UserRole).value<TagsModel *>());
+    }
+
+    emit tagsChanged();
+}
+

@@ -3,44 +3,42 @@
 
 #include "tagsmodel.h"
 
-#include <QWidget>
+#include <QDialog>
 #include <QPropertyAnimation>
 #include <QDesktopWidget>
 
-namespace Ui {
-class TagsWidget;
+namespace Ui
+{
+    class TagsWidget;
 }
 
-class TagsWidget : public QWidget
+class TagsWidget : public QDialog
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit TagsWidget(QWidget *parent = 0);
-    ~TagsWidget() override;
+
+    ~TagsWidget();
 
 signals:
-    void changeTags();
 
-public slots:
-    void resizeWindow(QSize size);
+    void tagsChanged();
 
 private slots:
-    void onAnimationFinished();
 
     void on_pushButton_add_clicked();
+
     void on_lineEdit_textChanged(const QString &arg1);
 
-protected:
-    void mouseReleaseEvent(QMouseEvent * event) override;
+    void on_buttonBox_accepted();
 
 private:
     Ui::TagsWidget *ui;
-    QList<TagsModel *> mTagsModelList;
-    QList<TagsModel *> mtagsModelSearchList;
 
-    void setListData(bool reread = true, const QString &string = "");
+    void mSetListWidgetList();
 
+    void mFiltrateListWidgetList();
 
 };
 

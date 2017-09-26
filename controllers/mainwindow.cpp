@@ -488,10 +488,9 @@ void MainWindow::on_lineEdit_searchCategories_textChanged(const QString &arg1)
 void MainWindow::on_pushButton_changeTags_clicked()
 {
     tagWidget = new TagsWidget(this);
-    tagWidget->show();
+    tagWidget->open();
 
-    connect(this, &MainWindow::resizeChildWindow, tagWidget, &TagsWidget::resizeWindow);
-    connect(tagWidget, SIGNAL(changeTags()), this, SLOT(onChangeTags()));
+    connect(tagWidget, SIGNAL(tagsChanged()), this, SLOT(onChangeTags()));
 }
 
 void MainWindow::onChangeTags()
