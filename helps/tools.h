@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QGraphicsDropShadowEffect>
 #include <QWidget>
+#include <QListWidget>
 
 class Tools : public QObject
 {
@@ -32,6 +33,8 @@ public:
     static QGraphicsDropShadowEffect *createShadowEffect();
 
     static void changeWidgetBorder(QWidget *widget, const QString color, int width);
+
+    static int listRowShowCount(QListWidget *listWidget);
 
 };
 

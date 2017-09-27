@@ -63,10 +63,15 @@ void MainWindow::on_pushButton_categories_clicked()
 void MainWindow::mSetOpenedNoteModel(bool initEditor)
 {
     if (Global::configModel->getOpenNotesUuid().isEmpty()) {
-        if (Global::noteModelList.length() != 0) {
-            Global::configModel->setOpenNotesUuid(Global::noteModelList.at(0)->contentModel->getUuid());
-            mSetOpenedNoteModel(true);
-            return;
+        if (Tools::listRowShowCount((QListWidget *) ui->tableWidget_list) > 0) {
+            for (int i = 0; i < ui->tableWidget_list->rowCount(); ++i) {
+                if (!ui->tableWidget_list->isRowHidden(i)) {
+                    auto *noteModel = ui->tableWidget_list->item(i, 0)->data(Qt::UserRole).value<NoteModel *>();
+                    Global::configModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
+                    mSetOpenedNoteModel(true);
+                    return;
+                }
+            }
         }
         Global::openNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
     }

@@ -1,6 +1,8 @@
 #include "tools.h"
 #include "globals.h"
 
+#include <QListWidget>
+
 QFileInfoList Tools::getFilesPath(const QString path)
 {
     QDir dir(path);
@@ -135,4 +137,16 @@ bool Tools::writerFile(QString path, QString text)
     f.close();
 
     return true;
+}
+
+int Tools::listRowShowCount(QListWidget *listWidget)
+{
+    int rowHiddenCount = 0;
+    int listRowCount = listWidget->count();
+    for (int i = 0; i < listRowCount; ++i) {
+        if (listWidget->isRowHidden(i)) {
+            rowHiddenCount += 1;
+        }
+    }
+    return listRowCount - rowHiddenCount;
 }
