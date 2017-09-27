@@ -54,7 +54,6 @@ void MainWindow::textChanged()
 
 void MainWindow::on_pushButton_categories_clicked()
 {
-
     categoriesWidget = new CategoriesWidget(this);
     categoriesWidget->open();
 
@@ -66,7 +65,7 @@ void MainWindow::mSetOpenedNoteModel(bool initEditor)
     if (Global::configModel->getOpenNotesUuid().isEmpty()) {
         if (Global::noteModelList.length() != 0) {
             Global::configModel->setOpenNotesUuid(Global::noteModelList.at(0)->contentModel->getUuid());
-            mSetOpenedNoteModel();
+            mSetOpenedNoteModel(true);
             return;
         }
         Global::openNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
