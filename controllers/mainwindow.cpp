@@ -73,10 +73,10 @@ void MainWindow::mSetOpenedNoteModel(bool initEditor)
                 }
             }
         }
-        Global::openNoteModel = new NoteModel(Tools::readerFile(":/marked/default.md"));
+        Global::setOpenNoteModel(new NoteModel(Tools::readerFile(":/marked/default.md")));
     }
     else {
-        Global::openNoteModel = Global::getNoteModelByUuid(Global::configModel->getOpenNotesUuid());
+        Global::setOpenNoteModel(Global::getNoteModelByUuid(Global::configModel->getOpenNotesUuid()));
     }
 
     // 初始化编辑器
@@ -142,7 +142,6 @@ void MainWindow::mFiltrateTableWidgetList()
         NoteModel *noteModel = tableWidgetItem->data(Qt::UserRole).value<NoteModel *>();
         bool hidden = true;
 
-        qDebug() << noteModel->categoriesModel->getName() << "==" << Global::configModel->getCategoriesName();
         if (Global::configModel->getIsSelectedClasses() == 1) {
             if (noteModel->categoriesModel->getName() == Global::configModel->getCategoriesName()) {
                 hidden = false;
@@ -207,11 +206,15 @@ void MainWindow::on_action_saveNote_triggered()
     }
 
     Tools::writerFile(Global::openNoteModel->contentModel->getFilePath(), Global::openNoteModel->getNote());
+    Global::initCategoriesModelList();
+    Global::initTagsModelList();
     mSetTableWidgetList();
 }
 
 void MainWindow::on_action_newNote_triggered()
 {
+    Global::setOpenNoteModel(new NoteModel());
+
     on_action_saveNote_triggered();
 }
 
@@ -269,19 +272,18 @@ void MainWindow::on_pushButton_folder_clicked()
 void MainWindow::on_listWidget_categories_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_categories->itemWidget(item)->findChild<QWidget *>("widget");
-    if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < Global::categoriesModelList.length(); ++i) {
-            QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
-            QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
-            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
-            listWidgetItem->setData(Qt::UserRole, QVariant());
-            ui->listWidget_categories->setItemSelected(listWidgetItem, false);
-        }
 
-        item->setData(Qt::UserRole, 1);
-        Tools::changeWidgetBorder(widget, "#7EBFF5", 2);
-        ui->listWidget_categories->setItemSelected(item, true);
+    for (int i = 0; i < Global::categoriesModelList.length(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(i);
+        QWidget *widget2 = ui->listWidget_categories->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
+        if (widget == widget2) {
+            Tools::changeWidgetBorder(widget2, "#7EBFF5", 2);
+        }
+        else {
+            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
+        }
     }
+    ui->listWidget_categories->setItemSelected(item, true);
 }
 
 void MainWindow::on_pushButton_notes_clicked()
@@ -347,33 +349,21 @@ void MainWindow::onActionTimeSortTriggered()
     qDebug() << "onActionTimeSortTriggered";
 }
 
-void MainWindow::onLineEditNameEditingFinished()
+void MainWindow::onLineEditNameCategoriesEditingFinished()
 {
     int index = ui->listWidget_categories->selectionModel()->selectedIndexes()[0].row();
+    QListWidgetItem *listWidgetItem = ui->listWidget_categories->item(index);
+    CategoriesModel *categoriesModel = listWidgetItem->data(Qt::UserRole).value<CategoriesModel *>();
     QWidget *widget = ui->listWidget_categories->itemWidget(ui->listWidget_categories->selectedItems()[0]);
     QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_name");
+    QString name = lineEdit_name->displayText();
 
-    if (lineEdit_name->displayText().isEmpty()) {
-        lineEdit_name->setText(Global::categoriesModelList[index]->getName());
+    if (!name.isEmpty() && !Global::hasInCategoriesModelList(name)) {
+        categoriesModel->setName(lineEdit_name->displayText());
     }
-    else {
-//        if (gDatabase->updateCategoriesByName(lineEdit_name->displayText(),
-//                                                    mCategoriesModelList[index]->getName())) {
-//            auto categoriesList = gDatabase->selectNJCByCategoriesId(
-//                    mCategoriesModelList[index]->getCategoriesId());
-//            for (auto &&item : categoriesList) {
-//                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
-//                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
-//            }
-//
-//            mCategoriesModelList[index]->setName(lineEdit_name->displayText());
-//        }
-//        else {
-//            lineEdit_name->setText(mCategoriesModelList[index]->getName());
-//        }
-    }
+
+    lineEdit_name->setText(categoriesModel->getName());
     lineEdit_name->setEnabled(false);
-
     setCategoriesListEnabled(true);
 }
 
@@ -387,20 +377,19 @@ void MainWindow::on_pushButton_addCategories_clicked()
                          ? tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i))
                          : lineEditSearchCategories;
 
-//        if (gDatabase->insertCategories(categoriesName) != 0) {
-//            setCategoriesList(true, lineEditSearchCategories);
-//
-//            for (int j = 0; j < mCategoriesModelList.length(); ++j) {
-//                if (mCategoriesModelList[j]->getName() == categoriesName) {
-//                    on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
-//                    break;
-//                }
-//            }
-//
-//            onActionRenameCategoriesTriggered();
-//            setCategoriesListEnabled(false);
-//            break;
-//        }
+        if (Global::addCategoriesModelList({new CategoriesModel(categoriesName)})) {
+            mSetCategoriesListWidgetList();
+            for (int j = 0; j < Global::categoriesModelList.length(); ++j) {
+                if (Global::categoriesModelList[j]->getName() == categoriesName) {
+                    on_listWidget_categories_itemClicked(ui->listWidget_categories->item(j));
+                    break;
+                }
+            }
+
+            onActionRenameCategoriesTriggered();
+            setCategoriesListEnabled(false);
+            break;
+        }
 
         if (!lineEditSearchCategories.isEmpty()) {
             break;
@@ -415,7 +404,8 @@ void MainWindow::onActionRenameCategoriesTriggered()
     lineEdit_name->setEnabled(true);
     lineEdit_name->setFocus();
     lineEdit_name->selectAll();
-    connect(lineEdit_name, SIGNAL(editingFinished()), this, SLOT(onLineEditNameEditingFinished()));
+
+    connect(lineEdit_name, SIGNAL(editingFinished()), this, SLOT(onLineEditNameCategoriesEditingFinished()));
 }
 
 void MainWindow::on_pushButton_removeCategories_clicked()
@@ -423,14 +413,15 @@ void MainWindow::on_pushButton_removeCategories_clicked()
     auto selectedIndexes = ui->listWidget_categories->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-
-//        if (mCategoriesModelList[index]->getCount() == 0) {
-//            gDatabase->deleteCategoriesByName(mCategoriesModelList[index]->getName());
-//            setCategoriesList(true, ui->lineEdit_searchCategories->displayText());
-//        }
-//        else {
-//            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
-//        }
+        auto categoriesModel = ui->listWidget_categories->item(index)->data(Qt::UserRole).value<CategoriesModel *>();
+        if (categoriesModel->getCount() == 0) {
+            Global::categoriesModelList.removeOne(categoriesModel);
+            Global::addCategoriesModelList();
+            mSetCategoriesListWidgetList();
+        }
+        else {
+            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
+        }
     }
 }
 
@@ -553,19 +544,18 @@ void MainWindow::mFiltrateTagsListWidgetList()
 void MainWindow::on_listWidget_tags_itemClicked(QListWidgetItem *item)
 {
     QWidget *widget = ui->listWidget_tags->itemWidget(item)->findChild<QWidget *>("widget");
-    if (item->data(Qt::UserRole).isNull()) {
-        for (int i = 0; i < Global::tagsModelList.length(); ++i) {
-            QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
-            QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
-            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
-            listWidgetItem->setData(Qt::UserRole, QVariant());
-            ui->listWidget_tags->setItemSelected(listWidgetItem, false);
-        }
 
-        item->setData(Qt::UserRole, 1);
-        Tools::changeWidgetBorder(widget, "#7EBFF5", 2);
-        ui->listWidget_tags->setItemSelected(item, true);
+    for (int i = 0; i < Global::tagsModelList.length(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(i);
+        QWidget *widget2 = ui->listWidget_tags->itemWidget(listWidgetItem)->findChild<QWidget *>("widget");
+        if (widget == widget2) {
+            Tools::changeWidgetBorder(widget2, "#7EBFF5", 2);
+        }
+        else {
+            Tools::changeWidgetBorder(widget2, "#DFDFE0", 1);
+        }
     }
+    ui->listWidget_tags->setItemSelected(item, true);
 }
 
 void MainWindow::on_listWidget_tags_itemDoubleClicked(QListWidgetItem *item)
@@ -637,20 +627,19 @@ void MainWindow::on_pushButton_addTags_clicked()
         tagName = lineEditSearchTags.isEmpty() ? tr("新建标签%1").arg(i == 0 ? "" : QString::number(i))
                                                : lineEditSearchTags;
 
-//        if (gDatabase->insertTags(tagName) != 0) {
-//            setTagsList(true, lineEditSearchTags);
-//
-//            for (int j = 0; j < mtagsModelList.length(); ++j) {
-//                if (mtagsModelList[j]->getName() == tagName) {
-//                    on_listWidget_tags_itemClicked(ui->listWidget_tags->item(j));
-//                    break;
-//                }
-//            }
-//
-//            onActionRenameTagsTriggered();
-//            setTagsListEnabled(false);
-//            break;
-//        }
+        if (Global::addTagsModelList({new TagsModel(tagName)})) {
+            mSetTagsListWidgetList();
+            for (int j = 0; j < Global::tagsModelList.length(); ++j) {
+                if (Global::tagsModelList[j]->getName() == tagName) {
+                    on_listWidget_tags_itemClicked(ui->listWidget_tags->item(j));
+                    break;
+                }
+            }
+
+            onActionRenameTagsTriggered();
+            setTagsListEnabled(false);
+            break;
+        }
 
         if (!lineEditSearchTags.isEmpty()) {
             break;
@@ -663,14 +652,15 @@ void MainWindow::on_pushButton_removeTags_clicked()
     auto selectedIndexes = ui->listWidget_tags->selectionModel()->selectedIndexes();
     if (selectedIndexes.length() != 0) {
         int index = selectedIndexes[0].row();
-
-//        if (mtagsModelList[index]->getCount() == 0) {
-//            gDatabase->deleteTagsByName(mtagsModelList[index]->getName());
-//            setTagsList(true, ui->lineEdit_searchTags->displayText());
-//        }
-//        else {
-//            QMessageBox::about(this, tr("消息提醒"), tr("该标签内存在笔记, 请先移出"));
-//        }
+        auto tagsModel = ui->listWidget_tags->item(index)->data(Qt::UserRole).value<TagsModel *>();
+        if (tagsModel->getCount() == 0) {
+            Global::tagsModelList.removeOne(tagsModel);
+            Global::addTagsModelList();
+            mSetTagsListWidgetList();
+        }
+        else {
+            QMessageBox::about(this, tr("消息提醒"), tr("该笔记本存在笔记, 请将笔记移出笔记本"));
+        }
     }
 }
 
@@ -687,29 +677,18 @@ void MainWindow::onActionRenameTagsTriggered()
 void MainWindow::onLineEditNameTagsEditingFinished()
 {
     int index = ui->listWidget_tags->selectionModel()->selectedIndexes()[0].row();
+    QListWidgetItem *listWidgetItem = ui->listWidget_tags->item(index);
+    TagsModel *tagsModel = listWidgetItem->data(Qt::UserRole).value<TagsModel *>();
     QWidget *widget = ui->listWidget_tags->itemWidget(ui->listWidget_tags->selectedItems()[0]);
-    QLineEdit *lineEdit_nameTags = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
+    QLineEdit *lineEdit_name = widget->findChild<QWidget *>("widget")->findChild<QLineEdit *>("lineEdit_nameTags");
+    QString name = lineEdit_name->displayText();
 
-    if (lineEdit_nameTags->displayText().isEmpty()) {
-        lineEdit_nameTags->setText(Global::tagsModelList[index]->getName());
+    if (!name.isEmpty() && !Global::hasInTagsModelList(name)) {
+        tagsModel->setName(lineEdit_name->displayText());
     }
-    else {
-//        if (gDatabase->updateTagsByName(lineEdit_nameTags->displayText(),
-//                                              mtagsModelList[index]->getName())) {
-//            auto tagsList = gDatabase->selectNJTByTagsId(mtagsModelList[index]->getTagsId());
-//            for (auto &&item : tagsList) {
-//                auto *note = gDatabase->getNoteByUuid(item->getNotesUuid());
-//                Tools::writerFile(note->contentModel->getFilePath(), note->getNote());
-//            }
-//
-//            mtagsModelList[index]->setName(lineEdit_nameTags->displayText());
-//        }
-//        else {
-//            lineEdit_nameTags->setText(mtagsModelList[index]->getName());
-//        }
-    }
-    lineEdit_nameTags->setEnabled(false);
 
+    lineEdit_name->setText(tagsModel->getName());
+    lineEdit_name->setEnabled(false);
     setTagsListEnabled(true);
 }
 

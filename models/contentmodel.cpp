@@ -2,8 +2,6 @@
 #include "tools.h"
 #include "globals.h"
 
-#include <QDateTime>
-
 ContentModel::ContentModel(QString uuid, QString title, int createDate, int updateDate, QString body, QString filePath)
 {
     setUuid(uuid);
@@ -21,7 +19,14 @@ QString ContentModel::getUuid()
 
 void ContentModel::setTitle(const QString title)
 {
-    mTitle = title;
+    QString aTitle = title.isEmpty() ? tr("无标题") : title;
+    if (!mTitle.isEmpty() && mTitle != aTitle) {
+        mTitle = aTitle;
+        setFilePath();
+    }
+    else {
+        mTitle = aTitle;
+    }
 }
 
 void ContentModel::setCreateDate(const QString createDate)
@@ -83,6 +88,9 @@ const QString &ContentModel::getFilePath() const
 
 void ContentModel::setFilePath(const QString &filePath)
 {
-    mFilePath = filePath.isEmpty() ? QString("%1/%2-%3.md").arg(Global::repoNotePath, mTitle.isEmpty() ? "无标题" : mTitle, mUuid)
-                                   : filePath;
+    QString aFilePath = filePath.isEmpty() ? QString("%1/%2-%3.md").arg(Global::repoNotePath, mTitle, mUuid) : filePath;
+    if (!mFilePath.isEmpty() && aFilePath != mFilePath) {
+        QFile(mFilePath).rename(aFilePath);
+    }
+    mFilePath = aFilePath;
 }

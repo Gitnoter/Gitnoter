@@ -57,7 +57,7 @@ void TagsWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
         Global::tagsModelList.append(new TagsModel(ui->lineEdit->displayText()));
-        Global::setTagsModelList();
+        Global::addTagsModelList();
         mSetListWidgetList();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
         ui->lineEdit->clear();

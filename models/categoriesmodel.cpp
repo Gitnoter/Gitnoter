@@ -2,7 +2,7 @@
 
 CategoriesModel::CategoriesModel(const QString &name, int count, int isDefault)
 {
-    mName = name;
+    setName(name);
     mCount = count;
     mIsDefault = isDefault;
 }
@@ -28,7 +28,7 @@ int CategoriesModel::getIsDefault()
 
 void CategoriesModel::setName(QString name)
 {
-    mName = name;
+    mName = name.isEmpty() ? tr("全部笔记") : name;
 }
 
 void CategoriesModel::setIsDefault(int isDefault)

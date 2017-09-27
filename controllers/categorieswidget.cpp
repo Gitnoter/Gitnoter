@@ -61,7 +61,7 @@ void CategoriesWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
         Global::categoriesModelList.append(new CategoriesModel(ui->lineEdit->displayText()));
-        Global::setCategoriesModelList();
+        Global::addCategoriesModelList();
         mSetListWidgetList();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
         ui->lineEdit->clear();

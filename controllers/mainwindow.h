@@ -86,7 +86,7 @@ private slots:
 
     void onActionTimeSortTriggered();
 
-    void onLineEditNameEditingFinished();
+    void onLineEditNameCategoriesEditingFinished();
 
     void on_lineEdit_searchCategories_textChanged(const QString &arg1);
 

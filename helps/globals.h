@@ -36,17 +36,35 @@ public:
     static ConfigModel *configModel;
     static GitManager *gitManager;
 
+    /// static QList<NoteModel *> noteModelList;
+
     static void initNoteModelList();
+
+    static NoteModel *getNoteModelByUuid(const QString &uuid);
+
+    static void addNoteModelToList(NoteModel *noteModel);
+
+    /// static QList<CategoriesModel *> categoriesModelList;
 
     static void initCategoriesModelList();
 
-    static void setCategoriesModelList();
+    static bool addCategoriesModelList(QList<CategoriesModel *> list = {});
+
+    static bool hasInCategoriesModelList(const QString &name);
+
+    /// static QList<TagsModel *> tagsModelList;
 
     static void initTagsModelList();
 
-    static void setTagsModelList();
+    static bool addTagsModelList(QList<TagsModel *> list = {});
 
-    static NoteModel *getNoteModelByUuid(const QString &uuid);
+    static bool hasInTagsModelList(const QString &name);
+
+    /// static NoteModel *openNoteModel;
+
+    static void setOpenNoteModel(NoteModel *noteModel);
+
+    /// ConfigModel
 
     static void initConfigModel();
 

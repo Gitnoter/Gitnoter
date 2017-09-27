@@ -25,7 +25,7 @@ public:
 
     void setBody(QString body);
 
-    void setFilePath(const QString &filePath);
+    void setFilePath(const QString &filePath = "");
 
     QString getUuid();
 
