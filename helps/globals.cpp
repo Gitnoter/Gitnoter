@@ -41,31 +41,31 @@ void Global::initNoteModelList()
 
 void Global::initCategoriesModelList()
 {
-    if (categoriesModelList.length() == 0) {
-        QMap<QString, CategoriesModel *> map;
-        for (auto &&noteModel : noteModelList) {
-            if (map.contains(noteModel->categoriesModel->getName())) {
-                auto *categoriesModel = map[noteModel->categoriesModel->getName()];
-                categoriesModel->setCount(categoriesModel->getCount() + 1);
-            }
-            else {
-                noteModel->categoriesModel->setCount(noteModel->categoriesModel->getCount() + 1);
-                map[noteModel->categoriesModel->getName()] = noteModel->categoriesModel;
-            }
-        }
+    categoriesModelList.clear();
 
-        QStringList stringList = Tools::readerFileToList(repoCategoriesListPath);
-        for (auto &&str : stringList) {
-            if (!str.isEmpty() && !map.contains(str)) {
-                map[str] = new CategoriesModel(str);
-            }
+    QMap<QString, CategoriesModel *> map;
+    for (auto &&noteModel : noteModelList) {
+        if (map.contains(noteModel->categoriesModel->getName())) {
+            auto *categoriesModel = map[noteModel->categoriesModel->getName()];
+            categoriesModel->setCount(categoriesModel->getCount() + 1);
         }
-
-        categoriesModelList = map.values();
-
-        if (stringList.length() == 0) {
-            setCategoriesModelList();
+        else {
+            noteModel->categoriesModel->setCount(noteModel->categoriesModel->getCount() + 1);
+            map[noteModel->categoriesModel->getName()] = noteModel->categoriesModel;
         }
+    }
+
+    QStringList stringList = Tools::readerFileToList(repoCategoriesListPath);
+    for (auto &&str : stringList) {
+        if (!str.isEmpty() && !map.contains(str)) {
+            map[str] = new CategoriesModel(str);
+        }
+    }
+
+    categoriesModelList = map.values();
+
+    if (stringList.length() == 0) {
+        setCategoriesModelList();
     }
 }
 
@@ -80,33 +80,33 @@ void Global::setCategoriesModelList()
 
 void Global::initTagsModelList()
 {
-    if (tagsModelList.length() == 0) {
-        QMap<QString, TagsModel *> map;
-        for (auto &&noteModel : noteModelList) {
-            for (auto &&tagsModel : *noteModel->tagsModelList) {
-                if (map.contains(tagsModel->getName())) {
-                    auto *model = map[tagsModel->getName()];
-                    model->setCount(model->getCount() + 1);
-                }
-                else {
-                    tagsModel->setCount(tagsModel->getCount() + 1);
-                    map[tagsModel->getName()] = tagsModel;
-                }
+    tagsModelList.clear();
+
+    QMap<QString, TagsModel *> map;
+    for (auto &&noteModel : noteModelList) {
+        for (auto &&tagsModel : *noteModel->tagsModelList) {
+            if (map.contains(tagsModel->getName())) {
+                auto *model = map[tagsModel->getName()];
+                model->setCount(model->getCount() + 1);
+            }
+            else {
+                tagsModel->setCount(tagsModel->getCount() + 1);
+                map[tagsModel->getName()] = tagsModel;
             }
         }
+    }
 
-        QStringList stringList = Tools::readerFileToList(repoTagsListPath);
-        for (auto &&str : stringList) {
-            if (!str.isEmpty() && !map.contains(str)) {
-                map[str] = new TagsModel(str);
-            }
+    QStringList stringList = Tools::readerFileToList(repoTagsListPath);
+    for (auto &&str : stringList) {
+        if (!str.isEmpty() && !map.contains(str)) {
+            map[str] = new TagsModel(str);
         }
+    }
 
-        tagsModelList = map.values();
+    tagsModelList = map.values();
 
-        if (stringList.length() == 0) {
-            setTagsModelList();
-        }
+    if (stringList.length() == 0) {
+        setTagsModelList();
     }
 }
 

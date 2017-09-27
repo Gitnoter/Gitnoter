@@ -63,7 +63,7 @@ void MainWindow::on_pushButton_categories_clicked()
 void MainWindow::mSetOpenedNoteModel(bool initEditor)
 {
     if (Global::configModel->getOpenNotesUuid().isEmpty()) {
-        if (Tools::listRowShowCount((QListWidget *) ui->tableWidget_list) > 0) {
+        if (Tools::rowShowCount(ui->tableWidget_list) > 0) {
             for (int i = 0; i < ui->tableWidget_list->rowCount(); ++i) {
                 if (!ui->tableWidget_list->isRowHidden(i)) {
                     auto *noteModel = ui->tableWidget_list->item(i, 0)->data(Qt::UserRole).value<NoteModel *>();
@@ -237,6 +237,9 @@ void MainWindow::on_action_deleteNote_triggered()
         QFile::remove(Global::openNoteModel->contentModel->getFilePath());
     }
     Global::configModel->setOpenNotesUuid("");
+    Global::noteModelList.removeOne(Global::openNoteModel);
+    Global::initCategoriesModelList();
+    Global::initTagsModelList();
 
     mSetTableWidgetList();
     mSetOpenedNoteModel();
@@ -260,11 +263,6 @@ void MainWindow::onChangeCategories()
 void MainWindow::on_pushButton_folder_clicked()
 {
     mSelectedSidebarButtonByName(1);
-
-    if (ui->listWidget_categories->count() > 0) {
-        return;
-    }
-
     mSetCategoriesListWidgetList();
 }
 
@@ -507,10 +505,6 @@ void MainWindow::onChangeTags()
 void MainWindow::on_pushButton_tags_clicked()
 {
     mSelectedSidebarButtonByName(2);
-
-    if (ui->listWidget_tags->count() > 0) {
-        return;
-    }
 
     mSetTagsListWidgetList();
 }
