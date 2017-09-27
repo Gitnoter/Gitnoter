@@ -7,6 +7,12 @@ NoteModel::NoteModel()
     this->clear();
 }
 
+NoteModel::NoteModel(CategoriesModel *categoriesModel)
+{
+    this->clear();
+    this->categoriesModel = categoriesModel;
+}
+
 NoteModel::NoteModel(QString noteText, QString filePath)
 {
     QTextStream in(&noteText);
@@ -112,4 +118,9 @@ void NoteModel::clear()
     this->contentModel = new ContentModel();
     this->tagsModelList = new QList<TagsModel *>();
     this->categoriesModel = new CategoriesModel();
+}
+
+void NoteModel::writerLocal()
+{
+    Tools::writerFile(contentModel->getFilePath(), getNote());
 }

@@ -65,7 +65,7 @@ void Global::initCategoriesModelList()
     categoriesModelList = map.values();
 
     if (stringList.length() == 0) {
-        addCategoriesModelList();
+        saveCategoriesModelList();
     }
 }
 
@@ -86,11 +86,7 @@ bool Global::addCategoriesModelList(QList<CategoriesModel *> list)
     }
 
     if (isWriterFile || list.length() == 0) {
-        QString str = "";
-        for (auto &&item : categoriesModelList) {
-            str += item->getName() + "\n";
-        }
-        Tools::writerFile(repoCategoriesListPath, str.trimmed());
+        saveCategoriesModelList();
     }
 
     return isWriterFile;
@@ -138,7 +134,7 @@ void Global::initTagsModelList()
     tagsModelList = map.values();
 
     if (stringList.length() == 0) {
-        addTagsModelList();
+        saveTagsModelList();
     }
 }
 
@@ -159,11 +155,7 @@ bool Global::addTagsModelList(QList<TagsModel *> list)
     }
 
     if (isWriterFile || list.length() == 0) {
-        QString str = "";
-        for (auto &&item : tagsModelList) {
-            str += item->getName() + "\n";
-        }
-        Tools::writerFile(repoTagsListPath, str.trimmed());
+        saveTagsModelList();
     }
 
     return isWriterFile;
@@ -222,4 +214,49 @@ bool Global::hasInTagsModelList(const QString &name)
     }
 
     return false;
+}
+
+void Global::saveCategoriesModelList()
+{
+    QString str = "";
+    for (auto &&item : categoriesModelList) {
+        str += item->getName() + "\n";
+    }
+    Tools::writerFile(repoCategoriesListPath, str.trimmed());
+}
+
+void Global::saveTagsModelList()
+{
+    QString str = "";
+    for (auto &&item : tagsModelList) {
+        str += item->getName() + "\n";
+    }
+    Tools::writerFile(repoTagsListPath, str.trimmed());
+}
+
+void Global::renameTagsModelListInName(const QString oldName, const QString newName)
+{
+    for (auto &&item : noteModelList) {
+        for (auto &&tagsModel : *item->tagsModelList) {
+            if (tagsModel->getName() == oldName) {
+                tagsModel->setName(newName);
+                item->writerLocal();
+                break;
+            }
+        }
+    }
+
+    saveTagsModelList();
+}
+
+void Global::renameCategoriesModelListInName(const QString oldName, const QString newName)
+{
+    for (auto &&item : noteModelList) {
+        if (item->categoriesModel->getName() == oldName) {
+            item->categoriesModel->setName(newName);
+            item->writerLocal();
+        }
+    }
+
+    saveCategoriesModelList();
 }

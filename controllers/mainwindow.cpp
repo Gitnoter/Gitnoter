@@ -213,8 +213,10 @@ void MainWindow::on_action_saveNote_triggered()
 
 void MainWindow::on_action_newNote_triggered()
 {
-    Global::setOpenNoteModel(new NoteModel());
-
+    NoteModel *noteModel = new NoteModel(new CategoriesModel(Global::configModel->getCategoriesName()));
+    Global::setOpenNoteModel(noteModel);
+    mSetOpenedNoteModel();
+    mSetEditorModified(true);
     on_action_saveNote_triggered();
 }
 
@@ -359,7 +361,10 @@ void MainWindow::onLineEditNameCategoriesEditingFinished()
     QString name = lineEdit_name->displayText();
 
     if (!name.isEmpty() && !Global::hasInCategoriesModelList(name)) {
-        categoriesModel->setName(lineEdit_name->displayText());
+        if (categoriesModel->getName() != name) {
+            Global::renameCategoriesModelListInName(categoriesModel->getName(), name);
+            categoriesModel->setName(name);
+        }
     }
 
     lineEdit_name->setText(categoriesModel->getName());
@@ -416,7 +421,7 @@ void MainWindow::on_pushButton_removeCategories_clicked()
         auto categoriesModel = ui->listWidget_categories->item(index)->data(Qt::UserRole).value<CategoriesModel *>();
         if (categoriesModel->getCount() == 0) {
             Global::categoriesModelList.removeOne(categoriesModel);
-            Global::addCategoriesModelList();
+            Global::saveCategoriesModelList();
             mSetCategoriesListWidgetList();
         }
         else {
@@ -655,7 +660,7 @@ void MainWindow::on_pushButton_removeTags_clicked()
         auto tagsModel = ui->listWidget_tags->item(index)->data(Qt::UserRole).value<TagsModel *>();
         if (tagsModel->getCount() == 0) {
             Global::tagsModelList.removeOne(tagsModel);
-            Global::addTagsModelList();
+            Global::saveTagsModelList();
             mSetTagsListWidgetList();
         }
         else {
@@ -684,7 +689,10 @@ void MainWindow::onLineEditNameTagsEditingFinished()
     QString name = lineEdit_name->displayText();
 
     if (!name.isEmpty() && !Global::hasInTagsModelList(name)) {
-        tagsModel->setName(lineEdit_name->displayText());
+        if (tagsModel->getName() != name) {
+            Global::renameTagsModelListInName(tagsModel->getName(), name);
+            tagsModel->setName(name);
+        }
     }
 
     lineEdit_name->setText(tagsModel->getName());

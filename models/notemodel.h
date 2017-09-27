@@ -19,6 +19,8 @@ public:
 
     NoteModel();
 
+    NoteModel(CategoriesModel *categoriesModel);
+
     NoteModel(QString noteText, QString filePath = "");
 
     NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
@@ -29,6 +31,8 @@ public:
     QString getDisplayNote() const;
 
     QString getTagsString() const;
+
+    void writerLocal();
 
     void clear();
 

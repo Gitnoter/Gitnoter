@@ -48,17 +48,25 @@ public:
 
     static void initCategoriesModelList();
 
-    static bool addCategoriesModelList(QList<CategoriesModel *> list = {});
+    static bool addCategoriesModelList(QList<CategoriesModel *>);
 
     static bool hasInCategoriesModelList(const QString &name);
+
+    static void saveCategoriesModelList();
+
+    static void renameCategoriesModelListInName(const QString oldName, const QString newName);
 
     /// static QList<TagsModel *> tagsModelList;
 
     static void initTagsModelList();
 
-    static bool addTagsModelList(QList<TagsModel *> list = {});
+    static bool addTagsModelList(QList<TagsModel *> list);
 
     static bool hasInTagsModelList(const QString &name);
+
+    static void saveTagsModelList();
+
+    static void renameTagsModelListInName(const QString oldName, const QString newName);
 
     /// static NoteModel *openNoteModel;
 
