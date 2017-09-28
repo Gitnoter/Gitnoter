@@ -65,10 +65,15 @@ public:
 
     void setIsSelectedClasses(int isSelectedClasses);
 
+    const QString &getRepoEmail() const;
+
+    void setRepoEmail(const QString &repoEmail);
+
 private:
     QString mVersion;
     QString mRepoDir;
     QString mRepoUrl;
+    QString mRepoEmail;
     QString mRepoUsername;
     QString mRepoPassword;
     QString mOpenNotesUuid;

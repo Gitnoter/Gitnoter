@@ -1,5 +1,7 @@
 #include "configmodel.h"
 #include "json.h"
+#include "qtinyaes/qtinyaes.h"
+#include "globals.h"
 
 
 ConfigModel::ConfigModel(const QString &jsonString)
@@ -20,14 +22,15 @@ ConfigModel::ConfigModel(QString version, QString repoDir, QString repoUrl, QStr
 
 QString ConfigModel::serialize()
 {
+    QTinyAes aes(QTinyAes::CBC, Global::aesKey, Global::aesIv);
     QtJson::JsonObject contributor;
-    contributor["version"] = mVersion;
 
     contributor["version"] = mVersion;
     contributor["repoDir"] = mRepoDir;
     contributor["repoUrl"] = mRepoUrl;
+    contributor["repoEmail"] = mRepoEmail;
     contributor["repoUsername"] = mRepoUsername;
-    contributor["repoPassword"] = mRepoPassword;
+    contributor["repoPassword"] = aes.encrypt(mRepoPassword.toLocal8Bit()).toBase64();
     contributor["openNotesUuid"] = mOpenNotesUuid;
     contributor["sidebarSortValue"] = mSidebarSortValue;
     contributor["sidebarSortKey"] = mSidebarSortKey;
@@ -41,13 +44,15 @@ QString ConfigModel::serialize()
 
 void ConfigModel::unserialize(const QString &jsonString)
 {
+    QTinyAes aes(QTinyAes::CBC, Global::aesKey, Global::aesIv);
     QtJson::JsonObject result = QtJson::parse(jsonString).toMap();
 
     mVersion = result["version"].toString();
     mRepoDir = result["repoDir"].toString();
     mRepoUrl = result["repoUrl"].toString();
+    mRepoEmail = result["repoEmail"].toString();
     mRepoUsername = result["repoUsername"].toString();
-    mRepoPassword = result["repoPassword"].toString();
+    mRepoPassword = aes.decrypt(QByteArray::fromBase64(result["repoPassword"].toByteArray()));
     mOpenNotesUuid = result["openNotesUuid"].toString();
     mSidebarSortValue = result["sidebarSortValue"].toString();
     mSidebarSortKey = result["sidebarSortKey"].toInt();
@@ -177,4 +182,14 @@ int ConfigModel::getIsSelectedClasses() const
 void ConfigModel::setIsSelectedClasses(int isSelectedClasses)
 {
     ConfigModel::mIsSelectedClasses = isSelectedClasses;
+}
+
+const QString &ConfigModel::getRepoEmail() const
+{
+    return mRepoEmail;
+}
+
+void ConfigModel::setRepoEmail(const QString &repoEmail)
+{
+    ConfigModel::mRepoEmail = repoEmail;
 }

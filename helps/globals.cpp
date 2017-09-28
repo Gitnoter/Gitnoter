@@ -18,6 +18,9 @@ const QString Global::repoDataPath = QDir(repoPath).filePath("data");
 const QString Global::repoCategoriesListPath = QDir(repoDataPath).filePath("categories.list");
 const QString Global::repoTagsListPath = QDir(repoDataPath).filePath("tags.list");
 
+const QByteArray Global::aesKey = "Q5tO3jUB0oe7FmWq";
+const QByteArray Global::aesIv  = "TNFNhE3u32x0wU4XkkduFwZz3BrWlTnp";
+
 QList<NoteModel *> Global::noteModelList = {};
 QList<CategoriesModel *> Global::categoriesModelList = {};
 QList<TagsModel *> Global::tagsModelList = {};

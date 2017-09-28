@@ -28,6 +28,9 @@ public:
     static const QString repoCategoriesListPath;
     static const QString repoTagsListPath;
 
+    static const QByteArray aesKey;
+    static const QByteArray aesIv;
+
     static QList<NoteModel *> noteModelList;
     static QList<CategoriesModel *> categoriesModelList;
     static QList<TagsModel *> tagsModelList;
