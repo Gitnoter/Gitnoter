@@ -8,16 +8,13 @@ class ConfigModel : public QObject
 Q_OBJECT
 
 public:
+    ConfigModel();
+
     ConfigModel(const QString &jsonString);
 
-    ConfigModel(QString version = "", QString repoDir = "", QString repoUrl = "",
-                QString repoUsername = "", QString repoPassword = "", QString openNotesUuid = "");
-
-    QString serialize();
+    QString serialize(const QString &path = "");
 
     void unserialize(const QString &jsonString);
-
-    void setVersion(const QString &version);
 
     void setRepoDir(const QString &repoDir);
 

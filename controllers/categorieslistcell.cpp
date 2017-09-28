@@ -7,11 +7,13 @@ CategoriesListCell::CategoriesListCell(QWidget *parent) :
     ui(new Ui::CategoriesListCell)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);   // 背景透明
 }
 
 CategoriesListCell::CategoriesListCell(CategoriesModel *categoriesModel) : ui(new Ui::CategoriesListCell)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);   // 背景透明
 
     m_categoriesModel = categoriesModel;
     ui->lineEdit_name->setText(m_categoriesModel->getName());

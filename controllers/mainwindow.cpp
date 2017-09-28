@@ -28,10 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tableWidget_list->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
             this, &MainWindow::onHeaderViewSortIndicatorChanged);
 
+    Global::initRepoLocalDir();
     Global::initNoteModelList();
     Global::initCategoriesModelList();
     Global::initTagsModelList();
-    Global::initConfigModel();
 
     mSetTableWidgetList();
     mSetOpenedNoteModel(true);

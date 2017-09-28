@@ -160,3 +160,13 @@ int Tools::rowShowCount(QListWidget *listWidget)
     }
     return listRowCount - rowShowCount;
 }
+
+bool Tools::createMkDir(const QString &path)
+{
+    QDir dir(path);
+    if(!dir.exists()) {
+        return QDir().mkpath(path); //创建多级目录
+    }
+
+    return false;
+}

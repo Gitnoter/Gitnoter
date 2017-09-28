@@ -23,6 +23,8 @@ public:
 
     static QStringList textToStringList(QString text);
 
+    static bool createMkDir(const QString &path);
+
     static int timestampFromDateTime(QString dateTime);
 
     static QString timestampToDateTime(int timestamp);

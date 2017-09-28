@@ -2,6 +2,7 @@
 #include "json.h"
 #include "qtinyaes/qtinyaes.h"
 #include "globals.h"
+#include "tools.h"
 
 
 ConfigModel::ConfigModel(const QString &jsonString)
@@ -9,18 +10,24 @@ ConfigModel::ConfigModel(const QString &jsonString)
     unserialize(jsonString);
 }
 
-ConfigModel::ConfigModel(QString version, QString repoDir, QString repoUrl, QString repoUsername,
-                         QString repoPassword, QString openNotesUuid)
+ConfigModel::ConfigModel()
 {
-    mVersion = version;
-    mRepoDir = repoDir;
-    mRepoUrl = repoUrl;
-    mRepoUsername = repoUsername;
-    mRepoPassword = repoPassword;
-    mOpenNotesUuid = openNotesUuid;
+    mVersion = Global::version;
+    mRepoDir = "";
+    mRepoUrl = "";
+    mRepoEmail = "";
+    mRepoUsername = "";
+    mRepoPassword = "";
+    mOpenNotesUuid = "";
+    mSidebarSortValue = "";
+    mSidebarSortKey = 0;
+    mIsSelectedClasses = 0;
+    mIsLocalRepo = 1;
+    mCategoriesName = "";
+    mTagsName = "";
 }
 
-QString ConfigModel::serialize()
+QString ConfigModel::serialize(const QString &path)
 {
     QTinyAes aes(QTinyAes::CBC, Global::aesKey, Global::aesIv);
     QtJson::JsonObject contributor;
@@ -39,7 +46,12 @@ QString ConfigModel::serialize()
     contributor["categoriesName"] = mCategoriesName;
     contributor["tagsName"] = mTagsName;
 
-    return QString(QtJson::serialize(contributor).data());
+    QString jsonString = QString(QtJson::serialize(contributor).data());
+    if (!path.isEmpty()) {
+        Tools::writerFile(path, jsonString);
+    }
+
+    return jsonString;
 }
 
 void ConfigModel::unserialize(const QString &jsonString)
@@ -60,11 +72,6 @@ void ConfigModel::unserialize(const QString &jsonString)
     mIsLocalRepo = result["isLocalRepo"].toInt();
     mCategoriesName = result["categoriesName"].toString();
     mTagsName = result["tagsName"].toString();
-}
-
-void ConfigModel::setVersion(const QString &version)
-{
-    ConfigModel::mVersion = version;
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)

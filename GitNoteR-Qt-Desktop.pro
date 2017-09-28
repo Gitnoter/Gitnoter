@@ -39,6 +39,7 @@ SOURCES += \
     controllers/categorieslistcell.cpp  \
     controllers/tagslistcell.cpp  \
     controllers/tagswidget.cpp  \
+    controllers/loginwidget.cpp  \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -51,7 +52,7 @@ SOURCES += \
     helps/gitmanager.cpp \
     helps/json.cpp \
     helps/qtinyaes/aes.c \
-    helps/qtinyaes/qtinyaes.cpp \
+    helps/qtinyaes/qtinyaes.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -59,6 +60,7 @@ HEADERS += \
     controllers/categorieslistcell.h  \
     controllers/tagslistcell.h  \
     controllers/tagswidget.h  \
+    controllers/loginwidget.h  \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -78,7 +80,8 @@ FORMS += \
     views/categorieswidget.ui \
     views/categorieslistcell.ui \
     views/tagslistcell.ui \
-    views/tagswidget.ui
+    views/tagswidget.ui \
+    views/loginwidget.ui
 
 RESOURCES += \
     resources/resources.qrc

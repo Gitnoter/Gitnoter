@@ -9,17 +9,17 @@ const QString Global::tagSplit = ", ";
 const QString Global::appDataLocation = QDir(
         QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(
         packageName);
-const QString Global::appDataPath = QDir(appDataLocation).filePath("data");
-const QString Global::appConfigPath = QDir(appDataPath).filePath("appconfig");
-const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git");
-const QString Global::repoNotePath = QDir(repoPath).filePath("notes");
-const QString Global::repoResourcePath = QDir(repoPath).filePath("resources");
-const QString Global::repoDataPath = QDir(repoPath).filePath("data");
+const QString Global::appDataPath = QDir(appDataLocation).filePath("data/");
+const QString Global::appConfigPath = QDir(appDataPath).filePath("appconfig.json");
+const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git/");
+const QString Global::repoNotePath = QDir(repoPath).filePath("notes/");
+const QString Global::repoResourcePath = QDir(repoPath).filePath("resources/");
+const QString Global::repoDataPath = QDir(repoPath).filePath("data/");
 const QString Global::repoCategoriesListPath = QDir(repoDataPath).filePath("categories.list");
 const QString Global::repoTagsListPath = QDir(repoDataPath).filePath("tags.list");
 
 const QByteArray Global::aesKey = "Q5tO3jUB0oe7FmWq";
-const QByteArray Global::aesIv  = "TNFNhE3u32x0wU4XkkduFwZz3BrWlTnp";
+const QByteArray Global::aesIv  = "RNNSR8XNbMTuOSGd";
 
 QList<NoteModel *> Global::noteModelList = {};
 QList<CategoriesModel *> Global::categoriesModelList = {};
@@ -177,13 +177,14 @@ NoteModel *Global::getNoteModelByUuid(const QString &uuid)
 
 void Global::initConfigModel()
 {
-    configModel->unserialize(Tools::readerFile(appConfigPath));
-
-    configModel->setOpenNotesUuid("c6c71bef-3dbf-4fd4-ab3c-2a111f58fcde5");
-    configModel->setSidebarSortKey(1);
-    configModel->setSidebarSortValue("DESC");
-    configModel->setCategoriesName("test");
-    configModel->setIsSelectedClasses(1);
+    Tools::createMkDir(appDataPath);
+    QString jsonString = Tools::readerFile(appConfigPath);
+    if (jsonString.isEmpty()) {
+        configModel->serialize(appConfigPath);
+    }
+    else {
+        configModel->unserialize(jsonString);
+    }
 }
 
 void Global::setConfigModel()
@@ -262,4 +263,11 @@ void Global::renameCategoriesModelListInName(const QString oldName, const QStrin
     }
 
     saveCategoriesModelList();
+}
+
+void Global::initRepoLocalDir()
+{
+    Tools::createMkDir(repoNotePath);
+    Tools::createMkDir(repoResourcePath);
+    Tools::createMkDir(repoDataPath);
 }

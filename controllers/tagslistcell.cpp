@@ -7,11 +7,13 @@ TagsListCell::TagsListCell(QWidget *parent) :
     ui(new Ui::TagsListCell)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);   // 背景透明
 }
 
 TagsListCell::TagsListCell(TagsModel *tagsModel) : ui(new Ui::TagsListCell)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);   // 背景透明
 
     mtagsModel = tagsModel;
     ui->lineEdit_nameTags->setText(mtagsModel->getName());

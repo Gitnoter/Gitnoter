@@ -10,5 +10,10 @@
         <file>images/select.jpg</file>
         <file>images/selected.jpg</file>
         <file>database/gitnoter.sql</file>
+        <file>images/icon-close-down.png</file>
+        <file>images/icon-close-up.png</file>
+        <file>images/icon-enter-down.png</file>
+        <file>images/icon-enter-up.png</file>
+        <file>images/icon-logo.png</file>
     </qresource>
 </RCC>

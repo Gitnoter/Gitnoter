@@ -81,6 +81,10 @@ public:
 
     static void setConfigModel();
 
+    ///
+
+    static void initRepoLocalDir();
+
 };
 
 #endif // GLOBALS_H

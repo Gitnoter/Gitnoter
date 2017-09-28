@@ -19,7 +19,8 @@ qt5_wrap_ui(UIS_HDRS
         views/categorieswidget.ui
         views/categorieslistcell.ui
         views/tagslistcell.ui
-        views/tagswidget.ui)
+        views/tagswidget.ui
+        views/loginwidget.ui)
 
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}
@@ -31,6 +32,7 @@ add_executable(${PROJECT_NAME}
         controllers/categorieslistcell.h    controllers/categorieslistcell.cpp
         controllers/tagslistcell.h          controllers/tagslistcell.cpp
         controllers/tagswidget.h            controllers/tagswidget.cpp
+        controllers/loginwidget.h           controllers/loginwidget.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/contentmodel.h       models/contentmodel.cpp
