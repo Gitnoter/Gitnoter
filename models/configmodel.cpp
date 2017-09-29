@@ -20,9 +20,9 @@ ConfigModel::ConfigModel()
     mRepoPassword = "";
     mOpenNotesUuid = "";
     mSidebarSortValue = "";
-    mSidebarSortKey = 0;
+    mSidebarSortKey = -1;
     mIsSelectedClasses = 0;
-    mIsLocalRepo = 1;
+    mLocalRepoStatus = 0;
     mCategoriesName = "";
     mTagsName = "";
 }
@@ -37,16 +37,17 @@ QString ConfigModel::serialize(const QString &path)
     contributor["repoUrl"] = mRepoUrl;
     contributor["repoEmail"] = mRepoEmail;
     contributor["repoUsername"] = mRepoUsername;
-    contributor["repoPassword"] = aes.encrypt(mRepoPassword.toLocal8Bit()).toBase64();
+    contributor["repoPassword"] = mRepoPassword;
     contributor["openNotesUuid"] = mOpenNotesUuid;
     contributor["sidebarSortValue"] = mSidebarSortValue;
     contributor["sidebarSortKey"] = mSidebarSortKey;
     contributor["isSelectedClasses"] = mIsSelectedClasses;
-    contributor["isLocalRepo"] = mIsLocalRepo;
+    contributor["localRepoStatus"] = mLocalRepoStatus;
     contributor["categoriesName"] = mCategoriesName;
     contributor["tagsName"] = mTagsName;
 
-    QString jsonString = QString(QtJson::serialize(contributor).data());
+    QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
+
     if (!path.isEmpty()) {
         Tools::writerFile(path, jsonString);
     }
@@ -57,19 +58,19 @@ QString ConfigModel::serialize(const QString &path)
 void ConfigModel::unserialize(const QString &jsonString)
 {
     QTinyAes aes(QTinyAes::CBC, Global::aesKey, Global::aesIv);
-    QtJson::JsonObject result = QtJson::parse(jsonString).toMap();
+    QtJson::JsonObject result = QtJson::parse(aes.decrypt(QByteArray::fromBase64(jsonString.toUtf8()))).toMap();
 
     mVersion = result["version"].toString();
     mRepoDir = result["repoDir"].toString();
     mRepoUrl = result["repoUrl"].toString();
     mRepoEmail = result["repoEmail"].toString();
     mRepoUsername = result["repoUsername"].toString();
-    mRepoPassword = aes.decrypt(QByteArray::fromBase64(result["repoPassword"].toByteArray()));
+    mRepoPassword = result["repoPassword"].toString();
     mOpenNotesUuid = result["openNotesUuid"].toString();
     mSidebarSortValue = result["sidebarSortValue"].toString();
     mSidebarSortKey = result["sidebarSortKey"].toInt();
     mIsSelectedClasses = result["isSelectedClasses"].toInt();
-    mIsLocalRepo = result["isLocalRepo"].toInt();
+    mLocalRepoStatus = result["localRepoStatus"].toInt();
     mCategoriesName = result["categoriesName"].toString();
     mTagsName = result["tagsName"].toString();
 }
@@ -77,26 +78,31 @@ void ConfigModel::unserialize(const QString &jsonString)
 void ConfigModel::setRepoDir(const QString &repoDir)
 {
     ConfigModel::mRepoDir = repoDir;
+    serialize(Global::appConfigPath);
 }
 
 void ConfigModel::setRepoUrl(const QString &repoUrl)
 {
     ConfigModel::mRepoUrl = repoUrl;
+    serialize(Global::appConfigPath);
 }
 
 void ConfigModel::setRepoUsername(const QString &repoUsername)
 {
     ConfigModel::mRepoUsername = repoUsername;
+    serialize(Global::appConfigPath);
 }
 
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
     ConfigModel::mRepoPassword = repoPassword;
+    serialize(Global::appConfigPath);
 }
 
 void ConfigModel::setOpenNotesUuid(const QString &openNotesUuid)
 {
     ConfigModel::mOpenNotesUuid = openNotesUuid;
+    serialize(Global::appConfigPath);
 }
 
 const QString &ConfigModel::getVersion() const
@@ -137,6 +143,7 @@ int ConfigModel::getSidebarSortKey() const
 void ConfigModel::setSidebarSortKey(int sidebarSortKey)
 {
     ConfigModel::mSidebarSortKey = sidebarSortKey;
+    serialize(Global::appConfigPath);
 }
 
 const QString &ConfigModel::getSidebarSortValue() const
@@ -147,6 +154,7 @@ const QString &ConfigModel::getSidebarSortValue() const
 void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
 {
     ConfigModel::mSidebarSortValue = sidebarSortValue;
+    serialize(Global::appConfigPath);
 }
 
 QString ConfigModel::getCategoriesName() const
@@ -158,6 +166,7 @@ void ConfigModel::setCategoriesName(const QString &categoriesName)
 {
     ConfigModel::mIsSelectedClasses = 1;
     ConfigModel::mCategoriesName = categoriesName;
+    serialize(Global::appConfigPath);
 }
 
 QString ConfigModel::getTagsName() const
@@ -169,16 +178,18 @@ void ConfigModel::setTagsName(const QString &tagsName)
 {
     ConfigModel::mIsSelectedClasses = 2;
     ConfigModel::mTagsName = tagsName;
+    serialize(Global::appConfigPath);
 }
 
-int ConfigModel::getIsLocalRepo() const
+int ConfigModel::getLocalRepoStatus() const
 {
-    return mIsLocalRepo;
+    return mLocalRepoStatus;
 }
 
-void ConfigModel::setIsLocalRepo(int isLocalRepo)
+void ConfigModel::setLocalRepoStatus(int localRepoStatus)
 {
-    ConfigModel::mIsLocalRepo = isLocalRepo;
+    ConfigModel::mLocalRepoStatus = localRepoStatus;
+    serialize(Global::appConfigPath);
 }
 
 int ConfigModel::getIsSelectedClasses() const
@@ -189,6 +200,7 @@ int ConfigModel::getIsSelectedClasses() const
 void ConfigModel::setIsSelectedClasses(int isSelectedClasses)
 {
     ConfigModel::mIsSelectedClasses = isSelectedClasses;
+    serialize(Global::appConfigPath);
 }
 
 const QString &ConfigModel::getRepoEmail() const
@@ -199,4 +211,5 @@ const QString &ConfigModel::getRepoEmail() const
 void ConfigModel::setRepoEmail(const QString &repoEmail)
 {
     ConfigModel::mRepoEmail = repoEmail;
+    serialize(Global::appConfigPath);
 }

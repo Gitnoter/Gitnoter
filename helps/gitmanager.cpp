@@ -72,7 +72,7 @@ int GitManager::clone(const char *url, const char *path)
     opts.fetch_opts.callbacks.credentials = git_cred_userpass;
     opts.fetch_opts.callbacks.payload = &mUserPass;
 
-    return git_clone(&mRepo, url, path, &opts);;
+    return git_clone(&mRepo, url, path, &opts);
 }
 
 int GitManager::createInitialCommit()

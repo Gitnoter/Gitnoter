@@ -82,7 +82,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>201</y>
+        <y>160</y>
         <width>218</width>
         <height>43</height>
        </rect>
@@ -113,10 +113,11 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
            <pointsize>16</pointsize>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit#lineEdit_username{
-	background-color:rgba(255, 255, 255, 0);
-}</string>
+          <string notr="true">QLineEdit#lineEdit_username{background-color:rgba(255, 255, 255, 0);}</string>
          </property>
          <property name="frame">
           <bool>false</bool>
@@ -188,12 +189,12 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>160</y>
+        <y>201</y>
         <width>218</width>
         <height>43</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -219,10 +220,11 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
            <pointsize>16</pointsize>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit#lineEdit_repoUrl{
-	background-color:rgba(255, 255, 255, 0);
-}</string>
+          <string notr="true">QLineEdit#lineEdit_repoUrl{background-color:rgba(255, 255, 255, 0);}</string>
          </property>
          <property name="frame">
           <bool>false</bool>
@@ -291,6 +293,9 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
            <pointsize>16</pointsize>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QLineEdit#lineEdit_password{
 	background-color:rgba(255, 255, 255, 0);
@@ -321,6 +326,9 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
            <height>20</height>
           </size>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton#pushButton_enter{border-image: url(:/images/icon-enter-down.png);}</string>
          </property>
@@ -346,16 +354,23 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
       <property name="styleSheet">
        <string notr="true">#pushButton_initLocal{
 	color:#9B9B9B;
+border: none;
 }</string>
       </property>
       <property name="text">
        <string>本地使用</string>
       </property>
+      <property name="autoExclusive">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
       <property name="flat">
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="logo">
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -395,7 +410,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
      <zorder>layoutWidget</zorder>
      <zorder>frame_6</zorder>
      <zorder>pushButton_initLocal</zorder>
-     <zorder>label</zorder>
+     <zorder>logo</zorder>
     </widget>
    </item>
   </layout>

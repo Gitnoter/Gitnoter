@@ -187,11 +187,6 @@ void Global::initConfigModel()
     }
 }
 
-void Global::setConfigModel()
-{
-    Tools::writerFile(appConfigPath, configModel->serialize());
-}
-
 void Global::setOpenNoteModel(NoteModel *noteModel)
 {
     openNoteModel = noteModel;

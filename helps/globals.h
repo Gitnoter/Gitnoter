@@ -79,8 +79,6 @@ public:
 
     static void initConfigModel();
 
-    static void setConfigModel();
-
     ///
 
     static void initRepoLocalDir();

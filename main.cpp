@@ -10,13 +10,13 @@ int main(int argc, char *argv[])
 
     Global::initConfigModel();
 
-    if (Global::configModel->getIsLocalRepo()) {
-        LoginWidget *l = new LoginWidget;
-        l->show();
-    }
-    else {
+    if (Global::configModel->getLocalRepoStatus()) {
         MainWindow *w = new MainWindow;
         w->show();
+    }
+    else {
+        LoginWidget *l = new LoginWidget;
+        l->show();
     }
 
     return a.exec();

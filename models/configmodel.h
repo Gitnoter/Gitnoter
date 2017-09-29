@@ -54,9 +54,9 @@ public:
 
     void setTagsName(const QString &tagsName);
 
-    int getIsLocalRepo() const;
+    int getLocalRepoStatus() const;
 
-    void setIsLocalRepo(int isLocalRepo);
+    void setLocalRepoStatus(int localRepoStatus);
 
     int getIsSelectedClasses() const;
 
@@ -74,10 +74,13 @@ private:
     QString mRepoUsername;
     QString mRepoPassword;
     QString mOpenNotesUuid;
-    QString mSidebarSortValue;
+    // -1: 没有选择没任何排序, 0: 选择名称排序, 1: 选择时间排序
     int mSidebarSortKey;
+    QString mSidebarSortValue;
+    // 0: 还没有初始化仓库, 1: 初始化远程仓库, 2: 初始化本地仓库
+    int mLocalRepoStatus;
+    // 0: 没有选择任何类型, 1: 选择笔记本, 2: 选择标签
     int mIsSelectedClasses;
-    int mIsLocalRepo;
     QString mCategoriesName;
     QString mTagsName;
 };

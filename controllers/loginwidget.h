@@ -26,10 +26,14 @@ private slots:
 
     void on_pushButton_enter_clicked();
 
+    void on_pushButton_initLocal_clicked();
+
 private:
     Ui::LoginWidget *ui;
 
     bool changeEnterButtonStatus();
+
+    void openMainWindow();
 };
 
 #endif // LOGINWIDGET_H
