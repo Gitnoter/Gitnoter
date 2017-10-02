@@ -6,6 +6,7 @@
 #include "notemodel.h"
 #include "configmodel.h"
 #include "tagswidget.h"
+#include "settingdialog.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -42,6 +43,10 @@ private slots:
     void on_action_newNote_triggered();
 
     void on_action_deleteNote_triggered();
+
+    void openAboutDialog();
+
+    void openSettingDialog();
 
     // 左侧菜单栏
     void on_pushButton_notes_clicked();
@@ -129,6 +134,7 @@ private:
     Ui::MainWindow *ui;
     CategoriesWidget *categoriesWidget;
     TagsWidget *tagWidget;
+    SettingDialog *settingDialog;
 
     Document m_content;
 
@@ -161,6 +167,8 @@ private:
     void setTagsListEnabled(bool b);
 
     void mSelectedSidebarButtonByName(int i);
+
+    void mInitAppMenu();
 };
 
 #endif // MAINWINDOW_H
