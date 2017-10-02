@@ -40,7 +40,8 @@ SOURCES += \
     controllers/categorieslistcell.cpp  \
     controllers/tagslistcell.cpp  \
     controllers/tagswidget.cpp  \
-    controllers/loginwidget.cpp  \
+    controllers/loginwidget.cpp \
+    controllers/settingdialog.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -61,7 +62,8 @@ HEADERS += \
     controllers/categorieslistcell.h  \
     controllers/tagslistcell.h  \
     controllers/tagswidget.h  \
-    controllers/loginwidget.h  \
+    controllers/loginwidget.h \
+    controllers/settingdialog.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -82,7 +84,8 @@ FORMS += \
     views/categorieslistcell.ui \
     views/tagslistcell.ui \
     views/tagswidget.ui \
-    views/loginwidget.ui
+    views/loginwidget.ui \
+    views/settingdialog.ui
 
 RESOURCES += \
     resources/resources.qrc
