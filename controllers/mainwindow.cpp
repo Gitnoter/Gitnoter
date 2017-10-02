@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "categorieslistcell.h"
 #include "tagslistcell.h"
+#include "settingdialog.h"
 
 #include "previewpage.h"
 #include "tools.h"
@@ -16,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    mInitAppMenu();
+    settingDialog = new SettingDialog(this);
 
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
@@ -766,5 +769,32 @@ void MainWindow::mSelectedSidebarButtonByName(int i)
         menuPushButtonList[j]->setChecked(j == i);
     }
     ui->stackedWidget->setCurrentIndex(i);
+}
+
+void MainWindow::mInitAppMenu()
+{
+    QMenu *aboutMenu = new QMenu(ui->menuBar);
+    QAction *aboutAction = aboutMenu->addAction(tr("&关于 Gitnoter"));
+    aboutAction->setMenuRole(QAction::AboutRole);
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(openAboutDialog()));
+    menuBar()->addMenu(aboutMenu);
+
+    QMenu *preferencesMenu = new QMenu(ui->menuBar);
+    QAction *preferencesAction = preferencesMenu->addAction(tr("&Preferences..."));
+    preferencesAction->setMenuRole(QAction::PreferencesRole);
+    connect(preferencesAction, SIGNAL(triggered()), this, SLOT(openSettingDialog()));
+    menuBar()->addMenu(preferencesMenu);
+}
+
+void MainWindow::openAboutDialog()
+{
+
+}
+
+void MainWindow::openSettingDialog()
+{
+    if (settingDialog->isHidden()) {
+        settingDialog->open();
+    }
 }
 
