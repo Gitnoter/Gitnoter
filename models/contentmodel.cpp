@@ -31,24 +31,24 @@ void ContentModel::setTitle(const QString title)
 
 void ContentModel::setCreateDate(const QString createDate)
 {
-    mCreateDate = createDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+    mCreateDate = createDate.isEmpty() ? (int) QDateTime::currentMSecsSinceEpoch() / 1000
                                        : Tools::timestampFromDateTime(createDate);
 }
 
 void ContentModel::setCreateDate(int createDate)
 {
-    mCreateDate = createDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : createDate;
+    mCreateDate = createDate == 0 ? (int) QDateTime::currentMSecsSinceEpoch() / 1000 : createDate;
 }
 
 void ContentModel::setUpdateDate(const QString updateDate)
 {
-    mUpdateDate = updateDate.isEmpty() ? (int) QDateTime::currentSecsSinceEpoch()
+    mUpdateDate = updateDate.isEmpty() ? (int) QDateTime::currentMSecsSinceEpoch() / 1000
                                        : Tools::timestampFromDateTime(updateDate);
 }
 
 void ContentModel::setUpdateDate(int updateDate)
 {
-    mUpdateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
+    mUpdateDate = updateDate == 0 ? (int) QDateTime::currentMSecsSinceEpoch() / 1000 : updateDate;
 }
 
 void ContentModel::setBody(const QString body)

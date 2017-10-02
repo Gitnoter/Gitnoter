@@ -95,7 +95,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QLineEdit" name="lineEdit_username">
+        <widget class="QLineEdit" name="lineEdit_repoUrl">
          <property name="minimumSize">
           <size>
            <width>216</width>
@@ -123,7 +123,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
           <bool>false</bool>
          </property>
          <property name="placeholderText">
-          <string>输入账号</string>
+          <string>输入远程仓库地址</string>
          </property>
         </widget>
        </item>
@@ -202,7 +202,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QLineEdit" name="lineEdit_repoUrl">
+        <widget class="QLineEdit" name="lineEdit_username">
          <property name="minimumSize">
           <size>
            <width>216</width>
@@ -230,7 +230,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
           <bool>false</bool>
          </property>
          <property name="placeholderText">
-          <string>输入远程仓库地址</string>
+          <string>输入账号</string>
          </property>
          <property name="cursorMoveStyle">
           <enum>Qt::LogicalMoveStyle</enum>

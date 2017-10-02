@@ -28,9 +28,6 @@
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
-  <property name="tabletTracking">
-   <bool>false</bool>
-  </property>
   <property name="acceptDrops">
    <bool>false</bool>
   </property>
@@ -47,6 +44,9 @@
    <string notr="true">QDialog#TagsWidget{
   background-color:#EFEFEF;
 }</string>
+  </property>
+  <property name="tabletTracking" stdset="0">
+   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

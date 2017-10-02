@@ -29,8 +29,6 @@ public:
 
     static QString timestampToDateTime(int timestamp);
 
-    static bool compareVersions(const QString string, const QString string1);
-
     static QStringList splitNotesData(QString string);
 
     static QGraphicsDropShadowEffect *createShadowEffect();

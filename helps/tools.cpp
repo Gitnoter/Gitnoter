@@ -68,14 +68,6 @@ QStringList Tools::textToStringList(QString text)
     return stringList;
 }
 
-bool Tools::compareVersions(const QString string, const QString string1)
-{
-    QVersionNumber versionNumber = QVersionNumber::fromString(string);
-    QVersionNumber versionNumber1 = QVersionNumber::fromString(string1);
-
-    return versionNumber == versionNumber1;
-}
-
 QStringList Tools::splitNotesData(QString string)
 {
     bool split = false;
@@ -88,7 +80,7 @@ QStringList Tools::splitNotesData(QString string)
     list << "" << "";
 
     for (int i = 0; i < string.length(); ++i) {
-        if (!split && string[i] == ":") {
+        if (!split && QString::QString(string[i]) == ":") {
             split = true;
             continue;
         }
