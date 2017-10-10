@@ -117,7 +117,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit#lineEdit_username{background-color:rgba(255, 255, 255, 0);}</string>
+          <string notr="true">QLineEdit#lineEdit_repoUrl{background-color:rgba(255, 255, 255, 0);}</string>
          </property>
          <property name="frame">
           <bool>false</bool>
@@ -224,7 +224,7 @@ QPushButton#pushButton_close:pressed{border-image: url(:/images/icon-close-up.pn
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit#lineEdit_repoUrl{background-color:rgba(255, 255, 255, 0);}</string>
+          <string notr="true">QLineEdit#lineEdit_username{background-color:rgba(255, 255, 255, 0);}</string>
          </property>
          <property name="frame">
           <bool>false</bool>
@@ -379,17 +379,8 @@ border: none;
         <height>80</height>
        </rect>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
       <property name="text">
        <string/>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::AutoText</enum>
       </property>
       <property name="pixmap">
        <pixmap resource="../resources/resources.qrc">:/images/icon-logo.png</pixmap>
@@ -397,11 +388,14 @@ border: none;
       <property name="scaledContents">
        <bool>true</bool>
       </property>
-      <property name="indent">
-       <number>0</number>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
-      <property name="textInteractionFlags">
-       <set>Qt::NoTextInteraction</set>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+      <property name="indent">
+       <number>-1</number>
       </property>
      </widget>
      <zorder>layoutWidget</zorder>
