@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     mInitAppMenu();
     settingDialog = new SettingDialog(this);
+    aboutDialog = new AboutDialog(this);
 
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
@@ -788,7 +789,9 @@ void MainWindow::mInitAppMenu()
 
 void MainWindow::openAboutDialog()
 {
-
+    if (aboutDialog->isHidden()) {
+        aboutDialog->exec();
+    }
 }
 
 void MainWindow::openSettingDialog()

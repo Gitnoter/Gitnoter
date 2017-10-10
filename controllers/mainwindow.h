@@ -7,6 +7,7 @@
 #include "configmodel.h"
 #include "tagswidget.h"
 #include "settingdialog.h"
+#include "aboutdialog.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -135,6 +136,7 @@ private:
     CategoriesWidget *categoriesWidget;
     TagsWidget *tagWidget;
     SettingDialog *settingDialog;
+    AboutDialog *aboutDialog;
 
     Document m_content;
 
