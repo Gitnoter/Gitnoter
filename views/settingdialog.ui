@@ -7,13 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>420</height>
+    <height>220</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="bottomMargin">
+    <number>8</number>
+   </property>
    <item>
     <widget class="QWidget" name="widget_content" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -72,19 +78,141 @@
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="styleSheet">
-         <string notr="true">background-color:#fff;</string>
+         <string notr="true">#stackedWidget{background-color:#fff;}</string>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="page"/>
-        <widget class="QWidget" name="page_5"/>
-        <widget class="QWidget" name="page_6">
-         <zorder>pushButton_snippets</zorder>
+        <widget class="QWidget" name="page_0">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>自动同步笔记到远程仓库: </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox_autoSynch">
+              <item>
+               <property name="text">
+                <string>关闭</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每5分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每15分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每30分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每小时</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>当无任何操作时自动锁定: </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox_autoLock">
+              <item>
+               <property name="text">
+                <string>关闭</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每5分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每15分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每30分钟</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>每小时</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
+        <widget class="QWidget" name="page_1"/>
+        <widget class="QWidget" name="page_2"/>
         <widget class="QWidget" name="page_3"/>
         <widget class="QWidget" name="page_4"/>
-        <widget class="QWidget" name="page_2"/>
+        <widget class="QWidget" name="page_5"/>
        </widget>
       </item>
       <item>
