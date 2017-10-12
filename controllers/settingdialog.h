@@ -27,8 +27,11 @@ private slots:
 
     void on_pushButton_shortcuts_clicked();
 
-    void on_pushButton_snippets_clicked();
+    void on_lineEdit_repoUrl_editingFinished();
 
+    void on_lineEdit_repoUrl_returnPressed();
+
+    void on_fontComboBox_currentFontChanged(const QFont &f);
 
 private:
     Ui::SettingDialog *ui;

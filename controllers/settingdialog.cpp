@@ -9,6 +9,7 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui(new Ui::SettingDialog)
 {
     ui->setupUi(this);
+    setWindowHeight(0);
 }
 
 SettingDialog::~SettingDialog()
@@ -30,16 +31,15 @@ void SettingDialog::setWindowHeight(int pageIndex)
     ui->stackedWidget->setCurrentIndex(pageIndex);
     int _height = 0;
     switch (pageIndex) {
-        case 0:_height = 240;break;
-        case 1:_height = 200;break;
-        case 2:_height = 300;break;
-        case 3:_height = 400;break;
+        case 0:_height = 260;break;
+        case 1:_height = 320;break;
+        case 2:_height = 240;break;
+        case 3:_height = 280;break;
         case 4:_height = 500;break;
         default:return;
     }
 
-
-    resize(QSize(geometry().width(), _height));
+    setFixedHeight(_height);
 
 //    QPropertyAnimation *animation = new QPropertyAnimation(ui->widget_content, "geometry");
 //    QRect endRect = QRect(contentGeometry.x(), contentGeometry.y(), contentGeometry.width(), _height);
@@ -55,6 +55,7 @@ void SettingDialog::setWindowHeight(int pageIndex)
 void SettingDialog::on_pushButton_general_clicked()
 {
     setWindowHeight(0);
+    qDebug() << 0;
 }
 
 void SettingDialog::on_pushButton_accountRepo_clicked()
@@ -72,7 +73,17 @@ void SettingDialog::on_pushButton_shortcuts_clicked()
     setWindowHeight(3);
 }
 
-void SettingDialog::on_pushButton_snippets_clicked()
+void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 {
-    setWindowHeight(4);
+
+}
+
+void SettingDialog::on_lineEdit_repoUrl_returnPressed()
+{
+    on_lineEdit_repoUrl_editingFinished();
+}
+
+void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
+{
+
 }
