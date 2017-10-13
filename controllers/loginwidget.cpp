@@ -49,10 +49,10 @@ void LoginWidget::on_pushButton_enter_clicked()
         Global::configModel->setRepoUsername(ui->lineEdit_username->displayText());
         Global::configModel->setRepoPassword(ui->lineEdit_password->text());
 
-        Global::gitManager->setUserPass(Global::configModel->getRepoUsername().toStdString().c_str(),
-                                        Global::configModel->getRepoPassword().toStdString().c_str());
-        int result = Global::gitManager->clone(Global::configModel->getRepoUrl().toStdString().c_str(),
-                                               Global::repoPath.toStdString().c_str());
+        Global::gitManager->setUserPass(Global::configModel->getRepoUsername().toUtf8().constData(),
+                                        Global::configModel->getRepoPassword().toUtf8().constData());
+        int result = Global::gitManager->clone(Global::configModel->getRepoUrl().toUtf8().constData(),
+                                               Global::repoPath.toUtf8().constData());
         if (!result) {
             Global::configModel->setLocalRepoStatus(1);
             openMainWindow();
@@ -88,7 +88,7 @@ void LoginWidget::openMainWindow()
 
 void LoginWidget::on_pushButton_initLocal_clicked()
 {
-    int result = Global::gitManager->initLocalRepo(Global::repoPath.toStdString().c_str(), true);
+    int result = Global::gitManager->initLocalRepo(Global::repoPath.toUtf8().constData(), true);
     if (!result) {
         Global::configModel->setLocalRepoStatus(2);
         openMainWindow();
