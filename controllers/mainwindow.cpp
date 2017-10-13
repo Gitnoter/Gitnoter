@@ -44,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mSetTableWidgetList();
     mSetOpenedNoteModel(true);
+
+    onAutoSyncRepoTimerStart();
+    onAutoLockTimerStart();
 }
 
 MainWindow::~MainWindow()
