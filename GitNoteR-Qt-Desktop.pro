@@ -43,6 +43,7 @@ SOURCES += \
     controllers/loginwidget.cpp \
     controllers/settingdialog.cpp \
     controllers/aboutdialog.cpp \
+    controllers/lockdialog.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -66,6 +67,7 @@ HEADERS += \
     controllers/loginwidget.h \
     controllers/settingdialog.h \
     controllers/aboutdialog.h \
+    controllers/lockdialog.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -88,7 +90,8 @@ FORMS += \
     views/tagswidget.ui \
     views/loginwidget.ui \
     views/settingdialog.ui \
-    views/aboutdialog.ui
+    views/aboutdialog.ui \
+    views/lockdialog.ui
 
 RESOURCES += \
     resources/resources.qrc
