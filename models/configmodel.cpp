@@ -25,6 +25,9 @@ ConfigModel::ConfigModel()
     mLocalRepoStatus = 0;
     mCategoriesName = "";
     mTagsName = "";
+    mAutoSyncRepoTime = 15 * 60 * 1000;
+    mAutoLockTime = 15 * 60 * 1000;
+    mUnlockPassword = "";
 }
 
 QString ConfigModel::serialize(const QString &path)
@@ -45,6 +48,9 @@ QString ConfigModel::serialize(const QString &path)
     contributor["localRepoStatus"] = mLocalRepoStatus;
     contributor["categoriesName"] = mCategoriesName;
     contributor["tagsName"] = mTagsName;
+    contributor["autoSyncRepoTime"] = mAutoSyncRepoTime;
+    contributor["autoLockTime"] = mAutoLockTime;
+    contributor["unlockPassword"] = mUnlockPassword;
 
     QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
 
@@ -73,6 +79,9 @@ void ConfigModel::unserialize(const QString &jsonString)
     mLocalRepoStatus = result["localRepoStatus"].toInt();
     mCategoriesName = result["categoriesName"].toString();
     mTagsName = result["tagsName"].toString();
+    mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
+    mAutoLockTime = result["autoLockTime"].toInt();
+    mUnlockPassword = result["unlockPassword"].toString();
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)
@@ -211,5 +220,38 @@ const QString &ConfigModel::getRepoEmail() const
 void ConfigModel::setRepoEmail(const QString &repoEmail)
 {
     ConfigModel::mRepoEmail = repoEmail;
+    serialize(Global::appConfigPath);
+}
+
+int ConfigModel::getAutoSyncRepoTime() const
+{
+    return mAutoSyncRepoTime;
+}
+
+void ConfigModel::setAutoSyncRepoTime(int autoSyncRepoTime)
+{
+    ConfigModel::mAutoSyncRepoTime = autoSyncRepoTime;
+    serialize(Global::appConfigPath);
+}
+
+int ConfigModel::getAutoLockTime() const
+{
+    return mAutoLockTime;
+}
+
+void ConfigModel::setAutoLockTime(int autoLockTime)
+{
+    ConfigModel::mAutoLockTime = autoLockTime;
+    serialize(Global::appConfigPath);
+}
+
+const QString &ConfigModel::getUnlockPassword() const
+{
+    return mUnlockPassword;
+}
+
+void ConfigModel::setUnlockPassword(const QString &unlockPassword)
+{
+    ConfigModel::mUnlockPassword = unlockPassword;
     serialize(Global::appConfigPath);
 }

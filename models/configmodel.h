@@ -66,6 +66,18 @@ public:
 
     void setRepoEmail(const QString &repoEmail);
 
+    int getAutoSyncRepoTime() const;
+
+    void setAutoSyncRepoTime(int autoSyncRepoTime);
+
+    int getAutoLockTime() const;
+
+    void setAutoLockTime(int autoLockTime);
+
+    const QString &getUnlockPassword() const;
+
+    void setUnlockPassword(const QString &unlockPassword);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -83,6 +95,10 @@ private:
     int mIsSelectedClasses;
     QString mCategoriesName;
     QString mTagsName;
+    int mAutoSyncRepoTime;
+    int mAutoLockTime;
+    QString mUnlockPassword;
+
 };
 
 #endif // CONFIGMODEL_H

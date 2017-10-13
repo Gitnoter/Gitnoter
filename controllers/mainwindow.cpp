@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
     mInitAppMenu();
     settingDialog = new SettingDialog(this);
     aboutDialog = new AboutDialog(this);
+    autoSyncRepoTimer = new QTimer(this);
+    autoLockTimer = new QTimer(this);
+
+    connect(settingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(onAutoSyncRepoTimerStart()));
+    connect(settingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(onAutoLockTimerStart()));
 
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
@@ -799,5 +804,46 @@ void MainWindow::openSettingDialog()
     if (settingDialog->isHidden()) {
         settingDialog->open();
     }
+}
+
+void MainWindow::onAutoSyncRepoTimerStart()
+{
+    qDebug() << "onAutoSyncRepoTimerStart";
+    int autoSyncRepo = Global::configModel->getAutoSyncRepoTime();
+    if (autoSyncRepo) {
+        connect(autoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(onAutoSyncRepoTimeout()));
+        autoSyncRepoTimer->start(autoSyncRepo);
+    }
+    else if (autoSyncRepoTimer->isActive()){
+        autoSyncRepoTimer->stop();
+    }
+}
+
+void MainWindow::onAutoLockTimerStart()
+{
+    int autoLockTime = Global::configModel->getAutoLockTime();
+    if (autoLockTime) {
+        connect(autoLockTimer, SIGNAL(timeout()), this, SLOT(onAutoLockTimeout()));
+        autoLockTimer->start(autoLockTime);
+    }
+    else if (autoLockTimer->isActive()){
+        autoLockTimer->stop();
+    }
+}
+
+void MainWindow::onAutoSyncRepoTimeout()
+{
+    if (Global::configModel->getLocalRepoStatus() == 1) {
+        Global::gitManager->commitA();
+        Global::gitManager->pull();
+        Global::gitManager->commitA();
+        Global::gitManager->push();
+    }
+}
+
+void MainWindow::onAutoLockTimeout()
+{
+    qDebug() << "onAutoLockTimeout";
+    qDebug() << Global::configModel->getAutoLockTime();
 }
 

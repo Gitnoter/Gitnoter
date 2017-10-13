@@ -1,15 +1,21 @@
 #include "settingdialog.h"
 #include "ui_settingdialog.h"
+#include "globals.h"
 
 #include <QPropertyAnimation>
 #include <QDebug>
+#include <helps/globals.h>
 
 SettingDialog::SettingDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SettingDialog)
+        QDialog(parent),
+        ui(new Ui::SettingDialog)
 {
     ui->setupUi(this);
     setWindowHeight(0);
+
+    ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoSyncRepoTime()));
+    ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoLockTime()));
+    ui->lineEdit_unlockPassword->setText(Global::configModel->getUnlockPassword());
 }
 
 SettingDialog::~SettingDialog()
@@ -86,4 +92,57 @@ void SettingDialog::on_lineEdit_repoUrl_returnPressed()
 void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 {
 
+}
+
+void SettingDialog::on_comboBox_autoSynch_currentIndexChanged(int index)
+{
+    int time = getTimeByComboBoxIndex(index);
+    if (time >= 0) {
+        Global::configModel->setAutoSyncRepoTime(time);
+        emit autoSyncRepoTimeChanged();
+    }
+}
+
+void SettingDialog::on_comboBox_autoLock_currentIndexChanged(int index)
+{
+    int time = getTimeByComboBoxIndex(index);
+    if (time >= 0) {
+        Global::configModel->setAutoLockTime(time);
+        emit autoLockTimeChanged();
+    }
+}
+
+int SettingDialog::getTimeByComboBoxIndex(int index)
+{
+    int time = -1;
+    switch (index) {
+        case 0: time = 0;break;
+        case 1: time = 5;break;
+        case 2: time = 15;break;
+        case 3: time = 30;break;
+        case 4: time = 60;break;
+        default:break;
+    }
+    return time * 60 * 1000;
+}
+
+int SettingDialog::getComboBoxIndexByTime(int time)
+{
+    time = time / 60 / 1000;
+    int index = 0;
+    switch (time) {
+        case 0: index = 0;break;
+        case 5: index = 1;break;
+        case 15: index = 2;break;
+        case 30: index = 3;break;
+        case 60: index = 4;break;
+        default:break;
+    }
+    return index;
+}
+
+
+void SettingDialog::on_lineEdit_unlockPassword_editingFinished()
+{
+    Global::configModel->setUnlockPassword(ui->lineEdit_unlockPassword->text());
 }

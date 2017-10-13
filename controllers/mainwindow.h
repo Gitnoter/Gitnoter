@@ -15,6 +15,7 @@
 #include <QPushButton>
 #include <QTableWidgetItem>
 #include <QListWidgetItem>
+#include <QTimer>
 
 namespace Ui
 {
@@ -37,6 +38,14 @@ public slots:
     void onChangeTags();
 
 private slots:
+
+    void onAutoSyncRepoTimerStart();
+
+    void onAutoLockTimerStart();
+
+    void onAutoSyncRepoTimeout();
+
+    void onAutoLockTimeout();
 
     // 系统菜单栏
     void on_action_saveNote_triggered();
@@ -137,7 +146,8 @@ private:
     TagsWidget *tagWidget;
     SettingDialog *settingDialog;
     AboutDialog *aboutDialog;
-
+    QTimer *autoSyncRepoTimer;
+    QTimer *autoLockTimer;
     Document m_content;
 
     void textChanged();
