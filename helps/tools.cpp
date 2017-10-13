@@ -1,6 +1,8 @@
 #include "tools.h"
 #include "globals.h"
 
+#include <QTcpSocket>
+
 QFileInfoList Tools::getFilesPath(const QString path)
 {
     QDir dir(path);
@@ -160,5 +162,43 @@ bool Tools::createMkDir(const QString &path)
         return QDir().mkpath(path); //创建多级目录
     }
 
+    return false;
+}
+
+bool Tools::urlExists(QString urlString) {
+    QUrl theurl(urlString);
+//    QTextStream out(stdout);
+    QTcpSocket socket;
+    QByteArray buffer;
+
+    socket.connectToHost(theurl.host(), 80);
+    if (socket.waitForConnected()) {
+        //Standard http request
+        socket.write("GET / HTTP/1.1\r\n"
+                             "host: " + theurl.host().toUtf8() + "\r\n\r\n");
+        if (socket.waitForReadyRead()) {
+            while(socket.bytesAvailable()){
+                buffer.append(socket.readAll());
+                int packetSize=buffer.size();
+                while(packetSize>0)
+                {
+                    //Output server response for debugging
+//                    out << "[" << buffer.data() << "]" <<endl;
+
+                    //set Url if 200, 301, or 302 response given assuming that server will redirect
+                    if (buffer.contains("200 OK") ||
+                        buffer.contains("302 Found") ||
+                        buffer.contains("301 Moved")) {
+                        return true;
+                    }
+                    buffer.remove(0,packetSize);
+                    //packetSize=getPacketSize(buffer);
+                    packetSize=buffer.size();
+
+                } //while packet size >0
+            } //while socket.bytesavail
+
+        } //socket wait for ready read
+    }//socket write
     return false;
 }

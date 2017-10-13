@@ -39,6 +39,8 @@ public:
 
     static int rowShowCount(QListWidget *listWidget);
 
+    static bool urlExists(QString urlString);
+
 };
 
 #endif // TOOLS_H
