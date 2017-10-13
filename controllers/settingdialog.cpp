@@ -1,10 +1,7 @@
 #include "settingdialog.h"
 #include "ui_settingdialog.h"
 #include "globals.h"
-
-#include <QPropertyAnimation>
-#include <QDebug>
-#include <helps/globals.h>
+#include "tools.h"
 
 SettingDialog::SettingDialog(QWidget *parent) :
         QDialog(parent),
@@ -16,6 +13,9 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoSyncRepoTime()));
     ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoLockTime()));
     ui->lineEdit_unlockPassword->setText(Global::configModel->getUnlockPassword());
+    ui->lineEdit_repoUrl->setText(Global::configModel->getRepoUrl());
+    ui->lineEdit_username->setText(Global::configModel->getRepoUsername());
+    ui->lineEdit_password->setText(Global::configModel->getRepoPassword());
 }
 
 SettingDialog::~SettingDialog()
@@ -79,16 +79,6 @@ void SettingDialog::on_pushButton_shortcuts_clicked()
     setWindowHeight(3);
 }
 
-void SettingDialog::on_lineEdit_repoUrl_editingFinished()
-{
-
-}
-
-void SettingDialog::on_lineEdit_repoUrl_returnPressed()
-{
-    on_lineEdit_repoUrl_editingFinished();
-}
-
 void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 {
 
@@ -145,4 +135,27 @@ int SettingDialog::getComboBoxIndexByTime(int time)
 void SettingDialog::on_lineEdit_unlockPassword_editingFinished()
 {
     Global::configModel->setUnlockPassword(ui->lineEdit_unlockPassword->text());
+}
+
+void SettingDialog::on_lineEdit_repoUrl_editingFinished()
+{
+    if (Tools::urlExists(ui->lineEdit_repoUrl->text())) {
+        Global::configModel->setRepoUrl(ui->lineEdit_repoUrl->text());
+        Global::gitManager->clearRemoteList();
+        Global::gitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
+    }
+}
+
+void SettingDialog::on_lineEdit_username_editingFinished()
+{
+    if (!ui->lineEdit_username->text().isEmpty()) {
+        Global::configModel->setRepoUsername(ui->lineEdit_username->text());
+    }
+}
+
+void SettingDialog::on_lineEdit_password_editingFinished()
+{
+    if (!ui->lineEdit_password->text().isEmpty()) {
+        Global::configModel->setRepoPassword(ui->lineEdit_password->text());
+    }
 }

@@ -35,8 +35,6 @@ private slots:
 
     void on_lineEdit_repoUrl_editingFinished();
 
-    void on_lineEdit_repoUrl_returnPressed();
-
     void on_fontComboBox_currentFontChanged(const QFont &f);
 
     void on_comboBox_autoSynch_currentIndexChanged(int index);
@@ -44,6 +42,10 @@ private slots:
     void on_comboBox_autoLock_currentIndexChanged(int index);
 
     void on_lineEdit_unlockPassword_editingFinished();
+
+    void on_lineEdit_username_editingFinished();
+
+    void on_lineEdit_password_editingFinished();
 
 private:
     Ui::SettingDialog *ui;

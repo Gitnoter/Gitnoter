@@ -195,6 +195,22 @@ std::vector<git_remote *> GitManager::getRemoteList()
     return list;
 }
 
+void GitManager::clearRemoteList()
+{
+    int error = 0;
+    git_strarray remotes = {0};
+
+    error = git_remote_list(&remotes, mRepo);
+    if (error) {
+        fprintf(stdout, "std::vector<git_remote *> GitManager::getRemoteList(): git_remote_list %i\n", error);
+        return;
+    }
+
+    for (int i = 0; i < (int) remotes.count; i++) {
+        removeRemote(remotes.strings[i]);
+    }
+}
+
 std::vector<git_status_entry> GitManager::getStatusList()
 {
     int error = 0;

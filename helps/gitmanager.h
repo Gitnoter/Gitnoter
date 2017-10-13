@@ -309,6 +309,8 @@ public:
 
     std::vector<git_remote *> getRemoteList();
 
+    void clearRemoteList();
+
     std::vector<git_status_entry> getStatusList();
 
     int addAll();
