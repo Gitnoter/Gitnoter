@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "categorieslistcell.h"
 #include "tagslistcell.h"
-#include "settingdialog.h"
+#include "lockdialog.h"
 
 #include "previewpage.h"
 #include "tools.h"
@@ -843,7 +843,11 @@ void MainWindow::onAutoSyncRepoTimeout()
 
 void MainWindow::onAutoLockTimeout()
 {
-    qDebug() << "onAutoLockTimeout";
-    qDebug() << Global::configModel->getAutoLockTime();
+    if (autoLockTimer->isActive()){
+        autoLockTimer->stop();
+    }
+
+    close();
+    (new LockDialog())->show();
 }
 

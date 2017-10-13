@@ -15,6 +15,9 @@ public:
     explicit LockDialog(QWidget *parent = 0);
     ~LockDialog();
 
+private slots:
+    void on_lineEdit_returnPressed();
+
 private:
     Ui::LockDialog *ui;
 };
