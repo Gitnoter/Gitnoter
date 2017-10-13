@@ -123,7 +123,7 @@ int SettingDialog::getTimeByComboBoxIndex(int index)
         case 4: time = 60;break;
         default:break;
     }
-    return time * 1000;
+    return time * 60 * 1000;
 }
 
 int SettingDialog::getComboBoxIndexByTime(int time)
