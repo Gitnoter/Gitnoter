@@ -4,7 +4,6 @@
 #include "globals.h"
 #include "tools.h"
 
-
 ConfigModel::ConfigModel(const QString &jsonString)
 {
     unserialize(jsonString);
@@ -28,6 +27,16 @@ ConfigModel::ConfigModel()
     mAutoSyncRepoTime = 15 * 60 * 1000;
     mAutoLockTime = 15 * 60 * 1000;
     mUnlockPassword = "";
+#ifdef Q_OS_MAC
+    mFontFamily = "Helvetica Neue";
+#elif Q_OS_WIN
+    mFontFamily = "Courier New";
+#elif Q_OS_LINUX
+    mFontFamily = "Menlo2";
+#else
+
+#endif
+    mFontPixelSize = 14;
 }
 
 QString ConfigModel::serialize(const QString &path)
@@ -51,6 +60,8 @@ QString ConfigModel::serialize(const QString &path)
     contributor["autoSyncRepoTime"] = mAutoSyncRepoTime;
     contributor["autoLockTime"] = mAutoLockTime;
     contributor["unlockPassword"] = mUnlockPassword;
+    contributor["fontFamily"] = mFontFamily;
+    contributor["fontPixelSize"] = mFontPixelSize;
 
     QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
 
@@ -82,6 +93,8 @@ void ConfigModel::unserialize(const QString &jsonString)
     mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
     mAutoLockTime = result["autoLockTime"].toInt();
     mUnlockPassword = result["unlockPassword"].toString();
+    mFontFamily = result["fontFamily"].toString();
+    mFontPixelSize = result["fontPixelSize"].toInt();
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)
@@ -253,5 +266,27 @@ const QString &ConfigModel::getUnlockPassword() const
 void ConfigModel::setUnlockPassword(const QString &unlockPassword)
 {
     ConfigModel::mUnlockPassword = unlockPassword;
+    serialize(Global::appConfigPath);
+}
+
+const QString &ConfigModel::getFontFamily() const
+{
+    return mFontFamily;
+}
+
+void ConfigModel::setFontFamily(const QString &fontFamily)
+{
+    ConfigModel::mFontFamily = fontFamily;
+    serialize(Global::appConfigPath);
+}
+
+int ConfigModel::getFontPixelSize() const
+{
+    return mFontPixelSize;
+}
+
+void ConfigModel::setFontPixelSize(int fontPixelSize)
+{
+    ConfigModel::mFontPixelSize = fontPixelSize;
     serialize(Global::appConfigPath);
 }

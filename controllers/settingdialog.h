@@ -46,6 +46,8 @@ private slots:
     void on_lineEdit_username_editingFinished();
 
     void on_lineEdit_password_editingFinished();
+    
+    void on_comboBox_fontSize_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::SettingDialog *ui;

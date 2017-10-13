@@ -78,6 +78,14 @@ public:
 
     void setUnlockPassword(const QString &unlockPassword);
 
+    const QString &getFontFamily() const;
+
+    void setFontFamily(const QString &fontFamily);
+
+    int getFontPixelSize() const;
+
+    void setFontPixelSize(int fontPixelSize);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -98,6 +106,8 @@ private:
     int mAutoSyncRepoTime;
     int mAutoLockTime;
     QString mUnlockPassword;
+    QString mFontFamily;
+    int mFontPixelSize;
 
 };
 

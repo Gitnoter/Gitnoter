@@ -16,6 +16,8 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_repoUrl->setText(Global::configModel->getRepoUrl());
     ui->lineEdit_username->setText(Global::configModel->getRepoUsername());
     ui->lineEdit_password->setText(Global::configModel->getRepoPassword());
+    ui->fontComboBox->setCurrentText(Global::configModel->getFontFamily());
+    ui->comboBox_fontSize->setCurrentText(QString::number(Global::configModel->getFontPixelSize()));
 }
 
 SettingDialog::~SettingDialog()
@@ -77,11 +79,6 @@ void SettingDialog::on_pushButton_edit_clicked()
 void SettingDialog::on_pushButton_shortcuts_clicked()
 {
     setWindowHeight(3);
-}
-
-void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
-{
-
 }
 
 void SettingDialog::on_comboBox_autoSynch_currentIndexChanged(int index)
@@ -158,4 +155,14 @@ void SettingDialog::on_lineEdit_password_editingFinished()
     if (!ui->lineEdit_password->text().isEmpty()) {
         Global::configModel->setRepoPassword(ui->lineEdit_password->text());
     }
+}
+
+void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
+{
+    Global::configModel->setFontFamily(f.family());
+}
+
+void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
+{
+    Global::configModel->setFontPixelSize(arg1.toInt());
 }
