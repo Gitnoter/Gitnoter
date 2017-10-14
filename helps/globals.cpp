@@ -270,3 +270,20 @@ void Global::initRepoLocalDir()
     Tools::createMkDir(repoResourcePath);
     Tools::createMkDir(repoDataPath);
 }
+
+int Global::initGitManager()
+{
+    if (QDir(Global::repoPath).exists()) {
+        return gitManager->open(Global::repoPath.toUtf8().constData());
+    }
+
+    if (!configModel->getRepoUsername().isEmpty()
+        && !configModel->getRepoPassword().isEmpty()
+        && !configModel->getRepoUrl().isEmpty()) {
+        gitManager->setUserPass(configModel->getRepoUsername().toUtf8().constData(),
+                                configModel->getRepoPassword().toUtf8().constData());
+        return gitManager->clone(configModel->getRepoUrl().toUtf8().constData(), repoPath.toUtf8().constData());
+    }
+
+    return gitManager->initLocalRepo(Global::repoPath.toUtf8().constData(), true);
+}

@@ -85,6 +85,7 @@ public:
 
     ///
 
+    static int initGitManager();
     static void initRepoLocalDir();
 
 };
