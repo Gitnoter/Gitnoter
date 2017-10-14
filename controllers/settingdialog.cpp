@@ -170,11 +170,13 @@ void SettingDialog::on_lineEdit_password_editingFinished()
 void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 {
     Global::configModel->setFontFamily(f.family());
+    emit editorFontChanged();
 }
 
 void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
 {
     Global::configModel->setFontPixelSize(arg1.toInt());
+    emit editorFontChanged();
 }
 
 void SettingDialog::on_keySequenceEdit_newNote_keySequenceChanged(const QKeySequence &keySequence)

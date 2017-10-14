@@ -23,6 +23,8 @@ signals:
 
     void autoLockTimeChanged();
 
+    void editorFontChanged();
+
 private slots:
 
     void on_pushButton_general_clicked();

@@ -33,9 +33,9 @@ public:
 
 public slots:
 
-    void onChangeCategories();
+    void onCategoriesChange();
 
-    void onChangeTags();
+    void onTagsChange();
 
 private slots:
 
@@ -46,6 +46,8 @@ private slots:
     void onAutoSyncRepoTimeout();
 
     void onAutoLockTimeout();
+
+    void onEditorFontChange();
 
     // 系统菜单栏
     void on_action_saveNote_triggered();

@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(settingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(onAutoSyncRepoTimerStart()));
     connect(settingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(onAutoLockTimerStart()));
+    connect(settingDialog, SIGNAL(editorFontChanged()), this, SLOT(onEditorFontChange()));
 
     ui->listWidget_categories->setAcceptDrops(false);   // 不接受拖放 ui编辑器编辑无用代码, 可能是bug
     ui->lineEdit_searchNote->setHidden(true);           // 隐藏暂时不用的组件
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mSetTableWidgetList();
     mSetOpenedNoteModel(true);
+    onEditorFontChange();
 
     onAutoSyncRepoTimerStart();
     onAutoLockTimerStart();
@@ -70,7 +72,7 @@ void MainWindow::on_pushButton_categories_clicked()
     categoriesWidget = new CategoriesWidget(this);
     categoriesWidget->open();
 
-    connect(categoriesWidget, SIGNAL(categoriesChanged()), this, SLOT(onChangeCategories()));
+    connect(categoriesWidget, SIGNAL(categoriesChanged()), this, SLOT(onCategoriesChange()));
 }
 
 void MainWindow::mSetOpenedNoteModel(bool initEditor)
@@ -271,7 +273,7 @@ void MainWindow::onHeaderViewSortIndicatorChanged(int logicalIndex, Qt::SortOrde
     qDebug() << "on_headerView_sortIndicatorChanged";
 }
 
-void MainWindow::onChangeCategories()
+void MainWindow::onCategoriesChange()
 {
     mSetOpenedNoteModel();
     mSetEditorModified(true);
@@ -501,10 +503,10 @@ void MainWindow::on_pushButton_changeTags_clicked()
     tagWidget = new TagsWidget(this);
     tagWidget->open();
 
-    connect(tagWidget, SIGNAL(tagsChanged()), this, SLOT(onChangeTags()));
+    connect(tagWidget, SIGNAL(tagsChanged()), this, SLOT(onTagsChange()));
 }
 
-void MainWindow::onChangeTags()
+void MainWindow::onTagsChange()
 {
     mSetOpenedNoteModel();
     mSetEditorModified(true);
@@ -853,5 +855,12 @@ void MainWindow::onAutoLockTimeout()
 
     close();
     (new LockDialog())->show();
+}
+
+void MainWindow::onEditorFontChange()
+{
+    QFont font(Global::configModel->getFontFamily());
+    font.setPixelSize(Global::configModel->getFontPixelSize());
+    ui->plainTextEdit_editor->setFont(font);
 }
 
