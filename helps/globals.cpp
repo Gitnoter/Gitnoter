@@ -11,8 +11,9 @@ const QString Global::appDataLocation = QDir(
         packageName);
 const QString Global::appDataPath = QDir(appDataLocation).filePath("data/");
 const QString Global::appConfigPath = QDir(appDataPath).filePath("appconfig.json");
-const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git/");
+const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git");
 const QString Global::repoNotePath = QDir(repoPath).filePath("notes/");
+const QString Global::repoResourceName = "resources";
 const QString Global::repoResourcePath = QDir(repoPath).filePath("resources/");
 const QString Global::repoDataPath = QDir(repoPath).filePath("data/");
 const QString Global::repoCategoriesListPath = QDir(repoDataPath).filePath("categories.list");
@@ -287,3 +288,4 @@ int Global::initGitManager()
 
     return gitManager->initLocalRepo(Global::repoPath.toUtf8().constData(), true);
 }
+

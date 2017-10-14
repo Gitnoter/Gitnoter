@@ -84,6 +84,8 @@ private slots:
 
     void on_pushButton_changeTags_clicked();
 
+    void on_pushButton_insertImage_clicked();
+
     // 菜单分页第二页
     void on_listWidget_categories_itemClicked(QListWidgetItem *item);
 

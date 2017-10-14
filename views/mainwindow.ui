@@ -672,14 +672,14 @@ QTableWidget::item:selected{
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <item>
-                  <widget class="QPushButton" name="pushButton_3">
+                  <widget class="QPushButton" name="pushButton_insertImage">
                    <property name="text">
                     <string>Image</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_7">
+                  <widget class="QPushButton" name="pushButton_insertUrl">
                    <property name="text">
                     <string>Url</string>
                    </property>

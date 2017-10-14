@@ -11,6 +11,7 @@
 
 #include <QWebChannel>
 #include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -64,7 +65,14 @@ void MainWindow::textChanged()
                                            : ui->lineEdit_title->displayText());
     Global::openNoteModel->contentModel->setBody(ui->plainTextEdit_editor->toPlainText());
     Global::openNoteModel->contentModel->setUpdateDate(0);
-    m_content.setText(Global::openNoteModel->getDisplayNote());
+
+    const QString after = tr("![\\1](file://%1\\3)").arg(Global::repoPath);
+    QString displayNote = static_cast<QString &&>(Global::openNoteModel->getDisplayNote()
+            .replace(QRegularExpression("!\\[(.*)\\]\\(( *)(.*)\\)"), after));
+
+    qDebug() << displayNote;
+
+    m_content.setText(displayNote);
 }
 
 void MainWindow::on_pushButton_categories_clicked()
@@ -233,6 +241,8 @@ void MainWindow::on_action_newNote_triggered()
     mSetOpenedNoteModel();
     mSetEditorModified(true);
     on_action_saveNote_triggered();
+    Tools::createMkDir(QDir(Global::repoResourcePath).filePath(noteModel->contentModel->getUuid()));
+    qDebug() << Global::configModel->getOpenNotesUuid();
 }
 
 bool MainWindow::isEditorModified()

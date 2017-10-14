@@ -23,6 +23,7 @@ public:
     static const QString appConfigPath;
     static const QString repoPath;
     static const QString repoNotePath;
+    static const QString repoResourceName;
     static const QString repoResourcePath;
     static const QString repoDataPath;
     static const QString repoCategoriesListPath;
@@ -86,6 +87,7 @@ public:
     ///
 
     static int initGitManager();
+
     static void initRepoLocalDir();
 
 };
