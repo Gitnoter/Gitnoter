@@ -142,10 +142,14 @@ void SettingDialog::on_lineEdit_unlockPassword_editingFinished()
 
 void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 {
-    if (Tools::urlExists(ui->lineEdit_repoUrl->text())) {
+    QRegExp regExp("((http|https)://|(www)\\.)(\\w+)(\\.?[\\.a-z0-9/:?%&=\\-_+#;]*).git", Qt::CaseInsensitive);
+    if (regExp.exactMatch(ui->lineEdit_repoUrl->text())) {
         Global::configModel->setRepoUrl(ui->lineEdit_repoUrl->text());
         Global::gitManager->clearRemoteList();
         Global::gitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
+    }
+    else {
+        ui->lineEdit_repoUrl->setText(Global::configModel->getRepoUrl());
     }
 }
 

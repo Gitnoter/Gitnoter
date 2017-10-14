@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Global::initNoteModelList();
     Global::initCategoriesModelList();
     Global::initTagsModelList();
+    Global::initGitManager();
 
     mSetTableWidgetList();
     mSetOpenedNoteModel(true);
