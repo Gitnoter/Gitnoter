@@ -18,6 +18,10 @@ const QString Global::repoDataPath = QDir(repoPath).filePath("data/");
 const QString Global::repoCategoriesListPath = QDir(repoDataPath).filePath("categories.list");
 const QString Global::repoTagsListPath = QDir(repoDataPath).filePath("tags.list");
 
+const QString Global::newNoteKeySequence = "Ctrl+N";
+const QString Global::lockWindowKeySequence = "Ctrl+Shift+L";
+const QString Global::cutWindowKeySequence = "Ctrl+Shift+X";
+
 const QByteArray Global::aesKey = "Q5tO3jUB0oe7FmWq";
 const QByteArray Global::aesIv  = "RNNSR8XNbMTuOSGd";
 

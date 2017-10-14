@@ -18,6 +18,12 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_password->setText(Global::configModel->getRepoPassword());
     ui->fontComboBox->setCurrentText(Global::configModel->getFontFamily());
     ui->comboBox_fontSize->setCurrentText(QString::number(Global::configModel->getFontPixelSize()));
+    ui->keySequenceEdit_newNote->setKeySequence(QKeySequence(Global::configModel->getNewNoteKeySequence()));
+    ui->keySequenceEdit_lockWindow->setKeySequence(QKeySequence(Global::configModel->getLockWindowKeySequence()));
+    ui->keySequenceEdit_cutWindow->setKeySequence(QKeySequence(Global::configModel->getCutWindowKeySequence()));
+    ui->label_defaultNewNote->setText(tr("默认: %1").arg(Global::newNoteKeySequence));
+    ui->label_defaultLockWindow->setText(tr("默认: %1").arg(Global::lockWindowKeySequence));
+    ui->label_defaultCutWindow->setText(tr("默认: %1").arg(Global::cutWindowKeySequence));
 }
 
 SettingDialog::~SettingDialog()
@@ -165,4 +171,19 @@ void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
 {
     Global::configModel->setFontPixelSize(arg1.toInt());
+}
+
+void SettingDialog::on_keySequenceEdit_newNote_keySequenceChanged(const QKeySequence &keySequence)
+{
+    Global::configModel->setNewNoteKeySequence(keySequence.toString());
+}
+
+void SettingDialog::on_keySequenceEdit_lockWindow_keySequenceChanged(const QKeySequence &keySequence)
+{
+    Global::configModel->setLockWindowKeySequence(keySequence.toString());
+}
+
+void SettingDialog::on_keySequenceEdit_cutWindow_keySequenceChanged(const QKeySequence &keySequence)
+{
+    Global::configModel->setCutWindowKeySequence(keySequence.toString());
 }

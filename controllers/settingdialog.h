@@ -49,6 +49,12 @@ private slots:
     
     void on_comboBox_fontSize_currentIndexChanged(const QString &arg1);
 
+    void on_keySequenceEdit_newNote_keySequenceChanged(const QKeySequence &keySequence);
+
+    void on_keySequenceEdit_lockWindow_keySequenceChanged(const QKeySequence &keySequence);
+
+    void on_keySequenceEdit_cutWindow_keySequenceChanged(const QKeySequence &keySequence);
+
 private:
     Ui::SettingDialog *ui;
     QRect contentGeometry;

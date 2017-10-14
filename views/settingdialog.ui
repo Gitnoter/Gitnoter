@@ -386,7 +386,6 @@
               </layout>
              </item>
             </layout>
-            <zorder>lineEdit_username</zorder>
            </widget>
           </item>
          </layout>
@@ -659,14 +658,14 @@
                 </widget>
                </item>
                <item>
-                <widget class="QKeySequenceEdit" name="keySequenceEdit_newNote_2">
+                <widget class="QKeySequenceEdit" name="keySequenceEdit_lockWindow">
                  <property name="focusPolicy">
                   <enum>Qt::ClickFocus</enum>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QKeySequenceEdit" name="keySequenceEdit_newNote_3">
+                <widget class="QKeySequenceEdit" name="keySequenceEdit_cutWindow">
                  <property name="focusPolicy">
                   <enum>Qt::ClickFocus</enum>
                  </property>
@@ -701,7 +700,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_defaultNewNote_2">
+                <widget class="QLabel" name="label_defaultLockWindow">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -719,7 +718,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_defaultNewNote_3">
+                <widget class="QLabel" name="label_defaultCutWindow">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>

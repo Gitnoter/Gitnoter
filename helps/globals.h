@@ -28,6 +28,10 @@ public:
     static const QString repoCategoriesListPath;
     static const QString repoTagsListPath;
 
+    static const QString newNoteKeySequence;
+    static const QString lockWindowKeySequence;
+    static const QString cutWindowKeySequence;
+
     static const QByteArray aesKey;
     static const QByteArray aesIv;
 

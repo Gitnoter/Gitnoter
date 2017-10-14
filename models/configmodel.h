@@ -86,6 +86,18 @@ public:
 
     void setFontPixelSize(int fontPixelSize);
 
+    const QString &getNewNoteKeySequence() const;
+
+    void setNewNoteKeySequence(const QString &newNoteKeySequence);
+
+    const QString &getLockWindowKeySequence() const;
+
+    void setLockWindowKeySequence(const QString &lockWindowKeySequence);
+
+    const QString &getCutWindowKeySequence() const;
+
+    void setCutWindowKeySequence(const QString &cutWindowKeySequence);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -103,11 +115,17 @@ private:
     int mIsSelectedClasses;
     QString mCategoriesName;
     QString mTagsName;
+
     int mAutoSyncRepoTime;
     int mAutoLockTime;
     QString mUnlockPassword;
+
     QString mFontFamily;
     int mFontPixelSize;
+
+    QString mNewNoteKeySequence;
+    QString mLockWindowKeySequence;
+    QString mCutWindowKeySequence;
 
 };
 

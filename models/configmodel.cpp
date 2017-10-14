@@ -27,6 +27,11 @@ ConfigModel::ConfigModel()
     mAutoSyncRepoTime = 15 * 60 * 1000;
     mAutoLockTime = 15 * 60 * 1000;
     mUnlockPassword = "";
+    mFontPixelSize = 14;
+    mNewNoteKeySequence = Global::newNoteKeySequence;
+    mLockWindowKeySequence = Global::lockWindowKeySequence;
+    mCutWindowKeySequence = Global::cutWindowKeySequence;
+
 #ifdef Q_OS_MAC
     mFontFamily = "Helvetica Neue";
 #elif Q_OS_WIN
@@ -36,7 +41,6 @@ ConfigModel::ConfigModel()
 #else
 
 #endif
-    mFontPixelSize = 14;
 }
 
 QString ConfigModel::serialize(const QString &path)
@@ -62,6 +66,9 @@ QString ConfigModel::serialize(const QString &path)
     contributor["unlockPassword"] = mUnlockPassword;
     contributor["fontFamily"] = mFontFamily;
     contributor["fontPixelSize"] = mFontPixelSize;
+    contributor["newNoteKeySequence"] = mNewNoteKeySequence;
+    contributor["lockWindowKeySequence"] = mLockWindowKeySequence;
+    contributor["cutWindowKeySequence"] = mCutWindowKeySequence;
 
     QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
 
@@ -95,6 +102,9 @@ void ConfigModel::unserialize(const QString &jsonString)
     mUnlockPassword = result["unlockPassword"].toString();
     mFontFamily = result["fontFamily"].toString();
     mFontPixelSize = result["fontPixelSize"].toInt();
+    mNewNoteKeySequence = result["newNoteKeySequence"].toString();
+    mLockWindowKeySequence = result["lockWindowKeySequence"].toString();
+    mCutWindowKeySequence = result["cutWindowKeySequence"].toString();
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)
@@ -288,5 +298,38 @@ int ConfigModel::getFontPixelSize() const
 void ConfigModel::setFontPixelSize(int fontPixelSize)
 {
     ConfigModel::mFontPixelSize = fontPixelSize;
+    serialize(Global::appConfigPath);
+}
+
+const QString &ConfigModel::getNewNoteKeySequence() const
+{
+    return mNewNoteKeySequence;
+}
+
+void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
+{
+    ConfigModel::mNewNoteKeySequence = newNoteKeySequence;
+    serialize(Global::appConfigPath);
+}
+
+const QString &ConfigModel::getLockWindowKeySequence() const
+{
+    return mLockWindowKeySequence;
+}
+
+void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
+{
+    ConfigModel::mLockWindowKeySequence = lockWindowKeySequence;
+    serialize(Global::appConfigPath);
+}
+
+const QString &ConfigModel::getCutWindowKeySequence() const
+{
+    return mCutWindowKeySequence;
+}
+
+void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
+{
+    ConfigModel::mCutWindowKeySequence = cutWindowKeySequence;
     serialize(Global::appConfigPath);
 }
