@@ -3,7 +3,7 @@
 
 const QString Global::packageName = "com.huyaohui.gitnoter";
 const QString Global::version = "1.0.0";
-const QString Global::dateFormat = "yyyy/MM/dd hh:mm:ss";
+const QString Global::dateFormat = "yyyy/MM/dd hh:mm";
 const QString Global::tagSplit = ", ";
 
 const QString Global::appDataLocation = QDir(

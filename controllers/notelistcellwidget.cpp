@@ -2,6 +2,8 @@
 #include "ui_notelistcellwidget.h"
 #include "tagorcategorylistcellwidget.h"
 
+#include "tools.h"
+
 NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NoteListCellWidget),
@@ -12,11 +14,10 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     ui->frame_body->setText("2016年8月24日 - asdf 吉子可-- 2016-08-24 创建 播放 收藏 分享 下载 评论 歌曲列表 90首歌 播放:4次 生成外链播放器 加载中... 生命是场马拉松 卡比巴拉的海"
                             "2016年8月24日 - asdf 吉子可-- 2016-08-24 创建 播放 收藏 分享 下载 评论 歌曲列表 90首歌 播放:4次 生成外链播放器 加载中... 生命是场马拉松 卡比巴拉的海");
 
+    ui->label_datetime->setText(Tools::timestampToDateTime(noteModel->contentModel->getCreateDate()));
+
     if (!noteModel->categoriesModel->getName().isEmpty()) {
         ui->label_categoryList->setText(noteModel->categoriesModel->getName());
-    }
-    else {
-        ui->widget_categoryList->setHidden(true);
     }
 
     if (noteModel->tagsModelList->length()) {
@@ -25,15 +26,11 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
             text += noteModel->tagsModelList->at(i)->getName() + ", ";
         }
         text.chop(2);
-        if (text.isEmpty()) {
-            ui->widget_tagList->setHidden(true);
-        }
-        else {
-            ui->label_tagList->setText(text);
-        }
+        ui->label_tagList->setText(text);
     }
-    else {
-        ui->widget_tagList->setHidden(true);
+
+    if (!noteModel->contentModel->getCreateDate()) {
+        ui->label_datetime->setText(Tools::timestampToDateTime(noteModel->contentModel->getCreateDate()));
     }
 }
 

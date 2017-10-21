@@ -40,15 +40,18 @@ void MainWindow::setupUi()
 
 void MainWindow::setNoteList()
 {
-    ui->listWidget->clear();
+//    ui->listWidget->clear();
     for (auto &&noteMoldel : Global::noteModelList) {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteMoldel));
         ui->listWidget->addItem(listWidgetItem);
         NoteListCellWidget *noteListCellWidget = new NoteListCellWidget(noteMoldel);
-        listWidgetItem->setSizeHint(noteListCellWidget->minimumSizeHint());
+        listWidgetItem->setSizeHint(noteListCellWidget->minimumSize());
         ui->listWidget->setItemWidget(listWidgetItem, noteListCellWidget);
+//        ui->listWidget->resize(noteListCellWidget->sizeHint());
+        qDebug() << noteListCellWidget->minimumSize();
     }
+
 }
 
 
