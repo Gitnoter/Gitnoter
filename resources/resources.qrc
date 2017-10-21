@@ -7,13 +7,25 @@
         <file>marked/index.html</file>
         <file>marked/marked.min.js</file>
         <file>marked/qwebchannel.js</file>
-        <file>images/select.jpg</file>
-        <file>images/selected.jpg</file>
         <file>database/gitnoter.sql</file>
         <file>images/icon-close-down.png</file>
         <file>images/icon-close-up.png</file>
         <file>images/icon-enter-down.png</file>
         <file>images/icon-enter-up.png</file>
         <file>images/icon-logo.png</file>
+        <file>images/icon-allnote.png</file>
+        <file>images/icon-folder.png</file>
+        <file>images/icon-notclassify.png</file>
+        <file>images/icon-recent.png</file>
+        <file>images/icon-trash.png</file>
+        <file>images/icon-add-down.png</file>
+        <file>images/icon-add-up.png</file>
+        <file>images/icon-subtract-down.png</file>
+        <file>images/icon-subtract-up.png</file>
+        <file>images/icon-search.png</file>
+        <file>images/icon-search.png</file>
+        <file>images/icon-tags.png</file>
+        <file>images/icon-down-848484.png</file>
+        <file>images/icon-down-ffffff.png</file>
     </qresource>
 </RCC>
