@@ -45,7 +45,6 @@ SOURCES += \
     controllers/aboutdialog.cpp \
     controllers/lockdialog.cpp \
     controllers/notelistcellwidget.cpp \
-    controllers/tagorcategorylistcellwidget.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -60,7 +59,8 @@ SOURCES += \
     helps/qtinyaes/aes.c \
     helps/qtinyaes/qtinyaes.cpp \
     controllers/notelistsortpopupmenu.cpp \
-    controllers/elidedlabel.cpp
+    controllers/elidedlabel.cpp \
+    helps/thememanager.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -73,7 +73,6 @@ HEADERS += \
     controllers/aboutdialog.h \
     controllers/lockdialog.h \
     controllers/notelistcellwidget.h \
-    controllers/tagorcategorylistcellwidget.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -88,7 +87,8 @@ HEADERS += \
     helps/qtinyaes/aes.h \
     helps/qtinyaes/qtinyaes.h \
     controllers/notelistsortpopupmenu.h \
-    controllers/elidedlabel.h
+    controllers/elidedlabel.h \
+    helps/thememanager.h
 
 FORMS += \
     views/mainwindow.ui \
@@ -100,8 +100,7 @@ FORMS += \
     views/settingdialog.ui \
     views/aboutdialog.ui \
     views/lockdialog.ui \
-    views/notelistcellwidget.ui \
-    views/tagorcategorylistcellwidget.ui
+    views/notelistcellwidget.ui
 
 RESOURCES += \
     resources/resources.qrc

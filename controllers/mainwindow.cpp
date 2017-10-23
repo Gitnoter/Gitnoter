@@ -36,22 +36,32 @@ void MainWindow::setupUi()
     ui->listWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
+
+    ui->splitter->setSizes(Global::configModel->getSplitterSizes());
 }
 
 void MainWindow::setNoteList()
 {
-//    ui->listWidget->clear();
+    ui->listWidget->clear();
     for (auto &&noteMoldel : Global::noteModelList) {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteMoldel));
         ui->listWidget->addItem(listWidgetItem);
-        NoteListCellWidget *noteListCellWidget = new NoteListCellWidget(noteMoldel);
+        NoteListCellWidget *noteListCellWidget = new NoteListCellWidget(noteMoldel, this);
         listWidgetItem->setSizeHint(noteListCellWidget->minimumSize());
         ui->listWidget->setItemWidget(listWidgetItem, noteListCellWidget);
-//        ui->listWidget->resize(noteListCellWidget->sizeHint());
-        qDebug() << noteListCellWidget->minimumSize();
     }
 
+    // TODO: fix layout bug
+    ui->splitter->setSizes(Global::configModel->getSplitterSizes());
 }
 
+void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    emit noteListItemClicked(item);
+}
 
+void MainWindow::on_splitter_splitterMoved(int pos, int index)
+{
+    Global::configModel->setSplitterSizes(ui->splitter->sizes());
+}

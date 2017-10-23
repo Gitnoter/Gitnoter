@@ -30,9 +30,10 @@ QList<NoteModel *> Global::noteModelList = {};
 QList<CategoriesModel *> Global::categoriesModelList = {};
 QList<TagsModel *> Global::tagsModelList = {};
 
-NoteModel *Global::openNoteModel = new NoteModel();
 ConfigModel *Global::configModel = new ConfigModel();
+NoteModel *Global::openNoteModel = new NoteModel();
 GitManager *Global::gitManager = new GitManager();
+ThemeManager *Global::themeManager = new ThemeManager();
 
 void Global::initNoteModelList()
 {

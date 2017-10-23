@@ -5,6 +5,7 @@
 #include "configmodel.h"
 #include "tagsmodel.h"
 #include "gitmanager.h"
+#include "thememanager.h"
 
 #include <QObject>
 
@@ -43,6 +44,7 @@ public:
     static NoteModel *openNoteModel;
     static ConfigModel *configModel;
     static GitManager *gitManager;
+    static ThemeManager *themeManager;
 
     /// static QList<NoteModel *> noteModelList;
 

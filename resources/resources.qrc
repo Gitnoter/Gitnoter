@@ -23,9 +23,11 @@
         <file>images/icon-subtract-down.png</file>
         <file>images/icon-subtract-up.png</file>
         <file>images/icon-search.png</file>
-        <file>images/icon-search.png</file>
         <file>images/icon-tags.png</file>
         <file>images/icon-down-848484.png</file>
         <file>images/icon-down-ffffff.png</file>
+        <file>theme/notelistcellwidget-selected.qss</file>
+        <file>theme/notelistcellwidget-unselected.qss</file>
+        <file>theme/default.qss</file>
     </qresource>
 </RCC>

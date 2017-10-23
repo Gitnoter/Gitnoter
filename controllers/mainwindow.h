@@ -31,6 +31,14 @@ public:
 
     ~MainWindow();
 
+signals:
+    void noteListItemClicked(QListWidgetItem *item);
+
+private slots:
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+
+    void on_splitter_splitterMoved(int pos, int index);
+
 private:
     Ui::MainWindow *ui;
 

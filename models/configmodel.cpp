@@ -12,6 +12,9 @@ ConfigModel::ConfigModel(const QString &jsonString)
 ConfigModel::ConfigModel()
 {
     mVersion = Global::version;
+    mNewNoteKeySequence = Global::newNoteKeySequence;
+    mLockWindowKeySequence = Global::lockWindowKeySequence;
+    mCutWindowKeySequence = Global::cutWindowKeySequence;
     mRepoDir = "";
     mRepoUrl = "";
     mRepoEmail = "";
@@ -28,9 +31,8 @@ ConfigModel::ConfigModel()
     mAutoLockTime = 15 * 60 * 1000;
     mUnlockPassword = "";
     mFontPixelSize = 14;
-    mNewNoteKeySequence = Global::newNoteKeySequence;
-    mLockWindowKeySequence = Global::lockWindowKeySequence;
-    mCutWindowKeySequence = Global::cutWindowKeySequence;
+    mTheme = ThemeManager::ThemeFlag::Default;
+    splitterSizes = {0, 0, 0};
 
 #ifdef Q_OS_MAC
     mFontFamily = "Helvetica Neue";
@@ -69,9 +71,15 @@ QString ConfigModel::serialize(const QString &path)
     contributor["newNoteKeySequence"] = mNewNoteKeySequence;
     contributor["lockWindowKeySequence"] = mLockWindowKeySequence;
     contributor["cutWindowKeySequence"] = mCutWindowKeySequence;
+    contributor["theme"] = mTheme;
+
+    QtJson::JsonArray splitterSizesArray;
+    for (int i = 0; i < splitterSizes.length(); ++i) {
+        splitterSizesArray.append(splitterSizes[i]);
+    }
+    contributor["splitterSizes"] = splitterSizesArray;
 
     QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
-
     if (!path.isEmpty()) {
         Tools::writerFile(path, jsonString);
     }
@@ -105,6 +113,13 @@ void ConfigModel::unserialize(const QString &jsonString)
     mNewNoteKeySequence = result["newNoteKeySequence"].toString();
     mLockWindowKeySequence = result["lockWindowKeySequence"].toString();
     mCutWindowKeySequence = result["cutWindowKeySequence"].toString();
+    mTheme = (ThemeManager::ThemeFlag) result["cutWindowKeySequence"].toInt();
+
+    splitterSizes.clear();
+    QtJson::JsonArray splitterSizesArray = result["splitterSizes"].toList();
+    for (int i = 0; i < splitterSizesArray.length(); ++i) {
+        splitterSizes.append(splitterSizesArray[i].toInt());
+    }
 }
 
 void ConfigModel::setRepoDir(const QString &repoDir)
@@ -331,5 +346,27 @@ const QString &ConfigModel::getCutWindowKeySequence() const
 void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
 {
     ConfigModel::mCutWindowKeySequence = cutWindowKeySequence;
+    serialize(Global::appConfigPath);
+}
+
+const ThemeManager::ThemeFlag &ConfigModel::getTheme() const
+{
+    return mTheme;
+}
+
+void ConfigModel::setTheme(const ThemeManager::ThemeFlag &theme)
+{
+    mTheme = theme;
+    serialize(Global::appConfigPath);
+}
+
+const QList<int> &ConfigModel::getSplitterSizes() const
+{
+    return splitterSizes;
+}
+
+void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
+{
+    this->splitterSizes = splitterSizes;
     serialize(Global::appConfigPath);
 }

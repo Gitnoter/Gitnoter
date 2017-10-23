@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "thememanager.h"
+
 class ConfigModel : public QObject
 {
 Q_OBJECT
@@ -98,6 +100,14 @@ public:
 
     void setCutWindowKeySequence(const QString &cutWindowKeySequence);
 
+    const ThemeManager::ThemeFlag &getTheme() const;
+
+    void setTheme(const ThemeManager::ThemeFlag &theme);
+
+    const QList<int> &getSplitterSizes() const;
+
+    void setSplitterSizes(const QList<int> &splitterSizes);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -127,6 +137,8 @@ private:
     QString mLockWindowKeySequence;
     QString mCutWindowKeySequence;
 
+    ThemeManager::ThemeFlag mTheme;
+    QList<int> splitterSizes;
 };
 
 #endif // CONFIGMODEL_H

@@ -1,6 +1,7 @@
 #include "notelistcellwidget.h"
 #include "ui_notelistcellwidget.h"
-#include "tagorcategorylistcellwidget.h"
+
+#include "globals.h"
 
 #include "tools.h"
 
@@ -10,6 +11,8 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     noteModel(noteModel)
 {
     ui->setupUi(this);
+    setupUi();
+
     ui->label_title->setText("asdf - 歌单 - 网易云音乐");
     ui->frame_body->setText("2016年8月24日 - asdf 吉子可-- 2016-08-24 创建 播放 收藏 分享 下载 评论 歌曲列表 90首歌 播放:4次 生成外链播放器 加载中... 生命是场马拉松 卡比巴拉的海"
                             "2016年8月24日 - asdf 吉子可-- 2016-08-24 创建 播放 收藏 分享 下载 评论 歌曲列表 90首歌 播放:4次 生成外链播放器 加载中... 生命是场马拉松 卡比巴拉的海");
@@ -37,4 +40,18 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
 NoteListCellWidget::~NoteListCellWidget()
 {
     delete ui;
+}
+
+void NoteListCellWidget::onNoteListItemClicked(QListWidgetItem *item)
+{
+    NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
+    Global::themeManager->setTheme(this, noteModel == this->noteModel
+                                   ? ThemeManager::NoteListCellWidgetSelected
+                                   : ThemeManager::NoteListCellWidgetUnselected);
+}
+
+void NoteListCellWidget::setupUi()
+{
+    Global::themeManager->setTheme(this, ThemeManager::NoteListCellWidgetUnselected);
+    connect(parent(), SIGNAL(noteListItemClicked(QListWidgetItem *)), this, SLOT(onNoteListItemClicked(QListWidgetItem *)));
 }
