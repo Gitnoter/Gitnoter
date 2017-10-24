@@ -8,7 +8,7 @@ QT       += core gui webenginewidgets webchannel
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = GitNoteR-Qt-Desktop
+TARGET = Gitnoter
 TEMPLATE = app
 CONFIG += c++11
 
@@ -45,6 +45,8 @@ SOURCES += \
     controllers/aboutdialog.cpp \
     controllers/lockdialog.cpp \
     controllers/notelistcellwidget.cpp \
+    controllers/notelistsortpopupmenu.cpp \
+    controllers/elidedlabel.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -55,11 +57,6 @@ SOURCES += \
     helps/globals.cpp  \
     helps/tools.cpp \
     helps/gitmanager.cpp \
-    helps/json.cpp \
-    helps/qtinyaes/aes.c \
-    helps/qtinyaes/qtinyaes.cpp \
-    controllers/notelistsortpopupmenu.cpp \
-    controllers/elidedlabel.cpp \
     helps/thememanager.cpp
 
 HEADERS += \
@@ -73,6 +70,8 @@ HEADERS += \
     controllers/aboutdialog.h \
     controllers/lockdialog.h \
     controllers/notelistcellwidget.h \
+    controllers/notelistsortpopupmenu.h \
+    controllers/elidedlabel.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -83,11 +82,6 @@ HEADERS += \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
-    helps/json.h \
-    helps/qtinyaes/aes.h \
-    helps/qtinyaes/qtinyaes.h \
-    controllers/notelistsortpopupmenu.h \
-    controllers/elidedlabel.h \
     helps/thememanager.h
 
 FORMS += \
@@ -105,7 +99,8 @@ FORMS += \
 RESOURCES += \
     resources/resources.qrc
 
-unix|win32: LIBS += -L$$PWD/libraries/lib/ -lgit2
+#
+## DEPENDENCIES
+#
+include(3rdparty/3rdparty.pri)
 
-INCLUDEPATH += $$PWD/libraries/include
-DEPENDPATH += $$PWD/libraries/include

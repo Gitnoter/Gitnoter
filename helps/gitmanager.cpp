@@ -1,5 +1,3 @@
-#include <libraries/include/git2/remote.h>
-#include <libraries/include/git2.h>
 #include "gitmanager.h"
 
 GitManager::GitManager()

@@ -1,8 +1,9 @@
 #include "configmodel.h"
-#include "json.h"
-#include "qtinyaes/qtinyaes.h"
 #include "globals.h"
 #include "tools.h"
+
+#include <qtinyaes.h>
+#include <json.h>
 
 ConfigModel::ConfigModel(const QString &jsonString)
 {

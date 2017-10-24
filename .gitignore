@@ -37,4 +37,4 @@ Makefile*
 .DS_Store
 .idea
 *.user
-!libraries/lib/*
+!3rdparty/libgit2/lib/*

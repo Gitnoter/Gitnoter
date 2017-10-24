@@ -997,11 +997,7 @@ QWidget#widget_6{
           <widget class="QWidget" name="page">
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
+             <widget class="QMarkdownTextEdit" name="plainTextEdit"/>
             </item>
            </layout>
           </widget>
@@ -1210,6 +1206,13 @@ QWidget#widget_6{
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QMarkdownTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">qmarkdowntextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources/resources.qrc"/>
  </resources>

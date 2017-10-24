@@ -2,9 +2,8 @@
 #define GITMANAGER_H
 
 #include <vector>
-#include <git2.h>
-
 #include <assert.h>
+#include <git2.h>
 
 typedef struct
 {
