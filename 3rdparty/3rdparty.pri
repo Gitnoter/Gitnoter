@@ -11,6 +11,11 @@ include($$PWD/libgit2/libgit2.pri)
 include($$PWD/qmarkdowntextedit/qmarkdowntextedit.pri)
 
 #
+# Markdown parser
+#
+include($$PWD/hoedown/hoedown.pri)
+
+#
 # json
 #
 include($$PWD/json/json.pri)

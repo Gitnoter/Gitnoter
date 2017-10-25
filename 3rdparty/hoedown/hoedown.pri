@@ -1,3 +1,5 @@
+INCLUDEPATH += $$PWD/
+
 HEADERS += \
     $$PWD/autolink.h \
     $$PWD/buffer.h \

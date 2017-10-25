@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-08-08T17:23:25
+# Project created by MakeHui 2017-08-08T17:23:25
 #
 #-------------------------------------------------
 
@@ -47,17 +47,18 @@ SOURCES += \
     controllers/notelistcellwidget.cpp \
     controllers/notelistsortpopupmenu.cpp \
     controllers/elidedlabel.cpp \
+    controllers/markdowneditorwidget.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
     models/tagsmodel.cpp  \
     models/configmodel.cpp  \
     helps/previewpage.cpp  \
-    helps/document.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
     helps/gitmanager.cpp \
-    helps/thememanager.cpp
+    helps/thememanager.cpp \
+    helps/notepreviewwidget.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -72,17 +73,18 @@ HEADERS += \
     controllers/notelistcellwidget.h \
     controllers/notelistsortpopupmenu.h \
     controllers/elidedlabel.h \
+    controllers/markdowneditorwidget.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
     models/tagsmodel.h  \
     models/configmodel.h  \
     helps/previewpage.h  \
-    helps/document.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
-    helps/thememanager.h
+    helps/thememanager.h \
+    helps/notepreviewwidget.h
 
 FORMS += \
     views/mainwindow.ui \
@@ -94,7 +96,8 @@ FORMS += \
     views/settingdialog.ui \
     views/aboutdialog.ui \
     views/lockdialog.ui \
-    views/notelistcellwidget.ui
+    views/notelistcellwidget.ui \
+    views/markdowneditorwidget.ui
 
 RESOURCES += \
     resources/resources.qrc

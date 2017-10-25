@@ -990,19 +990,7 @@ QWidget#widget_6{
          <number>0</number>
         </property>
         <item>
-         <widget class="QWidget" name="widget_8" native="true"/>
-        </item>
-        <item>
-         <widget class="QStackedWidget" name="stackedWidget">
-          <widget class="QWidget" name="page">
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <item>
-             <widget class="QMarkdownTextEdit" name="plainTextEdit"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_2"/>
-         </widget>
+         <widget class="MarkdownEditorWidget" name="widget_editor" native="true"/>
         </item>
        </layout>
       </widget>
@@ -1208,9 +1196,10 @@ QWidget#widget_6{
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QMarkdownTextEdit</class>
-   <extends>QPlainTextEdit</extends>
-   <header location="global">qmarkdowntextedit.h</header>
+   <class>MarkdownEditorWidget</class>
+   <extends>QWidget</extends>
+   <header>markdowneditorwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
