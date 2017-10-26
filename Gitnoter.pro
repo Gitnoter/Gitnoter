@@ -48,6 +48,7 @@ SOURCES += \
     controllers/notelistsortpopupmenu.cpp \
     controllers/elidedlabel.cpp \
     controllers/markdowneditorwidget.cpp \
+    controllers/tagcellwidget.cpp \
     models/contentmodel.cpp  \
     models/notemodel.cpp  \
     models/categoriesmodel.cpp  \
@@ -74,6 +75,7 @@ HEADERS += \
     controllers/notelistsortpopupmenu.h \
     controllers/elidedlabel.h \
     controllers/markdowneditorwidget.h \
+    controllers/tagcellwidget.h \
     models/contentmodel.h  \
     models/notemodel.h  \
     models/categoriesmodel.h  \
@@ -97,7 +99,8 @@ FORMS += \
     views/aboutdialog.ui \
     views/lockdialog.ui \
     views/notelistcellwidget.ui \
-    views/markdowneditorwidget.ui
+    views/markdowneditorwidget.ui \
+    views/tagcellwidget.ui
 
 RESOURCES += \
     resources/resources.qrc

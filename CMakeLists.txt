@@ -22,8 +22,11 @@ qt5_wrap_ui(UIS_HDRS
         views/tagswidget.ui
         views/loginwidget.ui
         views/settingdialog.ui
-        views/aboutdialog.ui
-        views/lockdialog.ui)
+        views/aboutdialog.ui﻿
+        views/lockdialog.ui
+        views/notelistcellwidget.ui
+        views/markdowneditorwidget.ui
+        views/tagcellwidget.ui)
 
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}
@@ -39,6 +42,11 @@ add_executable(${PROJECT_NAME}
         controllers/settingdialog.h         controllers/settingdialog.cpp
         controllers/aboutdialog.h           controllers/aboutdialog.cpp
         controllers/lockdialog.h            controllers/lockdialog.cpp
+        controllers/notelistcellwidget.h    controllers/notelistcellwidget.cpp
+        controllers/notelistsortpopupmenu.h controllers/notelistsortpopupmenu.cpp
+        controllers/elidedlabel.h           controllers/elidedlabel.cpp
+        controllers/markdowneditorwidget.h  controllers/markdowneditorwidget.cpp
+        controllers/tagcellwidget.h         controllers/tagcellwidget.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/contentmodel.h       models/contentmodel.cpp
@@ -51,8 +59,7 @@ add_executable(${PROJECT_NAME}
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp
         helps/gitmanager.h      helps/gitmanager.cpp
-        helps/json.h            helps/json.cpp
-        helps/qtinyaes/aes.h    helps/qtinyaes/aes.c
-        helps/qtinyaes/qtinyaes.h helps/qtinyaes/qtinyaes.cpp)
+        helps/thememanager.h        helps/thememanager.cpp
+        helps/notepreviewwidget.h   helps/notepreviewwidget.cpp)
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel git2)

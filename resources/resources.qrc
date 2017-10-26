@@ -29,5 +29,12 @@
         <file>theme/notelistcellwidget-selected.qss</file>
         <file>theme/notelistcellwidget-unselected.qss</file>
         <file>theme/default.qss</file>
+        <file>images/icon-markdownpreview.png</file>
+        <file>images/icon-splitterpreview.png</file>
+        <file>images/icon-folder-down.png</file>
+        <file>images/icon-markdownpreview-down.png</file>
+        <file>images/icon-splitterpreview-down.png</file>
+        <file>images/icon-tags-down.png</file>
+        <file>images/icon-delete.png</file>
     </qresource>
 </RCC>
