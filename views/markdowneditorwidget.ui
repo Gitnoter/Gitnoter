@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>629</width>
+    <width>707</width>
     <height>428</height>
    </rect>
   </property>
@@ -18,6 +18,7 @@
 QWidget#MarkdownEditorWidget {
   
 }
+
 QFrame#frame{
   border: 0.5px solid rgba(255, 255, 255, 0);
   border-radius: 4px;
@@ -66,9 +67,105 @@ QLineEdit#lineEdit_tag,
 #markdownPreview {
   border: none;
 }
+
+QPushButton#pushButton_headerSize {
+  border-image: url(:/images/icon-text-size.svg);
+}
+
+QPushButton#pushButton_headerSize:hover {
+  border-image: url(:/images/icon-text-size-down.svg);
+}
+
+QPushButton#pushButton_bold {
+  border-image: url(:/images/icon-bold.svg);
+}
+
+QPushButton#pushButton_bold:hover {
+  border-image: url(:/images/icon-bold-down.svg);
+}
+
+QPushButton#pushButton_italic {
+  border-image: url(:/images/icon-italic.svg);
+}
+
+QPushButton#pushButton_italic:hover {
+  border-image: url(:/images/icon-italic-down.svg);
+}
+
+QPushButton#pushButton_strickout {
+  border-image: url(:/images/icon-strickout.svg);
+}
+
+QPushButton#pushButton_strickout:hover {
+  border-image: url(:/images/icon-strickout-down.svg);
+}
+
+QPushButton#pushButton_quote {
+  border-image: url(:/images/icon-quote.svg);
+}
+
+QPushButton#pushButton_quote:hover {
+  border-image: url(:/images/icon-quote-down.svg);
+}
+
+QPushButton#pushButton_code {
+  border-image: url(:/images/icon-code.svg);
+}
+
+QPushButton#pushButton_code:hover {
+  border-image: url(:/images/icon-code-down.svg);
+}
+
+QPushButton#pushButton_link {
+  border-image: url(:/images/icon-link.svg);
+}
+
+QPushButton#pushButton_link:hover {
+  border-image: url(:/images/icon-link-down.svg);
+}
+
+QPushButton#pushButton_image {
+  border-image: url(:/images/icon-file-media.svg);
+}
+
+QPushButton#pushButton_image:hover {
+  border-image: url(:/images/icon-file-media-down.svg);
+}
+
+QPushButton#pushButton_unordered {
+  border-image: url(:/images/icon-list-unordered.svg);
+}
+
+QPushButton#pushButton_unordered:hover {
+  border-image: url(:/images/icon-list-unordered-down.svg);
+}
+
+QPushButton#pushButton_ordered {
+  border-image: url(:/images/icon-list-ordered.svg);
+}
+
+QPushButton#pushButton_ordered:hover {
+  border-image: url(:/images/icon-list-ordered-down.svg);
+}
+
+QPushButton#pushButton_taskList {
+  border-image: url(:/images/icon-tasklist.svg);
+}
+
+QPushButton#pushButton_taskList:hover {
+  border-image: url(:/images/icon-tasklist-down.svg);
+}
+
+QPushButton#pushButton_table {
+  border-image: url(:/images/icon-table.svg);
+}
+
+QPushButton#pushButton_table:hover {
+  border-image: url(:/images/icon-table-down.svg);
+}
    </string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -290,8 +387,299 @@ QLineEdit#lineEdit_tag,
              <height>32</height>
             </size>
            </property>
-           <widget class="QWidget" name="page"/>
-           <widget class="QWidget" name="page_2"/>
+           <widget class="QWidget" name="page_editTools">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pushButton_headerSize">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_bold">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_italic">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_strickout">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_2" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_quote">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_code">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_link">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_image">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_3" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_unordered">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_ordered">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_taskList">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_table">
+               <property name="minimumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_noteDate"/>
           </widget>
          </item>
         </layout>

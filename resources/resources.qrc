@@ -36,5 +36,29 @@
         <file>images/icon-splitterpreview-down.png</file>
         <file>images/icon-tags-down.png</file>
         <file>images/icon-delete.png</file>
+        <file>images/icon-file-media-down.svg</file>
+        <file>images/icon-file-media.svg</file>
+        <file>images/icon-bold-down.svg</file>
+        <file>images/icon-bold.svg</file>
+        <file>images/icon-code-down.svg</file>
+        <file>images/icon-code.svg</file>
+        <file>images/icon-italic-down.svg</file>
+        <file>images/icon-italic.svg</file>
+        <file>images/icon-link-down.svg</file>
+        <file>images/icon-link.svg</file>
+        <file>images/icon-list-ordered-down.svg</file>
+        <file>images/icon-list-ordered.svg</file>
+        <file>images/icon-list-unordered-down.svg</file>
+        <file>images/icon-list-unordered.svg</file>
+        <file>images/icon-quote-down.svg</file>
+        <file>images/icon-quote.svg</file>
+        <file>images/icon-strickout-down.svg</file>
+        <file>images/icon-strickout.svg</file>
+        <file>images/icon-table-down.svg</file>
+        <file>images/icon-table.svg</file>
+        <file>images/icon-tasklist-down.svg</file>
+        <file>images/icon-tasklist.svg</file>
+        <file>images/icon-text-size-down.svg</file>
+        <file>images/icon-text-size.svg</file>
     </qresource>
 </RCC>
