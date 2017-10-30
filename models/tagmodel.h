@@ -1,14 +1,14 @@
-#ifndef TAGSMODEL_H
-#define TAGSMODEL_H
+#ifndef TAGMODEL_H
+#define TAGMODEL_H
 
 #include <QObject>
 
-class TagsModel : public QObject
+class TagModel : public QObject
 {
 Q_OBJECT
 
 public:
-    TagsModel(const QString &name = "", int count = 0);
+    TagModel(const QString &name = "", int count = 0);
 
     const QString &getName() const;
 
@@ -19,9 +19,9 @@ public:
     void setCount(int count);
 
 private:
-    QString name;
-    int count;
+    QString mName;
+    int mCount;
 
 };
 
-#endif // TAGSMODEL_H
+#endif // TAGMODEL_H
