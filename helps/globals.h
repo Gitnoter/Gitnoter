@@ -23,9 +23,10 @@ public:
     static const QString appDataPath;
     static const QString appConfigPath;
     static const QString repoPath;
-    static const QString repoNotePath;
+    static const QString repoNoteTextPath;
     static const QString noteTextFileName;
     static const QString noteDataFileName;
+    static const QString repoNoteDataPath;
     static const QString repoCategoriesListPath;
     static const QString repoTagsListPath;
 
@@ -38,7 +39,7 @@ public:
 
     static QList<NoteModel *> noteModelList;
     static QList<CategoryModel *> categoryModelList;
-    static QList<TagModel *> tagsModelList;
+    static QList<TagModel *> tagModelList;
 
     static NoteModel *openNoteModel;
     static ConfigModel *configModel;
@@ -57,7 +58,7 @@ public:
 
     static void initCategoryModelList();
 
-    static bool addCategoryModelList(QList<CategoryModel *>);
+    static void addCategoryModelToList(const QString categoryName);
 
     static bool hasInCategoryModelList(const QString &name);
 
@@ -69,7 +70,7 @@ public:
 
     static void initTagModelList();
 
-    static bool addTagModelList(QList<TagModel *> list);
+    static void addTagModelList(const QString tagName);
 
     static bool hasInTagModelList(const QString &name);
 

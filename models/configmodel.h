@@ -48,7 +48,7 @@ public:
 
     void setSidebarSortValue(const QString &sidebarSortValue);
 
-    QString getCategoriesName() const;
+    QString getCategoryName() const;
 
     void setCategoriesName(const QString &categoriesName);
 

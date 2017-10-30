@@ -1,4 +1,5 @@
 #include "markdowneditorwidget.h"
+#include "notemodel.h"
 
 #include "ui_markdowneditorwidget.h"
 
@@ -18,8 +19,6 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     connect(ui->markdownPreview->verticalScrollBar(),
                 SIGNAL(valueChanged(int)),
                 this, SLOT(markdownPreviewSliderValueChanged(int)));
-
-    ui->markdownPreview->setText(ui->markdownEditor->toPlainText());
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()

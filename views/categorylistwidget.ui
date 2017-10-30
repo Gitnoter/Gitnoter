@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CategoriesWidget</class>
- <widget class="QDialog" name="CategoriesWidget">
+ <class>CategoryListWidget</class>
+ <widget class="QDialog" name="CategoryListWidget">
   <property name="enabled">
    <bool>true</bool>
   </property>

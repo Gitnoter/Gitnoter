@@ -1,14 +1,14 @@
-#include "categorieswidget.h"
+#include "categorylistwidget.h"
 #include "mainwindow.h"
-#include "ui_categorieswidget.h"
+#include "ui_categorylistwidget.h"
 #include "tools.h"
 #include "globals.h"
 
 #include <QDebug>
 
-CategoriesWidget::CategoriesWidget(QWidget *parent) :
+CategoryListWidget::CategoryListWidget(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::CategoriesWidget)
+        ui(new Ui::CategoryListWidget)
 {
     ui->setupUi(this);
 
@@ -18,12 +18,12 @@ CategoriesWidget::CategoriesWidget(QWidget *parent) :
     mSetListWidgetList();
 }
 
-CategoriesWidget::~CategoriesWidget()
+CategoryListWidget::~CategoryListWidget()
 {
     delete ui;
 }
 
-void CategoriesWidget::mSetListWidgetList()
+void CategoryListWidget::mSetListWidgetList()
 {
     ui->listWidget_data->clear();
     for (int i = 0; i < Global::categoryModelList.length(); ++i) {
@@ -35,7 +35,7 @@ void CategoriesWidget::mSetListWidgetList()
     }
 }
 
-void CategoriesWidget::mFiltrateListWidgetList()
+void CategoryListWidget::mFiltrateListWidgetList()
 {
     int showCount = 0;
     QString text = ui->lineEdit->displayText();
@@ -51,13 +51,13 @@ void CategoriesWidget::mFiltrateListWidgetList()
     ui->pushButton_add->setHidden(showCount != 0);
 }
 
-void CategoriesWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
+void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
 {
     on_buttonBox_accepted();
     emit accept();
 }
 
-void CategoriesWidget::on_pushButton_add_clicked()
+void CategoryListWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
         Global::categoryModelList.append(new CategoryModel(ui->lineEdit->displayText()));
@@ -68,12 +68,12 @@ void CategoriesWidget::on_pushButton_add_clicked()
     }
 }
 
-void CategoriesWidget::on_lineEdit_textChanged(const QString &arg1)
+void CategoryListWidget::on_lineEdit_textChanged(const QString &arg1)
 {
     mFiltrateListWidgetList();
 }
 
-void CategoriesWidget::on_buttonBox_accepted()
+void CategoryListWidget::on_buttonBox_accepted()
 {
     auto selectItemList = ui->listWidget_data->selectedItems();
     for (auto &&item : selectItemList) {

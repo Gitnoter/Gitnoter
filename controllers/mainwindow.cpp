@@ -2,13 +2,10 @@
 #include "notelistsortpopupmenu.h"
 #include "notelistcellwidget.h"
 
-#include "previewpage.h"
 #include "tools.h"
 #include "globals.h"
 
 #include "ui_mainwindow.h"
-
-#include <html.h>
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -40,7 +37,6 @@ void MainWindow::setupUi()
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
 
     ui->splitter->setSizes(Global::configModel->getSplitterSizes());
-//    ui->textBrowser->setText(toMarkdownHtml(""));
 }
 
 void MainWindow::setNoteList()
@@ -67,4 +63,18 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 void MainWindow::on_splitter_splitterMoved(int pos, int index)
 {
     Global::configModel->setSplitterSizes(ui->splitter->sizes());
+}
+
+void MainWindow::on_pushButton_noteAdd_clicked()
+{
+    NoteModel *noteModel = new NoteModel();
+    noteModel->setCategory(Global::configModel->getCategoryName());
+    Global::setOpenNoteModel(noteModel);
+    Global::addNoteModelToList(noteModel);
+    on_action_saveNote_triggered();
+}
+
+void MainWindow::on_action_saveNote_triggered()
+{
+    Global::openNoteModel->writerLocal();
 }

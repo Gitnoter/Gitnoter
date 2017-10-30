@@ -1,5 +1,5 @@
-#ifndef CATEGORIESWIDGET_H
-#define CATEGORIESWIDGET_H
+#ifndef CATEGORYLISTWIDGET_H
+#define CATEGORYLISTWIDGET_H
 
 #include "categorymodel.h"
 
@@ -9,17 +9,17 @@
 
 namespace Ui
 {
-    class CategoriesWidget;
+    class CategoryListWidget;
 }
 
-class CategoriesWidget : public QDialog
+class CategoryListWidget : public QDialog
 {
 Q_OBJECT
 
 public:
-    explicit CategoriesWidget(QWidget *parent = 0);
+    explicit CategoryListWidget(QWidget *parent = 0);
 
-    ~CategoriesWidget();
+    ~CategoryListWidget();
 
 signals:
 
@@ -36,11 +36,11 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::CategoriesWidget *ui;
+    Ui::CategoryListWidget *ui;
 
     void mSetListWidgetList();
 
     void mFiltrateListWidgetList();
 };
 
-#endif // CATEGORIESWIDGET_H
+#endif // CATEGORYLISTWIDGET_H

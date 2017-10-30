@@ -36,7 +36,7 @@ DEPENDPATH += $$PWD/controllers \
 SOURCES += \
     main.cpp \
     controllers/mainwindow.cpp  \
-    controllers/categorieswidget.cpp  \
+    controllers/categorylistwidget.cpp  \
     controllers/loginwidget.cpp \
     controllers/settingdialog.cpp \
     controllers/aboutdialog.cpp \
@@ -50,7 +50,6 @@ SOURCES += \
     models/categorymodel.cpp  \
     models/tagmodel.cpp  \
     models/configmodel.cpp  \
-    helps/previewpage.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
     helps/gitmanager.cpp \
@@ -59,7 +58,7 @@ SOURCES += \
 
 HEADERS += \
         controllers/mainwindow.h  \
-    controllers/categorieswidget.h  \
+    controllers/categorylistwidget.h  \
     controllers/loginwidget.h \
     controllers/settingdialog.h \
     controllers/aboutdialog.h \
@@ -73,7 +72,6 @@ HEADERS += \
     models/categorymodel.h  \
     models/tagmodel.h  \
     models/configmodel.h  \
-    helps/previewpage.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
@@ -82,7 +80,7 @@ HEADERS += \
 
 FORMS += \
     views/mainwindow.ui \
-    views/categorieswidget.ui \
+    views/categorylistwidget.ui \
     views/loginwidget.ui \
     views/settingdialog.ui \
     views/aboutdialog.ui \

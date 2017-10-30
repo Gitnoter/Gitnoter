@@ -13,7 +13,7 @@ include_directories(${PROJECT_SOURCE_DIR}/helps)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
-        views/categorieswidget.ui
+        views/categorylistwidget.ui
         views/loginwidget.ui
         views/settingdialog.ui
         views/aboutdialog.ui
@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME}
         resources/resources.qrc
 
         controllers/mainwindow.h            controllers/mainwindow.cpp
-        controllers/categorieswidget.h      controllers/categorieswidget.cpp
+        controllers/categorylistwidget.h controllers/categorylistwidget.cpp
         controllers/loginwidget.h           controllers/loginwidget.cpp
         controllers/settingdialog.h         controllers/settingdialog.cpp
         controllers/aboutdialog.h           controllers/aboutdialog.cpp
@@ -44,8 +44,6 @@ add_executable(${PROJECT_NAME}
         models/tagmodel.h       models/tagmodel.cpp
         models/configmodel.h    models/configmodel.cpp
 
-        helps/previewpage.h     helps/previewpage.cpp
-        helps/document.h        helps/document.cpp
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp
         helps/gitmanager.h      helps/gitmanager.cpp

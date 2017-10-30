@@ -12,11 +12,12 @@ const QString Global::appDataLocation = QDir(
 const QString Global::appDataPath = QDir(appDataLocation).filePath("data/");
 const QString Global::appConfigPath = QDir(appDataPath).filePath("appconfig.json");
 const QString Global::repoPath = QDir(appDataLocation).filePath("user/user.git");
-const QString Global::repoNotePath = QDir(repoPath).filePath("notes/");
+const QString Global::repoNoteTextPath = QDir(repoPath).filePath("notes/");
 const QString Global::noteTextFileName = "markdown.md";
 const QString Global::noteDataFileName = "data.json";
-const QString Global::repoCategoriesListPath = QDir(noteDataFileName).filePath("categories.list");
-const QString Global::repoTagsListPath = QDir(noteDataFileName).filePath("tags.list");
+const QString Global::repoNoteDataPath = QDir(repoPath).filePath("data");
+const QString Global::repoCategoriesListPath = QDir(repoNoteDataPath).filePath("categories.list");
+const QString Global::repoTagsListPath = QDir(repoNoteDataPath).filePath("tags.list");
 
 const QString Global::newNoteKeySequence = "Ctrl+N";
 const QString Global::lockWindowKeySequence = "Ctrl+Shift+L";
@@ -27,7 +28,7 @@ const QByteArray Global::aesIv  = "RNNSR8XNbMTuOSGd";
 
 QList<NoteModel *> Global::noteModelList = {};
 QList<CategoryModel *> Global::categoryModelList = {};
-QList<TagModel *> Global::tagsModelList = {};
+QList<TagModel *> Global::tagModelList = {};
 
 ConfigModel *Global::configModel = new ConfigModel();
 NoteModel *Global::openNoteModel = new NoteModel();
@@ -36,12 +37,16 @@ ThemeManager *Global::themeManager = new ThemeManager();
 
 void Global::initNoteModelList()
 {
-    if (noteModelList.length() == 0) {
-        QFileInfoList fileInfoList = Tools::getFilesPath(repoNotePath);
-        noteModelList.clear();
-        for (auto &&fileInfo : fileInfoList) {
-            NoteModel *noteModel = new NoteModel(Tools::readerFile(fileInfo.absoluteFilePath()),
-                                                 fileInfo.absoluteFilePath());
+    noteModelList.clear();
+    QDir dir(repoNoteTextPath);
+
+    for (auto &&mfi : dir.entryInfoList()) {
+        if (mfi.fileName() == "." || mfi.fileName() == "..") {
+            continue;
+        }
+        if (mfi.isDir()) {
+            QDir dir2(mfi.absoluteFilePath());
+            NoteModel *noteModel = new NoteModel(dir2.filePath(noteTextFileName), dir2.filePath(noteDataFileName));
             noteModelList.append(noteModel);
         }
     }
@@ -50,17 +55,15 @@ void Global::initNoteModelList()
 void Global::initCategoryModelList()
 {
     categoryModelList.clear();
-
     QMap<QString, CategoryModel *> map;
     for (auto &&noteModel : noteModelList) {
-//        if (map.contains(noteModel->categoryModel->getName())) {
-//            auto *categoryModel = map[noteModel->categoryModel->getName()];
-//            categoryModel->setCount(categoryModel->getCount() + 1);
-//        }
-//        else {
-//            noteModel->categoryModel->setCount(1);
-//            map[noteModel->categoryModel->getName()] = noteModel->categoryModel;
-//        }
+        if (map.contains(noteModel->getCategory())) {
+            CategoryModel *categoryModel = map[noteModel->getCategory()];
+            categoryModel->setCount(categoryModel->getCount() + 1);
+        }
+        else {
+            map[noteModel->getCategory()] = new CategoryModel(noteModel->getCategory(), 1);
+        }
     }
 
     QStringList stringList = Tools::readerFileToList(repoCategoriesListPath);
@@ -72,32 +75,21 @@ void Global::initCategoryModelList()
 
     categoryModelList = map.values();
 
-    if (stringList.length() == 0) {
-        saveCategoryModelList();
-    }
+    saveCategoryModelList();
 }
 
-bool Global::addCategoryModelList(QList<CategoryModel *> list)
+void Global::addCategoryModelToList(const QString categoryName)
 {
-    bool isWriterFile = false;
-    for (auto &&item : list) {
-        bool hasName = false;
-        for (auto &&categoryModel : categoryModelList) {
-            if (categoryModel->getName() == item->getName()) {
-                hasName = true;
-            }
-        }
-        if (!hasName) {
-            isWriterFile = true;
-            categoryModelList.append(item);
+    for (auto &&item : categoryModelList) {
+        if (item->getName() == categoryName) {
+            item->setCount(item->getCount() + 1);
+            saveCategoryModelList();
+            return;
         }
     }
 
-    if (isWriterFile || list.length() == 0) {
-        saveCategoryModelList();
-    }
-
-    return isWriterFile;
+    categoryModelList.append(new CategoryModel(categoryName, 1));
+    saveCategoryModelList();
 }
 
 bool Global::hasInCategoryModelList(const QString &name)
@@ -113,23 +105,19 @@ bool Global::hasInCategoryModelList(const QString &name)
 
 void Global::initTagModelList()
 {
-    tagsModelList.clear();
+    tagModelList.clear();
 
     QMap<QString, TagModel *> map;
     for (auto &&noteModel : noteModelList) {
-//        for (auto &&tagsModel : *noteModel->tagsModelList) {
-//            if (tagsModel->getName().isEmpty()) {
-//                continue;
-//            }
-//            if (map.contains(tagsModel->getName())) {
-//                auto *model = map[tagsModel->getName()];
-//                model->setCount(model->getCount() + 1);
-//            }
-//            else {
-//                tagsModel->setCount(1);
-//                map[tagsModel->getName()] = tagsModel;
-//            }
-//        }
+        for (auto &&item : noteModel->getTagList()) {
+            if (map.contains(item)) {
+                TagModel *tagModel = map[item];
+                tagModel->setCount(tagModel->getCount() + 1);
+            }
+            else {
+                map[item] = new TagModel(item, 1);
+            }
+        }
     }
 
     QStringList stringList = Tools::readerFileToList(repoTagsListPath);
@@ -139,42 +127,35 @@ void Global::initTagModelList()
         }
     }
 
-    tagsModelList = map.values();
+    tagModelList = map.values();
 
-    if (stringList.length() == 0) {
-        saveTagModelList();
-    }
+    saveTagModelList();
 }
 
-bool Global::addTagModelList(QList<TagModel *> list)
+void Global::addTagModelList(const QString tagName)
 {
-    bool isWriterFile = false;
-    for (auto &&item : list) {
-        bool hasName = false;
-        for (auto &&tagsModel : tagsModelList) {
-            if (tagsModel->getName() == item->getName()) {
-                hasName = true;
-            }
-        }
-        if (!hasName) {
-            isWriterFile = true;
-            tagsModelList.append(item);
+    if (tagName.isEmpty()) {
+        return;
+    }
+
+    for (auto &&tagsModel : tagModelList) {
+        if (tagsModel->getName() == tagName) {
+            tagsModel->setCount(tagsModel->getCount() + 1);
+            saveTagModelList();
+            return;
         }
     }
 
-    if (isWriterFile || list.length() == 0) {
-        saveTagModelList();
-    }
-
-    return isWriterFile;
+    tagModelList.append(new TagModel(tagName, 1));
+    saveTagModelList();
 }
 
 NoteModel *Global::getNoteModelByUuid(const QString &uuid)
 {
     for (auto &&noteModel :noteModelList) {
-//        if (noteModel->contentModel->getUuid() == uuid) {
-//            return noteModel;
-//        }
+        if (noteModel->getUuid() == uuid) {
+            return noteModel;
+        }
     }
 
     return nullptr;
@@ -195,7 +176,7 @@ void Global::initConfigModel()
 void Global::setOpenNoteModel(NoteModel *noteModel)
 {
     openNoteModel = noteModel;
-//    configModel->setOpenNotesUuid(noteModel->contentModel->getUuid());
+    configModel->setOpenNotesUuid(noteModel->getUuid());
 
     addNoteModelToList(noteModel);
 }
@@ -204,14 +185,13 @@ void Global::addNoteModelToList(NoteModel *noteModel)
 {
     if (noteModelList.indexOf(noteModel) == -1) {
         noteModelList.append(noteModel);
-        initCategoryModelList();
-        initTagModelList();
+        addCategoryModelToList(Global::configModel->getCategoryName());
     }
 }
 
 bool Global::hasInTagModelList(const QString &name)
 {
-    for (auto &&item : tagsModelList) {
+    for (auto &&item : tagModelList) {
         if (item->getName() == name) {
             return true;
         }
@@ -232,7 +212,7 @@ void Global::saveCategoryModelList()
 void Global::saveTagModelList()
 {
     QString str = "";
-    for (auto &&item : tagsModelList) {
+    for (auto &&item : tagModelList) {
         str += item->getName() + "\n";
     }
     Tools::writerFile(repoTagsListPath, str.trimmed());
@@ -267,7 +247,8 @@ void Global::renameCategoryModelListInName(const QString oldName, const QString 
 
 void Global::initRepoLocalDir()
 {
-    Tools::createMkDir(repoNotePath);
+    Tools::createMkDir(repoNoteTextPath);
+    Tools::createMkDir(repoNoteDataPath);
 }
 
 int Global::initGitManager()

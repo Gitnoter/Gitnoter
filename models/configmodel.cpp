@@ -205,7 +205,7 @@ void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
     serialize(Global::appConfigPath);
 }
 
-QString ConfigModel::getCategoriesName() const
+QString ConfigModel::getCategoryName() const
 {
     return mCategoriesName;
 }

@@ -990,7 +990,10 @@ QWidget#widget_6{
          <number>0</number>
         </property>
         <item>
-         <widget class="MarkdownEditorWidget" name="widget_editor" native="true"/>
+         <widget class="QStackedWidget" name="widget_editor">
+          <widget class="MarkdownEditorWidget" name="page_editor" native="true"/>
+          <widget class="QWidget" name="page_noEdit"/>
+         </widget>
         </item>
        </layout>
       </widget>

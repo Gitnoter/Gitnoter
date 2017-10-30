@@ -1,8 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "document.h"
-#include "categorieswidget.h"
+#include "categorylistwidget.h"
 #include "notemodel.h"
 #include "configmodel.h"
 #include "settingdialog.h"
@@ -38,8 +37,13 @@ private slots:
 
     void on_splitter_splitterMoved(int pos, int index);
 
+    void on_pushButton_noteAdd_clicked();
+
+    void on_action_saveNote_triggered();
+
 private:
     Ui::MainWindow *ui;
+
 
 private:
     void setupUi();
