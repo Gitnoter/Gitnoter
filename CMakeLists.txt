@@ -6,9 +6,6 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Gui WebEngineWidgets WebChannel Sql REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/libraries/include)
-link_directories(${PROJECT_SOURCE_DIR}/libraries/lib)
-
 include_directories(${PROJECT_SOURCE_DIR}/models)
 include_directories(${PROJECT_SOURCE_DIR}/views)
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
@@ -17,12 +14,9 @@ include_directories(${PROJECT_SOURCE_DIR}/helps)
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
         views/categorieswidget.ui
-        views/categorieslistcell.ui
-        views/tagslistcell.ui
-        views/tagswidget.ui
         views/loginwidget.ui
         views/settingdialog.ui
-        views/aboutdialog.ui﻿
+        views/aboutdialog.ui
         views/lockdialog.ui
         views/notelistcellwidget.ui
         views/markdowneditorwidget.ui
@@ -35,9 +29,6 @@ add_executable(${PROJECT_NAME}
 
         controllers/mainwindow.h            controllers/mainwindow.cpp
         controllers/categorieswidget.h      controllers/categorieswidget.cpp
-        controllers/categorieslistcell.h    controllers/categorieslistcell.cpp
-        controllers/tagslistcell.h          controllers/tagslistcell.cpp
-        controllers/tagswidget.h            controllers/tagswidget.cpp
         controllers/loginwidget.h           controllers/loginwidget.cpp
         controllers/settingdialog.h         controllers/settingdialog.cpp
         controllers/aboutdialog.h           controllers/aboutdialog.cpp
@@ -48,11 +39,10 @@ add_executable(${PROJECT_NAME}
         controllers/markdowneditorwidget.h  controllers/markdowneditorwidget.cpp
         controllers/tagcellwidget.h         controllers/tagcellwidget.cpp
 
-        models/notemodel.h          models/notemodel.cpp
-        models/contentmodel.h       models/contentmodel.cpp
-        models/categoriesmodel.h    models/categoriesmodel.cpp
-        models/tagsmodel.h          models/tagsmodel.cpp
-        models/configmodel.h        models/configmodel.cpp
+        models/notemodel.h      models/notemodel.cpp
+        models/categorymodel.h  models/categorymodel.cpp
+        models/tagmodel.h       models/tagmodel.cpp
+        models/configmodel.h    models/configmodel.cpp
 
         helps/previewpage.h     helps/previewpage.cpp
         helps/document.h        helps/document.cpp
@@ -62,4 +52,4 @@ add_executable(${PROJECT_NAME}
         helps/thememanager.h        helps/thememanager.cpp
         helps/notepreviewwidget.h   helps/notepreviewwidget.cpp)
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel git2)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::WebEngineWidgets Qt5::WebChannel)

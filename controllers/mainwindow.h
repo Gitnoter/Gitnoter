@@ -5,7 +5,6 @@
 #include "categorieswidget.h"
 #include "notemodel.h"
 #include "configmodel.h"
-#include "tagswidget.h"
 #include "settingdialog.h"
 #include "aboutdialog.h"
 

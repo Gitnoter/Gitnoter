@@ -1,9 +1,8 @@
 #ifndef NOTEMODEL_H
 #define NOTEMODEL_H
 
-#include "contentmodel.h"
-#include "tagsmodel.h"
-#include "categoriesmodel.h"
+#include "tagmodel.h"
+#include "categorymodel.h"
 
 #include <QObject>
 #include <QtCore>
@@ -13,28 +12,61 @@ class NoteModel : public QObject
 Q_OBJECT
 
 public:
-    ContentModel *contentModel;
-    QList<TagsModel *> *tagsModelList;
-    CategoriesModel *categoriesModel;
+    NoteModel(const QString noteText = "");
 
-    NoteModel();
-
-    NoteModel(CategoriesModel *categoriesModel);
-
-    NoteModel(QString noteText, QString filePath = "");
-
-    NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
-              CategoriesModel *categoriesModel);
-
-    QString getNote() const;
+    NoteModel(const QString textPath, const QString dataPath = "");
 
     QString getDisplayNote() const;
 
     QString getTagsString() const;
 
+    QString getNoteData() const;
+
+    void setNoteData(const QString &noteData);
+
     void writerLocal();
 
     void clear();
+
+
+
+    void setUuid(QString uuid = "");
+
+    void setCreateDate(QString createDate = "");
+
+    void setCreateDate(int createDate = 0);
+
+    void setUpdateDate(QString updateDate = "");
+
+    void setUpdateDate(int updateDate = 0);
+
+    void setNoteText(QString body = "");
+
+    QString getUuid();
+
+    int getCreateDate();
+
+    int getUpdateDate();
+
+    QString getNoteText();
+
+    const QString & getFileDir();
+
+    const QStringList &getTagList() const;
+
+    void setTagList(const QStringList &tagList = {});
+
+    const QString &getCategory() const;
+
+    void setCategory(const QString &category = "");
+
+private:
+    QString mUuid;
+    int mCreateDate;
+    int mUpdateDate;
+    QString mBody;
+    QStringList tagList;
+    QString category;
 
 };
 

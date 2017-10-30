@@ -2,125 +2,166 @@
 #include "tools.h"
 #include "globals.h"
 
-NoteModel::NoteModel()
+#include <json.h>
+
+NoteModel::NoteModel(const QString noteText)
 {
-    this->clear();
+    clear();
+    setNoteText(noteText);
 }
 
-NoteModel::NoteModel(CategoriesModel *categoriesModel)
+NoteModel::NoteModel(const QString textPath, const QString dataPath)
 {
-    this->clear();
-    this->categoriesModel = categoriesModel;
+    setNoteText(Tools::readerFile(textPath));
+    setNoteData(Tools::readerFile(dataPath));
 }
 
-NoteModel::NoteModel(QString noteText, QString filePath)
+const QString & NoteModel::getFileDir()
 {
-    QTextStream in(&noteText);
-    bool bodyStart = false;
-    QString body;
-    QMap<QString, QString> map;
-    map["uuid"] = "";
-    map["title"] = "";
-    map["createDate"] = "";
-    map["updateDate"] = "";
-    map["tags"] = "";
-    map["categories"] = "";
-
-    while (!in.atEnd()) {
-        QString noteLine = in.readLine().trimmed();
-
-        if (!bodyStart) {
-            if (noteLine.mid(0, 1) == "#" || noteLine.mid(0, 2) == "##" || noteLine.mid(0, 3) == "###") {
-                bodyStart = true;
-            }
-            if (noteLine == "---") {
-                bodyStart = true;
-                continue;
-            }
-        }
-
-        if (!bodyStart && noteLine.isEmpty()) {
-            continue;
-        }
-
-        if (!bodyStart) {
-            QStringList stringList = Tools::splitNotesData(noteLine);
-            if (stringList.length() == 2) {
-                map[stringList[0]] = stringList[1].trimmed();
-            }
-        }
-        else {
-            body += noteLine + "\n";
-        }
+    if (mUuid.isEmpty()) {
+        setUuid();
     }
-    this->contentModel = new ContentModel(map["uuid"], map["title"],
-                                          Tools::timestampFromDateTime(map["createDate"]),
-                                          Tools::timestampFromDateTime(map["updateDate"]), body.trimmed(),
-                                          filePath);
-    this->categoriesModel = new CategoriesModel(map["categories"]);
-    this->tagsModelList = new QList<TagsModel *>;
-    QStringList tags = map["tags"].split(QRegExp(Global::tagSplit + "?"));
-    for (auto &&tag : tags) {
-        this->tagsModelList->append(new TagsModel(tag.trimmed()));
-    }
-}
 
-NoteModel::NoteModel(ContentModel *contentModel, QList<TagsModel *> *tagList,
-                     CategoriesModel *categoriesModel)
-{
-    this->contentModel = contentModel;
-    this->tagsModelList = tagList;
-    this->categoriesModel = categoriesModel;
-}
-
-QString NoteModel::getNote() const
-{
-    QString note;
-    QString tags;
-    note += "uuid: " + this->contentModel->getUuid() + "\n";
-    note += "title: " + this->contentModel->getTitle() + "\n";
-    note += "createDate: " + Tools::timestampToDateTime(this->contentModel->getCreateDate()) + "\n";
-    note += "updateDate: " + Tools::timestampToDateTime(this->contentModel->getUpdateDate()) + "\n";
-    note += "categories: " + this->categoriesModel->getName() + "\n";
-
-    note += "tags: ";
-    for (auto &&tagsModel : *(this->tagsModelList)) {
-        tags += tagsModel->getName() + Global::tagSplit;
-    }
-    tags.chop(Global::tagSplit.length());
-    note += tags;
-
-    note += "\n\n---\n\n" + this->contentModel->getBody();
-
-    return note;
+    return QDir(Global::repoNotePath).filePath(getUuid());
 }
 
 QString NoteModel::getDisplayNote() const
 {
-    return contentModel->getTitle().isEmpty()
-           ? contentModel->getBody()
-           : "# " + contentModel->getTitle() + "\n\n" + contentModel->getBody();
+    return "";
 }
 
 QString NoteModel::getTagsString() const
 {
     QString tagsString;
-    for (auto &&item : *Global::openNoteModel->tagsModelList) {
-        tagsString += item->getName() + Global::tagSplit;
+    for (auto &&item : tagList) {
+        tagsString += item + Global::tagSplit;
     }
     tagsString.chop(Global::tagSplit.length());
 
     return tagsString;
 }
 
+void NoteModel::setNoteData(const QString &noteData)
+{
+    QtJson::JsonObject result = QtJson::parse(noteData).toMap();
+
+    mUuid = result["uuid"].toString();
+    mCreateDate = result["createDate"].toInt();
+    mUpdateDate = result["updateDate"].toInt();
+    category = result["category"].toString();
+
+    tagList.clear();
+    QtJson::JsonArray tagListArray = result["tagList"].toList();
+    for (int i = 0; i < tagListArray.length(); ++i) {
+        tagList.append(tagListArray[i].toString());
+    }
+}
+
+QString NoteModel::getNoteData() const
+{
+    QtJson::JsonObject contributor;
+
+    contributor["uuid"] = mUuid;
+    contributor["createDate"] = mCreateDate;
+    contributor["updateDate"] = mUpdateDate;
+    contributor["category"] = category;
+
+    QtJson::JsonArray tagListArray;
+    for (int i = 0; i < tagList.length(); ++i) {
+        tagListArray.append(tagList[i]);
+    }
+    contributor["tagList"] = tagListArray;
+
+    return QString(QtJson::serialize(contributor));
+}
+
 void NoteModel::clear()
 {
-    this->contentModel = new ContentModel();
-    this->tagsModelList = new QList<TagsModel *>();
-    this->categoriesModel = new CategoriesModel();
+    setUuid();
+    setNoteText();
+    setCreateDate(0);
+    setUpdateDate(0);
+    setTagList();
+    setCategory();
 }
 
 void NoteModel::writerLocal()
 {
-    Tools::writerFile(contentModel->getFilePath(), getNote());
+    QString path = getFileDir();
+
+    Tools::createMkDir(path);
+    Tools::writerFile(QDir(path).filePath(Global::noteTextFileName), getNoteText());
+    Tools::writerFile(QDir(path).filePath(Global::noteDataFileName), getNoteData());
+}
+
+QString NoteModel::getUuid()
+{
+    return mUuid;
+}
+
+void NoteModel::setCreateDate(const QString createDate)
+{
+    mCreateDate = createDate.isEmpty() ? (int) QDateTime::currentMSecsSinceEpoch() / 1000
+                                       : Tools::timestampFromDateTime(createDate);
+}
+
+void NoteModel::setCreateDate(int createDate)
+{
+    mCreateDate = createDate == 0 ? (int) QDateTime::currentMSecsSinceEpoch() / 1000 : createDate;
+}
+
+void NoteModel::setUpdateDate(const QString updateDate)
+{
+    mUpdateDate = updateDate.isEmpty() ? (int) QDateTime::currentMSecsSinceEpoch() / 1000
+                                       : Tools::timestampFromDateTime(updateDate);
+}
+
+void NoteModel::setUpdateDate(int updateDate)
+{
+    mUpdateDate = updateDate == 0 ? (int) QDateTime::currentMSecsSinceEpoch() / 1000 : updateDate;
+}
+
+void NoteModel::setNoteText(QString body)
+{
+    mBody = body;
+}
+
+void NoteModel::setUuid(QString uuid)
+{
+    mUuid = uuid.isEmpty() ? Tools::getUuid() : uuid;
+}
+
+int NoteModel::getCreateDate()
+{
+    return mCreateDate;
+}
+
+int NoteModel::getUpdateDate()
+{
+    return mUpdateDate;
+}
+
+QString NoteModel::getNoteText()
+{
+    return mBody;
+}
+
+const QStringList &NoteModel::getTagList() const
+{
+    return tagList;
+}
+
+void NoteModel::setTagList(const QStringList &tagList)
+{
+    NoteModel::tagList = tagList;
+}
+
+const QString &NoteModel::getCategory() const
+{
+    return category;
+}
+
+void NoteModel::setCategory(const QString &category)
+{
+    NoteModel::category = category;
 }

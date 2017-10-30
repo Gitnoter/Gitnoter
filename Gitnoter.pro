@@ -37,9 +37,6 @@ SOURCES += \
     main.cpp \
     controllers/mainwindow.cpp  \
     controllers/categorieswidget.cpp  \
-    controllers/categorieslistcell.cpp  \
-    controllers/tagslistcell.cpp  \
-    controllers/tagswidget.cpp  \
     controllers/loginwidget.cpp \
     controllers/settingdialog.cpp \
     controllers/aboutdialog.cpp \
@@ -49,10 +46,9 @@ SOURCES += \
     controllers/elidedlabel.cpp \
     controllers/markdowneditorwidget.cpp \
     controllers/tagcellwidget.cpp \
-    models/contentmodel.cpp  \
     models/notemodel.cpp  \
-    models/categoriesmodel.cpp  \
-    models/tagsmodel.cpp  \
+    models/categorymodel.cpp  \
+    models/tagmodel.cpp  \
     models/configmodel.cpp  \
     helps/previewpage.cpp  \
     helps/globals.cpp  \
@@ -64,9 +60,6 @@ SOURCES += \
 HEADERS += \
         controllers/mainwindow.h  \
     controllers/categorieswidget.h  \
-    controllers/categorieslistcell.h  \
-    controllers/tagslistcell.h  \
-    controllers/tagswidget.h  \
     controllers/loginwidget.h \
     controllers/settingdialog.h \
     controllers/aboutdialog.h \
@@ -76,10 +69,9 @@ HEADERS += \
     controllers/elidedlabel.h \
     controllers/markdowneditorwidget.h \
     controllers/tagcellwidget.h \
-    models/contentmodel.h  \
     models/notemodel.h  \
-    models/categoriesmodel.h  \
-    models/tagsmodel.h  \
+    models/categorymodel.h  \
+    models/tagmodel.h  \
     models/configmodel.h  \
     helps/previewpage.h  \
     helps/globals.h  \
@@ -91,9 +83,6 @@ HEADERS += \
 FORMS += \
     views/mainwindow.ui \
     views/categorieswidget.ui \
-    views/categorieslistcell.ui \
-    views/tagslistcell.ui \
-    views/tagswidget.ui \
     views/loginwidget.ui \
     views/settingdialog.ui \
     views/aboutdialog.ui \

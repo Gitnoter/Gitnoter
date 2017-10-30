@@ -3,7 +3,7 @@
 
 #include "notemodel.h"
 #include "configmodel.h"
-#include "tagsmodel.h"
+#include "tagmodel.h"
 #include "gitmanager.h"
 #include "thememanager.h"
 
@@ -24,9 +24,8 @@ public:
     static const QString appConfigPath;
     static const QString repoPath;
     static const QString repoNotePath;
-    static const QString repoResourceName;
-    static const QString repoResourcePath;
-    static const QString repoDataPath;
+    static const QString noteTextFileName;
+    static const QString noteDataFileName;
     static const QString repoCategoriesListPath;
     static const QString repoTagsListPath;
 
@@ -38,8 +37,8 @@ public:
     static const QByteArray aesIv;
 
     static QList<NoteModel *> noteModelList;
-    static QList<CategoriesModel *> categoriesModelList;
-    static QList<TagsModel *> tagsModelList;
+    static QList<CategoryModel *> categoryModelList;
+    static QList<TagModel *> tagsModelList;
 
     static NoteModel *openNoteModel;
     static ConfigModel *configModel;
@@ -54,29 +53,29 @@ public:
 
     static void addNoteModelToList(NoteModel *noteModel);
 
-    /// static QList<CategoriesModel *> categoriesModelList;
+    /// static QList<CategoryModel *> categoryModelList;
 
-    static void initCategoriesModelList();
+    static void initCategoryModelList();
 
-    static bool addCategoriesModelList(QList<CategoriesModel *>);
+    static bool addCategoryModelList(QList<CategoryModel *>);
 
-    static bool hasInCategoriesModelList(const QString &name);
+    static bool hasInCategoryModelList(const QString &name);
 
-    static void saveCategoriesModelList();
+    static void saveCategoryModelList();
 
-    static void renameCategoriesModelListInName(const QString oldName, const QString newName);
+    static void renameCategoryModelListInName(const QString oldName, const QString newName);
 
-    /// static QList<TagsModel *> tagsModelList;
+    /// static QList<TagModel *> tagsModelList;
 
-    static void initTagsModelList();
+    static void initTagModelList();
 
-    static bool addTagsModelList(QList<TagsModel *> list);
+    static bool addTagModelList(QList<TagModel *> list);
 
-    static bool hasInTagsModelList(const QString &name);
+    static bool hasInTagModelList(const QString &name);
 
-    static void saveTagsModelList();
+    static void saveTagModelList();
 
-    static void renameTagsModelListInName(const QString oldName, const QString newName);
+    static void renameTagModelListInName(const QString oldName, const QString newName);
 
     /// static NoteModel *openNoteModel;
 

@@ -8,6 +8,8 @@
 
 #include "ui_mainwindow.h"
 
+#include <html.h>
+
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow)
@@ -17,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Global::initRepoLocalDir();
     Global::initNoteModelList();
-    Global::initCategoriesModelList();
-    Global::initTagsModelList();
+    Global::initCategoryModelList();
+    Global::initTagModelList();
     Global::initGitManager();
 
     setNoteList();
@@ -38,6 +40,7 @@ void MainWindow::setupUi()
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
 
     ui->splitter->setSizes(Global::configModel->getSplitterSizes());
+//    ui->textBrowser->setText(toMarkdownHtml(""));
 }
 
 void MainWindow::setNoteList()
