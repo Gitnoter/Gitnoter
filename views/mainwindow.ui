@@ -35,11 +35,13 @@ QTreeView#treeWidget{
 	border: 0px;
 }
 
+QTreeView#treeWidget::item:selected:!active,
 QTreeView#treeWidget::item:selected:active {
 	background:rgb(218, 216, 222);
 	color:rgb(77, 77, 77);
 }
 
+QTreeWidget#treeWidget::branch:selected:!active,
 QTreeWidget#treeWidget::branch:selected:active{
 	background:rgb(218, 216, 222);
 }
@@ -121,11 +123,15 @@ QPushButton#pushButton_sort::menu-indicator:hover{
   image: url(:/images/icon-down-ffffff.png);
 }
 
-
 QListView#listWidget{
 	background-color:rgb(255, 255, 255);
 	font-size: 12px;
 	border: 0;
+}
+
+QListView#listWidget::item:selected:!active,
+QListView#listWidget::item:selected:active {
+  background:#F5F5F5;
 }
 
 QWidget#widget_6{
@@ -389,91 +395,6 @@ QWidget#widget_6{
            <property name="flags">
             <set>ItemIsEnabled</set>
            </property>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
           </item>
           <item>
            <property name="text">
@@ -515,61 +436,6 @@ QWidget#widget_6{
            <property name="flags">
             <set>ItemIsEnabled</set>
            </property>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>新建子项目</string>
-            </property>
-           </item>
           </item>
          </widget>
         </item>
@@ -990,8 +856,8 @@ QWidget#widget_6{
          <number>0</number>
         </property>
         <item>
-         <widget class="QStackedWidget" name="widget_editor">
-          <widget class="MarkdownEditorWidget" name="page_editor" native="true"/>
+         <widget class="QStackedWidget" name="stackWidget_editor">
+          <widget class="MarkdownEditorWidget" name="page_editor"/>
           <widget class="QWidget" name="page_noEdit"/>
          </widget>
         </item>
