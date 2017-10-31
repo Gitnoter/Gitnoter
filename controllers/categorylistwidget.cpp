@@ -1,10 +1,9 @@
+#include "ui_categorylistwidget.h"
+
 #include "categorylistwidget.h"
 #include "mainwindow.h"
-#include "ui_categorylistwidget.h"
 #include "tools.h"
 #include "globals.h"
-
-#include <QDebug>
 
 CategoryListWidget::CategoryListWidget(QWidget *parent) :
         QDialog(parent),

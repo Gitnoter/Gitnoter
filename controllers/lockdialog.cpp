@@ -1,5 +1,6 @@
-#include "lockdialog.h"
 #include "ui_lockdialog.h"
+
+#include "lockdialog.h"
 #include "mainwindow.h"
 #include "globals.h"
 

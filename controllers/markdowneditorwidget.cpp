@@ -1,7 +1,6 @@
-#include "markdowneditorwidget.h"
-#include "notemodellist.h"
-
 #include "ui_markdowneditorwidget.h"
+
+#include "markdowneditorwidget.h"
 
 #include <QScrollBar>
 #include <QDebug>

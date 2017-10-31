@@ -29,7 +29,7 @@ public:
 
     void setRepoPassword(const QString &repoPassword);
 
-    void setOpenNotesUuid(const QString &openNotesUuid);
+    void setOpenNoteModel(const QString &openNoteUuid);
 
     const QString &getVersion() const;
 
@@ -41,7 +41,7 @@ public:
 
     const QString &getRepoPassword() const;
 
-    const QString &getOpenNotesUuid() const;
+    const QString &getUuidFromOpenNoteModel() const;
 
     int getSidebarSortKey() const;
 
@@ -122,7 +122,7 @@ private:
     QString mRepoEmail;
     QString mRepoUsername;
     QString mRepoPassword;
-    QString mOpenNotesUuid;
+    QString mOpenNoteUuid;
     // -1: 没有选择没任何排序, 0: 选择名称排序, 1: 选择时间排序
     int mSidebarSortKey;
     QString mSidebarSortValue;
@@ -147,7 +147,7 @@ private:
     ThemeManager::ThemeFlag mTheme;
     QList<int> splitterSizes;
 
-    NoteModel *openNoteModel;
+    NoteModel *mOpenNoteModel;
 
 };
 

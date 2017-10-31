@@ -4,7 +4,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets Network REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/models)
 include_directories(${PROJECT_SOURCE_DIR}/views)
@@ -50,4 +50,4 @@ add_executable(${PROJECT_NAME}
         helps/thememanager.h        helps/thememanager.cpp
         helps/notepreviewwidget.h   helps/notepreviewwidget.cpp)
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network)

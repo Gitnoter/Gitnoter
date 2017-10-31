@@ -37,7 +37,7 @@ void MainWindow::setupUi()
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
     ui->splitter->setSizes(Global::configModel->getSplitterSizes());
-    ui->stackWidget_editor->setCurrentIndex((int) Global::configModel->getOpenNotesUuid().isEmpty());
+    ui->stackWidget_editor->setCurrentIndex((int) Global::configModel->getUuidFromOpenNoteModel().isEmpty());
 }
 
 void MainWindow::setNoteList()
@@ -106,7 +106,7 @@ void MainWindow::on_action_saveNote_triggered()
 void MainWindow::on_action_deleteNote_triggered()
 {
     Global::categoryModelList.removeOne(Global::configModel->getOpenNoteModel()->getCategory());
-    Global::configModel->setOpenNotesUuid("");
+    Global::configModel->setOpenNoteModel("");
     Global::noteModelList.removeOne(Global::configModel->getOpenNoteModel());
 //    Global::initCategoriesModelList();
 //    Global::initTagsModelList();
@@ -116,11 +116,11 @@ void MainWindow::on_action_deleteNote_triggered()
 
 void MainWindow::setOpenedNoteModel()
 {
-    if (Global::configModel->getOpenNotesUuid().isEmpty()) {
+    if (Global::configModel->getUuidFromOpenNoteModel().isEmpty()) {
         ui->stackWidget_editor->setCurrentIndex(0);
         return;
     }
-    NoteModel *noteModel = Global::noteModelList.findByUuid(Global::configModel->getOpenNotesUuid());
+    NoteModel *noteModel = Global::noteModelList.findByUuid(Global::configModel->getUuidFromOpenNoteModel());
     if (noteModel == nullptr) {
         ui->stackWidget_editor->setCurrentIndex(0);
         return;

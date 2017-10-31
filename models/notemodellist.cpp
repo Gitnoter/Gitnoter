@@ -2,8 +2,9 @@
 #include "tools.h"
 #include "globals.h"
 
-#include <json/json.h>
-#include <hoedown/html.h>
+#include <json.h>
+#include <html.h>
+
 #include <QUrl>
 #include <QMimeDatabase>
 #include <QDateTime>

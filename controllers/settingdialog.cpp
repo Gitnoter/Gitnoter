@@ -1,5 +1,6 @@
-#include "settingdialog.h"
 #include "ui_settingdialog.h"
+
+#include "settingdialog.h"
 #include "globals.h"
 #include "tools.h"
 

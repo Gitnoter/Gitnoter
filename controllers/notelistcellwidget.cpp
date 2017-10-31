@@ -1,7 +1,6 @@
 #include "notelistcellwidget.h"
 #include "ui_notelistcellwidget.h"
 
-#include "globals.h"
 #include "tools.h"
 
 NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :

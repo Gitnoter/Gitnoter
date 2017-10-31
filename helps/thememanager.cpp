@@ -1,7 +1,6 @@
 #include "thememanager.h"
-#include "globals.h"
 
-#include "QFile"
+#include <QFile>
 
 ThemeManager::ThemeManager()
 {

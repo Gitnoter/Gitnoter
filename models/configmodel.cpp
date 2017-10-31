@@ -21,7 +21,7 @@ ConfigModel::ConfigModel()
     mRepoEmail = "";
     mRepoUsername = "";
     mRepoPassword = "";
-    mOpenNotesUuid = "";
+    mOpenNoteUuid = "";
     mSidebarSortValue = "";
     mSidebarSortKey = -1;
     mIsSelectedClasses = 0;
@@ -69,7 +69,7 @@ QString ConfigModel::serialize(const QString &path)
     contributor["repoEmail"] = mRepoEmail;
     contributor["repoUsername"] = mRepoUsername;
     contributor["repoPassword"] = mRepoPassword;
-    contributor["openNotesUuid"] = mOpenNotesUuid;
+    contributor["openNotesUuid"] = mOpenNoteUuid;
     contributor["sidebarSortValue"] = mSidebarSortValue;
     contributor["sidebarSortKey"] = mSidebarSortKey;
     contributor["isSelectedClasses"] = mIsSelectedClasses;
@@ -111,7 +111,7 @@ void ConfigModel::unserialize(const QString &jsonString)
     mRepoEmail = result["repoEmail"].toString();
     mRepoUsername = result["repoUsername"].toString();
     mRepoPassword = result["repoPassword"].toString();
-    mOpenNotesUuid = result["openNotesUuid"].toString();
+    mOpenNoteUuid = result["openNotesUuid"].toString();
     mSidebarSortValue = result["sidebarSortValue"].toString();
     mSidebarSortKey = result["sidebarSortKey"].toInt();
     mIsSelectedClasses = result["isSelectedClasses"].toInt();
@@ -159,9 +159,17 @@ void ConfigModel::setRepoPassword(const QString &repoPassword)
     serialize(Global::appConfigPath);
 }
 
-void ConfigModel::setOpenNotesUuid(const QString &openNotesUuid)
+void ConfigModel::setOpenNoteModel(const QString &openNoteUuid)
 {
-    ConfigModel::mOpenNotesUuid = openNotesUuid;
+    if (openNoteUuid.isEmpty()) {
+        mOpenNoteUuid.clear();
+        mOpenNoteModel = nullptr;
+    }
+    else {
+        ConfigModel::mOpenNoteUuid = openNoteUuid;
+        setOpenNoteModel(Global::noteModelList.findByUuid(openNoteUuid));
+    }
+
     serialize(Global::appConfigPath);
 }
 
@@ -190,9 +198,9 @@ const QString &ConfigModel::getRepoPassword() const
     return mRepoPassword;
 }
 
-const QString &ConfigModel::getOpenNotesUuid() const
+const QString &ConfigModel::getUuidFromOpenNoteModel() const
 {
-    return mOpenNotesUuid;
+    return mOpenNoteUuid;
 }
 
 int ConfigModel::getSidebarSortKey() const
@@ -386,11 +394,10 @@ void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
 
 NoteModel *ConfigModel::getOpenNoteModel() const
 {
-    return openNoteModel;
+    return mOpenNoteModel;
 }
 
 void ConfigModel::setOpenNoteModel(NoteModel *noteModel)
 {
-    ConfigModel::openNoteModel = noteModel;
-    setOpenNotesUuid(noteModel->getUuid());
+    ConfigModel::mOpenNoteModel = noteModel;
 }

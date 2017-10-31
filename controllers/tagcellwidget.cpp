@@ -1,5 +1,6 @@
-#include "tagcellwidget.h"
 #include "ui_tagcellwidget.h"
+
+#include "tagcellwidget.h"
 
 TagCellWidget::TagCellWidget(const QString tagName, QWidget *parent) :
     QWidget(parent),
