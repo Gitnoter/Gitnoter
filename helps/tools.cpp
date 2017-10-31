@@ -2,6 +2,9 @@
 #include "globals.h"
 
 #include <QTcpSocket>
+#include <QUuid>
+#include <QDateTime>
+#include <QUrl>
 
 QFileInfoList Tools::getFilesPath(const QString path)
 {
