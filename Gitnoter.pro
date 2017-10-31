@@ -46,9 +46,9 @@ SOURCES += \
     controllers/elidedlabel.cpp \
     controllers/markdowneditorwidget.cpp \
     controllers/tagcellwidget.cpp \
-    models/notemodel.cpp  \
-    models/categorymodel.cpp  \
-    models/tagmodel.cpp  \
+    models/notemodellist.cpp  \
+    models/categorymodellist.cpp  \
+    models/tagmodellist.cpp  \
     models/configmodel.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
@@ -68,9 +68,9 @@ HEADERS += \
     controllers/elidedlabel.h \
     controllers/markdowneditorwidget.h \
     controllers/tagcellwidget.h \
-    models/notemodel.h  \
-    models/categorymodel.h  \
-    models/tagmodel.h  \
+    models/notemodellist.h  \
+    models/categorymodellist.h  \
+    models/tagmodellist.h  \
     models/configmodel.h  \
     helps/globals.h  \
     helps/tools.h \

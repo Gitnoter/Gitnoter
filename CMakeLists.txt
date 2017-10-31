@@ -39,9 +39,9 @@ add_executable(${PROJECT_NAME}
         controllers/markdowneditorwidget.h  controllers/markdowneditorwidget.cpp
         controllers/tagcellwidget.h         controllers/tagcellwidget.cpp
 
-        models/notemodel.h      models/notemodel.cpp
-        models/categorymodel.h  models/categorymodel.cpp
-        models/tagmodel.h       models/tagmodel.cpp
+        models/notemodellist.h models/notemodellist.cpp
+        models/categorymodellist.h models/categorymodellist.cpp
+        models/tagmodellist.h models/tagmodellist.cpp
         models/configmodel.h    models/configmodel.cpp
 
         helps/globals.h         helps/globals.cpp
