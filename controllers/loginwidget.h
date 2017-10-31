@@ -34,6 +34,9 @@ private:
     bool changeEnterButtonStatus();
 
     void openMainWindow();
+
+    int initGitManager();
+
 };
 
 #endif // LOGINWIDGET_H

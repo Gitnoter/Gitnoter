@@ -14,13 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setupUi();
 
-    Global::initRepoLocalDir();
-    Global::initNoteModelList();
-    Global::initCategoryModelList();
-    Global::initTagModelList();
-    Global::initGitManager();
+    Global::noteModelList.init();
+    Global::categoryModelList.init();
+    Global::tagModelList.init();
 
     setNoteList();
+    setCategoryList();
+    setTagList();
+    setOpenedNoteModel();
 }
 
 MainWindow::~MainWindow()
@@ -35,14 +36,14 @@ void MainWindow::setupUi()
     ui->listWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
-
     ui->splitter->setSizes(Global::configModel->getSplitterSizes());
+    ui->stackWidget_editor->setCurrentIndex((int) Global::configModel->getOpenNotesUuid().isEmpty());
 }
 
 void MainWindow::setNoteList()
 {
     ui->listWidget->clear();
-    for (auto &&noteMoldel : Global::noteModelList) {
+    for (auto &&noteMoldel : Global::noteModelList.getList()) {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteMoldel));
         ui->listWidget->addItem(listWidgetItem);
@@ -55,26 +56,77 @@ void MainWindow::setNoteList()
     ui->splitter->setSizes(Global::configModel->getSplitterSizes());
 }
 
+void MainWindow::setCategoryList()
+{
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
+    for (auto &&item : Global::categoryModelList.getList()) {
+        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+        treeWidgetItem->setText(0, item->getName());
+        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+        topLevelItem->addChild(treeWidgetItem);
+    }
+}
+
+void MainWindow::setTagList()
+{
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
+    for (auto &&item : Global::tagModelList.getList()) {
+        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+        treeWidgetItem->setText(0, item->getName());
+        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+        topLevelItem->addChild(treeWidgetItem);
+    }
+}
+
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 {
     emit noteListItemClicked(item);
 }
 
-void MainWindow::on_splitter_splitterMoved(int pos, int index)
+void MainWindow::on_splitter_splitterMoved(int, int)
 {
     Global::configModel->setSplitterSizes(ui->splitter->sizes());
 }
 
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
-    NoteModel *noteModel = new NoteModel();
-    noteModel->setCategory(Global::configModel->getCategoryName());
-    Global::setOpenNoteModel(noteModel);
-    Global::addNoteModelToList(noteModel);
+    NoteModel *noteModel = Global::noteModelList.append(Global::configModel->getCategory());
+
+    Global::configModel->setOpenNoteModel(noteModel);
+    Global::categoryModelList.append(noteModel->getCategory());
+    ui->stackWidget_editor->setCurrentIndex(0);
     on_action_saveNote_triggered();
 }
 
 void MainWindow::on_action_saveNote_triggered()
 {
-    Global::openNoteModel->writerLocal();
+    Global::configModel->getOpenNoteModel()->saveNoteToLocal();
+}
+
+void MainWindow::on_action_deleteNote_triggered()
+{
+    Global::categoryModelList.removeOne(Global::configModel->getOpenNoteModel()->getCategory());
+    Global::configModel->setOpenNotesUuid("");
+    Global::noteModelList.removeOne(Global::configModel->getOpenNoteModel());
+//    Global::initCategoriesModelList();
+//    Global::initTagsModelList();
+//    mSetTableWidgetList();
+//    mSetOpenedNoteModel();
+}
+
+void MainWindow::setOpenedNoteModel()
+{
+    if (Global::configModel->getOpenNotesUuid().isEmpty()) {
+        ui->stackWidget_editor->setCurrentIndex(0);
+        return;
+    }
+    NoteModel *noteModel = Global::noteModelList.findByUuid(Global::configModel->getOpenNotesUuid());
+    if (noteModel == nullptr) {
+        ui->stackWidget_editor->setCurrentIndex(0);
+        return;
+    }
+    Global::configModel->setOpenNoteModel(noteModel);
+    ui->page_editor->setMarkdownEditorText(Global::configModel->getOpenNoteModel()->getNoteText());
+    ui->page_editor->setMarkdownPreviewText(Global::configModel->getOpenNoteModel()->getMarkdownHtml());
+    ui->stackWidget_editor->setCurrentIndex(1);
 }

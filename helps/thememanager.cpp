@@ -15,17 +15,6 @@ void ThemeManager::setTheme(QWidget *widget, ThemeFlag theme)
         stylePath = ":/theme/default.qss";
     }
 
-    if (theme == NoteListCellWidgetSelected) {
-        if (Global::configModel->getTheme() == Default) {
-            stylePath = ":/theme/notelistcellwidget-selected.qss";
-        }
-    }
-    else if (theme == NoteListCellWidgetUnselected) {
-        if (Global::configModel->getTheme() == Default) {
-            stylePath = ":/theme/notelistcellwidget-unselected.qss";
-        }
-    }
-
     QFile file(stylePath);
 
     if (file.open(QIODevice::ReadOnly)) {

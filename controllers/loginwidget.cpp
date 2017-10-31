@@ -1,7 +1,8 @@
-#include "loginwidget.h"
 #include "ui_loginwidget.h"
-#include "mainwindow.h"
 
+#include "loginwidget.h"
+#include "mainwindow.h"
+#include "tools.h"
 #include "globals.h"
 
 LoginWidget::LoginWidget(QWidget *parent) :
@@ -49,7 +50,7 @@ void LoginWidget::on_pushButton_enter_clicked()
         Global::configModel->setRepoUsername(ui->lineEdit_username->displayText());
         Global::configModel->setRepoPassword(ui->lineEdit_password->text());
 
-        int result = Global::initGitManager();
+        int result = initGitManager();
         if (!result) {
             Global::configModel->setLocalRepoStatus(1);
             openMainWindow();
@@ -78,13 +79,16 @@ bool LoginWidget::changeEnterButtonStatus()
 
 void LoginWidget::openMainWindow()
 {
+    Tools::createMkDir(Global::repoNoteTextPath);
+    Tools::createMkDir(Global::repoNoteDataPath);
+
     close();
     (new MainWindow)->show();
 }
 
 void LoginWidget::on_pushButton_initLocal_clicked()
 {
-    int result = Global::initGitManager();
+    int result = initGitManager();
     if (!result) {
         Global::configModel->setLocalRepoStatus(2);
         openMainWindow();
@@ -94,4 +98,19 @@ void LoginWidget::on_pushButton_initLocal_clicked()
     }
 }
 
+int LoginWidget::initGitManager()
+{
+    if (QDir(Global::repoPath).exists()) {
+        return Global::gitManager->open(Global::repoPath.toUtf8().constData());
+    }
 
+    if (!Global::configModel->getRepoUsername().isEmpty()
+        && !Global::configModel->getRepoPassword().isEmpty()
+        && !Global::configModel->getRepoUrl().isEmpty()) {
+        Global::gitManager->setUserPass(Global::configModel->getRepoUsername().toUtf8().constData(),
+                                        Global::configModel->getRepoPassword().toUtf8().constData());
+        return Global::gitManager->clone(Global::configModel->getRepoUrl().toUtf8().constData(), Global::repoPath.toUtf8().constData());
+    }
+
+    return Global::gitManager->initLocalRepo(Global::repoPath.toUtf8().constData(), true);
+}

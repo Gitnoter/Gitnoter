@@ -26,7 +26,7 @@ ConfigModel::ConfigModel()
     mSidebarSortKey = -1;
     mIsSelectedClasses = 0;
     mLocalRepoStatus = 0;
-    mCategoriesName = "";
+    mCategory = "";
     mTagsName = "";
     mAutoSyncRepoTime = 15 * 60 * 1000;
     mAutoLockTime = 15 * 60 * 1000;
@@ -46,6 +46,18 @@ ConfigModel::ConfigModel()
 #endif
 }
 
+void ConfigModel::init()
+{
+    Tools::createMkDir(Global::appDataPath);
+    QString jsonString = Tools::readerFile(Global::appConfigPath);
+    if (jsonString.isEmpty()) {
+        serialize(Global::appConfigPath);
+    }
+    else {
+        unserialize(jsonString);
+    }
+}
+
 QString ConfigModel::serialize(const QString &path)
 {
     QTinyAes aes(QTinyAes::CBC, Global::aesKey, Global::aesIv);
@@ -62,7 +74,7 @@ QString ConfigModel::serialize(const QString &path)
     contributor["sidebarSortKey"] = mSidebarSortKey;
     contributor["isSelectedClasses"] = mIsSelectedClasses;
     contributor["localRepoStatus"] = mLocalRepoStatus;
-    contributor["categoriesName"] = mCategoriesName;
+    contributor["category"] = mCategory;
     contributor["tagsName"] = mTagsName;
     contributor["autoSyncRepoTime"] = mAutoSyncRepoTime;
     contributor["autoLockTime"] = mAutoLockTime;
@@ -104,7 +116,7 @@ void ConfigModel::unserialize(const QString &jsonString)
     mSidebarSortKey = result["sidebarSortKey"].toInt();
     mIsSelectedClasses = result["isSelectedClasses"].toInt();
     mLocalRepoStatus = result["localRepoStatus"].toInt();
-    mCategoriesName = result["categoriesName"].toString();
+    mCategory = result["category"].toString();
     mTagsName = result["tagsName"].toString();
     mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
     mAutoLockTime = result["autoLockTime"].toInt();
@@ -205,15 +217,15 @@ void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
     serialize(Global::appConfigPath);
 }
 
-QString ConfigModel::getCategoryName() const
+QString ConfigModel::getCategory() const
 {
-    return mCategoriesName;
+    return mCategory;
 }
 
-void ConfigModel::setCategoriesName(const QString &categoriesName)
+void ConfigModel::setCategory(const QString &category)
 {
     ConfigModel::mIsSelectedClasses = 1;
-    ConfigModel::mCategoriesName = categoriesName;
+    ConfigModel::mCategory = category;
     serialize(Global::appConfigPath);
 }
 
@@ -370,4 +382,15 @@ void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
 {
     this->splitterSizes = splitterSizes;
     serialize(Global::appConfigPath);
+}
+
+NoteModel *ConfigModel::getOpenNoteModel() const
+{
+    return openNoteModel;
+}
+
+void ConfigModel::setOpenNoteModel(NoteModel *noteModel)
+{
+    ConfigModel::openNoteModel = noteModel;
+    setOpenNotesUuid(noteModel->getUuid());
 }

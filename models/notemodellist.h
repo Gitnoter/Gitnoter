@@ -1,29 +1,25 @@
-#ifndef NOTEMODEL_H
-#define NOTEMODEL_H
-
-#include "tagmodel.h"
-#include "categorymodel.h"
+#ifndef NOTEMODELLIST_H
+#define NOTEMODELLIST_H
 
 #include <QObject>
-#include <QtCore>
 
 class NoteModel : public QObject
 {
 Q_OBJECT
 
 public:
-    NoteModel(const QString noteText = "");
-
-    NoteModel(const QString textPath, const QString dataPath);
-
-    QString toMarkdownHtml(int maxImageWidth = 980, bool forExport = false,
-                           bool decrypt = true, bool base64Images = false);
-
     /**
      * Returns the CSS code for a QFont
      * Thank you to Phil Weinstein for the code
      */
     static QString encodeCssFont(const QFont& refFont);
+
+    NoteModel(const QString noteText = "");
+
+    NoteModel(const QString textPath, const QString dataPath);
+
+    QString getMarkdownHtml(int maxImageWidth = 980, bool forExport = false,
+                            bool decrypt = true, bool base64Images = false);
 
     QString getStringFormTagList() const;
 
@@ -31,7 +27,11 @@ public:
 
     void setNoteData(const QString &noteData);
 
-    void writerLocal();
+    void saveNoteToLocal();
+
+    void saveNoteTextToLocal();
+
+    void saveNoteDataToLocal();
 
     void clear();
 
@@ -55,7 +55,7 @@ public:
 
     QString getNoteText();
 
-    QString getFileDir();
+    QString getNoteDir();
 
     const QStringList &getTagList() const;
 
@@ -77,7 +77,33 @@ private:
     QString mNoteText;
     QStringList tagList;
     QString category;
+    int isDelete;
 
 };
 
-#endif // NOTEMODEL_H
+class NoteModelList : public QObject
+{
+Q_OBJECT
+
+public:
+    NoteModelList();
+
+    void init();
+
+    NoteModel *findByUuid(const QString &uuid);
+
+    void append(NoteModel *noteModel);
+
+    NoteModel *append(const QString category);
+
+    void removeOne(NoteModel *noteModel);
+
+    const QList<NoteModel *> &getList() const;
+
+    void setList(const QList<NoteModel *> &noteModelList);
+
+private:
+    QList<NoteModel *> noteModelList;
+
+};
+#endif // NOTEMODELLIST_H

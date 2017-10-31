@@ -1,9 +1,13 @@
-#include "notemodel.h"
+#include "notemodellist.h"
 #include "tools.h"
 #include "globals.h"
 
 #include <json/json.h>
 #include <hoedown/html.h>
+#include <QUrl>
+#include <QMimeDatabase>
+#include <QDateTime>
+#include <QDebug>
 
 NoteModel::NoteModel(const QString noteText)
 {
@@ -17,7 +21,7 @@ NoteModel::NoteModel(const QString textPath, const QString dataPath)
     setNoteData(Tools::readerFile(dataPath));
 }
 
-QString NoteModel::getFileDir()
+QString NoteModel::getNoteDir()
 {
     if (mUuid.isEmpty()) {
         setUuid();
@@ -27,7 +31,7 @@ QString NoteModel::getFileDir()
 }
 
 
-QString NoteModel::toMarkdownHtml(int maxImageWidth, bool forExport, bool decrypt, bool base64Images)
+QString NoteModel::getMarkdownHtml(int maxImageWidth, bool forExport, bool decrypt, bool base64Images)
 {
     // get the decrypted note text (or the normal note text if there isn't any)
     hoedown_renderer *renderer =
@@ -381,6 +385,7 @@ void NoteModel::setNoteData(const QString &noteData)
     mCreateDate = result["createDate"].toInt();
     mUpdateDate = result["updateDate"].toInt();
     category = result["category"].toString();
+    isDelete = result["isDelete"].toInt();
 
     tagList.clear();
     QtJson::JsonArray tagListArray = result["tagList"].toList();
@@ -397,6 +402,7 @@ QString NoteModel::getNoteData() const
     contributor["createDate"] = mCreateDate;
     contributor["updateDate"] = mUpdateDate;
     contributor["category"] = category;
+    contributor["isDelete"] = isDelete;
 
     QtJson::JsonArray tagListArray;
     for (int i = 0; i < tagList.length(); ++i) {
@@ -417,12 +423,28 @@ void NoteModel::clear()
     setCategory();
 }
 
-void NoteModel::writerLocal()
+void NoteModel::saveNoteToLocal()
 {
-    QString path = getFileDir();
-
+    setUpdateDate(0);
+    QString path = getNoteDir();
     Tools::createMkDir(path);
     Tools::writerFile(QDir(path).filePath(Global::noteTextFileName), getNoteText());
+    Tools::writerFile(QDir(path).filePath(Global::noteDataFileName), getNoteData());
+}
+
+void NoteModel::saveNoteTextToLocal()
+{
+    setUpdateDate(0);
+    QString path = getNoteDir();
+    Tools::createMkDir(path);
+    Tools::writerFile(QDir(path).filePath(Global::noteTextFileName), getNoteText());
+}
+
+void NoteModel::saveNoteDataToLocal()
+{
+    setUpdateDate(0);
+    QString path = getNoteDir();
+    Tools::createMkDir(path);
     Tools::writerFile(QDir(path).filePath(Global::noteDataFileName), getNoteData());
 }
 
@@ -506,4 +528,74 @@ const QString &NoteModel::getTitle() const
 void NoteModel::setTitle(const QString &title)
 {
     NoteModel::mTitle = title;
+}
+
+/**
+ *
+ * NoteModelList
+ *
+ */
+
+NoteModelList::NoteModelList()
+{
+    noteModelList = {};
+}
+
+void NoteModelList::init()
+{
+    noteModelList.clear();
+    QDir dir(Global::repoNoteTextPath);
+
+    for (auto &&mfi : dir.entryInfoList()) {
+        if (mfi.fileName() == "." || mfi.fileName() == "..") {
+            continue;
+        }
+        if (mfi.isDir()) {
+            QDir dir2(mfi.absoluteFilePath());
+            NoteModel *noteModel = new NoteModel(dir2.filePath(Global::noteTextFileName),
+                                                 dir2.filePath(Global::noteDataFileName));
+            noteModelList.append(noteModel);
+        }
+    }
+}
+
+NoteModel *NoteModelList::findByUuid(const QString &uuid)
+{
+    for (auto &&noteModel : noteModelList) {
+        if (noteModel->getUuid() == uuid) {
+            return noteModel;
+        }
+    }
+
+    return nullptr;
+}
+
+void NoteModelList::append(NoteModel *noteModel)
+{
+    noteModelList.append(noteModel);
+}
+
+NoteModel *NoteModelList::append(const QString category)
+{
+    NoteModel *noteModel = new NoteModel;
+    noteModel->setCategory(category);
+    noteModelList.append(noteModel);
+
+    return noteModel;
+}
+
+void NoteModelList::removeOne(NoteModel *noteModel)
+{
+    QFile::remove(noteModel->getNoteDir());
+    noteModelList.removeOne(noteModel);
+}
+
+const QList<NoteModel *> &NoteModelList::getList() const
+{
+    return noteModelList;
+}
+
+void NoteModelList::setList(const QList<NoteModel *> &noteModelList)
+{
+    NoteModelList::noteModelList = noteModelList;
 }

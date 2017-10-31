@@ -1,9 +1,10 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "notemodel.h"
+#include "categorymodellist.h"
+#include "notemodellist.h"
 #include "configmodel.h"
-#include "tagmodel.h"
+#include "tagmodellist.h"
 #include "gitmanager.h"
 #include "thememanager.h"
 
@@ -27,7 +28,7 @@ public:
     static const QString noteTextFileName;
     static const QString noteDataFileName;
     static const QString repoNoteDataPath;
-    static const QString repoCategoriesListPath;
+    static const QString repoCategoryListPath;
     static const QString repoTagsListPath;
 
     static const QString newNoteKeySequence;
@@ -37,60 +38,13 @@ public:
     static const QByteArray aesKey;
     static const QByteArray aesIv;
 
-    static QList<NoteModel *> noteModelList;
-    static QList<CategoryModel *> categoryModelList;
-    static QList<TagModel *> tagModelList;
+    static NoteModelList noteModelList;
+    static CategoryModelList categoryModelList;
+    static TagModelList tagModelList;
 
-    static NoteModel *openNoteModel;
     static ConfigModel *configModel;
     static GitManager *gitManager;
     static ThemeManager *themeManager;
-
-    /// static QList<NoteModel *> noteModelList;
-
-    static void initNoteModelList();
-
-    static NoteModel *getNoteModelByUuid(const QString &uuid);
-
-    static void addNoteModelToList(NoteModel *noteModel);
-
-    /// static QList<CategoryModel *> categoryModelList;
-
-    static void initCategoryModelList();
-
-    static void addCategoryModelToList(const QString categoryName);
-
-    static bool hasInCategoryModelList(const QString &name);
-
-    static void saveCategoryModelList();
-
-    static void renameCategoryModelListInName(const QString oldName, const QString newName);
-
-    /// static QList<TagModel *> tagsModelList;
-
-    static void initTagModelList();
-
-    static void addTagModelList(const QString tagName);
-
-    static bool hasInTagModelList(const QString &name);
-
-    static void saveTagModelList();
-
-    static void renameTagModelListInName(const QString oldName, const QString newName);
-
-    /// static NoteModel *openNoteModel;
-
-    static void setOpenNoteModel(NoteModel *noteModel);
-
-    /// ConfigModel
-
-    static void initConfigModel();
-
-    ///
-
-    static int initGitManager();
-
-    static void initRepoLocalDir();
 
 };
 

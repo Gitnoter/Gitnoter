@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "categorylistwidget.h"
-#include "notemodel.h"
+#include "notemodellist.h"
 #include "configmodel.h"
 #include "settingdialog.h"
 #include "aboutdialog.h"
@@ -41,6 +41,8 @@ private slots:
 
     void on_action_saveNote_triggered();
 
+    void on_action_deleteNote_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -48,6 +50,9 @@ private:
 private:
     void setupUi();
     void setNoteList();
+    void setCategoryList();
+    void setTagList();
+    void setOpenedNoteModel();
 };
 
 #endif // MAINWINDOW_H

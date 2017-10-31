@@ -69,7 +69,6 @@ void SettingDialog::setWindowHeight(int pageIndex)
 void SettingDialog::on_pushButton_general_clicked()
 {
     setWindowHeight(0);
-    qDebug() << 0;
 }
 
 void SettingDialog::on_pushButton_accountRepo_clicked()

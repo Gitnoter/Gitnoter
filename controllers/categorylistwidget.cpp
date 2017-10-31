@@ -26,10 +26,11 @@ CategoryListWidget::~CategoryListWidget()
 void CategoryListWidget::mSetListWidgetList()
 {
     ui->listWidget_data->clear();
-    for (int i = 0; i < Global::categoryModelList.length(); ++i) {
-        ui->listWidget_data->addItem(Global::categoryModelList[i]->getName());
-        ui->listWidget_data->item(i)->setData(Qt::UserRole, QVariant::fromValue(Global::categoryModelList[i]));
-        if (Global::openNoteModel->getCategory() == Global::categoryModelList[i]->getName()) {
+    QList<CategoryModel *> categoryModelList = Global::categoryModelList.getList();
+    for (int i = 0; i < categoryModelList.length(); ++i) {
+        ui->listWidget_data->addItem(categoryModelList[i]->getName());
+        ui->listWidget_data->item(i)->setData(Qt::UserRole, QVariant::fromValue(categoryModelList[i]));
+        if (Global::configModel->getOpenNoteModel()->getCategory() == categoryModelList[i]->getName()) {
             ui->listWidget_data->setItemSelected(ui->listWidget_data->item(i), true);
         }
     }
@@ -39,8 +40,9 @@ void CategoryListWidget::mFiltrateListWidgetList()
 {
     int showCount = 0;
     QString text = ui->lineEdit->displayText();
-    for (int i = 0; i < Global::categoryModelList.length(); ++i) {
-        int index = Global::categoryModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
+    QList<CategoryModel *> categoryModelList = Global::categoryModelList.getList();
+    for (int i = 0; i < categoryModelList.length(); ++i) {
+        int index = categoryModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
         QListWidgetItem *listWidgetItem = ui->listWidget_data->item(i);
 
         bool isHidden = text.isEmpty() ? false : index == -1;
@@ -60,8 +62,8 @@ void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &ind
 void CategoryListWidget::on_pushButton_add_clicked()
 {
     if (!ui->lineEdit->displayText().isEmpty()) {
-        Global::categoryModelList.append(new CategoryModel(ui->lineEdit->displayText()));
-        Global::saveCategoryModelList();
+        Global::categoryModelList.append(ui->lineEdit->displayText());
+        Global::categoryModelList.saveToLocal();
         mSetListWidgetList();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
         ui->lineEdit->clear();
@@ -77,7 +79,7 @@ void CategoryListWidget::on_buttonBox_accepted()
 {
     auto selectItemList = ui->listWidget_data->selectedItems();
     for (auto &&item : selectItemList) {
-        Global::openNoteModel->setCategory((item->data(Qt::UserRole).value<CategoryModel *>())->getName());
+        Global::configModel->getOpenNoteModel()->setCategory((item->data(Qt::UserRole).value<CategoryModel *>())->getName());
     }
 
     emit categoriesChanged();

@@ -7,7 +7,6 @@
 class ThemeManager : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(ThemeFlag)
 public:
     ThemeManager();
 

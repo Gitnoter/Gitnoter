@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Global::initConfigModel();
+    Global::configModel->init();
 
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 

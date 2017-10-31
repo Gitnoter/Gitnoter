@@ -18,6 +18,10 @@ public:
     explicit MarkdownEditorWidget(QWidget *parent = 0);
     ~MarkdownEditorWidget();
 
+    void setMarkdownEditorText(const QString &text);
+
+    void setMarkdownPreviewText(const QString &text);
+
 private slots:
     void on_splitter_editor_splitterMoved(int pos, int index);
 

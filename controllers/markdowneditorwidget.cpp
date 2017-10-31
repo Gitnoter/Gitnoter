@@ -1,5 +1,5 @@
 #include "markdowneditorwidget.h"
-#include "notemodel.h"
+#include "notemodellist.h"
 
 #include "ui_markdowneditorwidget.h"
 
@@ -24,6 +24,16 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
 MarkdownEditorWidget::~MarkdownEditorWidget()
 {
     delete ui;
+}
+
+void MarkdownEditorWidget::setMarkdownEditorText(const QString &text)
+{
+    ui->markdownEditor->setText(text);
+}
+
+void MarkdownEditorWidget::setMarkdownPreviewText(const QString &text)
+{
+    ui->markdownPreview->setText(text);
 }
 
 void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)

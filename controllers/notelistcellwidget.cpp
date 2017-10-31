@@ -2,7 +2,6 @@
 #include "ui_notelistcellwidget.h"
 
 #include "globals.h"
-
 #include "tools.h"
 
 NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
@@ -17,8 +16,6 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     ui->frame_body->setText(noteModel->getNoteText());
     ui->label_categoryList->setText(noteModel->getCategory());
     ui->label_tagList->setText(noteModel->getStringFormTagList());
-    ui->label_datetime->setText(Tools::timestampToDateTime(noteModel->getCreateDate()));
-    ui->label_datetime->setText(Tools::timestampToDateTime(noteModel->getUpdateDate()));
 }
 
 NoteListCellWidget::~NoteListCellWidget()
@@ -29,13 +26,10 @@ NoteListCellWidget::~NoteListCellWidget()
 void NoteListCellWidget::onNoteListItemClicked(QListWidgetItem *item)
 {
     NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
-    Global::themeManager->setTheme(this, noteModel == this->noteModel
-                                   ? ThemeManager::NoteListCellWidgetSelected
-                                   : ThemeManager::NoteListCellWidgetUnselected);
+    setStyleSheet(noteModel == this->noteModel ? "QWidget#widget_content{border-bottom:none;}" : "");
 }
 
 void NoteListCellWidget::setupUi()
 {
-    Global::themeManager->setTheme(this, ThemeManager::NoteListCellWidgetUnselected);
     connect(parent(), SIGNAL(noteListItemClicked(QListWidgetItem *)), this, SLOT(onNoteListItemClicked(QListWidgetItem *)));
 }

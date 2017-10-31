@@ -1,7 +1,7 @@
 #ifndef CATEGORYLISTWIDGET_H
 #define CATEGORYLISTWIDGET_H
 
-#include "categorymodel.h"
+#include "categorymodellist.h"
 
 #include <QDialog>
 #include <QPropertyAnimation>

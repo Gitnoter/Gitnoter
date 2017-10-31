@@ -1,9 +1,10 @@
 #ifndef CONFIGMODEL_H
 #define CONFIGMODEL_H
 
-#include <QObject>
-
 #include "thememanager.h"
+#include "notemodellist.h"
+
+#include <QObject>
 
 class ConfigModel : public QObject
 {
@@ -13,6 +14,8 @@ public:
     ConfigModel();
 
     ConfigModel(const QString &jsonString);
+
+    void init();
 
     QString serialize(const QString &path = "");
 
@@ -48,9 +51,9 @@ public:
 
     void setSidebarSortValue(const QString &sidebarSortValue);
 
-    QString getCategoryName() const;
+    QString getCategory() const;
 
-    void setCategoriesName(const QString &categoriesName);
+    void setCategory(const QString &category);
 
     QString getTagsName() const;
 
@@ -108,6 +111,10 @@ public:
 
     void setSplitterSizes(const QList<int> &splitterSizes);
 
+    NoteModel *getOpenNoteModel() const;
+
+    void setOpenNoteModel(NoteModel *noteModel);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -123,7 +130,7 @@ private:
     int mLocalRepoStatus;
     // 0: 没有选择任何类型, 1: 选择笔记本, 2: 选择标签
     int mIsSelectedClasses;
-    QString mCategoriesName;
+    QString mCategory;
     QString mTagsName;
 
     int mAutoSyncRepoTime;
@@ -139,6 +146,9 @@ private:
 
     ThemeManager::ThemeFlag mTheme;
     QList<int> splitterSizes;
+
+    NoteModel *openNoteModel;
+
 };
 
 #endif // CONFIGMODEL_H
