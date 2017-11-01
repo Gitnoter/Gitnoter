@@ -28,7 +28,7 @@ QString NoteModel::getNoteDir()
         setUuid();
     }
 
-    return QDir(Global::repoNoteTextPath).filePath(getUuid());
+    return QDir(Globals::repoNoteTextPath).filePath(getUuid());
 }
 
 
@@ -371,9 +371,9 @@ QString NoteModel::getStringFormTagList() const
 {
     QString tagsString = "";
     for (auto &&item : tagList) {
-        tagsString += item + Global::tagSplit;
+        tagsString += item + Globals::tagSplit;
     }
-    tagsString.chop(Global::tagSplit.length());
+    tagsString.chop(Globals::tagSplit.length());
 
     return tagsString;
 }
@@ -422,6 +422,7 @@ void NoteModel::clear()
     setUpdateDate(0);
     setTagList();
     setCategory();
+    setIsDelete();
 }
 
 void NoteModel::saveNoteToLocal()
@@ -429,8 +430,8 @@ void NoteModel::saveNoteToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Global::noteTextFileName), getNoteText());
-    Tools::writerFile(QDir(path).filePath(Global::noteDataFileName), getNoteData());
+    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText());
+    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData());
 }
 
 void NoteModel::saveNoteTextToLocal()
@@ -438,7 +439,7 @@ void NoteModel::saveNoteTextToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Global::noteTextFileName), getNoteText());
+    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText());
 }
 
 void NoteModel::saveNoteDataToLocal()
@@ -446,7 +447,7 @@ void NoteModel::saveNoteDataToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Global::noteDataFileName), getNoteData());
+    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData());
 }
 
 QString NoteModel::getUuid()
@@ -531,6 +532,16 @@ void NoteModel::setTitle(const QString &title)
     NoteModel::mTitle = title;
 }
 
+int NoteModel::getIsDelete() const
+{
+    return isDelete;
+}
+
+void NoteModel::setIsDelete(int isDelete)
+{
+    NoteModel::isDelete = isDelete;
+}
+
 /**
  *
  * NoteModelList
@@ -545,7 +556,7 @@ NoteModelList::NoteModelList()
 void NoteModelList::init()
 {
     noteModelList.clear();
-    QDir dir(Global::repoNoteTextPath);
+    QDir dir(Globals::repoNoteTextPath);
 
     for (auto &&mfi : dir.entryInfoList()) {
         if (mfi.fileName() == "." || mfi.fileName() == "..") {
@@ -553,8 +564,8 @@ void NoteModelList::init()
         }
         if (mfi.isDir()) {
             QDir dir2(mfi.absoluteFilePath());
-            NoteModel *noteModel = new NoteModel(dir2.filePath(Global::noteTextFileName),
-                                                 dir2.filePath(Global::noteDataFileName));
+            NoteModel *noteModel = new NoteModel(dir2.filePath(Globals::noteTextFileName),
+                                                 dir2.filePath(Globals::noteDataFileName));
             noteModelList.append(noteModel);
         }
     }
@@ -587,8 +598,13 @@ NoteModel *NoteModelList::append(const QString category)
 
 void NoteModelList::removeOne(NoteModel *noteModel)
 {
-    QFile::remove(noteModel->getNoteDir());
+    QDir(noteModel->getNoteDir()).removeRecursively();
     noteModelList.removeOne(noteModel);
+}
+
+void NoteModelList::deleteOne(NoteModel *noteModel)
+{
+    noteModel->setIsDelete(1);
 }
 
 const QList<NoteModel *> &NoteModelList::getList() const

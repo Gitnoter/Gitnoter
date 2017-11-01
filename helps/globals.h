@@ -10,7 +10,7 @@
 
 #include <QObject>
 
-class Global : public QObject
+class Globals : public QObject
 {
 Q_OBJECT
 
@@ -29,7 +29,7 @@ public:
     static const QString noteDataFileName;
     static const QString repoNoteDataPath;
     static const QString repoCategoryListPath;
-    static const QString repoTagsListPath;
+    static const QString repoTagListPath;
 
     static const QString newNoteKeySequence;
     static const QString lockWindowKeySequence;

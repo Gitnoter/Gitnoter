@@ -11,20 +11,20 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->setupUi(this);
     setWindowHeight(0);
 
-    ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoSyncRepoTime()));
-    ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(Global::configModel->getAutoLockTime()));
-    ui->lineEdit_unlockPassword->setText(Global::configModel->getUnlockPassword());
-    ui->lineEdit_repoUrl->setText(Global::configModel->getRepoUrl());
-    ui->lineEdit_username->setText(Global::configModel->getRepoUsername());
-    ui->lineEdit_password->setText(Global::configModel->getRepoPassword());
-    ui->fontComboBox->setCurrentText(Global::configModel->getFontFamily());
-    ui->comboBox_fontSize->setCurrentText(QString::number(Global::configModel->getFontPixelSize()));
-    ui->keySequenceEdit_newNote->setKeySequence(QKeySequence(Global::configModel->getNewNoteKeySequence()));
-    ui->keySequenceEdit_lockWindow->setKeySequence(QKeySequence(Global::configModel->getLockWindowKeySequence()));
-    ui->keySequenceEdit_cutWindow->setKeySequence(QKeySequence(Global::configModel->getCutWindowKeySequence()));
-    ui->label_defaultNewNote->setText(tr("默认: %1").arg(Global::newNoteKeySequence));
-    ui->label_defaultLockWindow->setText(tr("默认: %1").arg(Global::lockWindowKeySequence));
-    ui->label_defaultCutWindow->setText(tr("默认: %1").arg(Global::cutWindowKeySequence));
+    ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(Globals::configModel->getAutoSyncRepoTime()));
+    ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(Globals::configModel->getAutoLockTime()));
+    ui->lineEdit_unlockPassword->setText(Globals::configModel->getUnlockPassword());
+    ui->lineEdit_repoUrl->setText(Globals::configModel->getRepoUrl());
+    ui->lineEdit_username->setText(Globals::configModel->getRepoUsername());
+    ui->lineEdit_password->setText(Globals::configModel->getRepoPassword());
+    ui->fontComboBox->setCurrentText(Globals::configModel->getFontFamily());
+    ui->comboBox_fontSize->setCurrentText(QString::number(Globals::configModel->getFontPixelSize()));
+    ui->keySequenceEdit_newNote->setKeySequence(QKeySequence(Globals::configModel->getNewNoteKeySequence()));
+    ui->keySequenceEdit_lockWindow->setKeySequence(QKeySequence(Globals::configModel->getLockWindowKeySequence()));
+    ui->keySequenceEdit_cutWindow->setKeySequence(QKeySequence(Globals::configModel->getCutWindowKeySequence()));
+    ui->label_defaultNewNote->setText(tr("默认: %1").arg(Globals::newNoteKeySequence));
+    ui->label_defaultLockWindow->setText(tr("默认: %1").arg(Globals::lockWindowKeySequence));
+    ui->label_defaultCutWindow->setText(tr("默认: %1").arg(Globals::cutWindowKeySequence));
 }
 
 SettingDialog::~SettingDialog()
@@ -91,7 +91,7 @@ void SettingDialog::on_comboBox_autoSynch_currentIndexChanged(int index)
 {
     int time = getTimeByComboBoxIndex(index);
     if (time >= 0) {
-        Global::configModel->setAutoSyncRepoTime(time);
+        Globals::configModel->setAutoSyncRepoTime(time);
         emit autoSyncRepoTimeChanged();
     }
 }
@@ -100,7 +100,7 @@ void SettingDialog::on_comboBox_autoLock_currentIndexChanged(int index)
 {
     int time = getTimeByComboBoxIndex(index);
     if (time >= 0) {
-        Global::configModel->setAutoLockTime(time);
+        Globals::configModel->setAutoLockTime(time);
         emit autoLockTimeChanged();
     }
 }
@@ -137,59 +137,59 @@ int SettingDialog::getComboBoxIndexByTime(int time)
 
 void SettingDialog::on_lineEdit_unlockPassword_editingFinished()
 {
-    Global::configModel->setUnlockPassword(ui->lineEdit_unlockPassword->text());
+    Globals::configModel->setUnlockPassword(ui->lineEdit_unlockPassword->text());
 }
 
 void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 {
     QRegExp regExp("((http|https)://|(www)\\.)(\\w+)(\\.?[\\.a-z0-9/:?%&=\\-_+#;]*).git", Qt::CaseInsensitive);
     if (regExp.exactMatch(ui->lineEdit_repoUrl->text())) {
-        Global::configModel->setRepoUrl(ui->lineEdit_repoUrl->text());
-        Global::gitManager->clearRemoteList();
-        Global::gitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
+        Globals::configModel->setRepoUrl(ui->lineEdit_repoUrl->text());
+        Globals::gitManager->clearRemoteList();
+        Globals::gitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
     }
     else {
-        ui->lineEdit_repoUrl->setText(Global::configModel->getRepoUrl());
+        ui->lineEdit_repoUrl->setText(Globals::configModel->getRepoUrl());
     }
 }
 
 void SettingDialog::on_lineEdit_username_editingFinished()
 {
     if (!ui->lineEdit_username->text().isEmpty()) {
-        Global::configModel->setRepoUsername(ui->lineEdit_username->text());
+        Globals::configModel->setRepoUsername(ui->lineEdit_username->text());
     }
 }
 
 void SettingDialog::on_lineEdit_password_editingFinished()
 {
     if (!ui->lineEdit_password->text().isEmpty()) {
-        Global::configModel->setRepoPassword(ui->lineEdit_password->text());
+        Globals::configModel->setRepoPassword(ui->lineEdit_password->text());
     }
 }
 
 void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 {
-    Global::configModel->setFontFamily(f.family());
+    Globals::configModel->setFontFamily(f.family());
     emit editorFontChanged();
 }
 
 void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
 {
-    Global::configModel->setFontPixelSize(arg1.toInt());
+    Globals::configModel->setFontPixelSize(arg1.toInt());
     emit editorFontChanged();
 }
 
 void SettingDialog::on_keySequenceEdit_newNote_keySequenceChanged(const QKeySequence &keySequence)
 {
-    Global::configModel->setNewNoteKeySequence(keySequence.toString());
+    Globals::configModel->setNewNoteKeySequence(keySequence.toString());
 }
 
 void SettingDialog::on_keySequenceEdit_lockWindow_keySequenceChanged(const QKeySequence &keySequence)
 {
-    Global::configModel->setLockWindowKeySequence(keySequence.toString());
+    Globals::configModel->setLockWindowKeySequence(keySequence.toString());
 }
 
 void SettingDialog::on_keySequenceEdit_cutWindow_keySequenceChanged(const QKeySequence &keySequence)
 {
-    Global::configModel->setCutWindowKeySequence(keySequence.toString());
+    Globals::configModel->setCutWindowKeySequence(keySequence.toString());
 }

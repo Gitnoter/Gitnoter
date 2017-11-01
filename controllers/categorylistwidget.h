@@ -2,6 +2,7 @@
 #define CATEGORYLISTWIDGET_H
 
 #include "categorymodellist.h"
+#include "notemodellist.h"
 
 #include <QDialog>
 #include <QPropertyAnimation>
@@ -17,7 +18,7 @@ class CategoryListWidget : public QDialog
 Q_OBJECT
 
 public:
-    explicit CategoryListWidget(QWidget *parent = 0);
+    explicit CategoryListWidget(QWidget *parent = 0, NoteModel *noteModel = nullptr);
 
     ~CategoryListWidget();
 
@@ -36,11 +37,15 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::CategoryListWidget *ui;
 
     void mSetListWidgetList();
 
     void mFiltrateListWidgetList();
+
+private:
+    Ui::CategoryListWidget *ui;
+    NoteModel *mNoteModel;
+
 };
 
 #endif // CATEGORYLISTWIDGET_H

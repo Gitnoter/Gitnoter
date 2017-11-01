@@ -36,13 +36,13 @@ void TagModel::setCount(int count)
 
 void TagModelList::init()
 {
-    if (!Global::noteModelList.getList().length()) {
+    if (!Globals::noteModelList.getList().length()) {
         return;
     }
 
     tagModelList.clear();
     QMap<QString, TagModel *> map;
-    for (auto &&noteModel : Global::noteModelList.getList()) {
+    for (auto &&noteModel : Globals::noteModelList.getList()) {
         for (auto &&item : noteModel->getTagList()) {
             if (map.contains(item)) {
                 TagModel *tagModel = map[item];
@@ -54,7 +54,7 @@ void TagModelList::init()
         }
     }
 
-    QStringList stringList = Tools::readerFileToList(Global::repoTagsListPath);
+    QStringList stringList = Tools::readerFileToList(Globals::repoTagListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty() && !map.contains(str)) {
             map[str] = new TagModel(str);
@@ -94,7 +94,7 @@ int TagModelList::indexOf(const QString &name)
 
 void TagModelList::rename(const QString oldName, const QString newName)
 {
-    for (auto &&item : Global::noteModelList.getList()) {
+    for (auto &&item : Globals::noteModelList.getList()) {
         QStringList tagList = item->getTagList();
         for (int i = 0; i < tagList.length(); ++i) {
             if (tagList[i] == oldName) {
@@ -106,6 +106,22 @@ void TagModelList::rename(const QString oldName, const QString newName)
     }
 }
 
+void TagModelList::removeOne(const QString &name)
+{
+    for (auto &&item : tagModelList) {
+        if (item->getName() == name) {
+            item->setCount(item->getCount() - 1);
+        }
+    }
+}
+
+void TagModelList::removeList(const QStringList &nameList)
+{
+    for (auto &&name : nameList) {
+        removeOne(name);
+    }
+}
+
 const QString TagModelList::toString()
 {
     QString str = "";
@@ -113,6 +129,11 @@ const QString TagModelList::toString()
         str += item->getName() + "\n";
     }
     return str.trimmed();
+}
+
+void TagModelList::saveToLocal()
+{
+    Tools::writerFile(Globals::repoTagListPath, toString());
 }
 
 const QList<TagModel *> &TagModelList::getList() const

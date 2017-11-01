@@ -50,13 +50,13 @@ CategoryModelList::CategoryModelList()
 
 void CategoryModelList::init()
 {
-    if (!Global::noteModelList.getList().length()) {
+    if (!Globals::noteModelList.getList().length()) {
         return;
     }
 
     categoryModelList.clear();
     QMap<QString, CategoryModel *> map;
-    for (auto &&noteModel : Global::noteModelList.getList()) {
+    for (auto &&noteModel : Globals::noteModelList.getList()) {
         if (map.contains(noteModel->getCategory())) {
             CategoryModel *categoryModel = map[noteModel->getCategory()];
             categoryModel->setCount(categoryModel->getCount() + 1);
@@ -66,7 +66,7 @@ void CategoryModelList::init()
         }
     }
 
-    QStringList stringList = Tools::readerFileToList(Global::repoCategoryListPath);
+    QStringList stringList = Tools::readerFileToList(Globals::repoCategoryListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty() && !map.contains(str)) {
             map[str] = new CategoryModel(str);
@@ -101,7 +101,7 @@ int CategoryModelList::indexOf(const QString &name)
 
 void CategoryModelList::rename(const QString oldName, const QString newName)
 {
-    for (auto &&item : Global::noteModelList.getList()) {
+    for (auto &&item : Globals::noteModelList.getList()) {
         if (item->getCategory() == oldName) {
             item->setCategory(newName);
             item->saveNoteDataToLocal();
@@ -127,6 +127,11 @@ const QString CategoryModelList::toString()
     return str.trimmed();
 }
 
+void CategoryModelList::saveToLocal()
+{
+    Tools::writerFile(Globals::repoCategoryListPath, toString());
+}
+
 const QList<CategoryModel *> &CategoryModelList::getList() const
 {
     return categoryModelList;
@@ -135,9 +140,4 @@ const QList<CategoryModel *> &CategoryModelList::getList() const
 void CategoryModelList::setList(const QList<CategoryModel *> &categoryModelList)
 {
     CategoryModelList::categoryModelList = categoryModelList;
-}
-
-void CategoryModelList::saveToLocal()
-{
-    Tools::writerFile(Global::repoCategoryListPath, toString());
 }

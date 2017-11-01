@@ -35,9 +35,15 @@ public:
 
     int indexOf(const QString &name);
 
-    const QString  toString();
-
     void rename(const QString oldName, const QString newName);
+
+    void removeOne(const QString &name);
+
+    void removeList(const QStringList &nameList);
+
+    const QString toString();
+
+    void saveToLocal();
 
     const QList<TagModel *> &getList() const;
 

@@ -69,6 +69,10 @@ public:
 
     void setTitle(const QString &title);
 
+    int getIsDelete() const;
+
+    void setIsDelete(int isDelete = 0);
+
 private:
     QString mUuid;
     int mCreateDate;
@@ -97,6 +101,8 @@ public:
     NoteModel *append(const QString category);
 
     void removeOne(NoteModel *noteModel);
+
+    void deleteOne(NoteModel *noteModel);
 
     const QList<NoteModel *> &getList() const;
 

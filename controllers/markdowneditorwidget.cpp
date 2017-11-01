@@ -1,6 +1,7 @@
 #include "ui_markdowneditorwidget.h"
 
 #include "markdowneditorwidget.h"
+#include "globals.h"
 
 #include <QScrollBar>
 #include <QDebug>
@@ -25,14 +26,11 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::setMarkdownEditorText(const QString &text)
+void MarkdownEditorWidget::init(NoteModel *noteModel)
 {
-    ui->markdownEditor->setText(text);
-}
-
-void MarkdownEditorWidget::setMarkdownPreviewText(const QString &text)
-{
-    ui->markdownPreview->setText(text);
+    mNoteModel = noteModel;
+    ui->markdownEditor->setText(noteModel->getNoteText());
+    ui->markdownPreview->setText(noteModel->getMarkdownHtml());
 }
 
 void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)
@@ -148,4 +146,11 @@ void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
         addTagToTagListWidget(ui->lineEdit_tag->text());
         ui->lineEdit_tag->clear();
     }
+}
+
+void MarkdownEditorWidget::on_markdownEditor_textChanged()
+{
+    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
+    mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
+    mNoteModel->saveNoteToLocal();
 }

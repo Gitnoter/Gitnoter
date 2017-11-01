@@ -18,7 +18,7 @@ LockDialog::~LockDialog()
 
 void LockDialog::on_lineEdit_returnPressed()
 {
-    if (Global::configModel->getUnlockPassword() == ui->lineEdit->text()) {
+    if (Globals::configModel->getUnlockPassword() == ui->lineEdit->text()) {
         close();
         (new MainWindow)->show();
     }

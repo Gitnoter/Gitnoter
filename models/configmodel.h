@@ -29,7 +29,7 @@ public:
 
     void setRepoPassword(const QString &repoPassword);
 
-    void setOpenNoteModel(const QString &openNoteUuid);
+    void setOpenNoteUuid(const QString &openNoteUuid);
 
     const QString &getVersion() const;
 
@@ -41,7 +41,7 @@ public:
 
     const QString &getRepoPassword() const;
 
-    const QString &getUuidFromOpenNoteModel() const;
+    const QString &getOpenNoteUuid() const;
 
     int getSidebarSortKey() const;
 
@@ -51,21 +51,15 @@ public:
 
     void setSidebarSortValue(const QString &sidebarSortValue);
 
-    QString getCategory() const;
+    QString getSideSelectedName() const;
 
-    void setCategory(const QString &category);
-
-    QString getTagsName() const;
-
-    void setTagsName(const QString &tagsName);
+    void setSideSelected(int type, const QString &name);
 
     int getLocalRepoStatus() const;
 
     void setLocalRepoStatus(int localRepoStatus);
 
-    int getIsSelectedClasses() const;
-
-    void setIsSelectedClasses(int isSelectedClasses);
+    int getSideSelectedType() const;
 
     const QString &getRepoEmail() const;
 
@@ -111,10 +105,6 @@ public:
 
     void setSplitterSizes(const QList<int> &splitterSizes);
 
-    NoteModel *getOpenNoteModel() const;
-
-    void setOpenNoteModel(NoteModel *noteModel);
-
 private:
     QString mVersion;
     QString mRepoDir;
@@ -128,10 +118,12 @@ private:
     QString mSidebarSortValue;
     // 0: 还没有初始化仓库, 1: 初始化远程仓库, 2: 初始化本地仓库
     int mLocalRepoStatus;
-    // 0: 没有选择任何类型, 1: 选择笔记本, 2: 选择标签
-    int mIsSelectedClasses;
-    QString mCategory;
-    QString mTagsName;
+    // type: 1 - 第一层及
+    //      name: all, recent, unclassified, trash, category, tag
+    // type: 2 - 第二层级
+    //      name: categoryName, tagName
+    int mSideSelectedType;
+    QString mSideSelectedName;
 
     int mAutoSyncRepoTime;
     int mAutoLockTime;
@@ -146,8 +138,6 @@ private:
 
     ThemeManager::ThemeFlag mTheme;
     QList<int> splitterSizes;
-
-    NoteModel *mOpenNoteModel;
 
 };
 

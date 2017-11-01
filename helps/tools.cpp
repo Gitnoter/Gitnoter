@@ -33,12 +33,12 @@ QString Tools::getUuid()
 
 int Tools::timestampFromDateTime(const QString dateTime)
 {
-    return QDateTime::fromString(dateTime, Global::dateFormat).toTime_t();
+    return QDateTime::fromString(dateTime, Globals::dateFormat).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(Global::dateFormat);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(Globals::dateFormat);
 }
 
 QString Tools::readerFile(QString path)

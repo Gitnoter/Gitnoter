@@ -14,6 +14,7 @@
 #include <QTableWidgetItem>
 #include <QListWidgetItem>
 #include <QTimer>
+#include <QTreeWidgetItem>
 
 namespace Ui
 {
@@ -43,9 +44,13 @@ private slots:
 
     void on_action_deleteNote_triggered();
 
+    void on_pushButton_noteSubtract_clicked();
+
+    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
+
 private:
     Ui::MainWindow *ui;
-
+    NoteModel *mNoteModel;
 
 private:
     void setupUi();
@@ -53,6 +58,8 @@ private:
     void setCategoryList();
     void setTagList();
     void setOpenedNoteModel();
+
+    void updateUiContent();
 };
 
 #endif // MAINWINDOW_H

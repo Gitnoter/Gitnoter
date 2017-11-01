@@ -2,6 +2,7 @@
 #define MARKDOWNEDITORWIDGET_H
 
 #include "tagcellwidget.h"
+#include "notemodellist.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -18,9 +19,7 @@ public:
     explicit MarkdownEditorWidget(QWidget *parent = 0);
     ~MarkdownEditorWidget();
 
-    void setMarkdownEditorText(const QString &text);
-
-    void setMarkdownPreviewText(const QString &text);
+    void init(NoteModel *noteModel);
 
 private slots:
     void on_splitter_editor_splitterMoved(int pos, int index);
@@ -39,9 +38,11 @@ private slots:
 
     void on_lineEdit_tag_returnPressed();
 
+    void on_markdownEditor_textChanged();
+
 private:
     Ui::MarkdownEditorWidget *ui;
-
+    NoteModel *mNoteModel;
     QList<TagCellWidget *> tagCellWidgetList;
 
 private:
