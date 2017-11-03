@@ -18,14 +18,9 @@ public:
     explicit NoteListCellWidget(NoteModel *noteModel, QWidget *parent = 0);
     ~NoteListCellWidget();
 
-public slots:
-    void onNoteListItemClicked(QListWidgetItem *item);
-
 private:
     Ui::NoteListCellWidget *ui;
-    NoteModel *noteModel;
-
-    void setupUi();
+    NoteModel *mNoteModel;
 
 };
 

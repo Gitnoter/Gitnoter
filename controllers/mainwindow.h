@@ -30,9 +30,6 @@ public:
 
     ~MainWindow();
 
-signals:
-    void noteListItemClicked(QListWidgetItem *item);
-
 private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
 

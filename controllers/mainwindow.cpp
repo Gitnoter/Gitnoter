@@ -230,7 +230,6 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     if (noteModel->getUuid() != mNoteModel->getUuid()) {
         Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
         setOpenedNoteModel();
-        emit noteListItemClicked(item);
     }
 }
 
@@ -315,11 +314,11 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
     else {
         if (item->parent() == ui->treeWidget->topLevelItem(6)) {
             type = 2;
-            name = item->data(0, Qt::UserRole).value<CategoryModel *>()->getName();
+            name = item->data(column, Qt::UserRole).value<CategoryModel *>()->getName();
         }
         else {
             type = 3;
-            name = item->data(0, Qt::UserRole).value<TagModel *>()->getName();
+            name = item->data(column, Qt::UserRole).value<TagModel *>()->getName();
         }
     }
     Globals::configModel->setSideSelected(type, name);
