@@ -45,6 +45,8 @@ private slots:
 
     void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
 
+    void onNoteModelChanged(NoteModel *noteModel);
+
 private:
     Ui::MainWindow *ui;
     NoteModel *mNoteModel;

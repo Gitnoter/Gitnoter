@@ -60,5 +60,9 @@
         <file>images/icon-tasklist.svg</file>
         <file>images/icon-text-size-down.svg</file>
         <file>images/icon-text-size.svg</file>
+        <file>images/icon-delete-down.svg</file>
+        <file>images/icon-delete.svg</file>
+        <file>images/icon-recover-down.svg</file>
+        <file>images/icon-recover.svg</file>
     </qresource>
 </RCC>

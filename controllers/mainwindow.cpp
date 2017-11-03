@@ -41,6 +41,8 @@ void MainWindow::setupUi()
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
 
+    connect(ui->page_editor, SIGNAL(noteModelChanged(NoteModel *)), this, SLOT(onNoteModelChanged(NoteModel *)));
+
     int type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
     if (type == 1) {
@@ -323,4 +325,15 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
     }
     Globals::configModel->setSideSelected(type, name);
     setNoteList(true);
+}
+
+void MainWindow::onNoteModelChanged(NoteModel *noteModel)
+{
+    for (int j = 0; j < ui->listWidget->count(); ++j) {
+        QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
+        NoteModel *itemNoteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+        if (itemNoteModel == noteModel) {
+            ((NoteListCellWidget *) ui->listWidget->itemWidget(listWidgetItem))->reload();
+        }
+    }
 }

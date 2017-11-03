@@ -9,14 +9,18 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     mNoteModel(noteModel)
 {
     ui->setupUi(this);
-
-    ui->label_title->setText(noteModel->getTitle());
-    ui->frame_body->setText(noteModel->getNoteText());
-    ui->label_categoryList->setText(noteModel->getCategory());
-    ui->label_tagList->setText(noteModel->getStringFormTagList());
+    reload();
 }
 
 NoteListCellWidget::~NoteListCellWidget()
 {
     delete ui;
+}
+
+void NoteListCellWidget::reload()
+{
+    ui->label_title->setText(mNoteModel->getTitle());
+    ui->frame_body->setText(mNoteModel->getNoteText());
+    ui->label_categoryList->setText(mNoteModel->getCategory());
+    ui->label_tagList->setText(mNoteModel->getStringFormTagList());
 }

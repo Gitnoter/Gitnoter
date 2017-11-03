@@ -13,6 +13,7 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_tag->installEventFilter(this);
+    ui->markdownEditor->installEventFilter(this);
 
     connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)),
                 this, SLOT(markdownEditorSliderValueChanged(int)));
@@ -31,6 +32,33 @@ void MarkdownEditorWidget::init(NoteModel *noteModel)
     mNoteModel = noteModel;
     ui->markdownEditor->setText(noteModel->getNoteText());
     ui->markdownPreview->setText(noteModel->getMarkdownHtml());
+    ui->pushButton_category->setText(noteModel->getCategory().isEmpty() ? tr("所有笔记") : noteModel->getCategory());
+
+    QStringList tagModelList = noteModel->getTagList();
+    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
+        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
+        ui->horizontalLayout->removeItem(layoutItem);
+        layoutItem->widget()->close();
+    }
+    for (auto &&item : tagModelList) {
+        addTagToTagListWidget(item);
+    }
+
+    if (mNoteModel->getIsDelete()) {
+        ui->pushButton_recover->setHidden(false);
+        ui->pushButton_category->setDisabled(true);
+        ui->lineEdit_tag->setDisabled(true);
+        ui->label_tagIcon->setDisabled(true);
+        ui->markdownEditor->setReadOnly(true);
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+    else {
+        ui->pushButton_recover->setHidden(true);
+        ui->pushButton_category->setDisabled(false);
+        ui->lineEdit_tag->setDisabled(false);
+        ui->label_tagIcon->setDisabled(false);
+        ui->markdownEditor->setReadOnly(false);
+    }
 }
 
 void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)
@@ -48,27 +76,27 @@ void MarkdownEditorWidget::addTagToTagListWidget(const QString &tagName)
 {
     TagCellWidget *tagCellWidget = new TagCellWidget(tagName, this);
     ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-    tagCellWidgetList.append(tagCellWidget);
+    setTagList();
 }
 
 void MarkdownEditorWidget::removeTagFromTagListWidget(const QString &tagName)
 {
-    if (tagName.isEmpty()) {
-        if (tagCellWidgetList.length() > 0) {
-            int deleteIndex = tagCellWidgetList.length() - 1;
-            tagCellWidgetList[deleteIndex]->close();
-            tagCellWidgetList.removeAt(deleteIndex);
+    if (tagName.isEmpty() && ui->horizontalLayout->count() - 2 > 0) {
+        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(ui->horizontalLayout->count() - 2);
+        layoutItem->widget()->close();
+        ui->horizontalLayout->removeItem(layoutItem);
+    }
+    else {
+        for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
+            QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
+            if (((TagCellWidget *) layoutItem->widget())->getTagName() == tagName) {
+                ui->horizontalLayout->removeItem(layoutItem);
+                layoutItem->widget()->close();
+            }
         }
-        return;
     }
 
-    for (int i = 0; i < tagCellWidgetList.length(); ++i) {
-        if (tagCellWidgetList[i]->getTagName() == tagName) {
-            tagCellWidgetList[i]->close();
-            tagCellWidgetList.removeAt(i);
-            break;
-        }
-    }
+    setTagList();
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -78,20 +106,41 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             ui->frame->setStyleSheet("QFrame#frame{border: 0.5px solid rgb(191, 191, 191);}");
             ui->pushButton_markdownPeview->setHidden(true);
             ui->pushButton_splitterPreview->setHidden(true);
+            ui->stackedWidget->setCurrentIndex(1);
+            return true;
         }
         else if (event->type() == QEvent::FocusOut) {
             ui->frame->setStyleSheet("");
             ui->pushButton_markdownPeview->setHidden(false);
             ui->pushButton_splitterPreview->setHidden(false);
+            ui->stackedWidget->setCurrentIndex(0);
+            return true;
         }
         // if lintEdit_tag is empty and press Backspace key, delete tag
         else if (event->type() == QEvent::KeyPress
                  && ((QKeyEvent *) event)->key() == Qt::Key_Backspace
                  && ui->lineEdit_tag->text().isEmpty()) {
             removeTagFromTagListWidget();
+            return true;
+        }
+        else {
+            return false;
         }
     }
-    return false;
+    else if (object == ui->markdownEditor) {
+        if (event->type() == QEvent::FocusIn) {
+            ui->stackedWidget->setCurrentIndex(0);
+            return true;
+        }
+        else if (event->type() == QEvent::FocusOut) {
+            ui->stackedWidget->setCurrentIndex(1);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    return QWidget::eventFilter(object, event);
 }
 
 void MarkdownEditorWidget::markdownEditorSliderValueChanged(int value, bool force) {
@@ -153,4 +202,16 @@ void MarkdownEditorWidget::on_markdownEditor_textChanged()
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
     mNoteModel->saveNoteToLocal();
+    emit noteModelChanged(mNoteModel);
+}
+
+void MarkdownEditorWidget::setTagList()
+{
+    QStringList tagList = {};
+    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
+        tagList.append(((TagCellWidget *) ui->horizontalLayout->itemAt(i)->widget())->getTagName());
+    }
+    mNoteModel->setTagList(tagList);
+    mNoteModel->saveNoteDataToLocal();
+    emit noteModelChanged(mNoteModel);
 }

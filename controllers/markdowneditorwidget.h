@@ -21,6 +21,9 @@ public:
 
     void init(NoteModel *noteModel);
 
+signals:
+    void noteModelChanged(NoteModel *noteModel);
+
 private slots:
     void on_splitter_editor_splitterMoved(int pos, int index);
 
@@ -43,7 +46,6 @@ private slots:
 private:
     Ui::MarkdownEditorWidget *ui;
     NoteModel *mNoteModel;
-    QList<TagCellWidget *> tagCellWidgetList;
 
 private:
     void setSplitterHandleDisable(bool b);
@@ -51,6 +53,8 @@ private:
     void addTagToTagListWidget(const QString &tagName);
 
     void removeTagFromTagListWidget(const QString &tagName = "");
+
+    void setTagList();
 
     bool eventFilter(QObject* object, QEvent* event);
 
