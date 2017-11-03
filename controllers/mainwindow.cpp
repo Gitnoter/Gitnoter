@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setupUi();
 
     Globals::noteModelList.init();
     Globals::categoryModelList.init();
@@ -21,7 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setCategoryList();
     setTagList();
     setOpenedNoteModel();
-    updateUiContent();
+
+
+    setupUi();
 }
 
 MainWindow::~MainWindow()
@@ -36,8 +37,51 @@ void MainWindow::setupUi()
     ui->listWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
+
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
+
+    int type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
+    if (type == 1) {
+        int index = 0;
+        if (name == "all") index = 1;
+        else if (name == "recent") index = 2;
+        else if (name == "unclassified") index = 3;
+        else if (name == "trash") index = 4;
+        ui->treeWidget->topLevelItem(index)->setSelected(true);
+    }
+    else if(type == 2) {
+        QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(6);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
+            if (categoryModel->getName() == name) {
+                childItem->setSelected(true);
+                break;
+            }
+        }
+    }
+    else if (type == 3) {
+        QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(8);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
+            if (tagModel->getName() == name) {
+                childItem->setSelected(true);
+                break;
+            }
+        }
+    }
+
+    for (int j = 0; j < ui->listWidget->count(); ++j) {
+        QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
+        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+        if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
+            listWidgetItem->setSelected(true);
+            break;
+        }
+    }
 }
 
 void MainWindow::updateUiContent()
@@ -98,7 +142,7 @@ void MainWindow::updateUiContent()
     }
 }
 
-void MainWindow::setNoteList()
+void MainWindow::setNoteList(bool hasSelected)
 {
     ui->listWidget->clear();
     int type = Globals::configModel->getSideSelectedType();
@@ -110,7 +154,7 @@ void MainWindow::setNoteList()
             || (type == 1 && name == "unclassified" && !noteModel->getIsDelete() && noteModel->getCategory().isEmpty())
             || (type == 1 && name == "trash" && noteModel->getIsDelete())
             || (type == 2 && !noteModel->getIsDelete() && name == noteModel->getCategory())
-            || (type == 2 && !noteModel->getIsDelete() && noteModel->getTagList().indexOf(name) != -1)) {
+            || (type == 3 && !noteModel->getIsDelete() && noteModel->getTagList().indexOf(name) != -1)) {
 
             QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
             listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteModel));
@@ -120,9 +164,34 @@ void MainWindow::setNoteList()
             ui->listWidget->setItemWidget(listWidgetItem, noteListCellWidget);
         }
     }
-
     // TODO: fix layout bug
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
+
+    if (hasSelected) {
+        // Check is selected list item
+        bool hasFind = false;
+        for (int j = 0; j < ui->listWidget->count(); ++j) {
+            QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
+            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+            if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
+                listWidgetItem->setSelected(true);
+                hasFind = true;
+                break;
+            }
+        }
+        if (!hasFind) {
+            if (ui->listWidget->count() > 0) {
+                QListWidgetItem *listWidgetItem = ui->listWidget->item(0);
+                NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+                Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+                listWidgetItem->setSelected(true);
+            }
+            else {
+                Globals::configModel->setOpenNoteUuid("");
+            }
+            setOpenedNoteModel();
+        }
+    }
 }
 
 void MainWindow::setCategoryList()
@@ -133,7 +202,8 @@ void MainWindow::setCategoryList()
             continue;
         }
         QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-        treeWidgetItem->setText(0, tr("%1 (%2)").arg(item->getName()).arg(item->getCount()));
+//        treeWidgetItem->setText(0, tr("%1 (%2)").arg(item->getName()).arg(item->getCount()));
+        treeWidgetItem->setText(0, item->getName());
         treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
         topLevelItem->addChild(treeWidgetItem);
     }
@@ -147,7 +217,8 @@ void MainWindow::setTagList()
             continue;
         }
         QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-        treeWidgetItem->setText(0, tr("%1 (%2)").arg(item->getName()).arg(item->getCount()));
+//        treeWidgetItem->setText(0, tr("%1 (%2)").arg(item->getName()).arg(item->getCount()));
+        treeWidgetItem->setText(0, item->getName());
         treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
         topLevelItem->addChild(treeWidgetItem);
     }
@@ -170,11 +241,21 @@ void MainWindow::on_splitter_splitterMoved(int, int)
 
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
-    mNoteModel = Globals::noteModelList.append(Globals::configModel->getSideSelectedName());
+    mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
+                                               ? Globals::configModel->getSideSelectedName() : "");
     Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
     Globals::categoryModelList.append(mNoteModel->getCategory());
+    Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
     ui->stackWidget_editor->setCurrentIndex(0);
     on_action_saveNote_triggered();
+
+    if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
+        Globals::configModel->setSideSelected(1, "all");
+        ui->treeWidget->clearSelection();
+        ui->treeWidget->topLevelItem(1)->setSelected(true);
+    }
+    setNoteList(true);
+    setOpenedNoteModel();
 }
 
 void MainWindow::on_action_saveNote_triggered()
@@ -232,14 +313,15 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
         }
     }
     else {
-        type = 2;
         if (item->parent() == ui->treeWidget->topLevelItem(6)) {
+            type = 2;
             name = item->data(0, Qt::UserRole).value<CategoryModel *>()->getName();
         }
         else {
+            type = 3;
             name = item->data(0, Qt::UserRole).value<TagModel *>()->getName();
         }
     }
     Globals::configModel->setSideSelected(type, name);
-    setNoteList();
+    setNoteList(true);
 }

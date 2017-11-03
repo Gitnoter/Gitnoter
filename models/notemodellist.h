@@ -100,6 +100,10 @@ public:
 
     NoteModel *append(const QString category);
 
+    void prepend(NoteModel *noteModel);
+
+    NoteModel *prepend(const QString category);
+
     void removeOne(NoteModel *noteModel);
 
     void deleteOne(NoteModel *noteModel);

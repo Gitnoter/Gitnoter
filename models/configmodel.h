@@ -121,7 +121,9 @@ private:
     // type: 1 - 第一层及
     //      name: all, recent, unclassified, trash, category, tag
     // type: 2 - 第二层级
-    //      name: categoryName, tagName
+    //      name: categoryName
+    // type: 3
+    //      name: tagName
     int mSideSelectedType;
     QString mSideSelectedName;
 

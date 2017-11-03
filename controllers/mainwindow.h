@@ -54,7 +54,7 @@ private:
 
 private:
     void setupUi();
-    void setNoteList();
+    void setNoteList(bool hasSelected = false);
     void setCategoryList();
     void setTagList();
     void setOpenedNoteModel();

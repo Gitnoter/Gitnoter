@@ -596,6 +596,20 @@ NoteModel *NoteModelList::append(const QString category)
     return noteModel;
 }
 
+void NoteModelList::prepend(NoteModel *noteModel)
+{
+    noteModelList.prepend(noteModel);
+}
+
+NoteModel *NoteModelList::prepend(const QString category)
+{
+    NoteModel *noteModel = new NoteModel;
+    noteModel->setCategory(category);
+    noteModelList.prepend(noteModel);
+
+    return noteModel;
+}
+
 void NoteModelList::removeOne(NoteModel *noteModel)
 {
     QDir(noteModel->getNoteDir()).removeRecursively();
