@@ -47,6 +47,10 @@ private slots:
 
     void onNoteModelChanged(NoteModel *noteModel);
 
+    void onCategoryAppend(const QString &category);
+
+    void onTagAppend(const QString &tag);
+
 private:
     Ui::MainWindow *ui;
     NoteModel *mNoteModel;

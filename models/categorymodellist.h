@@ -35,7 +35,7 @@ public:
 
     void init();
 
-    void append(const QString categoryName);
+    CategoryModel *append(const QString categoryName);
 
     int indexOf(const QString &name);
 

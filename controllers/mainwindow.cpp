@@ -209,6 +209,7 @@ void MainWindow::setCategoryList()
         treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
         topLevelItem->addChild(treeWidgetItem);
     }
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
 }
 
 void MainWindow::setTagList()
@@ -224,6 +225,7 @@ void MainWindow::setTagList()
         treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(item));
         topLevelItem->addChild(treeWidgetItem);
     }
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
 }
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
@@ -336,6 +338,27 @@ void MainWindow::onNoteModelChanged(NoteModel *noteModel)
             ((NoteListCellWidget *) ui->listWidget->itemWidget(listWidgetItem))->reloadData();
             break;
         }
-
     }
+}
+
+void MainWindow::onCategoryAppend(const QString &category)
+{
+    CategoryModel *categoryModel = Globals::categoryModelList.append(category);
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
+    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+    treeWidgetItem->setText(0, category);
+    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
+    topLevelItem->addChild(treeWidgetItem);
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
+}
+
+void MainWindow::onTagAppend(const QString &tag)
+{
+    TagModel *tagModel = Globals::tagModelList.append(tag);
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
+    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+    treeWidgetItem->setText(0, tag);
+    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
+    topLevelItem->addChild(treeWidgetItem);
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
 }

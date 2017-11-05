@@ -30,7 +30,7 @@ signals:
 
 private slots:
 
-    void on_pushButton_add_clicked();
+    void on_pushButton_addCategory_clicked();
 
     void on_lineEdit_textChanged(const QString &arg1);
 
@@ -40,7 +40,7 @@ private slots:
 
 private:
 
-    void setCategoryList();
+    void setCategoryList(QList<CategoryModel *> categoryModelList);
 
     void filtrateCategoryList();
 

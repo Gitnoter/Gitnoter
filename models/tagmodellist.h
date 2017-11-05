@@ -31,7 +31,7 @@ Q_OBJECT
 public:
     void init();
 
-    void append(const QString tagName);
+    TagModel *append(const QString tagName);
 
     int indexOf(const QString &name);
 

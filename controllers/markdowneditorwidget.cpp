@@ -222,6 +222,8 @@ void MarkdownEditorWidget::on_pushButton_category_clicked()
 
 void MarkdownEditorWidget::onCategoryChanged(QString category)
 {
+    ui->pushButton_category->setText(category);
+
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
     emit noteModelChanged(mNoteModel);

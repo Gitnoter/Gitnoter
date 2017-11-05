@@ -64,21 +64,22 @@ void TagModelList::init()
     tagModelList = map.values();
 }
 
-void TagModelList::append(const QString tagName)
+TagModel *TagModelList::append(const QString tagName)
 {
     if (tagName.isEmpty()) {
-        return;
+        return nullptr;
     }
 
     for (auto &&tagsModel : tagModelList) {
         if (tagsModel->getName() == tagName) {
             tagsModel->setCount(tagsModel->getCount() + 1);
             toString();
-            return;
+            return tagsModel;
         }
     }
 
-    tagModelList.append(new TagModel(tagName, 1));
+    TagModel *tagModel = new TagModel(tagName, 1);
+    tagModelList.append(tagModel);
 }
 
 int TagModelList::indexOf(const QString &name)

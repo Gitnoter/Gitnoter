@@ -76,16 +76,19 @@ void CategoryModelList::init()
     categoryModelList = map.values();
 }
 
-void CategoryModelList::append(const QString categoryName)
+CategoryModel *CategoryModelList::append(const QString categoryName)
 {
     for (auto &&item : categoryModelList) {
         if (item->getName() == categoryName) {
             item->setCount(item->getCount() + 1);
-            return;
+            return item;
         }
     }
 
-    categoryModelList.append(new CategoryModel(categoryName, 1));
+    CategoryModel *categoryModel = new CategoryModel(categoryName, 1);
+    categoryModelList.append(categoryModel);
+
+    return categoryModel;
 }
 
 int CategoryModelList::indexOf(const QString &name)

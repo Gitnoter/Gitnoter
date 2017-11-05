@@ -13,7 +13,7 @@ CategoryListWidget::CategoryListWidget(QWidget *parent, QString category) :
     ui->setupUi(this);
 
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->pushButton_add->setHidden(true);
+    ui->pushButton_addCategory->setHidden(true);
 }
 
 CategoryListWidget::~CategoryListWidget()
@@ -24,13 +24,14 @@ CategoryListWidget::~CategoryListWidget()
 void CategoryListWidget::init(const QString &category)
 {
     mCategory = category;
-    setCategoryList();
+    QList<CategoryModel *> categoryModelList = Globals::categoryModelList.getList();
+    setCategoryList(categoryModelList);
+    ui->lineEdit->clear();
 }
 
-void CategoryListWidget::setCategoryList()
+void CategoryListWidget::setCategoryList(QList<CategoryModel *> categoryModelList)
 {
     ui->listWidget_data->clear();
-    QList<CategoryModel *> categoryModelList = Globals::categoryModelList.getList();
     for (int i = 0; i < categoryModelList.length(); ++i) {
         if (categoryModelList[i]->getName().isEmpty()) {
             continue;
@@ -46,36 +47,33 @@ void CategoryListWidget::setCategoryList()
 
 void CategoryListWidget::filtrateCategoryList()
 {
-    int showCount = 0;
-    QString text = ui->lineEdit->displayText();
-    QList<CategoryModel *> categoryModelList = Globals::categoryModelList.getList();
+    QList<CategoryModel *> categoryModelList = {};
+    const QString text = ui->lineEdit->text();
 
-    for (int i = 0; i < categoryModelList.length(); ++i) {
-        int index = categoryModelList[i]->getName().indexOf(text, 0, Qt::CaseInsensitive);
-        QListWidgetItem *listWidgetItem = ui->listWidget_data->item(i);
-
-        bool isHidden = text.isEmpty() ? false : index == -1;
-        listWidgetItem->setHidden(isHidden);
-        if (!isHidden) showCount += 1;
+    for (auto &&item : Globals::categoryModelList.getList()) {
+        if (item->getName().isEmpty() || item->getName().indexOf(text, 0, Qt::CaseInsensitive) == -1) {
+            continue;
+        }
+        categoryModelList.append(item);
     }
 
-    ui->pushButton_add->setHidden(showCount != 0);
+    setCategoryList(categoryModelList);
+    ui->pushButton_addCategory->setHidden(categoryModelList.length() != 0);
 }
 
-void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &index)
+void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &)
 {
     on_buttonBox_accepted();
     emit accept();
 }
 
-void CategoryListWidget::on_pushButton_add_clicked()
+void CategoryListWidget::on_pushButton_addCategory_clicked()
 {
-    if (!ui->lineEdit->displayText().isEmpty()) {
-        Globals::categoryModelList.append(ui->lineEdit->displayText());
+    if (!ui->lineEdit->text().isEmpty()) {
+        Globals::categoryModelList.append(ui->lineEdit->text());
+        filtrateCategoryList();
         Globals::categoryModelList.saveToLocal();
-        setCategoryList();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
-        ui->lineEdit->clear();
     }
 }
 
