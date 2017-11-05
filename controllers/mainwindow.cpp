@@ -333,7 +333,9 @@ void MainWindow::onNoteModelChanged(NoteModel *noteModel)
         QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
         NoteModel *itemNoteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
         if (itemNoteModel == noteModel) {
-            ((NoteListCellWidget *) ui->listWidget->itemWidget(listWidgetItem))->reload();
+            ((NoteListCellWidget *) ui->listWidget->itemWidget(listWidgetItem))->reloadData();
+            break;
         }
+
     }
 }

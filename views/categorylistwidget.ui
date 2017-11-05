@@ -28,6 +28,9 @@
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
   <property name="acceptDrops">
    <bool>false</bool>
   </property>
@@ -44,9 +47,6 @@
    <string notr="true">QDialog#CategoriesWidget{
 	background-color:#EFEFEF;
 }</string>
-  </property>
-  <property name="tabletTracking" stdset="0">
-   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -113,32 +113,32 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CategoriesWidget</receiver>
+   <receiver>CategoryListWidget</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>249</x>
-     <y>419</y>
+     <x>219</x>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>219</y>
+     <x>219</x>
+     <y>309</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CategoriesWidget</receiver>
+   <receiver>CategoryListWidget</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>249</x>
-     <y>419</y>
+     <x>219</x>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>219</y>
+     <x>219</x>
+     <y>309</y>
     </hint>
    </hints>
   </connection>

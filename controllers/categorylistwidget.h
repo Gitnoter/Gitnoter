@@ -18,13 +18,15 @@ class CategoryListWidget : public QDialog
 Q_OBJECT
 
 public:
-    explicit CategoryListWidget(QWidget *parent = 0, NoteModel *noteModel = nullptr);
+    explicit CategoryListWidget(QWidget *parent = 0, QString category = "");
 
     ~CategoryListWidget();
 
+    void init(const QString &category);
+
 signals:
 
-    void categoriesChanged();
+    void categoryChanged(QString category);
 
 private slots:
 
@@ -38,13 +40,13 @@ private slots:
 
 private:
 
-    void mSetListWidgetList();
+    void setCategoryList();
 
-    void mFiltrateListWidgetList();
+    void filtrateCategoryList();
 
 private:
     Ui::CategoryListWidget *ui;
-    NoteModel *mNoteModel;
+    QString mCategory;
 
 };
 

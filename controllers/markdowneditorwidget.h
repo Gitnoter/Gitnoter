@@ -3,6 +3,7 @@
 
 #include "tagcellwidget.h"
 #include "notemodellist.h"
+#include "categorylistwidget.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -37,15 +38,20 @@ private slots:
      */
     void markdownPreviewSliderValueChanged(int value, bool force = false);
 
+    void onCategoryChanged(QString category);
+
     void onTagCellWidgetClicked(const QString tagName);
 
     void on_lineEdit_tag_returnPressed();
 
     void on_markdownEditor_textChanged();
 
+    void on_pushButton_category_clicked();
+
 private:
     Ui::MarkdownEditorWidget *ui;
     NoteModel *mNoteModel;
+    CategoryListWidget *categoryListWidget;
 
 private:
     void setSplitterHandleDisable(bool b);

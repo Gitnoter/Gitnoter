@@ -9,7 +9,7 @@ NoteListCellWidget::NoteListCellWidget(NoteModel *noteModel, QWidget *parent) :
     mNoteModel(noteModel)
 {
     ui->setupUi(this);
-    reload();
+    reloadData();
 }
 
 NoteListCellWidget::~NoteListCellWidget()
@@ -17,7 +17,7 @@ NoteListCellWidget::~NoteListCellWidget()
     delete ui;
 }
 
-void NoteListCellWidget::reload()
+void NoteListCellWidget::reloadData()
 {
     ui->label_title->setText(mNoteModel->getTitle());
     ui->frame_body->setText(mNoteModel->getNoteText());

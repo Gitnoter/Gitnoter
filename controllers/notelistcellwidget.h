@@ -18,7 +18,7 @@ public:
     explicit NoteListCellWidget(NoteModel *noteModel, QWidget *parent = 0);
     ~NoteListCellWidget();
 
-    void reload();
+    void reloadData();
 
 private:
     Ui::NoteListCellWidget *ui;

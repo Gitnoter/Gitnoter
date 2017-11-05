@@ -1,14 +1,15 @@
 #include "ui_markdowneditorwidget.h"
 
 #include "markdowneditorwidget.h"
-#include "globals.h"
+#include "mainwindow.h"
 
 #include <QScrollBar>
 #include <QDebug>
 
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MarkdownEditorWidget)
+    ui(new Ui::MarkdownEditorWidget),
+    categoryListWidget(new CategoryListWidget(this))
 {
     ui->setupUi(this);
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -16,10 +17,11 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     ui->markdownEditor->installEventFilter(this);
 
     connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)),
-                this, SLOT(markdownEditorSliderValueChanged(int)));
-    connect(ui->markdownPreview->verticalScrollBar(),
-                SIGNAL(valueChanged(int)),
-                this, SLOT(markdownPreviewSliderValueChanged(int)));
+            this, SLOT(markdownEditorSliderValueChanged(int)));
+    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(markdownPreviewSliderValueChanged(int)));
+    connect(categoryListWidget, SIGNAL(categoryChanged(QString)),
+            this, SLOT(onCategoryChanged(QString)));
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -206,6 +208,21 @@ void MarkdownEditorWidget::setTagList()
         tagList.append(((TagCellWidget *) ui->horizontalLayout->itemAt(i)->widget())->getTagName());
     }
     mNoteModel->setTagList(tagList);
+    mNoteModel->saveNoteDataToLocal();
+    emit noteModelChanged(mNoteModel);
+}
+
+void MarkdownEditorWidget::on_pushButton_category_clicked()
+{
+    if (categoryListWidget->isHidden()) {
+        categoryListWidget->init(mNoteModel->getCategory());
+        categoryListWidget->open();
+    }
+}
+
+void MarkdownEditorWidget::onCategoryChanged(QString category)
+{
+    mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
     emit noteModelChanged(mNoteModel);
 }
