@@ -26,7 +26,9 @@ public:
 
 signals:
 
-    void categoryChanged(QString category);
+    void categoryChanged(const QString &category);
+
+    void categoryAppend(const QString &category);
 
 private slots:
 

@@ -20,8 +20,8 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
             this, SLOT(markdownEditorSliderValueChanged(int)));
     connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)),
             this, SLOT(markdownPreviewSliderValueChanged(int)));
-    connect(categoryListWidget, SIGNAL(categoryChanged(QString)),
-            this, SLOT(onCategoryChanged(QString)));
+    connect(categoryListWidget, SIGNAL(categoryChanged(const QString &)),
+            this, SLOT(onCategoryChanged(const QString &)));
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -43,7 +43,8 @@ void MarkdownEditorWidget::init(NoteModel *noteModel)
         layoutItem->widget()->close();
     }
     for (auto &&item : tagModelList) {
-        addTagToTagListWidget(item);
+        TagCellWidget *tagCellWidget = new TagCellWidget(item, this);
+        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
     }
 
     if (mNoteModel->getIsDelete()) {
@@ -74,16 +75,19 @@ void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
     ui->splitter_editor->handle(1)->setDisabled(b);
 }
 
-void MarkdownEditorWidget::addTagToTagListWidget(const QString &tagName)
+void MarkdownEditorWidget::addTag(const QString &tagName)
 {
-    TagCellWidget *tagCellWidget = new TagCellWidget(tagName, this);
-    ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-    setTagList();
+    if (mNoteModel->getTagList().indexOf(tagName) == -1) {
+        TagCellWidget *tagCellWidget = new TagCellWidget(tagName, this);
+        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
+        setTagList();
+        emit tagAppend(tagName);
+    }
 }
 
-void MarkdownEditorWidget::removeTagFromTagListWidget(const QString &tagName)
+void MarkdownEditorWidget::removeTag(const QString &tagName)
 {
-    if (tagName.isEmpty() && ui->horizontalLayout->count() - 2 > 0) {
+    if (tagName.isEmpty()) {
         QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(ui->horizontalLayout->count() - 2);
         layoutItem->widget()->close();
         ui->horizontalLayout->removeItem(layoutItem);
@@ -99,6 +103,7 @@ void MarkdownEditorWidget::removeTagFromTagListWidget(const QString &tagName)
     }
 
     setTagList();
+    emit tagDeleted(tagName);
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -119,11 +124,11 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             return false;
         }
         // if lintEdit_tag is empty and press Backspace key, delete tag
-        else if (event->type() == QEvent::KeyPress
-                 && ((QKeyEvent *) event)->key() == Qt::Key_Backspace
-                 && ui->lineEdit_tag->text().isEmpty()) {
-            removeTagFromTagListWidget();
-            return false;
+        else if (event->type() == QEvent::KeyPress && ((QKeyEvent *) event)->key() == Qt::Key_Backspace) {
+            if (ui->lineEdit_tag->text().isEmpty() && ui->horizontalLayout->count() > 2) {
+                removeTag();
+                return false;
+            }
         }
     }
     else if (object == ui->markdownEditor) {
@@ -182,13 +187,13 @@ void MarkdownEditorWidget::markdownPreviewSliderValueChanged(int value, bool for
 
 void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 {
-    removeTagFromTagListWidget(tagName);
+    removeTag(tagName);
 }
 
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 {
     if (!ui->lineEdit_tag->text().isEmpty()) {
-        addTagToTagListWidget(ui->lineEdit_tag->text());
+        addTag(ui->lineEdit_tag->text());
         ui->lineEdit_tag->clear();
     }
 }
@@ -220,7 +225,7 @@ void MarkdownEditorWidget::on_pushButton_category_clicked()
     }
 }
 
-void MarkdownEditorWidget::onCategoryChanged(QString category)
+void MarkdownEditorWidget::onCategoryChanged(const QString &category)
 {
     ui->pushButton_category->setText(category);
 

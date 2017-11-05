@@ -49,7 +49,11 @@ private slots:
 
     void onCategoryAppend(const QString &category);
 
+    void onCategoryDeleted(const QString &category);
+
     void onTagAppend(const QString &tag);
+
+    void onTagDeleted(const QString &tag);
 
 private:
     Ui::MainWindow *ui;

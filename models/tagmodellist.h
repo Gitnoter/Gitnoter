@@ -41,6 +41,8 @@ public:
 
     void removeList(const QStringList &nameList);
 
+    void removeAt(int index);
+
     const QString toString();
 
     void saveToLocal();

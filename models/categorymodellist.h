@@ -43,6 +43,8 @@ public:
 
     void removeOne(const QString &name);
 
+    void removeAt(int index);
+
     const QString toString();
 
     void saveToLocal();

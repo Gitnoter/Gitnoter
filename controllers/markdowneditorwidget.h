@@ -8,24 +8,34 @@
 #include <QWidget>
 #include <QPushButton>
 
-namespace Ui {
-class MarkdownEditorWidget;
+namespace Ui
+{
+    class MarkdownEditorWidget;
 }
 
 class MarkdownEditorWidget : public QWidget
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit MarkdownEditorWidget(QWidget *parent = 0);
+
     ~MarkdownEditorWidget();
 
     void init(NoteModel *noteModel);
 
 signals:
+
     void noteModelChanged(NoteModel *noteModel);
 
+    void tagAppend(const QString &tag);
+
+    void tagDeleted(const QString &tag);
+
+    void categoryAppend(const QString &tag);
+
 private slots:
+
     void on_splitter_editor_splitterMoved(int pos, int index);
 
     /**
@@ -38,7 +48,7 @@ private slots:
      */
     void markdownPreviewSliderValueChanged(int value, bool force = false);
 
-    void onCategoryChanged(QString category);
+    void onCategoryChanged(const QString &category);
 
     void onTagCellWidgetClicked(const QString tagName);
 
@@ -56,13 +66,13 @@ private:
 private:
     void setSplitterHandleDisable(bool b);
 
-    void addTagToTagListWidget(const QString &tagName);
+    void addTag(const QString &tagName);
 
-    void removeTagFromTagListWidget(const QString &tagName = "");
+    void removeTag(const QString &tagName = "");
 
     void setTagList();
 
-    bool eventFilter(QObject* object, QEvent* event);
+    bool eventFilter(QObject *object, QEvent *event);
 
 };
 

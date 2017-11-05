@@ -121,6 +121,11 @@ void CategoryModelList::removeOne(const QString &name)
     }
 }
 
+void CategoryModelList::removeAt(int index)
+{
+    categoryModelList.removeAt(index);
+}
+
 const QString CategoryModelList::toString()
 {
     QString str = "";

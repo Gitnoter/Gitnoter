@@ -42,6 +42,10 @@ void MainWindow::setupUi()
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
 
     connect(ui->page_editor, SIGNAL(noteModelChanged(NoteModel *)), this, SLOT(onNoteModelChanged(NoteModel *)));
+    connect(ui->page_editor, SIGNAL(tagAppend(const QString &)), this, SLOT(onTagAppend(const QString &)));
+    connect(ui->page_editor, SIGNAL(tagDeleted(const QString &)), this, SLOT(onTagDeleted(const QString &)));
+    connect(ui->page_editor, SIGNAL(categoryAppend(const QString &)), this, SLOT(onCategoryAppend(const QString &)));
+    connect(ui->page_editor, SIGNAL(categoryDeleted(const QString &)), this, SLOT(onCategoryDeleted(const QString &)));
 
     int type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
@@ -343,22 +347,52 @@ void MainWindow::onNoteModelChanged(NoteModel *noteModel)
 
 void MainWindow::onCategoryAppend(const QString &category)
 {
-    CategoryModel *categoryModel = Globals::categoryModelList.append(category);
+    if (Globals::categoryModelList.indexOf(category) == -1) {
+        CategoryModel *categoryModel = Globals::categoryModelList.append(category);
+        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
+        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+        treeWidgetItem->setText(0, category);
+        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
+        topLevelItem->addChild(treeWidgetItem);
+        topLevelItem->sortChildren(0, Qt::AscendingOrder);
+    }
+}
+
+void MainWindow::onCategoryDeleted(const QString &category)
+{
+    Globals::categoryModelList.removeAt(Globals::categoryModelList.indexOf(category));
     QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-    treeWidgetItem->setText(0, category);
-    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
-    topLevelItem->addChild(treeWidgetItem);
-    topLevelItem->sortChildren(0, Qt::AscendingOrder);
+    for (int i = 0; i < topLevelItem->childCount(); ++i) {
+        QTreeWidgetItem *childItem = topLevelItem->child(i);
+        CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
+        if (categoryModel->getName() == category) {
+            topLevelItem->removeChild(childItem);
+        }
+    }
 }
 
 void MainWindow::onTagAppend(const QString &tag)
 {
-    TagModel *tagModel = Globals::tagModelList.append(tag);
+    if (Globals::tagModelList.indexOf(tag) == -1) {
+        TagModel *tagModel = Globals::tagModelList.append(tag);
+        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
+        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+        treeWidgetItem->setText(0, tag);
+        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
+        topLevelItem->addChild(treeWidgetItem);
+        topLevelItem->sortChildren(0, Qt::AscendingOrder);
+    }
+}
+
+void MainWindow::onTagDeleted(const QString &tag)
+{
+    Globals::tagModelList.removeAt(Globals::tagModelList.indexOf(tag));
     QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
-    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-    treeWidgetItem->setText(0, tag);
-    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
-    topLevelItem->addChild(treeWidgetItem);
-    topLevelItem->sortChildren(0, Qt::AscendingOrder);
+    for (int i = 0; i < topLevelItem->childCount(); ++i) {
+        QTreeWidgetItem *childItem = topLevelItem->child(i);
+        TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
+        if (tagModel->getName() == tag) {
+            topLevelItem->removeChild(childItem);
+        }
+    }
 }

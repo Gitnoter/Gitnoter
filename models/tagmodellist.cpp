@@ -80,6 +80,7 @@ TagModel *TagModelList::append(const QString tagName)
 
     TagModel *tagModel = new TagModel(tagName, 1);
     tagModelList.append(tagModel);
+    return tagModel;
 }
 
 int TagModelList::indexOf(const QString &name)
@@ -121,6 +122,11 @@ void TagModelList::removeList(const QStringList &nameList)
     for (auto &&name : nameList) {
         removeOne(name);
     }
+}
+
+void TagModelList::removeAt(int index)
+{
+    tagModelList.removeAt(index);
 }
 
 const QString TagModelList::toString()
