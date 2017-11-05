@@ -22,6 +22,8 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
             this, SLOT(markdownPreviewSliderValueChanged(int)));
     connect(categoryListWidget, SIGNAL(categoryChanged(const QString &)),
             this, SLOT(onCategoryChanged(const QString &)));
+    connect(categoryListWidget, SIGNAL(categoryAppend(const QString &)),
+            this, SLOT(onCategoryAppend(const QString &)));
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -232,4 +234,9 @@ void MarkdownEditorWidget::onCategoryChanged(const QString &category)
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
     emit noteModelChanged(mNoteModel);
+}
+
+void MarkdownEditorWidget::onCategoryAppend(const QString &category)
+{
+    emit categoryAppend(category);
 }

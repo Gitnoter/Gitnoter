@@ -45,7 +45,6 @@ void MainWindow::setupUi()
     connect(ui->page_editor, SIGNAL(tagAppend(const QString &)), this, SLOT(onTagAppend(const QString &)));
     connect(ui->page_editor, SIGNAL(tagDeleted(const QString &)), this, SLOT(onTagDeleted(const QString &)));
     connect(ui->page_editor, SIGNAL(categoryAppend(const QString &)), this, SLOT(onCategoryAppend(const QString &)));
-    connect(ui->page_editor, SIGNAL(categoryDeleted(const QString &)), this, SLOT(onCategoryDeleted(const QString &)));
 
     int type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();

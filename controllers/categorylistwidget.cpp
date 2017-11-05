@@ -69,8 +69,9 @@ void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &)
 
 void CategoryListWidget::on_pushButton_addCategory_clicked()
 {
-    if (!ui->lineEdit->text().isEmpty()) {
-        Globals::categoryModelList.append(ui->lineEdit->text());
+    const QString text = ui->lineEdit->text();
+    if (!text.isEmpty()) {
+        emit categoryAppend(text);
         filtrateCategoryList();
         Globals::categoryModelList.saveToLocal();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);

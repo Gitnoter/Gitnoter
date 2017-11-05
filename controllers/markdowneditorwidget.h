@@ -50,6 +50,8 @@ private slots:
 
     void onCategoryChanged(const QString &category);
 
+    void onCategoryAppend(const QString &category);
+
     void onTagCellWidgetClicked(const QString tagName);
 
     void on_lineEdit_tag_returnPressed();

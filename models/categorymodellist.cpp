@@ -62,7 +62,7 @@ void CategoryModelList::init()
             categoryModel->setCount(categoryModel->getCount() + 1);
         }
         else {
-            map[noteModel->getCategory()] = new CategoryModel(noteModel->getCategory(), 1);
+            map[noteModel->getCategory()] = new CategoryModel(noteModel->getCategory(), 0);
         }
     }
 
@@ -85,7 +85,7 @@ CategoryModel *CategoryModelList::append(const QString categoryName)
         }
     }
 
-    CategoryModel *categoryModel = new CategoryModel(categoryName, 1);
+    CategoryModel *categoryModel = new CategoryModel(categoryName, 0);
     categoryModelList.append(categoryModel);
 
     return categoryModel;
