@@ -107,36 +107,30 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             ui->pushButton_markdownPeview->setHidden(true);
             ui->pushButton_splitterPreview->setHidden(true);
             ui->stackedWidget->setCurrentIndex(1);
-            return true;
+            return false;
         }
         else if (event->type() == QEvent::FocusOut) {
             ui->frame->setStyleSheet("");
             ui->pushButton_markdownPeview->setHidden(false);
             ui->pushButton_splitterPreview->setHidden(false);
             ui->stackedWidget->setCurrentIndex(0);
-            return true;
+            return false;
         }
         // if lintEdit_tag is empty and press Backspace key, delete tag
         else if (event->type() == QEvent::KeyPress
                  && ((QKeyEvent *) event)->key() == Qt::Key_Backspace
                  && ui->lineEdit_tag->text().isEmpty()) {
             removeTagFromTagListWidget();
-            return true;
-        }
-        else {
             return false;
         }
     }
     else if (object == ui->markdownEditor) {
         if (event->type() == QEvent::FocusIn) {
             ui->stackedWidget->setCurrentIndex(0);
-            return true;
+            return false;
         }
         else if (event->type() == QEvent::FocusOut) {
             ui->stackedWidget->setCurrentIndex(1);
-            return true;
-        }
-        else {
             return false;
         }
     }
