@@ -66,7 +66,7 @@ private:
     void setNoteList();
     void setCategoryList();
     void setTagList();
-    void setOpenedNoteModel();
+    void setOpenNote();
     void setItemSelected();
 
     void updateUiContent();

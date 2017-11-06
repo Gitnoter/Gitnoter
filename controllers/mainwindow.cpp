@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setNoteList();
     setCategoryList();
     setTagList();
-    setOpenedNoteModel();
+    setOpenNote();
     setItemSelected();
 
     setupUi();
@@ -237,7 +237,7 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
     if (noteModel->getUuid() != mNoteModel->getUuid()) {
         Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
-        setOpenedNoteModel();
+        setOpenNote();
     }
 }
 
@@ -274,7 +274,7 @@ void MainWindow::onNoteDeleted()
     Globals::tagModelList.removeList(mNoteModel->getTagList());
     Globals::configModel->setOpenNoteUuid("");
     setItemSelected();
-    setOpenedNoteModel();
+    setOpenNote();
 
     if (!mNoteModel->getIsDelete()) {
         Globals::noteModelList.deleteOne(mNoteModel);
@@ -294,7 +294,7 @@ void MainWindow::onNoteAdded()
 
         setNoteList();
         setItemSelected();
-        setOpenedNoteModel();
+        setOpenNote();
         return;
     }
 
@@ -314,10 +314,10 @@ void MainWindow::onNoteAdded()
 
     setNoteList();
     setItemSelected();
-    setOpenedNoteModel();
+    setOpenNote();
 }
 
-void MainWindow::setOpenedNoteModel()
+void MainWindow::setOpenNote()
 {
     if (Globals::configModel->getOpenNoteUuid().isEmpty()) {
         ui->stackWidget_editor->setCurrentIndex(1);
@@ -367,7 +367,7 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
     Globals::configModel->setSideSelected(type, name);
     setNoteList();
     setItemSelected();
-    setOpenedNoteModel();
+    setOpenNote();
 }
 
 void MainWindow::onNoteModelChanged(NoteModel *noteModel)
