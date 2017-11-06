@@ -54,7 +54,8 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp
+    helps/notepreviewwidget.cpp \
+    views/messagedialog.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -76,7 +77,8 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h
+    helps/notepreviewwidget.h \
+    views/messagedialog.h
 
 FORMS += \
     views/mainwindow.ui \
@@ -87,7 +89,8 @@ FORMS += \
     views/lockdialog.ui \
     views/notelistcellwidget.ui \
     views/markdowneditorwidget.ui \
-    views/tagcellwidget.ui
+    views/tagcellwidget.ui \
+    views/messagedialog.ui
 
 RESOURCES += \
     resources/resources.qrc
