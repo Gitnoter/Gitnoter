@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "notelistsortpopupmenu.h"
 #include "notelistcellwidget.h"
+#include "messagedialog.h"
 #include "tools.h"
 #include "globals.h"
 
@@ -279,7 +280,7 @@ void MainWindow::on_action_saveNote_triggered()
     mNoteModel->saveNoteToLocal();
 }
 
-void MainWindow::on_action_deleteNote_triggered()
+void MainWindow::onNoteDeleted()
 {
     if (ui->listWidget->selectedItems().length() > 0) {
         delete ui->listWidget->selectedItems().at(0);
@@ -312,7 +313,12 @@ void MainWindow::setOpenedNoteModel()
 
 void MainWindow::on_pushButton_noteSubtract_clicked()
 {
-    on_action_deleteNote_triggered();
+    if (mNoteModel->getIsDelete()) {
+        MessageDialog *messageDialog = new MessageDialog(this);
+        messageDialog->openMessage(tr("您确定需要删除该笔记? 删除后将无法恢复"), tr("删除笔记提示"), tr("确定删除"));
+        return;
+    }
+    onNoteDeleted();
 }
 
 void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)

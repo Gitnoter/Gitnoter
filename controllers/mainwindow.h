@@ -39,8 +39,6 @@ private slots:
 
     void on_action_saveNote_triggered();
 
-    void on_action_deleteNote_triggered();
-
     void on_pushButton_noteSubtract_clicked();
 
     void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
@@ -54,6 +52,8 @@ private slots:
     void onTagAppend(const QString &tag);
 
     void onTagDeleted(const QString &tag);
+
+    void onNoteDeleted();
 
 private:
     Ui::MainWindow *ui;

@@ -46,6 +46,7 @@ SOURCES += \
     controllers/elidedlabel.cpp \
     controllers/markdowneditorwidget.cpp \
     controllers/tagcellwidget.cpp \
+    controllers/messagedialog.cpp \
     models/notemodellist.cpp  \
     models/categorymodellist.cpp  \
     models/tagmodellist.cpp  \
@@ -54,8 +55,7 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp \
-    views/messagedialog.cpp
+    helps/notepreviewwidget.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -69,6 +69,7 @@ HEADERS += \
     controllers/elidedlabel.h \
     controllers/markdowneditorwidget.h \
     controllers/tagcellwidget.h \
+    controllers/messagedialog.h \
     models/notemodellist.h  \
     models/categorymodellist.h  \
     models/tagmodellist.h  \
@@ -77,8 +78,7 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h \
-    views/messagedialog.h
+    helps/notepreviewwidget.h
 
 FORMS += \
     views/mainwindow.ui \

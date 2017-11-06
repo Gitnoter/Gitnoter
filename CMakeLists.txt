@@ -20,7 +20,8 @@ qt5_wrap_ui(UIS_HDRS
         views/lockdialog.ui
         views/notelistcellwidget.ui
         views/markdowneditorwidget.ui
-        views/tagcellwidget.ui)
+        views/tagcellwidget.ui
+        views/messagedialog.ui)
 
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}
@@ -38,6 +39,7 @@ add_executable(${PROJECT_NAME}
         controllers/elidedlabel.h           controllers/elidedlabel.cpp
         controllers/markdowneditorwidget.h  controllers/markdowneditorwidget.cpp
         controllers/tagcellwidget.h         controllers/tagcellwidget.cpp
+        controllers/messagedialog.h         controllers/messagedialog.cpp
 
         models/notemodellist.h models/notemodellist.cpp
         models/categorymodellist.h models/categorymodellist.cpp
