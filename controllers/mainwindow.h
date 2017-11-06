@@ -61,10 +61,11 @@ private:
 
 private:
     void setupUi();
-    void setNoteList(bool hasSelected = false);
+    void setNoteList();
     void setCategoryList();
     void setTagList();
     void setOpenedNoteModel();
+    void setItemSelected();
 
     void updateUiContent();
 };

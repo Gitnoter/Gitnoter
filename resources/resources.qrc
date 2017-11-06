@@ -64,5 +64,7 @@
         <file>images/icon-delete.svg</file>
         <file>images/icon-recover-down.svg</file>
         <file>images/icon-recover.svg</file>
+        <file>images/icon-clear.svg</file>
+        <file>images/icon-clear-down.svg</file>
     </qresource>
 </RCC>

@@ -104,7 +104,7 @@ public:
 
     NoteModel *prepend(const QString category);
 
-    void removeOne(NoteModel *noteModel);
+    void removeFolder(NoteModel *noteModel);
 
     void deleteOne(NoteModel *noteModel);
 

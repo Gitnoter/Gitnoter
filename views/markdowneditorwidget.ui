@@ -163,22 +163,6 @@ QPushButton#pushButton_table {
 QPushButton#pushButton_table:hover {
   border-image: url(:/images/icon-table-down.svg);
 }
-
-QPushButton#pushButton_recover {
-  border-image: url(:/images/icon-recover.svg);
-}
-
-QPushButton#pushButton_recover:hover {
-  border-image: url(:/images/icon-recover-down.svg);
-}
-
-QPushButton#pushButton_delete {
-  border-image: url(:/images/icon-delete.svg);
-}
-
-QPushButton#pushButton_delete:hover {
-  border-image: url(:/images/icon-delete-down.svg);
-}
    </string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -784,44 +768,6 @@ QPushButton#pushButton_delete:hover {
                 </size>
                </property>
               </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_recover">
-               <property name="minimumSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_delete">
-               <property name="minimumSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
              </item>
             </layout>
            </widget>

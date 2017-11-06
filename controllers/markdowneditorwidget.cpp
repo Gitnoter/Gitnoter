@@ -50,7 +50,6 @@ void MarkdownEditorWidget::init(NoteModel *noteModel)
     }
 
     if (mNoteModel->getIsDelete()) {
-        ui->pushButton_recover->setHidden(false);
         ui->pushButton_category->setDisabled(true);
         ui->lineEdit_tag->setDisabled(true);
         ui->label_tagIcon->setDisabled(true);
@@ -58,7 +57,6 @@ void MarkdownEditorWidget::init(NoteModel *noteModel)
         ui->stackedWidget->setCurrentIndex(1);
     }
     else {
-        ui->pushButton_recover->setHidden(true);
         ui->pushButton_category->setDisabled(false);
         ui->lineEdit_tag->setDisabled(false);
         ui->label_tagIcon->setDisabled(false);
@@ -134,13 +132,15 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
         }
     }
     else if (object == ui->markdownEditor) {
-        if (event->type() == QEvent::FocusIn) {
-            ui->stackedWidget->setCurrentIndex(0);
-            return false;
-        }
-        else if (event->type() == QEvent::FocusOut) {
-            ui->stackedWidget->setCurrentIndex(1);
-            return false;
+        if (mNoteModel && !mNoteModel->getIsDelete()) {
+            if (event->type() == QEvent::FocusIn) {
+                ui->stackedWidget->setCurrentIndex(0);
+                return false;
+            }
+            else if (event->type() == QEvent::FocusOut) {
+                ui->stackedWidget->setCurrentIndex(1);
+                return false;
+            }
         }
     }
     return QWidget::eventFilter(object, event);

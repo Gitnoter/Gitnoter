@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCategoryList();
     setTagList();
     setOpenedNoteModel();
-
+    setItemSelected();
 
     setupUi();
 }
@@ -45,7 +45,10 @@ void MainWindow::setupUi()
     connect(ui->page_editor, SIGNAL(tagAppend(const QString &)), this, SLOT(onTagAppend(const QString &)));
     connect(ui->page_editor, SIGNAL(tagDeleted(const QString &)), this, SLOT(onTagDeleted(const QString &)));
     connect(ui->page_editor, SIGNAL(categoryAppend(const QString &)), this, SLOT(onCategoryAppend(const QString &)));
+}
 
+void MainWindow::setItemSelected()
+{
     int type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
     if (type == 1) {
@@ -85,6 +88,29 @@ void MainWindow::setupUi()
         if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
             listWidgetItem->setSelected(true);
             break;
+        }
+    }
+
+    // Check is selected list item
+    bool hasFind = false;
+    for (int j = 0; j < ui->listWidget->count(); ++j) {
+        QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
+        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+        if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
+            listWidgetItem->setSelected(true);
+            hasFind = true;
+            break;
+        }
+    }
+    if (!hasFind) {
+        if (ui->listWidget->count() > 0) {
+            QListWidgetItem *listWidgetItem = ui->listWidget->item(0);
+            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+            Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+            listWidgetItem->setSelected(true);
+        }
+        else {
+            Globals::configModel->setOpenNoteUuid("");
         }
     }
 }
@@ -147,7 +173,7 @@ void MainWindow::updateUiContent()
     }
 }
 
-void MainWindow::setNoteList(bool hasSelected)
+void MainWindow::setNoteList()
 {
     ui->listWidget->clear();
     int type = Globals::configModel->getSideSelectedType();
@@ -171,32 +197,6 @@ void MainWindow::setNoteList(bool hasSelected)
     }
     // TODO: fix layout bug
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
-
-    if (hasSelected) {
-        // Check is selected list item
-        bool hasFind = false;
-        for (int j = 0; j < ui->listWidget->count(); ++j) {
-            QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
-            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-            if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
-                listWidgetItem->setSelected(true);
-                hasFind = true;
-                break;
-            }
-        }
-        if (!hasFind) {
-            if (ui->listWidget->count() > 0) {
-                QListWidgetItem *listWidgetItem = ui->listWidget->item(0);
-                NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-                Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
-                listWidgetItem->setSelected(true);
-            }
-            else {
-                Globals::configModel->setOpenNoteUuid("");
-            }
-            setOpenedNoteModel();
-        }
-    }
 }
 
 void MainWindow::setCategoryList()
@@ -247,20 +247,30 @@ void MainWindow::on_splitter_splitterMoved(int, int)
 
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
-    mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
-                                               ? Globals::configModel->getSideSelectedName() : "");
-    Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
-    Globals::categoryModelList.append(mNoteModel->getCategory());
-    Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
-    ui->stackWidget_editor->setCurrentIndex(0);
-    on_action_saveNote_triggered();
+    if (!mNoteModel->getIsDelete()) {
+        mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
+                                                    ? Globals::configModel->getSideSelectedName() : "");
+        Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
+        Globals::categoryModelList.append(mNoteModel->getCategory());
+        Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
+        ui->stackWidget_editor->setCurrentIndex(0);
+        mNoteModel->saveNoteDataToLocal();
 
-    if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
-        Globals::configModel->setSideSelected(1, "all");
-        ui->treeWidget->clearSelection();
-        ui->treeWidget->topLevelItem(1)->setSelected(true);
+        if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
+            Globals::configModel->setSideSelected(1, "all");
+            ui->treeWidget->clearSelection();
+            ui->treeWidget->topLevelItem(1)->setSelected(true);
+        }
     }
-    setNoteList(true);
+    else {
+        if (ui->listWidget->selectedItems().length() > 0) {
+            delete ui->listWidget->selectedItems().at(0);
+        }
+        mNoteModel->setIsDelete(0);
+        mNoteModel->saveNoteDataToLocal();
+    }
+    setNoteList();
+    setItemSelected();
     setOpenedNoteModel();
 }
 
@@ -271,20 +281,22 @@ void MainWindow::on_action_saveNote_triggered()
 
 void MainWindow::on_action_deleteNote_triggered()
 {
-    for (int i = 0; i < ui->listWidget->count(); ++i) {
-        QListWidgetItem *listWidgetItem = ui->listWidget->item(i);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        if (noteModel->getUuid() == mNoteModel->getUuid()) {
-            delete listWidgetItem;
-            break;
-        }
+    if (ui->listWidget->selectedItems().length() > 0) {
+        delete ui->listWidget->selectedItems().at(0);
     }
 
     Globals::categoryModelList.removeOne(mNoteModel->getCategory());
     Globals::tagModelList.removeList(mNoteModel->getTagList());
-    Globals::noteModelList.deleteOne(mNoteModel);
-    on_action_saveNote_triggered();
     Globals::configModel->setOpenNoteUuid("");
+    setItemSelected();
+
+    if (!mNoteModel->getIsDelete()) {
+        Globals::noteModelList.deleteOne(mNoteModel);
+        on_action_saveNote_triggered();
+    }
+    else {
+        Globals::noteModelList.removeFolder(mNoteModel);
+    }
 }
 
 void MainWindow::setOpenedNoteModel()
@@ -329,7 +341,9 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
         }
     }
     Globals::configModel->setSideSelected(type, name);
-    setNoteList(true);
+    setNoteList();
+    setItemSelected();
+    setOpenedNoteModel();
 }
 
 void MainWindow::onNoteModelChanged(NoteModel *noteModel)
