@@ -274,6 +274,7 @@ void MainWindow::onNoteDeleted()
     Globals::tagModelList.removeList(mNoteModel->getTagList());
     Globals::configModel->setOpenNoteUuid("");
     setItemSelected();
+    setOpenedNoteModel();
 
     if (!mNoteModel->getIsDelete()) {
         Globals::noteModelList.deleteOne(mNoteModel);
