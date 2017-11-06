@@ -55,6 +55,8 @@ private slots:
 
     void onNoteDeleted();
 
+    void onNoteAdded();
+
 private:
     Ui::MainWindow *ui;
     NoteModel *mNoteModel;

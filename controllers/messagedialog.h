@@ -21,6 +21,11 @@ public:
     void openMessage(QWidget *parent, const QString &body, const QString &title = "",
                             const QString &apply = "", const QString &close = "");
 
+signals:
+    void applyClicked();
+
+    void closeClicked();
+
 private slots:
     void on_pushButton_close_clicked();
 

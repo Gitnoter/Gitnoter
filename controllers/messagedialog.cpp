@@ -6,7 +6,6 @@ MessageDialog::MessageDialog(QWidget *parent) :
     ui(new Ui::MessageDialog)
 {
     ui->setupUi(this);
-    connect(ui->pushButton_apply, SIGNAL(clicked()), parent, SLOT(onNoteDeleted()));
 }
 
 MessageDialog::~MessageDialog()
@@ -17,7 +16,6 @@ MessageDialog::~MessageDialog()
 void MessageDialog::openMessage(QWidget *parent, const QString &body, const QString &title,
                                 const QString &apply, const QString &close)
 {
-    connect(ui->pushButton_apply, SIGNAL(clicked()), parent, SLOT(onNoteDeleted()));
     setParent(parent);
     openMessage(body, title, apply, close);
 }
@@ -43,10 +41,10 @@ void MessageDialog::openMessage(const QString &body, const QString &title, const
 
 void MessageDialog::on_pushButton_close_clicked()
 {
-
+    emit closeClicked();
 }
 
 void MessageDialog::on_pushButton_apply_clicked()
 {
-
+    emit applyClicked();
 }

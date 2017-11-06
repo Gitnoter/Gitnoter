@@ -248,31 +248,15 @@ void MainWindow::on_splitter_splitterMoved(int, int)
 
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
-    if (!mNoteModel->getIsDelete()) {
-        mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
-                                                    ? Globals::configModel->getSideSelectedName() : "");
-        Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
-        Globals::categoryModelList.append(mNoteModel->getCategory());
-        Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
-        ui->stackWidget_editor->setCurrentIndex(0);
-        mNoteModel->saveNoteDataToLocal();
-
-        if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
-            Globals::configModel->setSideSelected(1, "all");
-            ui->treeWidget->clearSelection();
-            ui->treeWidget->topLevelItem(1)->setSelected(true);
-        }
+    if (mNoteModel->getIsDelete()) {
+        MessageDialog *messageDialog = new MessageDialog(this);
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(onNoteAdded()));
+        const QString category = mNoteModel->getCategory().isEmpty() ? tr("所有笔记") : mNoteModel->getCategory();
+        messageDialog->openMessage(tr("笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
+                                   tr("恢复笔记提示"), tr("确定恢复"));
+        return;
     }
-    else {
-        if (ui->listWidget->selectedItems().length() > 0) {
-            delete ui->listWidget->selectedItems().at(0);
-        }
-        mNoteModel->setIsDelete(0);
-        mNoteModel->saveNoteDataToLocal();
-    }
-    setNoteList();
-    setItemSelected();
-    setOpenedNoteModel();
+    onNoteAdded();
 }
 
 void MainWindow::on_action_saveNote_triggered()
@@ -300,6 +284,38 @@ void MainWindow::onNoteDeleted()
     }
 }
 
+void MainWindow::onNoteAdded()
+{
+    qDebug() << 1;
+    if (mNoteModel->getIsDelete()) {
+        mNoteModel->setIsDelete(0);
+        mNoteModel->saveNoteDataToLocal();
+
+        setNoteList();
+        setItemSelected();
+        setOpenedNoteModel();
+        return;
+    }
+
+    mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
+                                                ? Globals::configModel->getSideSelectedName() : "");
+    Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
+    Globals::categoryModelList.append(mNoteModel->getCategory());
+    Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
+    ui->stackWidget_editor->setCurrentIndex(0);
+    mNoteModel->saveNoteDataToLocal();
+
+    if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
+        Globals::configModel->setSideSelected(1, "all");
+        ui->treeWidget->clearSelection();
+        ui->treeWidget->topLevelItem(1)->setSelected(true);
+    }
+
+    setNoteList();
+    setItemSelected();
+    setOpenedNoteModel();
+}
+
 void MainWindow::setOpenedNoteModel()
 {
     if (Globals::configModel->getOpenNoteUuid().isEmpty()) {
@@ -315,7 +331,8 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
 {
     if (mNoteModel->getIsDelete()) {
         MessageDialog *messageDialog = new MessageDialog(this);
-        messageDialog->openMessage(tr("您确定需要删除该笔记? 删除后将无法恢复"), tr("删除笔记提示"), tr("确定删除"));
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(onNoteDeleted()));
+        messageDialog->openMessage(tr("删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr("删除笔记提示"), tr("确定删除"));
         return;
     }
     onNoteDeleted();
