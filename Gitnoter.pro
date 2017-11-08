@@ -50,7 +50,8 @@ SOURCES += \
     models/notemodellist.cpp  \
     models/categorymodellist.cpp  \
     models/tagmodellist.cpp  \
-    models/configmodel.cpp  \
+    models/configmodel.cpp \
+    models/groupmodel.cpp  \
     helps/globals.cpp  \
     helps/tools.cpp \
     helps/gitmanager.cpp \
@@ -73,7 +74,8 @@ HEADERS += \
     models/notemodellist.h  \
     models/categorymodellist.h  \
     models/tagmodellist.h  \
-    models/configmodel.h  \
+    models/configmodel.h \
+    models/groupmodel.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
