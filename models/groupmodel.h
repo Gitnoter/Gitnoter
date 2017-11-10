@@ -36,7 +36,23 @@ public:
 
     static void init(QTreeWidget *treeWidget, QList<NoteModel *> noteModelList);
 
+    static QTreeWidgetItem *find(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text);
+
+    static QTreeWidgetItem *find(QTreeWidget *treeWidget, GroupModel &groupModel);
+
     static GroupModel *append(QTreeWidget *treeWidget, GroupModel *groupModel);
+
+    static void removeOne(QTreeWidget *treeWidget, GroupModel *groupModel);
+
+    static void removeOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text);
+
+    static void subtractOne(GroupModel *groupModel);
+
+    static void subtractOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text);
+
+    static QString toString(QTreeWidget *treeWidget, GroupModel::GroupType type);
+
+    static void setItemSelected(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text);
 
 private:
     QString mName;

@@ -1,6 +1,6 @@
 #include "groupmodel.h"
-#include "globals.h"
 #include "tools.h"
+#include "globals.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -150,4 +150,93 @@ GroupModel *GroupModel::append(QTreeWidget *treeWidget, GroupModel *groupModel)
     treeWidgetItem->sortChildren(0, Qt::AscendingOrder);
 
     return groupModel;
+}
+
+void GroupModel::removeOne(QTreeWidget *treeWidget, GroupModel *groupModel)
+{
+    removeOne(treeWidget, groupModel->getType(), groupModel->getName());
+}
+
+void GroupModel::removeOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+{
+    QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
+    treeWidget->topLevelItem(type)->removeChild(treeWidgetItem);
+}
+
+QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+{
+    if (type <= GroupModel::Trash) {
+        return treeWidget->topLevelItem(type);
+    }
+
+    QTreeWidgetItem *topLevelItem = treeWidget->topLevelItem(type);
+    for (int i = 0; i < topLevelItem->childCount(); ++i) {
+        QTreeWidgetItem *childItem = topLevelItem->child(i);
+        if (childItem->text(0) == text) {
+            return childItem;
+        }
+    }
+
+    return nullptr;
+}
+
+QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, GroupModel &groupModel)
+{
+    return find(treeWidget, groupModel.getType(), groupModel.getName());
+}
+
+void GroupModel::subtractOne(GroupModel *groupModel)
+{
+    int count = groupModel->getCount();
+    if (count > 0) {
+        groupModel->setCount(count - 1);
+    }
+}
+
+void GroupModel::subtractOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+{
+    QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
+    if (treeWidgetItem) {
+        subtractOne(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>());
+    }
+}
+
+QString GroupModel::toString(QTreeWidget *treeWidget, GroupModel::GroupType type)
+{
+    QString text = "";
+
+    QTreeWidgetItem *topLevelItem = treeWidget->topLevelItem(type);
+    for (int i = 0; i < topLevelItem->childCount(); ++i) {
+        text += topLevelItem->child(i)->text(0) + "\n";
+    }
+
+    return text.trimmed();
+}
+
+void GroupModel::setItemSelected(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+{
+    if (type <= GroupModel::Trash) {
+        treeWidget->topLevelItem(type)->setSelected(true);
+        return;
+    }
+
+    if(type == GroupModel::Category) {
+        QTreeWidgetItem *treeWidgetItem = treeWidget->topLevelItem(6);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            if (childItem->text(0) == text) {
+                return childItem->setSelected(true);
+            }
+        }
+    }
+
+    if (type == GroupModel::Tag) {
+        QTreeWidgetItem *treeWidgetItem = treeWidget->topLevelItem(8);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            if (childItem->text(0) == text) {
+                return childItem->setSelected(true);
+            }
+        }
+    }
 }

@@ -49,7 +49,9 @@ private slots:
 
     void onCategoryAppend(const QString &category);
 
-    void onCategoryDeleted(const QString &name = "", bool remove = false);
+    void onGroupSubtracted(GroupModel::GroupType type, const QString &name);
+
+    void onGroupRemoved(GroupModel::GroupType type, const QString &name);
 
     void onTagAppend(const QString &tag);
 
@@ -75,11 +77,6 @@ private:
     void setOpenNote();
     void setItemSelected();
     void setGroupName();
-
-    void addCategoryToTreeWidget(CategoryModel *categoryModel);
-    void addTagToTreeWidget(TagModel *tagModel);
-
-    QTreeWidgetItem *findTreeWidgetItem(const QString &text);
 
 };
 

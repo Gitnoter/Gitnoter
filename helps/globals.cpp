@@ -29,7 +29,6 @@ const QString Globals::cutWindowKeySequence = "Ctrl+Shift+X";
 const QByteArray Globals::aesKey = "Q5tO3jUB0oe7FmWq";
 const QByteArray Globals::aesIv  = "RNNSR8XNbMTuOSGd";
 
-NoteModelList Globals::noteModelList;
 CategoryModelList Globals::categoryModelList;
 TagModelList Globals::tagModelList;
 

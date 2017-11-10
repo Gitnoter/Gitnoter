@@ -39,7 +39,6 @@ public:
     static const QByteArray aesKey;
     static const QByteArray aesIv;
 
-    static NoteModelList noteModelList;
     static CategoryModelList categoryModelList;
     static TagModelList tagModelList;
 

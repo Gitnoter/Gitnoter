@@ -1,7 +1,10 @@
-#ifndef NOTEMODELLIST_H
-#define NOTEMODELLIST_H
+#ifndef NOTEMODEL_H
+#define NOTEMODEL_H
+
+#include "groupmodel.h"
 
 #include <QObject>
+#include <QListWidget>
 
 class NoteModel : public QObject
 {
@@ -47,6 +50,7 @@ public:
 
     void setNoteText(QString body = "");
 
+public:
     QString getUuid();
 
     int getCreateDate();
@@ -73,6 +77,26 @@ public:
 
     void setIsDelete(int isDelete = 0);
 
+
+public:
+    static QList<NoteModel *> init(QListWidget *listWidget);
+
+    static void append(QListWidget *listWidget, NoteModel *noteModel);
+
+    static NoteModel *append(QListWidget *listWidget, const QString &category);
+
+    static void removeOne(QListWidget *listWidget, NoteModel *noteModel);
+
+    static void deleteOne(QListWidget *listWidget, NoteModel *noteModel);
+
+    static QListWidgetItem *findItemByUuid(QListWidget *listWidget, const QString &uuid);
+
+    static NoteModel *findNoteModelByUuid(QListWidget *listWidget, const QString &uuid);
+
+    static void showListItems(QListWidget *listWidget, GroupModel::GroupType type, const QString &name);
+
+    static const QString &setItemSelected(QListWidget *listWidget, const QString &uuid);
+
 private:
     QString mUuid;
     int mCreateDate;
@@ -84,36 +108,4 @@ private:
     int isDelete;
 
 };
-
-class NoteModelList : public QObject
-{
-Q_OBJECT
-
-public:
-    NoteModelList();
-
-    void init();
-
-    NoteModel *findByUuid(const QString &uuid);
-
-    void append(NoteModel *noteModel);
-
-    NoteModel *append(const QString category);
-
-    void prepend(NoteModel *noteModel);
-
-    NoteModel *prepend(const QString category);
-
-    void removeFolder(NoteModel *noteModel);
-
-    void deleteOne(NoteModel *noteModel);
-
-    const QList<NoteModel *> &getList() const;
-
-    void setList(const QList<NoteModel *> &noteModelList);
-
-private:
-    QList<NoteModel *> noteModelList;
-
-};
-#endif // NOTEMODELLIST_H
+#endif // NOTEMODEL_H

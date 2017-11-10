@@ -119,7 +119,7 @@ void Tools::changeWidgetBorder(QWidget *widget, const QString color, int width)
             widget->styleSheet().replace(QRegExp("border-width: ?[0-9]+px"), tr("border-width: %1px").arg(width)));
 }
 
-bool Tools::writerFile(QString path, QString text)
+bool Tools::writerFile(QString path, const QString &text)
 {
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {

@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow)
 {    ui->setupUi(this);
 
-    Globals::noteModelList.init();
-    GroupModel::init(ui->treeWidget, Globals::noteModelList.getList());
+    QList<NoteModel *> noteModelList = NoteModel::init(ui->listWidget);
+    GroupModel::init(ui->treeWidget, noteModelList);
 
     setNoteList();
     setOpenNote();
@@ -48,79 +48,21 @@ void MainWindow::setupUi()
 
 void MainWindow::setItemSelected()
 {
-    GroupModel::GroupType type = Globals::configModel->getSideSelectedType();
-    const QString name = Globals::configModel->getSideSelectedName();
-    if (type <= GroupModel::Trash) {
-        ui->treeWidget->topLevelItem(type)->setSelected(true);
-    }
-    else if(type == GroupModel::Category) {
-        QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(6);
-        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            if (childItem->text(0) == name) {
-                childItem->setSelected(true);
-                break;
-            }
-        }
-    }
-    else if (type == GroupModel::Tag) {
-        QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(8);
-        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            if (childItem->text(0) == name) {
-                childItem->setSelected(true);
-                break;
-            }
-        }
-    }
+    GroupModel::setItemSelected(ui->treeWidget, 
+                                Globals::configModel->getSideSelectedType(), 
+                                Globals::configModel->getSideSelectedName());
 
     // Check is selected list item
-    bool hasFind = false;
-    for (int j = 0; j < ui->listWidget->count(); ++j) {
-        QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
-            listWidgetItem->setSelected(true);
-            hasFind = true;
-            break;
-        }
-    }
-    if (!hasFind) {
-        if (ui->listWidget->count() > 0) {
-            QListWidgetItem *listWidgetItem = ui->listWidget->item(0);
-            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-            Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
-            listWidgetItem->setSelected(true);
-        }
-        else {
-            Globals::configModel->setOpenNoteUuid("");
-        }
-    }
+    Globals::configModel->setOpenNoteUuid(NoteModel::setItemSelected(ui->listWidget,
+                                                                     Globals::configModel->getOpenNoteUuid()));
 }
 
 void MainWindow::setNoteList()
 {
     ui->listWidget->clear();
-    int type = Globals::configModel->getSideSelectedType();
+    GroupModel::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
-    for (auto &&noteModel : Globals::noteModelList.getList()) {
-        if ((type == GroupModel::All && name == ui->treeWidget->topLevelItem(1)->text(0) && !noteModel->getIsDelete())
-            || (type == GroupModel::Recent && name == ui->treeWidget->topLevelItem(2)->text(0) && !noteModel->getIsDelete()
-                && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - 7 * 24 * 60 * 60))
-            || (type == GroupModel::Unclassified && name == ui->treeWidget->topLevelItem(3)->text(0) && !noteModel->getIsDelete()
-                && noteModel->getCategory().isEmpty())
-            || (type == GroupModel::Trash && name == ui->treeWidget->topLevelItem(4)->text(0) && noteModel->getIsDelete())
-            || (type == GroupModel::Category && !noteModel->getIsDelete() && name == noteModel->getCategory())
-            || (type == GroupModel::Tag && !noteModel->getIsDelete() && noteModel->getTagList().indexOf(name) != -1)) {
-
-            QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
-            listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteModel));
-            ui->listWidget->addItem(listWidgetItem);
-            NoteListCellWidget *noteListCellWidget = new NoteListCellWidget(noteModel, this);
-            listWidgetItem->setSizeHint(noteListCellWidget->minimumSize());
-            ui->listWidget->setItemWidget(listWidgetItem, noteListCellWidget);
-        }
-    }
+    NoteModel::showListItems(ui->listWidget, type, name);
     // TODO: fix layout bug
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
 }
@@ -202,17 +144,16 @@ void MainWindow::onNoteDeleted()
     setOpenNote();
 
     if (!mNoteModel->getIsDelete()) {
-        Globals::noteModelList.deleteOne(mNoteModel);
+        NoteModel::deleteOne(ui->listWidget, mNoteModel);
         on_action_saveNote_triggered();
     }
     else {
-        Globals::noteModelList.removeFolder(mNoteModel);
+        NoteModel::removeOne(ui->listWidget, mNoteModel);
     }
 }
 
 void MainWindow::onNoteAdded()
 {
-    qDebug() << 1;
     if (mNoteModel->getIsDelete()) {
         mNoteModel->setIsDelete(0);
         mNoteModel->saveNoteDataToLocal();
@@ -223,8 +164,9 @@ void MainWindow::onNoteAdded()
         return;
     }
 
-    mNoteModel = Globals::noteModelList.prepend(Globals::configModel->getSideSelectedType() == 2
-                                                ? Globals::configModel->getSideSelectedName() : "");
+    NoteModel::append(ui->listWidget, Globals::configModel->getSideSelectedType() == 2
+                                       ? Globals::configModel->getSideSelectedName()
+                                       : "");
     Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
     Globals::categoryModelList.append(mNoteModel->getCategory());
     Globals::configModel->setOpenNoteUuid(mNoteModel->getUuid());
@@ -248,8 +190,8 @@ void MainWindow::setOpenNote()
         ui->stackWidget_editor->setCurrentIndex(1);
         return;
     }
-    mNoteModel = Globals::noteModelList.findByUuid(Globals::configModel->getOpenNoteUuid());
-    ui->page_editor->init(mNoteModel);
+
+    ui->page_editor->init(NoteModel::findNoteModelByUuid(ui->listWidget, Globals::configModel->getOpenNoteUuid()));
     ui->stackWidget_editor->setCurrentIndex(0);
 }
 
@@ -293,39 +235,20 @@ void MainWindow::onCategoryAppend(const QString &category)
 {
     if (Globals::categoryModelList.indexOf(category) == -1) {
         CategoryModel *categoryModel = Globals::categoryModelList.append(category);
-        addCategoryToTreeWidget(categoryModel);
+//        addCategoryToTreeWidget(categoryModel);
     }
 }
 
-void MainWindow::onCategoryDeleted(const QString &name, bool remove)
+void MainWindow::onGroupSubtracted(GroupModel::GroupType type, const QString &name)
 {
-    const QString _name = name.isEmpty() ? Globals::configModel->getSideSelectedName() : name;
-
-    if (_name.isEmpty()) {
-        return;
-    }
-
-    if (remove) {
-        Globals::categoryModelList.removeAt(Globals::categoryModelList.indexOf(_name));
-        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-        for (int i = 0; i < topLevelItem->childCount(); ++i) {
-            QTreeWidgetItem *childItem = topLevelItem->child(i);
-            CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
-            if (categoryModel->getName() == _name) {
-                topLevelItem->removeChild(childItem);
-            }
-        }
-    }
-    else {
-        Globals::categoryModelList.removeOne(_name);
-    }
+//    GroupModel::su
 }
 
 void MainWindow::onTagAppend(const QString &tag)
 {
     if (Globals::tagModelList.indexOf(tag) == -1) {
         TagModel *tagModel = Globals::tagModelList.append(tag);
-        addTagToTreeWidget(tagModel);
+//        addTagToTreeWidget(tagModel);
     }
 }
 
@@ -368,14 +291,11 @@ void MainWindow::on_pushButton_add_clicked()
 
 void MainWindow::on_pushButton_subtract_clicked()
 {
-    int type = Globals::configModel->getSideSelectedType();
+    GroupModel::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
 
-    if (type == 2) {
-        onCategoryDeleted(name, true);
-    }
-    else if (type == 3) {
-        onTagDeleted(name, true);
+    if (type == GroupModel::Category || type == GroupModel::Tag) {
+        onGroupRemoved(type, name);
     }
 }
 
@@ -389,33 +309,14 @@ void MainWindow::setGroupName()
     ui->label_groupName->setText(tr("%1 (%2)").arg(groupModel->getName()).arg(groupModel->getCount()));
 }
 
-void MainWindow::addCategoryToTreeWidget(CategoryModel *categoryModel)
+void MainWindow::onGroupRemoved(GroupModel::GroupType type, const QString &name)
 {
-    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-    treeWidgetItem->setText(0, categoryModel->getName());
-    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
-    topLevelItem->addChild(treeWidgetItem);
-    topLevelItem->sortChildren(0, Qt::AscendingOrder);
-}
-
-void MainWindow::addTagToTreeWidget(TagModel *tagModel)
-{
-    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
-    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-    treeWidgetItem->setText(0, tagModel->getName());
-    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
-    topLevelItem->addChild(treeWidgetItem);
-    topLevelItem->sortChildren(0, Qt::AscendingOrder);
-}
-
-QTreeWidgetItem *MainWindow::findTreeWidgetItem(const QString &text)
-{
-    QList<QTreeWidgetItem *> treeWidgetItemList = ui->treeWidget->findItems(text, Qt::MatchExactly, 0);
-    if (treeWidgetItemList.length()) {
-        return treeWidgetItemList[0];
+    GroupModel::removeOne(ui->treeWidget, type, name);
+    if (type == GroupModel::Category) {
+        Tools::writerFile(Globals::repoCategoryListPath, GroupModel::toString(ui->treeWidget, type));
     }
-
-    return nullptr;
+    else if (type == GroupModel::Tag) {
+        Tools::writerFile(Globals::repoTagListPath, GroupModel::toString(ui->treeWidget, type));
+    }
 }
 

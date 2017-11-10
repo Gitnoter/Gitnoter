@@ -19,7 +19,7 @@ public:
 
     static QStringList readerFileToList(QString path);
 
-    static bool writerFile(QString path, QString text);
+    static bool writerFile(QString path, const QString &text);
 
     static QStringList textToStringList(QString text);
 
