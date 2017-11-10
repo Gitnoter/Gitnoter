@@ -59,103 +59,95 @@ void GroupModel::init(QTreeWidget *treeWidget, QList<NoteModel *> noteModelList)
     QMap<QString, GroupModel *> systemModelMap = {};
     QStringList stringList = {};
 
-    _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(1)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(2)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(3)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(4)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, GroupModel::All, treeWidget->topLevelItem(1)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, GroupModel::Recent, treeWidget->topLevelItem(2)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, GroupModel::Unclassified, treeWidget->topLevelItem(3)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, GroupModel::Trash, treeWidget->topLevelItem(4)->text(0), 0);
 
     for (auto &&noteModel : noteModelList) {
         _appendToGroupModelMap(categoryModelMap, GroupModel::Category, noteModel->getCategory(), 1);
 
         for (auto &&item : noteModel->getTagList()) {
-            _appendToGroupModelMap(tagModelMap, GroupModel::Category, item, 1);
+            _appendToGroupModelMap(tagModelMap, GroupModel::Tag, item, 1);
         }
 
         if (!noteModel->getIsDelete()) {
-            _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(1)->text(0), 1);
+            _appendToGroupModelMap(systemModelMap, GroupModel::All, treeWidget->topLevelItem(1)->text(0), 1);
 
             if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-                _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(2)->text(0), 1);
+                _appendToGroupModelMap(systemModelMap, GroupModel::Recent, treeWidget->topLevelItem(2)->text(0), 1);
             }
 
             if (noteModel->getCategory().isEmpty()) {
-                _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(3)->text(0), 1);
+                _appendToGroupModelMap(systemModelMap, GroupModel::Unclassified, treeWidget->topLevelItem(3)->text(0), 1);
             }
         }
         else {
-            _appendToGroupModelMap(systemModelMap, GroupModel::System, treeWidget->topLevelItem(4)->text(0), 1);
+            _appendToGroupModelMap(systemModelMap, GroupModel::Trash, treeWidget->topLevelItem(4)->text(0), 1);
         }
     }
 
     stringList = Tools::readerFileToList(Globals::repoCategoryListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
-            _appendToGroupModelMap(categoryModelMap, GroupModel::System, str, 0);
+            _appendToGroupModelMap(categoryModelMap, GroupModel::Category, str, 0);
         }
     }
 
     stringList = Tools::readerFileToList(Globals::repoTagListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
-            _appendToGroupModelMap(tagModelMap, GroupModel::System, str, 0);
+            _appendToGroupModelMap(tagModelMap, GroupModel::Tag, str, 0);
         }
     }
 
     for (auto &&modelMap : categoryModelMap) {
+        if (modelMap->getName().isEmpty()) {
+            continue;
+        }
         append(treeWidget, modelMap);
     }
 
     for (auto &&modelMap : tagModelMap) {
+        if (modelMap->getName().isEmpty()) {
+            continue;
+        }
         append(treeWidget, modelMap);
     }
 
-    for (auto &&modelMap : systemModelMap) {
-        append(treeWidget, modelMap);
+    for (auto iterator = systemModelMap.begin(); iterator != systemModelMap.end(); ++iterator) {
+        if (iterator.key() == treeWidget->topLevelItem(1)->text(0)) {
+            treeWidget->topLevelItem(1)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        }
+        else if (iterator.key() == treeWidget->topLevelItem(2)->text(0)) {
+            treeWidget->topLevelItem(2)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        }
+        else if (iterator.key() == treeWidget->topLevelItem(3)->text(0)) {
+            treeWidget->topLevelItem(3)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        }
+        else if (iterator.key() == treeWidget->topLevelItem(4)->text(0)) {
+            treeWidget->topLevelItem(4)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        }
     }
 }
 
 GroupModel *GroupModel::append(QTreeWidget *treeWidget, GroupModel *groupModel)
 {
-    QTreeWidgetItem *treeWidgetItem = nullptr;
+    QTreeWidgetItem *treeWidgetItem = treeWidget->topLevelItem(groupModel->getType());
 
-    if (GroupModel::Category == groupModel->getType()) {
-        treeWidgetItem = treeWidget->topLevelItem(6);
-    }
-    else if (GroupModel::Tag == groupModel->getType()) {
-        treeWidgetItem = treeWidget->topLevelItem(8);
-    }
-    else if (GroupModel::System == groupModel->getType()) {
-        if (treeWidget->topLevelItem(1)->text(0) == groupModel->getName()) {
-            treeWidgetItem = treeWidget->topLevelItem(1);
-        }
-        else if (treeWidget->topLevelItem(2)->text(0) == groupModel->getName()) {
-            treeWidgetItem = treeWidget->topLevelItem(2);
-        }
-        else if (treeWidget->topLevelItem(3)->text(0) == groupModel->getName()) {
-            treeWidgetItem = treeWidget->topLevelItem(3);
-        }
-        else if (treeWidget->topLevelItem(4)->text(0) == groupModel->getName()) {
-            treeWidgetItem = treeWidget->topLevelItem(4);
+    for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+        GroupModel *childModel = treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>();
+        if (childModel->getName() == groupModel->getName()) {
+            childModel->setCount(childModel->getCount() + 1);
+            return childModel;
         }
     }
 
-    if (treeWidgetItem) {
-        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-            GroupModel *childModel = treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>();
-            if (childModel->getName() == groupModel->getName()) {
-                childModel->setCount(childModel->getCount() + 1);
-                return childModel;
-            }
-        }
+    QTreeWidgetItem *childItem = new QTreeWidgetItem();
+    childItem->setText(0, groupModel->getName());
+    childItem->setData(0, Qt::UserRole, QVariant::fromValue(groupModel));
+    treeWidgetItem->addChild(childItem);
+    treeWidgetItem->sortChildren(0, Qt::AscendingOrder);
 
-        QTreeWidgetItem *childItem = new QTreeWidgetItem();
-        childItem->setText(0, groupModel->getName());
-        childItem->setData(0, Qt::UserRole, QVariant::fromValue(groupModel));
-        treeWidgetItem->addChild(childItem);
-        treeWidgetItem->sortChildren(0, Qt::AscendingOrder);
-
-        return groupModel;
-    }
-
-    return nullptr;
+    return groupModel;
 }

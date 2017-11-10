@@ -45,7 +45,7 @@ add_executable(${PROJECT_NAME}
         models/categorymodellist.h  models/categorymodellist.cpp
         models/tagmodellist.h       models/tagmodellist.cpp
         models/configmodel.h        models/configmodel.cpp
-        models/groupmodel.h models/groupmodel.cpp
+        models/groupmodel.h         models/groupmodel.cpp
 
         helps/globals.h         helps/globals.cpp
         helps/tools.h           helps/tools.cpp

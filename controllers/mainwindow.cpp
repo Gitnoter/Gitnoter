@@ -6,22 +6,20 @@
 #include "messagedialog.h"
 #include "tools.h"
 #include "globals.h"
+#include "groupmodel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
+{    ui->setupUi(this);
 
     Globals::noteModelList.init();
-    Globals::categoryModelList.init();
-    Globals::tagModelList.init();
+    GroupModel::init(ui->treeWidget, Globals::noteModelList.getList());
 
     setNoteList();
-    setCategoryList();
-    setTagList();
     setOpenNote();
     setItemSelected();
+    setGroupName();
 
     setupUi();
 }
@@ -50,45 +48,29 @@ void MainWindow::setupUi()
 
 void MainWindow::setItemSelected()
 {
-    int type = Globals::configModel->getSideSelectedType();
+    GroupModel::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
-    if (type == 1) {
-        int index = 0;
-        if (name == "all") index = 1;
-        else if (name == "recent") index = 2;
-        else if (name == "unclassified") index = 3;
-        else if (name == "trash") index = 4;
-        ui->treeWidget->topLevelItem(index)->setSelected(true);
+    if (type <= GroupModel::Trash) {
+        ui->treeWidget->topLevelItem(type)->setSelected(true);
     }
-    else if(type == 2) {
+    else if(type == GroupModel::Category) {
         QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(6);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
-            if (categoryModel->getName() == name) {
+            if (childItem->text(0) == name) {
                 childItem->setSelected(true);
                 break;
             }
         }
     }
-    else if (type == 3) {
+    else if (type == GroupModel::Tag) {
         QTreeWidgetItem *treeWidgetItem = ui->treeWidget->topLevelItem(8);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
-            if (tagModel->getName() == name) {
+            if (childItem->text(0) == name) {
                 childItem->setSelected(true);
                 break;
             }
-        }
-    }
-
-    for (int j = 0; j < ui->listWidget->count(); ++j) {
-        QListWidgetItem *listWidgetItem = ui->listWidget->item(j);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        if (noteModel->getUuid() == Globals::configModel->getOpenNoteUuid()) {
-            listWidgetItem->setSelected(true);
-            break;
         }
     }
 
@@ -116,77 +98,20 @@ void MainWindow::setItemSelected()
     }
 }
 
-void MainWindow::updateUiContent()
-{
-    QList<NoteModel *> noteModelList = Globals::noteModelList.getList();
-
-    int all = 0;
-    int recent = 0;
-    int unclassified = 0;
-    int trash = 0;
-    int category = 0;
-    int tag = 0;
-    for (auto &&item : noteModelList) {
-        if (item->getIsDelete()) {
-            trash += 1;
-            continue;
-        }
-        else {
-            all += 1;
-        }
-
-        if (item->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - 7 * 24 * 60 * 60)) {
-            recent += 1;
-        }
-
-        if (item->getCategory().isEmpty()) {
-            unclassified += 1;
-        }
-        else {
-            category += 1;
-        }
-
-        if (item->getTagList().length()) {
-            tag += 1;
-        }
-    }
-
-
-    ui->treeWidget->topLevelItem(1)->setText(0, tr("全部笔记 (%1)").arg(all));
-    ui->treeWidget->topLevelItem(2)->setText(0, tr("最近 7 天使用 (%1)").arg(recent));
-    ui->treeWidget->topLevelItem(3)->setText(0, tr("未分类的笔记 (%1)").arg(unclassified));
-    ui->treeWidget->topLevelItem(4)->setText(0, tr("回收站 (%1)").arg(trash));
-    ui->treeWidget->topLevelItem(6)->setText(0, tr("归档 (%1)").arg(category));
-    ui->treeWidget->topLevelItem(8)->setText(0, tr("标签 (%1)").arg(tag));
-
-    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-    for (int i = 0; i < topLevelItem->childCount(); ++i) {
-        QTreeWidgetItem *childItem = topLevelItem->child(i);
-        CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
-        childItem->setText(0, tr("%1 (%2)").arg(categoryModel->getName()).arg(categoryModel->getCount()));
-    }
-
-    topLevelItem = ui->treeWidget->topLevelItem(8);
-    for (int i = 0; i < topLevelItem->childCount(); ++i) {
-        QTreeWidgetItem *childItem = topLevelItem->child(i);
-        TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
-        childItem->setText(0, tr("%1 (%2)").arg(tagModel->getName()).arg(tagModel->getCount()));
-    }
-}
-
 void MainWindow::setNoteList()
 {
     ui->listWidget->clear();
     int type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
     for (auto &&noteModel : Globals::noteModelList.getList()) {
-        if ((type == 1 && name == "all" && !noteModel->getIsDelete())
-            || (type == 1 && name == "recent" && !noteModel->getIsDelete()
+        if ((type == GroupModel::All && name == ui->treeWidget->topLevelItem(1)->text(0) && !noteModel->getIsDelete())
+            || (type == GroupModel::Recent && name == ui->treeWidget->topLevelItem(2)->text(0) && !noteModel->getIsDelete()
                 && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - 7 * 24 * 60 * 60))
-            || (type == 1 && name == "unclassified" && !noteModel->getIsDelete() && noteModel->getCategory().isEmpty())
-            || (type == 1 && name == "trash" && noteModel->getIsDelete())
-            || (type == 2 && !noteModel->getIsDelete() && name == noteModel->getCategory())
-            || (type == 3 && !noteModel->getIsDelete() && noteModel->getTagList().indexOf(name) != -1)) {
+            || (type == GroupModel::Unclassified && name == ui->treeWidget->topLevelItem(3)->text(0) && !noteModel->getIsDelete()
+                && noteModel->getCategory().isEmpty())
+            || (type == GroupModel::Trash && name == ui->treeWidget->topLevelItem(4)->text(0) && noteModel->getIsDelete())
+            || (type == GroupModel::Category && !noteModel->getIsDelete() && name == noteModel->getCategory())
+            || (type == GroupModel::Tag && !noteModel->getIsDelete() && noteModel->getTagList().indexOf(name) != -1)) {
 
             QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->listWidget);
             listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteModel));
@@ -307,7 +232,7 @@ void MainWindow::onNoteAdded()
     mNoteModel->saveNoteDataToLocal();
 
     if (QList<int>({1, 3}).indexOf(Globals::configModel->getSideSelectedType()) != -1) {
-        Globals::configModel->setSideSelected(1, "all");
+        Globals::configModel->setSideSelected(GroupModel::All, ui->treeWidget->topLevelItem(1)->text(0));
         ui->treeWidget->clearSelection();
         ui->treeWidget->topLevelItem(1)->setSelected(true);
     }
@@ -341,31 +266,13 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
 
 void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
-    int type = 0;
-    QString name = "";
     if (item->data(0, Qt::UserRole).isNull()) {
-        type = 1;
-        int index = ui->treeWidget->indexOfTopLevelItem(item);
-        switch (index) {
-        case 1:name = "all";break;
-        case 2:name = "recent";break;
-        case 3:name = "unclassified";break;
-        case 4:name = "trash";break;
-        default:return;
-        }
+        return;
     }
-    else {
-        if (item->parent() == ui->treeWidget->topLevelItem(6)) {
-            type = 2;
-            name = item->data(column, Qt::UserRole).value<CategoryModel *>()->getName();
-        }
-        else {
-            type = 3;
-            name = item->data(column, Qt::UserRole).value<TagModel *>()->getName();
-        }
-    }
-    Globals::configModel->setSideSelected(type, name);
+
+    Globals::configModel->setSideSelected(item->data(0, Qt::UserRole).value<GroupModel *>()->getType(), item->text(0));
     setNoteList();
+    setGroupName();
     setItemSelected();
     setOpenNote();
 }
@@ -386,25 +293,31 @@ void MainWindow::onCategoryAppend(const QString &category)
 {
     if (Globals::categoryModelList.indexOf(category) == -1) {
         CategoryModel *categoryModel = Globals::categoryModelList.append(category);
-        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-        treeWidgetItem->setText(0, category);
-        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
-        topLevelItem->addChild(treeWidgetItem);
-        topLevelItem->sortChildren(0, Qt::AscendingOrder);
+        addCategoryToTreeWidget(categoryModel);
     }
 }
 
-void MainWindow::onCategoryDeleted(const QString &category)
+void MainWindow::onCategoryDeleted(const QString &name, bool remove)
 {
-    Globals::categoryModelList.removeAt(Globals::categoryModelList.indexOf(category));
-    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
-    for (int i = 0; i < topLevelItem->childCount(); ++i) {
-        QTreeWidgetItem *childItem = topLevelItem->child(i);
-        CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
-        if (categoryModel->getName() == category) {
-            topLevelItem->removeChild(childItem);
+    const QString _name = name.isEmpty() ? Globals::configModel->getSideSelectedName() : name;
+
+    if (_name.isEmpty()) {
+        return;
+    }
+
+    if (remove) {
+        Globals::categoryModelList.removeAt(Globals::categoryModelList.indexOf(_name));
+        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
+        for (int i = 0; i < topLevelItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = topLevelItem->child(i);
+            CategoryModel *categoryModel = childItem->data(0, Qt::UserRole).value<CategoryModel *>();
+            if (categoryModel->getName() == _name) {
+                topLevelItem->removeChild(childItem);
+            }
         }
+    }
+    else {
+        Globals::categoryModelList.removeOne(_name);
     }
 }
 
@@ -412,24 +325,97 @@ void MainWindow::onTagAppend(const QString &tag)
 {
     if (Globals::tagModelList.indexOf(tag) == -1) {
         TagModel *tagModel = Globals::tagModelList.append(tag);
-        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
-        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-        treeWidgetItem->setText(0, tag);
-        treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
-        topLevelItem->addChild(treeWidgetItem);
-        topLevelItem->sortChildren(0, Qt::AscendingOrder);
+        addTagToTreeWidget(tagModel);
     }
 }
 
-void MainWindow::onTagDeleted(const QString &tag)
+void MainWindow::onTagDeleted(const QString &name, bool remove)
 {
-    Globals::tagModelList.removeAt(Globals::tagModelList.indexOf(tag));
-    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
-    for (int i = 0; i < topLevelItem->childCount(); ++i) {
-        QTreeWidgetItem *childItem = topLevelItem->child(i);
-        TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
-        if (tagModel->getName() == tag) {
-            topLevelItem->removeChild(childItem);
+    const QString _name = name.isEmpty() ? Globals::configModel->getSideSelectedName() : name;
+
+    if (_name.isEmpty()) {
+        return;
+    }
+
+    if (remove) {
+        Globals::tagModelList.removeAt(Globals::tagModelList.indexOf(_name));
+        QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
+        for (int i = 0; i < topLevelItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = topLevelItem->child(i);
+            TagModel *tagModel = childItem->data(0, Qt::UserRole).value<TagModel *>();
+            if (tagModel->getName() == _name) {
+                topLevelItem->removeChild(childItem);
+            }
         }
     }
+    else {
+        Globals::tagModelList.removeOne(_name);
+    }
 }
+
+void MainWindow::on_pushButton_add_clicked()
+{
+    int type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
+
+    if (type == 2) {
+        onCategoryAppend(name);
+    }
+    else if (type == 3) {
+
+    }
+}
+
+void MainWindow::on_pushButton_subtract_clicked()
+{
+    int type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
+
+    if (type == 2) {
+        onCategoryDeleted(name, true);
+    }
+    else if (type == 3) {
+        onTagDeleted(name, true);
+    }
+}
+
+void MainWindow::setGroupName()
+{
+    QList<QTreeWidgetItem *> treeWidgetItemList = ui->treeWidget->selectedItems();
+    if (!treeWidgetItemList.length()) {
+        return;
+    }
+    GroupModel *groupModel = treeWidgetItemList[0]->data(0, Qt::UserRole).value<GroupModel *>();
+    ui->label_groupName->setText(tr("%1 (%2)").arg(groupModel->getName()).arg(groupModel->getCount()));
+}
+
+void MainWindow::addCategoryToTreeWidget(CategoryModel *categoryModel)
+{
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(6);
+    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+    treeWidgetItem->setText(0, categoryModel->getName());
+    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(categoryModel));
+    topLevelItem->addChild(treeWidgetItem);
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
+}
+
+void MainWindow::addTagToTreeWidget(TagModel *tagModel)
+{
+    QTreeWidgetItem *topLevelItem = ui->treeWidget->topLevelItem(8);
+    QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
+    treeWidgetItem->setText(0, tagModel->getName());
+    treeWidgetItem->setData(0, Qt::UserRole, QVariant::fromValue(tagModel));
+    topLevelItem->addChild(treeWidgetItem);
+    topLevelItem->sortChildren(0, Qt::AscendingOrder);
+}
+
+QTreeWidgetItem *MainWindow::findTreeWidgetItem(const QString &text)
+{
+    QList<QTreeWidgetItem *> treeWidgetItemList = ui->treeWidget->findItems(text, Qt::MatchExactly, 0);
+    if (treeWidgetItemList.length()) {
+        return treeWidgetItemList[0];
+    }
+
+    return nullptr;
+}
+

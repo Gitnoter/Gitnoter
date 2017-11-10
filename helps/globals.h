@@ -19,6 +19,7 @@ public:
     static const QString version;
     static const QString dateFormat;
     static const QString tagSplit;
+    static const int sevenDays;
 
     static const QString appDataLocation;
     static const QString appDataPath;

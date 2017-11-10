@@ -3,6 +3,7 @@
 
 #include "thememanager.h"
 #include "notemodellist.h"
+#include "groupmodel.h"
 
 #include <QObject>
 
@@ -53,13 +54,13 @@ public:
 
     QString getSideSelectedName() const;
 
-    void setSideSelected(int type, const QString &name);
+    void setSideSelected(GroupModel::GroupType type, const QString &name);
 
     int getLocalRepoStatus() const;
 
     void setLocalRepoStatus(int localRepoStatus);
 
-    int getSideSelectedType() const;
+    GroupModel::GroupType getSideSelectedType() const;
 
     const QString &getRepoEmail() const;
 
@@ -124,7 +125,7 @@ private:
     //      name: categoryName
     // type: 3
     //      name: tagName
-    int mSideSelectedType;
+    GroupModel::GroupType mSideSelectedType;
     QString mSideSelectedName;
 
     int mAutoSyncRepoTime;

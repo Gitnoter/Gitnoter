@@ -127,6 +127,7 @@ void TagModelList::removeList(const QStringList &nameList)
 void TagModelList::removeAt(int index)
 {
     tagModelList.removeAt(index);
+    saveToLocal();
 }
 
 const QString TagModelList::toString()

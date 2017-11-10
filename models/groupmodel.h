@@ -11,10 +11,12 @@ class GroupModel : public QObject
     Q_OBJECT
 public:
     enum GroupType {
-        None = 0x000000,
-        System = 0x000001,
-        Category = 0x000002,
-        Tag = 0x000003
+        All = 0x000001,
+        Recent = 0x000002,
+        Unclassified = 0x000003,
+        Trash = 0x000004,
+        Category = 0x000006,
+        Tag = 0x000008
     };
 
     GroupModel(GroupType type, const QString &name = "", int count = 0);

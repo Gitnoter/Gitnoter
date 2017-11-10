@@ -116,7 +116,10 @@ void CategoryModelList::removeOne(const QString &name)
 {
     for (auto &&item : categoryModelList) {
         if (item->getName() == name) {
-            item->setCount(item->getCount() - 1);
+            if (item->getCount() > 0) {
+                item->setCount(item->getCount() - 1);
+            }
+            break;
         }
     }
 }
@@ -124,6 +127,7 @@ void CategoryModelList::removeOne(const QString &name)
 void CategoryModelList::removeAt(int index)
 {
     categoryModelList.removeAt(index);
+    saveToLocal();
 }
 
 const QString CategoryModelList::toString()

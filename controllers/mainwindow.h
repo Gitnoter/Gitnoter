@@ -2,10 +2,12 @@
 #define MAINWINDOW_H
 
 #include "categorylistwidget.h"
-#include "notemodellist.h"
 #include "configmodel.h"
 #include "settingdialog.h"
 #include "aboutdialog.h"
+
+#include "notemodellist.h"
+#include "tagmodellist.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -47,15 +49,19 @@ private slots:
 
     void onCategoryAppend(const QString &category);
 
-    void onCategoryDeleted(const QString &category);
+    void onCategoryDeleted(const QString &name = "", bool remove = false);
 
     void onTagAppend(const QString &tag);
 
-    void onTagDeleted(const QString &tag);
+    void onTagDeleted(const QString &name = "", bool remove = false);
 
     void onNoteDeleted();
 
     void onNoteAdded();
+
+    void on_pushButton_add_clicked();
+
+    void on_pushButton_subtract_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -68,8 +74,13 @@ private:
     void setTagList();
     void setOpenNote();
     void setItemSelected();
+    void setGroupName();
 
-    void updateUiContent();
+    void addCategoryToTreeWidget(CategoryModel *categoryModel);
+    void addTagToTreeWidget(TagModel *tagModel);
+
+    QTreeWidgetItem *findTreeWidgetItem(const QString &text);
+
 };
 
 #endif // MAINWINDOW_H

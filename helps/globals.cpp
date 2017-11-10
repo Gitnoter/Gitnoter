@@ -7,6 +7,7 @@ const QString Globals::packageName = "com.huyaohui.gitnoter";
 const QString Globals::version = "1.0.0";
 const QString Globals::dateFormat = "yyyy/MM/dd hh:mm";
 const QString Globals::tagSplit = ", ";
+const int Globals::sevenDays = 7 * 24 * 60 * 60;
 
 const QString Globals::appDataLocation = QDir(
         QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(

@@ -24,7 +24,7 @@ ConfigModel::ConfigModel()
     mOpenNoteUuid = "";
     mSidebarSortValue = "";
     mSidebarSortKey = -1;
-    mSideSelectedType = 1;
+    mSideSelectedType = GroupModel::All;
     mLocalRepoStatus = 0;
     mSideSelectedName = "all";
     mAutoSyncRepoTime = 15 * 60 * 1000;
@@ -112,7 +112,7 @@ void ConfigModel::unserialize(const QString &jsonString)
     mOpenNoteUuid = result["openNotesUuid"].toString();
     mSidebarSortValue = result["sidebarSortValue"].toString();
     mSidebarSortKey = result["sidebarSortKey"].toInt();
-    mSideSelectedType = result["sideSelectedType"].toInt();
+    mSideSelectedType = (GroupModel::GroupType) result["sideSelectedType"].toInt();
     mLocalRepoStatus = result["localRepoStatus"].toInt();
     mSideSelectedName = result["sideSelectedName"].toString();
     mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
@@ -219,7 +219,7 @@ QString ConfigModel::getSideSelectedName() const
     return mSideSelectedName;
 }
 
-void ConfigModel::setSideSelected(int type, const QString &name)
+void ConfigModel::setSideSelected(GroupModel::GroupType type, const QString &name)
 {
     ConfigModel::mSideSelectedType = type;
     ConfigModel::mSideSelectedName = name;
@@ -237,7 +237,7 @@ void ConfigModel::setLocalRepoStatus(int localRepoStatus)
     serialize(Globals::appConfigPath);
 }
 
-int ConfigModel::getSideSelectedType() const
+GroupModel::GroupType ConfigModel::getSideSelectedType() const
 {
     return mSideSelectedType;
 }
