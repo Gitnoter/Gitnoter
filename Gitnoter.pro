@@ -47,9 +47,7 @@ SOURCES += \
     controllers/markdowneditorwidget.cpp \
     controllers/tagcellwidget.cpp \
     controllers/messagedialog.cpp \
-    models/notemodellist.cpp  \
-    models/categorymodellist.cpp  \
-    models/tagmodellist.cpp  \
+    models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
     helps/globals.cpp  \
@@ -71,16 +69,15 @@ HEADERS += \
     controllers/markdowneditorwidget.h \
     controllers/tagcellwidget.h \
     controllers/messagedialog.h \
-    models/notemodellist.h  \
-    models/categorymodellist.h  \
-    models/tagmodellist.h  \
+    models/notemodel.h  \
     models/configmodel.h \
     models/groupmodel.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h
+    helps/notepreviewwidget.h \
+    models/gitnoter.h
 
 FORMS += \
     views/mainwindow.ui \

@@ -1,10 +1,8 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "categorymodellist.h"
-#include "notemodellist.h"
+#include "notemodel.h"
 #include "configmodel.h"
-#include "tagmodellist.h"
 #include "gitmanager.h"
 #include "thememanager.h"
 
@@ -38,9 +36,6 @@ public:
 
     static const QByteArray aesKey;
     static const QByteArray aesIv;
-
-    static CategoryModelList categoryModelList;
-    static TagModelList tagModelList;
 
     static ConfigModel *configModel;
     static GitManager *gitManager;

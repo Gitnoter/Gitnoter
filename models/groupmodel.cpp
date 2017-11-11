@@ -5,7 +5,7 @@
 #include <QDateTime>
 #include <QDebug>
 
-GroupModel::GroupModel(GroupType type, const QString &name, int count)
+GroupModel::GroupModel(Gitnoter::GroupType type, const QString &name, int count)
 {
     mType = type;
     mName = name;
@@ -32,18 +32,18 @@ void GroupModel::setCount(int count)
     mCount = count;
 }
 
-GroupModel::GroupType GroupModel::getType() const
+Gitnoter::GroupType GroupModel::getType() const
 {
     return mType;
 }
 
-void GroupModel::setType(GroupModel::GroupType type)
+void GroupModel::setType(Gitnoter::GroupType type)
 {
     mType = type;
 }
 
 
-void _appendToGroupModelMap(QMap<QString, GroupModel *> &map, GroupModel::GroupType type, QString name, int count) {
+void _appendToGroupModelMap(QMap<QString, GroupModel *> &map, Gitnoter::GroupType type, QString name, int count) {
     if (map.contains(name)) {
         GroupModel *model = map[name];
         model->setCount(model->getCount() + count);
@@ -59,45 +59,46 @@ void GroupModel::init(QTreeWidget *treeWidget, QList<NoteModel *> noteModelList)
     QMap<QString, GroupModel *> systemModelMap = {};
     QStringList stringList = {};
 
-    _appendToGroupModelMap(systemModelMap, GroupModel::All, treeWidget->topLevelItem(1)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::Recent, treeWidget->topLevelItem(2)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::Unclassified, treeWidget->topLevelItem(3)->text(0), 0);
-    _appendToGroupModelMap(systemModelMap, GroupModel::Trash, treeWidget->topLevelItem(4)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, Gitnoter::All, treeWidget->topLevelItem(1)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, Gitnoter::Recent, treeWidget->topLevelItem(2)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, treeWidget->topLevelItem(3)->text(0), 0);
+    _appendToGroupModelMap(systemModelMap, Gitnoter::Trash, treeWidget->topLevelItem(4)->text(0), 0);
 
     for (auto &&noteModel : noteModelList) {
-        _appendToGroupModelMap(categoryModelMap, GroupModel::Category, noteModel->getCategory(), 1);
-
-        for (auto &&item : noteModel->getTagList()) {
-            _appendToGroupModelMap(tagModelMap, GroupModel::Tag, item, 1);
-        }
-
         if (!noteModel->getIsDelete()) {
-            _appendToGroupModelMap(systemModelMap, GroupModel::All, treeWidget->topLevelItem(1)->text(0), 1);
+            _appendToGroupModelMap(systemModelMap, Gitnoter::All, treeWidget->topLevelItem(1)->text(0), 1);
 
             if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-                _appendToGroupModelMap(systemModelMap, GroupModel::Recent, treeWidget->topLevelItem(2)->text(0), 1);
+                _appendToGroupModelMap(systemModelMap, Gitnoter::Recent, treeWidget->topLevelItem(2)->text(0), 1);
             }
 
             if (noteModel->getCategory().isEmpty()) {
-                _appendToGroupModelMap(systemModelMap, GroupModel::Unclassified, treeWidget->topLevelItem(3)->text(0), 1);
+                _appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, treeWidget->topLevelItem(3)->text(0), 1);
+            }
+            else {
+                _appendToGroupModelMap(categoryModelMap, Gitnoter::Category, noteModel->getCategory(), 1);
+            }
+
+            for (auto &&item : noteModel->getTagList()) {
+                _appendToGroupModelMap(tagModelMap, Gitnoter::Tag, item, 1);
             }
         }
         else {
-            _appendToGroupModelMap(systemModelMap, GroupModel::Trash, treeWidget->topLevelItem(4)->text(0), 1);
+            _appendToGroupModelMap(systemModelMap, Gitnoter::Trash, treeWidget->topLevelItem(4)->text(0), 1);
         }
     }
 
     stringList = Tools::readerFileToList(Globals::repoCategoryListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
-            _appendToGroupModelMap(categoryModelMap, GroupModel::Category, str, 0);
+            _appendToGroupModelMap(categoryModelMap, Gitnoter::Category, str, 0);
         }
     }
 
     stringList = Tools::readerFileToList(Globals::repoTagListPath);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
-            _appendToGroupModelMap(tagModelMap, GroupModel::Tag, str, 0);
+            _appendToGroupModelMap(tagModelMap, Gitnoter::Tag, str, 0);
         }
     }
 
@@ -157,15 +158,15 @@ void GroupModel::removeOne(QTreeWidget *treeWidget, GroupModel *groupModel)
     removeOne(treeWidget, groupModel->getType(), groupModel->getName());
 }
 
-void GroupModel::removeOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+void GroupModel::removeOne(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
     QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
     treeWidget->topLevelItem(type)->removeChild(treeWidgetItem);
 }
 
-QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
-    if (type <= GroupModel::Trash) {
+    if (type <= Gitnoter::Trash) {
         return treeWidget->topLevelItem(type);
     }
 
@@ -185,23 +186,67 @@ QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, GroupModel &groupMode
     return find(treeWidget, groupModel.getType(), groupModel.getName());
 }
 
-void GroupModel::subtractOne(GroupModel *groupModel)
-{
-    int count = groupModel->getCount();
-    if (count > 0) {
-        groupModel->setCount(count - 1);
-    }
-}
-
-void GroupModel::subtractOne(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+GroupModel *GroupModel::getGroupModel(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
     QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
+
     if (treeWidgetItem) {
-        subtractOne(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>());
+        return treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>();
+    }
+
+    return nullptr;
+}
+
+void GroupModel::appendAny(GroupModel *groupModel, int num)
+{
+    groupModel->setCount(groupModel->getCount() + num);
+}
+
+void GroupModel::appendOne(QTreeWidget *treeWidget, NoteModel *noteModel, int num)
+{
+    QTreeWidgetItem *treeWidgetItem = nullptr;
+    if (!noteModel->getIsDelete()) {
+        treeWidgetItem = find(treeWidget, Gitnoter::All, noteModel->getCategory());
+        if (treeWidgetItem) {
+            appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+        }
+
+        if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
+            treeWidgetItem = find(treeWidget, Gitnoter::Recent, noteModel->getCategory());
+            if (treeWidgetItem) {
+                appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+            }
+        }
+
+        if (noteModel->getCategory().isEmpty()) {
+            treeWidgetItem = find(treeWidget, Gitnoter::Unclassified, noteModel->getCategory());
+            if (treeWidgetItem) {
+                appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+            }
+        }
+        else {
+            treeWidgetItem = find(treeWidget, Gitnoter::Category, noteModel->getCategory());
+            if (treeWidgetItem) {
+                appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+            }
+        }
+
+        for (auto &&tag : noteModel->getTagList()) {
+            treeWidgetItem = find(treeWidget, Gitnoter::Tag, tag);
+            if (treeWidgetItem) {
+                appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+            }
+        }
+    }
+    else {
+        treeWidgetItem = find(treeWidget, Gitnoter::Trash, noteModel->getCategory());
+        if (treeWidgetItem) {
+            appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
+        }
     }
 }
 
-QString GroupModel::toString(QTreeWidget *treeWidget, GroupModel::GroupType type)
+QString GroupModel::toString(QTreeWidget *treeWidget, Gitnoter::GroupType type)
 {
     QString text = "";
 
@@ -213,14 +258,15 @@ QString GroupModel::toString(QTreeWidget *treeWidget, GroupModel::GroupType type
     return text.trimmed();
 }
 
-void GroupModel::setItemSelected(QTreeWidget *treeWidget, GroupModel::GroupType type, const QString &text)
+void GroupModel::setItemSelected(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
-    if (type <= GroupModel::Trash) {
+    treeWidget->clearSelection();
+    if (type <= Gitnoter::Trash) {
         treeWidget->topLevelItem(type)->setSelected(true);
         return;
     }
 
-    if(type == GroupModel::Category) {
+    if(type == Gitnoter::Category) {
         QTreeWidgetItem *treeWidgetItem = treeWidget->topLevelItem(6);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
@@ -230,7 +276,7 @@ void GroupModel::setItemSelected(QTreeWidget *treeWidget, GroupModel::GroupType 
         }
     }
 
-    if (type == GroupModel::Tag) {
+    if (type == Gitnoter::Tag) {
         QTreeWidgetItem *treeWidgetItem = treeWidget->topLevelItem(8);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
@@ -239,4 +285,26 @@ void GroupModel::setItemSelected(QTreeWidget *treeWidget, GroupModel::GroupType 
             }
         }
     }
+}
+
+QList<GroupModel *> &GroupModel::getGroupModelList(QTreeWidget *treeWidget, Gitnoter::GroupType type)
+{
+    QList<GroupModel *> groupModelList = {};
+    QTreeWidgetItem *treeWidgetItem = nullptr;
+    if(type == Gitnoter::Category) {
+        treeWidgetItem = treeWidget->topLevelItem(6);
+    }
+    else if (type == Gitnoter::Tag) {
+        treeWidgetItem = treeWidget->topLevelItem(8);
+    }
+
+    if (!treeWidgetItem) {
+        return groupModelList;
+    }
+
+    for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+        groupModelList.append(treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>());
+    }
+
+    return groupModelList;
 }

@@ -31,12 +31,17 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::init(NoteModel *noteModel)
+void MarkdownEditorWidget::init(NoteModel *noteModel, QTreeWidget *treeWidget, QListWidget *listWidget)
 {
     mNoteModel = noteModel;
+    mTreeWidget = treeWidget;
+    mListWidget = listWidget;
+
     ui->markdownEditor->setText(noteModel->getNoteText());
     ui->markdownPreview->setText(noteModel->getMarkdownHtml());
     ui->pushButton_category->setText(noteModel->getCategory().isEmpty() ? tr("所有笔记") : noteModel->getCategory());
+    ui->label_createTime->setText(tr("创建时间: %1").arg(noteModel->getCreateDateString()));
+    ui->label_updateTime->setText(tr("更新时间: %1").arg(noteModel->getUpdateDateString()));
 
     QStringList tagModelList = noteModel->getTagList();
     for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
@@ -222,7 +227,7 @@ void MarkdownEditorWidget::setTagList()
 void MarkdownEditorWidget::on_pushButton_category_clicked()
 {
     if (categoryListWidget->isHidden()) {
-        categoryListWidget->init(mNoteModel->getCategory());
+        categoryListWidget->init(mTreeWidget, mNoteModel->getCategory());
         categoryListWidget->open();
     }
 }

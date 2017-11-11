@@ -5,10 +5,9 @@
 #include "tools.h"
 #include "globals.h"
 
-CategoryListWidget::CategoryListWidget(QWidget *parent, QString category) :
+CategoryListWidget::CategoryListWidget(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::CategoryListWidget),
-        mCategory(category)
+        ui(new Ui::CategoryListWidget)
 {
     ui->setupUi(this);
 
@@ -21,25 +20,23 @@ CategoryListWidget::~CategoryListWidget()
     delete ui;
 }
 
-void CategoryListWidget::init(const QString &category)
+void CategoryListWidget::init(QTreeWidget *treeWidget, const QString &category)
 {
-    mCategory = category;
-    QList<CategoryModel *> categoryModelList = Globals::categoryModelList.getList();
-    setCategoryList(categoryModelList);
+    setCategoryList(GroupModel::getGroupModelList(treeWidget, Gitnoter::Category));
     ui->lineEdit->clear();
 }
 
-void CategoryListWidget::setCategoryList(QList<CategoryModel *> categoryModelList)
+void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList)
 {
     ui->listWidget_data->clear();
-    for (int i = 0; i < categoryModelList.length(); ++i) {
-        if (categoryModelList[i]->getName().isEmpty()) {
+    for (int i = 0; i < groupModelList.length(); ++i) {
+        if (groupModelList[i]->getName().isEmpty()) {
             continue;
         }
-        QListWidgetItem *listWidgetItem = new QListWidgetItem(categoryModelList[i]->getName());
-        listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(categoryModelList[i]));
+        QListWidgetItem *listWidgetItem = new QListWidgetItem(groupModelList[i]->getName());
+        listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(groupModelList[i]));
         ui->listWidget_data->addItem(listWidgetItem);
-        if (mCategory == categoryModelList[i]->getName()) {
+        if (mCategory == groupModelList[i]->getName()) {
             ui->listWidget_data->setItemSelected(listWidgetItem, true);
         }
     }
@@ -47,18 +44,16 @@ void CategoryListWidget::setCategoryList(QList<CategoryModel *> categoryModelLis
 
 void CategoryListWidget::filtrateCategoryList()
 {
-    QList<CategoryModel *> categoryModelList = {};
     const QString text = ui->lineEdit->text();
-
-    for (auto &&item : Globals::categoryModelList.getList()) {
-        if (item->getName().isEmpty() || item->getName().indexOf(text, 0, Qt::CaseInsensitive) == -1) {
-            continue;
-        }
-        categoryModelList.append(item);
+    bool addButtonHidden = true;
+    for (int i = 0; i < ui->listWidget_data->count(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->listWidget_data->item(i);
+        listWidgetItem->setHidden(
+                listWidgetItem->text().isEmpty() || listWidgetItem->text().indexOf(text, 0, Qt::CaseInsensitive) == -1);
+        addButtonHidden = false;
     }
 
-    setCategoryList(categoryModelList);
-    ui->pushButton_addCategory->setHidden(categoryModelList.length() != 0);
+    ui->pushButton_addCategory->setHidden(addButtonHidden);
 }
 
 void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &)
@@ -73,7 +68,6 @@ void CategoryListWidget::on_pushButton_addCategory_clicked()
     if (!text.isEmpty()) {
         emit categoryAppend(text);
         filtrateCategoryList();
-        Globals::categoryModelList.saveToLocal();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
     }
 }
@@ -87,8 +81,7 @@ void CategoryListWidget::on_buttonBox_accepted()
 {
     auto selectItemList = ui->listWidget_data->selectedItems();
     if (selectItemList.length() > 0) {
-        mCategory = (selectItemList[0]->data(Qt::UserRole).value<CategoryModel *>())->getName();
+        mCategory = (selectItemList[0]->data(Qt::UserRole).value<GroupModel *>())->getName();
+        emit categoryChanged(mCategory);
     }
-
-    emit categoryChanged(mCategory);
 }

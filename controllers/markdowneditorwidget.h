@@ -2,7 +2,7 @@
 #define MARKDOWNEDITORWIDGET_H
 
 #include "tagcellwidget.h"
-#include "notemodellist.h"
+#include "notemodel.h"
 #include "categorylistwidget.h"
 
 #include <QWidget>
@@ -22,7 +22,7 @@ public:
 
     ~MarkdownEditorWidget();
 
-    void init(NoteModel *noteModel);
+    void init(NoteModel *noteModel, QTreeWidget *treeWidget, QListWidget *listWidget);
 
 signals:
 
@@ -63,6 +63,8 @@ private slots:
 private:
     Ui::MarkdownEditorWidget *ui;
     NoteModel *mNoteModel;
+    QTreeWidget *mTreeWidget;
+    QListWidget *mListWidget;
     CategoryListWidget *categoryListWidget;
 
 private:

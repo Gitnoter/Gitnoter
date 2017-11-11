@@ -1,4 +1,4 @@
-#include "notemodellist.h"
+#include "notemodel.h"
 #include "tools.h"
 #include "globals.h"
 #include "notelistcellwidget.h"
@@ -498,6 +498,16 @@ int NoteModel::getUpdateDate()
     return mUpdateDate;
 }
 
+const QString NoteModel::getCreateDateString()
+{
+    return Tools::timestampToDateTime(mCreateDate);
+}
+
+const QString NoteModel::getUpdateDateString()
+{
+    return Tools::timestampToDateTime(mUpdateDate);
+}
+
 QString NoteModel::getNoteText()
 {
     return mNoteText;
@@ -562,7 +572,7 @@ QList<NoteModel *> NoteModel::init(QListWidget *listWidget)
             QDir dir2(mfi.absoluteFilePath());
             NoteModel *noteModel = new NoteModel(dir2.filePath(Globals::noteTextFileName),
                                                  dir2.filePath(Globals::noteDataFileName));
-            append(listWidget, noteModel);
+            appendNew(listWidget, noteModel);
             noteModelList.append(noteModel);
         }
     }
@@ -570,7 +580,7 @@ QList<NoteModel *> NoteModel::init(QListWidget *listWidget)
     return noteModelList;
 }
 
-void NoteModel::append(QListWidget *listWidget, NoteModel *noteModel)
+void NoteModel::appendNew(QListWidget *listWidget, NoteModel *noteModel)
 {
     QListWidgetItem *listWidgetItem = new QListWidgetItem(listWidget);
     listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteModel));
@@ -580,16 +590,16 @@ void NoteModel::append(QListWidget *listWidget, NoteModel *noteModel)
     listWidget->setItemWidget(listWidgetItem, noteListCellWidget);
 }
 
-NoteModel *NoteModel::append(QListWidget *listWidget, const QString &category)
+NoteModel *NoteModel::appendNew(QListWidget *listWidget, const QString &category)
 {
     NoteModel *noteModel = new NoteModel;
     noteModel->setCategory(category);
-    append(listWidget, noteModel);
+    appendNew(listWidget, noteModel);
 
     return noteModel;
 }
 
-QListWidgetItem *NoteModel::findItemByUuid(QListWidget *listWidget, const QString &uuid)
+QListWidgetItem *NoteModel::getItemByUuid(QListWidget *listWidget, const QString &uuid)
 {
     for (int i = 0; i < listWidget->count(); ++i) {
         QListWidgetItem *listWidgetItem = listWidget->item(i);
@@ -601,9 +611,9 @@ QListWidgetItem *NoteModel::findItemByUuid(QListWidget *listWidget, const QStrin
     return nullptr;
 }
 
-NoteModel *NoteModel::findNoteModelByUuid(QListWidget *listWidget, const QString &uuid)
+NoteModel *NoteModel::getNoteModelByUuid(QListWidget *listWidget, const QString &uuid)
 {
-    QListWidgetItem *listWidgetItem = findItemByUuid(listWidget, uuid);
+    QListWidgetItem *listWidgetItem = getItemByUuid(listWidget, uuid);
     if (listWidgetItem) {
         return listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
     }
@@ -613,17 +623,33 @@ NoteModel *NoteModel::findNoteModelByUuid(QListWidget *listWidget, const QString
 void NoteModel::removeOne(QListWidget *listWidget, NoteModel *noteModel)
 {
     QDir(noteModel->getNoteDir()).removeRecursively();
-    listWidget->removeItemWidget(findItemByUuid(listWidget, noteModel->getUuid()));
+    listWidget->removeItemWidget(getItemByUuid(listWidget, noteModel->getUuid()));
 }
 
-void NoteModel::deleteOne(QListWidget *listWidget, NoteModel *noteModel)
+void NoteModel::deleteOne(QListWidget *listWidget, const QString &uuid)
 {
+    QListWidgetItem *listWidgetItem = getItemByUuid(listWidget, uuid);
+    listWidgetItem->setHidden(true);
+
+    NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
     noteModel->setIsDelete(1);
-    findItemByUuid(listWidget, noteModel->getUuid())->setHidden(true);
+    noteModel->saveNoteDataToLocal();
 }
 
-void NoteModel::showListItems(QListWidget *listWidget, GroupModel::GroupType type, const QString &name)
+void NoteModel::appendOld(QListWidget *listWidget, const QString &uuid)
 {
+    QListWidgetItem *listWidgetItem = getItemByUuid(listWidget, uuid);
+    listWidgetItem->setHidden(false);
+
+    NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+    noteModel->setIsDelete(0);
+    noteModel->saveNoteDataToLocal();
+}
+
+int NoteModel::showListItems(QListWidget *listWidget, Gitnoter::GroupType type, const QString &name)
+{
+    int count = 0;
+
     for (int i = 0; i < listWidget->count(); ++i) {
         QListWidgetItem *listWidgetItem = listWidget->item(i);
         NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
@@ -631,39 +657,47 @@ void NoteModel::showListItems(QListWidget *listWidget, GroupModel::GroupType typ
         listWidgetItem->setHidden(true);
 
         if (noteModel->getIsDelete()) {
-            if (type == GroupModel::Trash) {
+            if (type == Gitnoter::Trash) {
                 listWidgetItem->setHidden(false);
+                count += 1;
             }
         }
-        else if ((type == GroupModel::All) ||
-                 (type == GroupModel::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) ||
-                 (type == GroupModel::Unclassified && noteModel->getCategory().isEmpty()) ||
-                 (type == GroupModel::Category && name == noteModel->getCategory()) ||
-                 (type == GroupModel::Tag && noteModel->getTagList().indexOf(name) != -1)) {
+        else if ((type == Gitnoter::All) ||
+                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) ||
+                 (type == Gitnoter::Unclassified && noteModel->getCategory().isEmpty()) ||
+                 (type == Gitnoter::Category && name == noteModel->getCategory()) ||
+                 (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {
             listWidgetItem->setHidden(false);
+            count += 1;
         }
     }
+
+    return count;
 }
 
-const QString &NoteModel::setItemSelected(QListWidget *listWidget, const QString &uuid)
+const QString NoteModel::setItemSelected(QListWidget *listWidget, const QString &uuid)
 {
-    for (int j = 0; j < listWidget->count(); ++j) {
-        QListWidgetItem *listWidgetItem = listWidget->item(j);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        if (noteModel->getUuid() == uuid) {
-            listWidgetItem->setSelected(true);
-            return uuid;
+    listWidget->clearSelection();
+    for (int i = 0; i < listWidget->count(); ++i) {
+        QListWidgetItem *listWidgetItem = listWidget->item(i);
+        if (!listWidgetItem->isHidden()) {
+            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+            if (noteModel->getUuid() == uuid) {
+                listWidgetItem->setSelected(true);
+                return uuid;
+            }
         }
     }
 
-    if (listWidget->count() > 0) {
-        QListWidgetItem *listWidgetItem = listWidget->item(0);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-        Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
-        listWidgetItem->setSelected(true);
-        return noteModel->getUuid();
+    for (int i = 0; i < listWidget->count(); ++i) {
+        QListWidgetItem *listWidgetItem = listWidget->item(i);
+        if (!listWidgetItem->isHidden()) {
+            NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+            Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+            listWidgetItem->setSelected(true);
+            return noteModel->getUuid();
+        }
     }
-    else {
-        return "";
-    }
+
+    return "";
 }

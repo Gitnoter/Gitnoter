@@ -1,8 +1,8 @@
 #ifndef CATEGORYLISTWIDGET_H
 #define CATEGORYLISTWIDGET_H
 
-#include "categorymodellist.h"
-#include "notemodellist.h"
+#include "notemodel.h"
+#include "groupmodel.h"
 
 #include <QDialog>
 #include <QPropertyAnimation>
@@ -18,11 +18,11 @@ class CategoryListWidget : public QDialog
 Q_OBJECT
 
 public:
-    explicit CategoryListWidget(QWidget *parent = 0, QString category = "");
+    explicit CategoryListWidget(QWidget *parent = 0);
 
     ~CategoryListWidget();
 
-    void init(const QString &category);
+    void init(QTreeWidget *treeWidget, const QString &category);
 
 signals:
 
@@ -42,7 +42,7 @@ private slots:
 
 private:
 
-    void setCategoryList(QList<CategoryModel *> categoryModelList);
+    void setCategoryList(QList<GroupModel *> categoryModelList);
 
     void filtrateCategoryList();
 

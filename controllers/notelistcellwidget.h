@@ -1,7 +1,7 @@
 #ifndef NOTELISTCELLWIDGET_H
 #define NOTELISTCELLWIDGET_H
 
-#include "notemodellist.h"
+#include "notemodel.h"
 
 #include <QWidget>
 #include <QListWidgetItem>

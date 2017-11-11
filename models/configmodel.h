@@ -2,7 +2,7 @@
 #define CONFIGMODEL_H
 
 #include "thememanager.h"
-#include "notemodellist.h"
+#include "notemodel.h"
 #include "groupmodel.h"
 
 #include <QObject>
@@ -54,13 +54,13 @@ public:
 
     QString getSideSelectedName() const;
 
-    void setSideSelected(GroupModel::GroupType type, const QString &name);
+    void setSideSelected(Gitnoter::GroupType type, const QString &name);
 
     int getLocalRepoStatus() const;
 
     void setLocalRepoStatus(int localRepoStatus);
 
-    GroupModel::GroupType getSideSelectedType() const;
+    Gitnoter::GroupType getSideSelectedType() const;
 
     const QString &getRepoEmail() const;
 
@@ -125,7 +125,7 @@ private:
     //      name: categoryName
     // type: 3
     //      name: tagName
-    GroupModel::GroupType mSideSelectedType;
+    Gitnoter::GroupType mSideSelectedType;
     QString mSideSelectedName;
 
     int mAutoSyncRepoTime;
