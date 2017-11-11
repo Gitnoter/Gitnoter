@@ -112,10 +112,10 @@ void MainWindow::on_action_saveNote_triggered()
 void MainWindow::onNoteDeleted()
 {
     if (Globals::configModel->getSideSelectedType() == Gitnoter::Trash) {
-        restoreNote();
+        removeNote();
     }
     else {
-        newNote();
+        deleteNote();
     }
 }
 
@@ -297,7 +297,7 @@ void MainWindow::newNote()
     }
     else {
         NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->listWidget, Globals::configModel->getOpenNoteUuid());
-        Globals::configModel->setSideSelected(Gitnoter::All, noteModel->getCategory());
+        Globals::configModel->setSideSelected(Gitnoter::Category, noteModel->getCategory());
         category = noteModel->getCategory();
     }
 
@@ -318,7 +318,12 @@ void MainWindow::removeNote()
     NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->listWidget, Globals::configModel->getOpenNoteUuid());
     if (noteModel) {
         NoteModel::removeOne(ui->listWidget, noteModel);
-        GroupModel::appendOne(ui->treeWidget, noteModel, -1);
+        GroupModel::appendAny(GroupModel::getGroupModel(ui->treeWidget, Gitnoter::Trash), -1);
+
+        setNoteList();
+        setItemSelected();
+        setGroupName();
+        setOpenNote();
     }
 }
 
@@ -329,5 +334,10 @@ void MainWindow::deleteNote()
         GroupModel::appendOne(ui->treeWidget, noteModel, -1);
         NoteModel::deleteOne(ui->listWidget, noteModel->getUuid());
         GroupModel::appendAny(GroupModel::getGroupModel(ui->treeWidget, Gitnoter::Trash), 1);
+
+        setNoteList();
+        setItemSelected();
+        setGroupName();
+        setOpenNote();
     }
 }
