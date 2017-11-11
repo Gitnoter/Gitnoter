@@ -623,7 +623,7 @@ NoteModel *NoteModel::getNoteModelByUuid(QListWidget *listWidget, const QString 
 void NoteModel::removeOne(QListWidget *listWidget, NoteModel *noteModel)
 {
     QDir(noteModel->getNoteDir()).removeRecursively();
-    listWidget->removeItemWidget(getItemByUuid(listWidget, noteModel->getUuid()));
+    delete getItemByUuid(listWidget, noteModel->getUuid());
 }
 
 void NoteModel::deleteOne(QListWidget *listWidget, const QString &uuid)
