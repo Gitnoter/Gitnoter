@@ -4,6 +4,7 @@
 #include "tagcellwidget.h"
 #include "notemodel.h"
 #include "categorylistwidget.h"
+#include "grouptreewidget.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -22,7 +23,7 @@ public:
 
     ~MarkdownEditorWidget();
 
-    void init(NoteModel *noteModel, QTreeWidget *treeWidget, QListWidget *listWidget);
+    void init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, QListWidget *listWidget);
 
 signals:
 
@@ -61,7 +62,7 @@ private slots:
 private:
     Ui::MarkdownEditorWidget *ui;
     NoteModel *mNoteModel;
-    QTreeWidget *mTreeWidget;
+    GroupTreeWidget *mGroupTreeWidget;
     QListWidget *mListWidget;
     CategoryListWidget *categoryListWidget;
 

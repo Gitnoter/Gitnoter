@@ -28,21 +28,21 @@
    </property>
    <property name="styleSheet">
     <string notr="true">/* folderList */
-QTreeView#groupModelList{
+QTreeView#groupTreeWidget{
 	background-color:rgb(241, 240, 243);
 	color:rgb(77, 77, 77);
 	font-size: 12px;
 	border: 0px;
 }
 
-QTreeView#groupModelList::item:selected:!active,
-QTreeView#groupModelList::item:selected:active {
+QTreeView#groupTreeWidget::item:selected:!active,
+QTreeView#groupTreeWidget::item:selected:active {
 	background:rgb(218, 216, 222);
 	color:rgb(77, 77, 77);
 }
 
-QTreeWidget#groupModelList::branch:selected:!active,
-QTreeWidget#groupModelList::branch:selected:active{
+QTreeWidget#groupTreeWidget::branch:selected:!active,
+QTreeWidget#groupTreeWidget::branch:selected:active{
 	background:rgb(218, 216, 222);
 }
 
@@ -205,7 +205,7 @@ QWidget#widget_6{
          <number>0</number>
         </property>
         <item>
-         <widget class="QTreeWidget" name="groupModelList">
+         <widget class="GroupTreeWidget" name="groupTreeWidget">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -1069,6 +1069,16 @@ QWidget#widget_6{
    <extends>QWidget</extends>
    <header>markdowneditorwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GroupTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">grouptreewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NoteListWidget</class>
+   <extends>QListWidget</extends>
+   <header location="global">notelistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow)
 {    ui->setupUi(this);
 
-    QList<NoteModel *> noteModelList = NoteModel::init(ui->noteModelList);
-    GroupModel::init(ui->groupModelList, noteModelList);
+    ui->noteListWidget->init();
+    ui->groupTreeWidget->init(ui->noteListWidget->getNoteModelList());
 
     setNoteList();
     setItemSelected();

@@ -31,10 +31,10 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::init(NoteModel *noteModel, QTreeWidget *treeWidget, QListWidget *listWidget)
+void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, QListWidget *listWidget)
 {
     mNoteModel = noteModel;
-    mTreeWidget = treeWidget;
+    mGroupTreeWidget = groupTreeWidget;
     mListWidget = listWidget;
 
     ui->markdownEditor->setText(noteModel->getNoteText());
@@ -222,7 +222,7 @@ void MarkdownEditorWidget::setTagList()
 void MarkdownEditorWidget::on_pushButton_category_clicked()
 {
     if (categoryListWidget->isHidden()) {
-        categoryListWidget->init(mTreeWidget, mNoteModel->getCategory());
+        categoryListWidget->init(mGroupTreeWidget, mNoteModel->getCategory());
         categoryListWidget->open();
     }
 }
