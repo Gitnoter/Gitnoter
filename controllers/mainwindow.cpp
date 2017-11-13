@@ -31,9 +31,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
-    ui->groupModelList->expandAll();
-    ui->groupModelList->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->noteModelList->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->groupTreeWidget->expandAll();
+    ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
 
@@ -49,27 +49,23 @@ void MainWindow::setupUi()
 
 void MainWindow::setItemSelected()
 {
-    GroupModel::setItemSelected(ui->groupModelList,
-                                Globals::configModel->getSideSelectedType(), 
-                                Globals::configModel->getSideSelectedName());
+    ui->groupTreeWidget->setItemSelected(Globals::configModel->getSideSelectedType(),
+                                        Globals::configModel->getSideSelectedName());
 
     // Check is selected list item
-    const QString uuid = NoteModel::setItemSelected(ui->noteModelList,
-                                                    Globals::configModel->getOpenNoteUuid());
+    const QString uuid = ui->noteListWidget->setItemSelected(Globals::configModel->getOpenNoteUuid());
     Globals::configModel->setOpenNoteUuid(uuid);
 }
 
 void MainWindow::setNoteList()
 {
-    NoteModel::showListItems(ui->noteModelList,
-                             Globals::configModel->getSideSelectedType(),
-                             Globals::configModel->getSideSelectedName());
+    ui->noteListWidget->showListItems();
 
     // TODO: fix layout bug
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
 }
 
-void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
 {
     NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
     if (noteModel->getUuid() != Globals::configModel->getOpenNoteUuid()) {
@@ -92,9 +88,9 @@ void MainWindow::on_pushButton_noteAdd_clicked()
 
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(onNoteAdded()));
-        NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->noteModelList, Globals::configModel->getOpenNoteUuid());
+        NoteModel *noteModel = ui->noteListWidget->getNoteModelByUuid(Globals::configModel->getOpenNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
-                                 ui->groupModelList->topLevelItem(1)->text(0) :
+                                 ui->groupTreeWidget->topLevelItem(1)->text(0) :
                                  noteModel->getCategory();
         messageDialog->openMessage(tr("笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
                                    tr("恢复笔记提示"),
@@ -137,13 +133,13 @@ void MainWindow::setOpenNote()
         return;
     }
 
-    NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->noteModelList, Globals::configModel->getOpenNoteUuid());
+    NoteModel *noteModel = ui->noteListWidget->getNoteModelByUuid(Globals::configModel->getOpenNoteUuid());
     if (!noteModel) {
         ui->stackWidget_editor->setCurrentIndex(1);
         Globals::configModel->setOpenNoteUuid("");
         return;
     }
-    ui->page_editor->init(noteModel, ui->groupModelList, ui->noteModelList);
+    ui->page_editor->init(noteModel, ui->groupTreeWidget, ui->noteListWidget);
     ui->stackWidget_editor->setCurrentIndex(0);
 }
 
@@ -163,7 +159,7 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
     }
 }
 
-void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
     if (item->data(0, Qt::UserRole).isNull()) {
         return;
@@ -178,11 +174,11 @@ void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
 
 void MainWindow::onNoteModelChanged(NoteModel *noteModel)
 {
-    for (int j = 0; j < ui->noteModelList->count(); ++j) {
-        QListWidgetItem *listWidgetItem = ui->noteModelList->item(j);
+    for (int j = 0; j < ui->noteListWidget->count(); ++j) {
+        QListWidgetItem *listWidgetItem = ui->noteListWidget->item(j);
         NoteModel *itemNoteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
         if (itemNoteModel == noteModel) {
-            ((NoteListCellWidget *) ui->noteModelList->itemWidget(listWidgetItem))->reloadData();
+            ((NoteListCellWidget *) ui->noteListWidget->itemWidget(listWidgetItem))->reloadData();
             break;
         }
     }
@@ -203,18 +199,18 @@ void MainWindow::onGroupSubtracted(Gitnoter::GroupType type, const QString &name
 
 void MainWindow::onGroupModelListAppend(Gitnoter::GroupType type, const QString &text)
 {
-    if (GroupModel::has(GroupModel::getGroupModelList(ui->groupModelList, type), type, text)) {
-        GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, type, text), 1);
+    if (ui->groupTreeWidget->has(ui->groupTreeWidget->getGroupModelList(type), type, text)) {
+        ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(type, text), 1);
     }
     else {
-        GroupModel::append(ui->groupModelList, new GroupModel(type, text, 1));
+        ui->groupTreeWidget->append(new GroupModel(type, text, 1));
     }
 }
 
 void MainWindow::onGroupModelListDeleted(Gitnoter::GroupType type, const QString &text)
 {
-    if (GroupModel::has(GroupModel::getGroupModelList(ui->groupModelList, type), type, text)) {
-        GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, type, text), -1);
+    if (ui->groupTreeWidget->has(ui->groupTreeWidget->getGroupModelList(type), type, text)) {
+        ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(type, text), -1);
     }
 }
 
@@ -243,7 +239,7 @@ void MainWindow::on_pushButton_subtract_clicked()
 
 void MainWindow::setGroupName()
 {
-    QList<QTreeWidgetItem *> treeWidgetItemList = ui->groupModelList->selectedItems();
+    QList<QTreeWidgetItem *> treeWidgetItemList = ui->groupTreeWidget->selectedItems();
     if (!treeWidgetItemList.length()) {
         return;
     }
@@ -253,21 +249,21 @@ void MainWindow::setGroupName()
 
 void MainWindow::onGroupRemoved(Gitnoter::GroupType type, const QString &name)
 {
-    GroupModel::removeOne(ui->groupModelList, type, name);
+    ui->groupTreeWidget->removeOne(type, name);
     if (type == Gitnoter::Category) {
-        Tools::writerFile(Globals::repoCategoryListPath, GroupModel::toString(ui->groupModelList, type));
+        Tools::writerFile(Globals::repoCategoryListPath, ui->groupTreeWidget->toString(type));
     }
     else if (type == Gitnoter::Tag) {
-        Tools::writerFile(Globals::repoTagListPath, GroupModel::toString(ui->groupModelList, type));
+        Tools::writerFile(Globals::repoTagListPath, ui->groupTreeWidget->toString(type));
     }
 }
 
 void MainWindow::restoreNote()
 {
     const QString uuid = Globals::configModel->getOpenNoteUuid();
-    GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, Gitnoter::Trash), -1);
-    NoteModel::appendOld(ui->noteModelList, uuid);
-    GroupModel::appendOne(ui->groupModelList, NoteModel::getNoteModelByUuid(ui->noteModelList, uuid), 1);
+    ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(Gitnoter::Trash), -1);
+    ui->noteListWidget->appendOld(uuid);
+    ui->groupTreeWidget->appendOne(ui->noteListWidget->getNoteModelByUuid(uuid), 1);
 
     setNoteList();
     setItemSelected();
@@ -279,17 +275,17 @@ void MainWindow::newNote()
 {
     QString category = "";
     if (Globals::configModel->getOpenNoteUuid().isEmpty()) {
-        Globals::configModel->setSideSelected(Gitnoter::All, ui->groupModelList->topLevelItem(1)->text(0));
+        Globals::configModel->setSideSelected(Gitnoter::All, ui->groupTreeWidget->topLevelItem(1)->text(0));
     }
     else {
-        NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->noteModelList, Globals::configModel->getOpenNoteUuid());
+        NoteModel *noteModel = ui->noteListWidget->getNoteModelByUuid(Globals::configModel->getOpenNoteUuid());
         Globals::configModel->setSideSelected(Gitnoter::Category, noteModel->getCategory());
         category = noteModel->getCategory();
     }
 
-    NoteModel *noteModel = NoteModel::appendNew(ui->noteModelList, category);
+    NoteModel *noteModel = ui->noteListWidget->appendNew(category);
     Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
-    GroupModel::appendOne(ui->groupModelList, noteModel, 1);
+    ui->groupTreeWidget->appendOne(noteModel, 1);
     noteModel->saveNoteToLocal();
     ui->stackWidget_editor->setCurrentIndex(0);
 
@@ -301,10 +297,10 @@ void MainWindow::newNote()
 
 void MainWindow::removeNote()
 {
-    NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->noteModelList, Globals::configModel->getOpenNoteUuid());
+    NoteModel *noteModel = ui->noteListWidget->getNoteModelByUuid(Globals::configModel->getOpenNoteUuid());
     if (noteModel) {
-        NoteModel::removeOne(ui->noteModelList, noteModel);
-        GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, Gitnoter::Trash), -1);
+        ui->noteListWidget->removeOne(noteModel);
+        ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(Gitnoter::Trash), -1);
 
         setNoteList();
         setItemSelected();
@@ -315,11 +311,11 @@ void MainWindow::removeNote()
 
 void MainWindow::deleteNote()
 {
-    NoteModel *noteModel = NoteModel::getNoteModelByUuid(ui->noteModelList, Globals::configModel->getOpenNoteUuid());
+    NoteModel *noteModel = ui->noteListWidget->getNoteModelByUuid(Globals::configModel->getOpenNoteUuid());
     if (noteModel) {
-        GroupModel::appendOne(ui->groupModelList, noteModel, -1);
-        NoteModel::deleteOne(ui->noteModelList, noteModel->getUuid());
-        GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, Gitnoter::Trash), 1);
+        ui->groupTreeWidget->appendOne(noteModel, -1);
+        ui->noteListWidget->deleteOne(noteModel->getUuid());
+        ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(Gitnoter::Trash), 1);
 
         setNoteList();
         setItemSelected();
@@ -330,8 +326,8 @@ void MainWindow::deleteNote()
 
 void MainWindow::modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText)
 {
-    for (int i = 0; i < ui->noteModelList->count(); ++i) {
-        QListWidgetItem *listWidgetItem = ui->noteModelList->item(i);
+    for (int i = 0; i < ui->noteListWidget->count(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->noteListWidget->item(i);
         NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
 
         if (Gitnoter::Tag == type) {
@@ -358,8 +354,8 @@ void MainWindow::modifyTextAllNote(Gitnoter::GroupType type, const QString &oldT
 
 void MainWindow::removeTextAllNote(Gitnoter::GroupType type, const QString &oldText)
 {
-    for (int i = 0; i < ui->noteModelList->count(); ++i) {
-        QListWidgetItem *listWidgetItem = ui->noteModelList->item(i);
+    for (int i = 0; i < ui->noteListWidget->count(); ++i) {
+        QListWidgetItem *listWidgetItem = ui->noteListWidget->item(i);
         NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
 
         if (Gitnoter::Tag == type) {
@@ -369,10 +365,10 @@ void MainWindow::removeTextAllNote(Gitnoter::GroupType type, const QString &oldT
         }
         else if (Gitnoter::Category == type) {
             if (noteModel->getCategory() == oldText) {
-                GroupModel::appendOne(ui->groupModelList, noteModel, -1);
+                ui->groupTreeWidget->appendOne(noteModel, -1);
                 noteModel->setCategory("");
                 noteModel->setIsDelete(1);
-                GroupModel::appendAny(GroupModel::getGroupModel(ui->groupModelList, Gitnoter::Trash), 1);
+                ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(Gitnoter::Trash), 1);
                 noteModel->saveNoteToLocal();
             }
         }

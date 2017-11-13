@@ -40,6 +40,8 @@ add_executable(${PROJECT_NAME}
         controllers/markdowneditorwidget.h  controllers/markdowneditorwidget.cpp
         controllers/tagcellwidget.h         controllers/tagcellwidget.cpp
         controllers/messagedialog.h         controllers/messagedialog.cpp
+        controllers/notelistwidget.h        controllers/notelistwidget.cpp
+        controllers/grouptreewidget.h       controllers/grouptreewidget.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp

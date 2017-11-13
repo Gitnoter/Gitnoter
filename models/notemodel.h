@@ -77,33 +77,12 @@ public:
 
     void clear();
 
-
-public:
+private:
     /**
      * Returns the CSS code for a QFont
      * Thank you to Phil Weinstein for the code
      */
     static QString encodeCssFont(const QFont& refFont);
-
-    static QList<NoteModel *> init(QListWidget *listWidget);
-
-    static void appendNew(QListWidget *listWidget, NoteModel *noteModel);
-
-    static NoteModel *appendNew(QListWidget *listWidget, const QString &category);
-
-    static void removeOne(QListWidget *listWidget, NoteModel *noteModel);
-
-    static void deleteOne(QListWidget *listWidget, const QString &uuid);
-
-    static void appendOld(QListWidget *listWidget, const QString &uuid);
-
-    static QListWidgetItem *getItemByUuid(QListWidget *listWidget, const QString &uuid);
-
-    static NoteModel *getNoteModelByUuid(QListWidget *listWidget, const QString &uuid);
-
-    static int showListItems(QListWidget *listWidget, Gitnoter::GroupType type, const QString &name);
-
-    static const QString setItemSelected(QListWidget *listWidget, const QString &uuid);
 
 private:
     QString mUuid;

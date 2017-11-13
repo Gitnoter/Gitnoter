@@ -3,6 +3,7 @@
 
 #include "notemodel.h"
 #include "groupmodel.h"
+#include "grouptreewidget.h"
 
 #include <QDialog>
 #include <QPropertyAnimation>
@@ -22,7 +23,7 @@ public:
 
     ~CategoryListWidget();
 
-    void init(QTreeWidget *treeWidget, const QString &category);
+    void init(GroupTreeWidget *groupTreeWidget, const QString &category);
 
 signals:
 

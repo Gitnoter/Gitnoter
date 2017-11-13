@@ -50,7 +50,7 @@ private slots:
 
     void on_pushButton_noteSubtract_clicked();
 
-    void on_listWidget_itemClicked(QListWidgetItem *item);
+    void on_noteListWidget_itemClicked(QListWidgetItem *item);
 
     void onNoteModelChanged(NoteModel *noteModel);
 

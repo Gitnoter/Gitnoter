@@ -47,6 +47,8 @@ SOURCES += \
     controllers/markdowneditorwidget.cpp \
     controllers/tagcellwidget.cpp \
     controllers/messagedialog.cpp \
+    controllers/grouptreewidget.cpp \
+    controllers/notelistwidget.cpp \
     models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
@@ -69,15 +71,17 @@ HEADERS += \
     controllers/markdowneditorwidget.h \
     controllers/tagcellwidget.h \
     controllers/messagedialog.h \
+    controllers/grouptreewidget.h \
+    controllers/notelistwidget.h \
     models/notemodel.h  \
     models/configmodel.h \
-    models/groupmodel.h  \
+    models/groupmodel.h \
+    models/gitnoter.h  \
     helps/globals.h  \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h \
-    models/gitnoter.h
+    helps/notepreviewwidget.h
 
 FORMS += \
     views/mainwindow.ui \

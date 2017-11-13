@@ -20,9 +20,9 @@ CategoryListWidget::~CategoryListWidget()
     delete ui;
 }
 
-void CategoryListWidget::init(QTreeWidget *treeWidget, const QString &category)
+void CategoryListWidget::init(GroupTreeWidget *groupTreeWidget, const QString &category)
 {
-    setCategoryList(GroupModel::getGroupModelList(treeWidget, Gitnoter::Category));
+    setCategoryList(groupTreeWidget->getGroupModelList(Gitnoter::Category));
     ui->lineEdit->clear();
 }
 

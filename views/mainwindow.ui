@@ -123,14 +123,14 @@ QPushButton#pushButton_sort::menu-indicator:hover{
   image: url(:/images/icon-down-ffffff.png);
 }
 
-QListView#noteModelList{
+QListView#noteListWidget{
 	background-color:rgb(255, 255, 255);
 	font-size: 12px;
 	border: 0;
 }
 
-QListView#noteModelList::item:selected:!active,
-QListView#noteModelList::item:selected:active {
+QListView#noteListWidget::item:selected:!active,
+QListView#noteListWidget::item:selected:active {
   background:#F5F5F5;
 }
 
@@ -698,7 +698,7 @@ QWidget#widget_6{
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="noteModelList">
+         <widget class="NoteListWidget" name="noteListWidget">
           <property name="minimumSize">
            <size>
             <width>0</width>

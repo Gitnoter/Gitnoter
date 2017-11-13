@@ -238,5 +238,5 @@ void MarkdownEditorWidget::onCategoryChanged(const QString &category)
 
 void MarkdownEditorWidget::onCategoryAppend(const QString &category)
 {
-    emit categoryAppend(category);
+//    emit categoryAppend(category);
 }
