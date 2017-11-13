@@ -160,11 +160,11 @@ void GroupModel::removeOne(QTreeWidget *treeWidget, GroupModel *groupModel)
 
 void GroupModel::removeOne(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
-    QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
+    QTreeWidgetItem *treeWidgetItem = getTreeWidgetItem(treeWidget, type, text);
     treeWidget->topLevelItem(type)->removeChild(treeWidgetItem);
 }
 
-QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
+QTreeWidgetItem *GroupModel::getTreeWidgetItem(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
     if (type <= Gitnoter::Trash) {
         return treeWidget->topLevelItem(type);
@@ -181,14 +181,14 @@ QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, Gitnoter::GroupType t
     return nullptr;
 }
 
-QTreeWidgetItem *GroupModel::find(QTreeWidget *treeWidget, GroupModel &groupModel)
+QTreeWidgetItem *GroupModel::getTreeWidgetItem(QTreeWidget *treeWidget, GroupModel &groupModel)
 {
-    return find(treeWidget, groupModel.getType(), groupModel.getName());
+    return getTreeWidgetItem(treeWidget, groupModel.getType(), groupModel.getName());
 }
 
 GroupModel *GroupModel::getGroupModel(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text)
 {
-    QTreeWidgetItem *treeWidgetItem = find(treeWidget, type, text);
+    QTreeWidgetItem *treeWidgetItem = getTreeWidgetItem(treeWidget, type, text);
 
     if (treeWidgetItem) {
         return treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>();
@@ -206,40 +206,40 @@ void GroupModel::appendOne(QTreeWidget *treeWidget, NoteModel *noteModel, int nu
 {
     QTreeWidgetItem *treeWidgetItem = nullptr;
     if (!noteModel->getIsDelete()) {
-        treeWidgetItem = find(treeWidget, Gitnoter::All, noteModel->getCategory());
+        treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::All, noteModel->getCategory());
         if (treeWidgetItem) {
             appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
         }
 
         if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-            treeWidgetItem = find(treeWidget, Gitnoter::Recent, noteModel->getCategory());
+            treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::Recent, noteModel->getCategory());
             if (treeWidgetItem) {
                 appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
             }
         }
 
         if (noteModel->getCategory().isEmpty()) {
-            treeWidgetItem = find(treeWidget, Gitnoter::Unclassified, noteModel->getCategory());
+            treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::Unclassified, noteModel->getCategory());
             if (treeWidgetItem) {
                 appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
             }
         }
         else {
-            treeWidgetItem = find(treeWidget, Gitnoter::Category, noteModel->getCategory());
+            treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::Category, noteModel->getCategory());
             if (treeWidgetItem) {
                 appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
             }
         }
 
         for (auto &&tag : noteModel->getTagList()) {
-            treeWidgetItem = find(treeWidget, Gitnoter::Tag, tag);
+            treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::Tag, tag);
             if (treeWidgetItem) {
                 appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
             }
         }
     }
     else {
-        treeWidgetItem = find(treeWidget, Gitnoter::Trash, noteModel->getCategory());
+        treeWidgetItem = getTreeWidgetItem(treeWidget, Gitnoter::Trash, noteModel->getCategory());
         if (treeWidgetItem) {
             appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
         }
@@ -287,7 +287,7 @@ void GroupModel::setItemSelected(QTreeWidget *treeWidget, Gitnoter::GroupType ty
     }
 }
 
-QList<GroupModel *> &GroupModel::getGroupModelList(QTreeWidget *treeWidget, Gitnoter::GroupType type)
+QList<GroupModel *> GroupModel::getGroupModelList(QTreeWidget *treeWidget, Gitnoter::GroupType type)
 {
     QList<GroupModel *> groupModelList = {};
     QTreeWidgetItem *treeWidgetItem = nullptr;
@@ -307,4 +307,15 @@ QList<GroupModel *> &GroupModel::getGroupModelList(QTreeWidget *treeWidget, Gitn
     }
 
     return groupModelList;
+}
+
+bool GroupModel::has(const QList<GroupModel *> &groupModelList, Gitnoter::GroupType type, const QString &text)
+{
+    for (auto &&item : groupModelList) {
+        if (item->getType() == type && item->getName() == text) {
+            return true;
+        }
+    }
+
+    return false;
 }

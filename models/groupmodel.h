@@ -30,13 +30,14 @@ public:
 public:
     static void init(QTreeWidget *treeWidget, QList<NoteModel *> noteModelList);
 
-    static QTreeWidgetItem *find(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text = "");
+    static QTreeWidgetItem *getTreeWidgetItem(QTreeWidget *treeWidget, Gitnoter::GroupType type,
+                                              const QString &text = "");
 
-    static QTreeWidgetItem *find(QTreeWidget *treeWidget, GroupModel &groupModel);
+    static QTreeWidgetItem *getTreeWidgetItem(QTreeWidget *treeWidget, GroupModel &groupModel);
 
     static GroupModel *getGroupModel(QTreeWidget *treeWidget, Gitnoter::GroupType type, const QString &text = "");
 
-    static QList<GroupModel *> &getGroupModelList(QTreeWidget *treeWidget, Gitnoter::GroupType type);
+    static QList<GroupModel *> getGroupModelList(QTreeWidget *treeWidget, Gitnoter::GroupType type);
 
     static GroupModel *append(QTreeWidget *treeWidget, GroupModel *groupModel);
 
@@ -47,6 +48,8 @@ public:
     static void appendAny(GroupModel *groupModel, int num);
 
     static void appendOne(QTreeWidget *treeWidget, NoteModel *noteModel, int num = 1);
+
+    static bool has(const QList<GroupModel *> &groupModelList, Gitnoter::GroupType type, const QString &text);
 
     static QString toString(QTreeWidget *treeWidget, Gitnoter::GroupType type);
 

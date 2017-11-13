@@ -28,11 +28,9 @@ signals:
 
     void noteModelChanged(NoteModel *noteModel);
 
-    void tagAppend(const QString &tag);
+    void groupModelListAppend(Gitnoter::GroupType type, const QString &tag);
 
-    void tagDeleted(const QString &tag);
-
-    void categoryAppend(const QString &tag);
+    void groupModelListDeleted(Gitnoter::GroupType type, const QString &tag);
 
 private slots:
 
@@ -69,8 +67,6 @@ private:
 
 private:
     void setSplitterHandleDisable(bool b);
-
-    void addTag(const QString &tagName);
 
     void removeTag(const QString &tagName = "");
 

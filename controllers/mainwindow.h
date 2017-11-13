@@ -60,9 +60,9 @@ private slots:
 
     void onGroupRemoved(Gitnoter::GroupType type, const QString &name);
 
-    void onTagAppend(const QString &tag);
+    void onGroupModelListAppend(Gitnoter::GroupType type, const QString &text);
 
-    void onTagDeleted(const QString &name = "", bool remove = false);
+    void onGroupModelListDeleted(Gitnoter::GroupType type, const QString &text = "");
 
     void onNoteDeleted();
 
@@ -70,7 +70,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    NoteModel *mNoteModel;
 
 private:
     void setupUi();
@@ -84,6 +83,8 @@ private:
     void removeNote();  // remove from disk
     void deleteNote();  // set isDelete: 1
 
+    void modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText = "");
+    void removeTextAllNote(Gitnoter::GroupType type, const QString &oldText);
 };
 
 #endif // MAINWINDOW_H

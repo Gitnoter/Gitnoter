@@ -80,16 +80,6 @@ void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
     ui->splitter_editor->handle(1)->setDisabled(b);
 }
 
-void MarkdownEditorWidget::addTag(const QString &tagName)
-{
-    if (mNoteModel->getTagList().indexOf(tagName) == -1) {
-        TagCellWidget *tagCellWidget = new TagCellWidget(tagName, this);
-        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-        setTagList();
-        emit tagAppend(tagName);
-    }
-}
-
 void MarkdownEditorWidget::removeTag(const QString &tagName)
 {
     if (tagName.isEmpty()) {
@@ -108,7 +98,7 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
     }
 
     setTagList();
-    emit tagDeleted(tagName);
+    emit groupModelListDeleted(Gitnoter::Category, tagName);
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -200,7 +190,12 @@ void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 {
     if (!ui->lineEdit_tag->text().isEmpty()) {
-        addTag(ui->lineEdit_tag->text());
+        if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
+            TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
+            ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
+            setTagList();
+            emit groupModelListAppend(Gitnoter::Tag, ui->lineEdit_tag->text());
+        }
         ui->lineEdit_tag->clear();
     }
 }
