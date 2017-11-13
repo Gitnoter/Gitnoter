@@ -31,11 +31,11 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, QListWidget *listWidget)
+void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget)
 {
     mNoteModel = noteModel;
     mGroupTreeWidget = groupTreeWidget;
-    mListWidget = listWidget;
+    mNoteListWidget = noteListWidget;
 
     ui->markdownEditor->setText(noteModel->getNoteText());
     ui->markdownPreview->setText(noteModel->getMarkdownHtml());

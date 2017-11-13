@@ -4,7 +4,6 @@
 #include "groupmodel.h"
 
 #include <QObject>
-#include <QListWidget>
 
 class GroupModel;
 
