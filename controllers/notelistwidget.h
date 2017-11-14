@@ -34,15 +34,18 @@ public:
     const QString setItemSelected(const QString &uuid);
 
 public slots:
-    void onNoteListWidgetChanged(NoteModel *noteModel);
+    void noteListWidgetChanged(NoteModel *noteModel);
 
 public:
     void setNoteModelList(const QList<NoteModel *> &noteModelList) { mNoteModelList = noteModelList; }
 
     const QList<NoteModel *> &getNoteModelList() const { return mNoteModelList; }
 
+    int getCount() { return mCount; }
+
 private:
     QList<NoteModel *> mNoteModelList;
+    int mCount;
 
 };
 

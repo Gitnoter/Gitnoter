@@ -102,6 +102,7 @@ void NoteListWidget::showListItems()
 {
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
     const QString &name = Globals::configModel->getSideSelectedName();
+    mCount = 0;
 
     for (int i = 0; i < count(); ++i) {
         QListWidgetItem *listWidgetItem = item(i);
@@ -112,6 +113,7 @@ void NoteListWidget::showListItems()
         if (noteModel->getIsDelete()) {
             if (type == Gitnoter::Trash) {
                 listWidgetItem->setHidden(false);
+                mCount += 1;
             }
         }
         else if ((type == Gitnoter::All) ||
@@ -120,6 +122,7 @@ void NoteListWidget::showListItems()
                  (type == Gitnoter::Category && name == noteModel->getCategory()) ||
                  (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {
             listWidgetItem->setHidden(false);
+            mCount += 1;
         }
     }
 }
@@ -151,7 +154,7 @@ const QString NoteListWidget::setItemSelected(const QString &uuid)
     return "";
 }
 
-void NoteListWidget::onNoteListWidgetChanged(NoteModel *noteModel)
+void NoteListWidget::noteListWidgetChanged(NoteModel *noteModel)
 {
     for (int j = 0; j < count(); ++j) {
         QListWidgetItem *listWidgetItem = item(j);

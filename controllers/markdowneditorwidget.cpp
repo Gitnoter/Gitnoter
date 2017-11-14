@@ -107,6 +107,7 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
     setTagList();
 
     if (Globals::configModel->getSideSelectedName() == tagName) {
+        Globals::configModel->setSideSelected(Gitnoter::All, "");
         mMainWindow->setNoteList();
         mMainWindow->setItemSelected();
         mMainWindow->setGroupName();
@@ -213,7 +214,7 @@ void MarkdownEditorWidget::on_markdownEditor_textChanged()
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
     mNoteModel->saveNoteToLocal();
-    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
+    mNoteListWidget->noteListWidgetChanged(mNoteModel);
 }
 
 void MarkdownEditorWidget::setTagList()
@@ -224,7 +225,7 @@ void MarkdownEditorWidget::setTagList()
     }
     mNoteModel->setTagList(tagList);
     mNoteModel->saveNoteDataToLocal();
-    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
+    mNoteListWidget->noteListWidgetChanged(mNoteModel);
 }
 
 void MarkdownEditorWidget::on_pushButton_category_clicked()
@@ -241,7 +242,12 @@ void MarkdownEditorWidget::changeCategory(const QString &category)
 
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
-    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
+    mNoteListWidget->noteListWidgetChanged(mNoteModel);
+
+    Globals::configModel->setSideSelected(Gitnoter::Category, category);
+    mMainWindow->setNoteList();
+    mMainWindow->setItemSelected();
+    mMainWindow->setGroupName();
 }
 
 void MarkdownEditorWidget::appendCategory(const QString &category)
