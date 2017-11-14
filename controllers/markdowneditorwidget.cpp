@@ -47,9 +47,9 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTree
 //        layoutItem->widget()->close();
 //    }
     for (auto &&tagCellWidget : mTagCellWidgetList) {
+        mTagCellWidgetList.removeOne(tagCellWidget);
         delete tagCellWidget;
     }
-    mTagCellWidgetList.clear();
 
     QStringList tagModelList = noteModel->getTagList();
     for (auto &&item : tagModelList) {
@@ -87,22 +87,31 @@ void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
 void MarkdownEditorWidget::removeTag(const QString &tagName)
 {
     if (tagName.isEmpty()) {
-        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(ui->horizontalLayout->count() - 2);
-        layoutItem->widget()->close();
-        ui->horizontalLayout->removeItem(layoutItem);
+//        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(ui->horizontalLayout->count() - 2);
+//        layoutItem->widget()->close();
+//        ui->horizontalLayout->removeItem(layoutItem);
+
+        TagCellWidget *tagCellWidget = mTagCellWidgetList[mTagCellWidgetList.length() - 1];
+        mTagCellWidgetList.removeOne(tagCellWidget);
+        delete tagCellWidget;
     }
     else {
-        for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
-            QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
-            if (((TagCellWidget *) layoutItem->widget())->getTagName() == tagName) {
-                ui->horizontalLayout->removeItem(layoutItem);
-                layoutItem->widget()->close();
+        for (auto &&tagCellWidget : mTagCellWidgetList) {
+            if (tagCellWidget->getTagName() == tagName) {
+                mTagCellWidgetList.removeOne(tagCellWidget);
+                delete tagCellWidget;
             }
         }
     }
 
     setTagList();
-    mGroupTreeWidget->remove(Gitnoter::Category, tagName);
+
+    if (Globals::configModel->getSideSelectedName() == tagName) {
+        mMainWindow->setNoteList();
+        mMainWindow->setItemSelected();
+        mMainWindow->setGroupName();
+        mMainWindow->setOpenNote();
+    }
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -124,7 +133,7 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
         }
         // if lintEdit_tag is empty and press Backspace key, delete tag
         else if (event->type() == QEvent::KeyPress && ((QKeyEvent *) event)->key() == Qt::Key_Backspace) {
-            if (ui->lineEdit_tag->text().isEmpty() && ui->horizontalLayout->count() > 2) {
+            if (ui->lineEdit_tag->text().isEmpty() && mTagCellWidgetList.length() > 0) {
                 removeTag();
                 return false;
             }
@@ -189,13 +198,6 @@ void MarkdownEditorWidget::markdownPreviewSliderValueChanged(int value, bool for
 void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 {
     removeTag(tagName);
-
-    if (Globals::configModel->getSideSelectedName() == tagName) {
-        mMainWindow->setNoteList();
-        mMainWindow->setItemSelected();
-        mMainWindow->setGroupName();
-        mMainWindow->setOpenNote();
-    }
 }
 
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
