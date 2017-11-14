@@ -31,6 +31,11 @@ public:
 
     ~MainWindow();
 
+    void setGroupName();
+    void setOpenNote();
+    void setNoteList();
+    void setItemSelected();
+
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 
@@ -52,17 +57,9 @@ private slots:
 
     void on_noteListWidget_itemClicked(QListWidgetItem *item);
 
-    void onNoteModelChanged(NoteModel *noteModel);
-
     void onCategoryAppend(const QString &category);
 
     void onGroupSubtracted(Gitnoter::GroupType type, const QString &name);
-
-    void onGroupRemoved(Gitnoter::GroupType type, const QString &name);
-
-    void onGroupModelListAppend(Gitnoter::GroupType type, const QString &text);
-
-    void onGroupModelListDeleted(Gitnoter::GroupType type, const QString &text = "");
 
     void onNoteDeleted();
 
@@ -70,13 +67,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    NoteModel *mNoteModel;
 
 private:
     void setupUi();
-    void setNoteList();
-    void setOpenNote();
-    void setItemSelected();
-    void setGroupName();
 
     void restoreNote();
     void newNote();

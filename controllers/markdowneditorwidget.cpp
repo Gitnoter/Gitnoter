@@ -2,6 +2,7 @@
 
 #include "markdowneditorwidget.h"
 #include "mainwindow.h"
+#include "globals.h"
 
 #include <QScrollBar>
 #include <QDebug>
@@ -9,21 +10,15 @@
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
-    categoryListWidget(new CategoryListWidget(this))
+    mCategoryListWidget(new CategoryListWidget(this))
 {
     ui->setupUi(this);
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
 
-    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(markdownEditorSliderValueChanged(int)));
-    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(markdownPreviewSliderValueChanged(int)));
-    connect(categoryListWidget, SIGNAL(categoryChanged(const QString &)),
-            this, SLOT(onCategoryChanged(const QString &)));
-    connect(categoryListWidget, SIGNAL(categoryAppend(const QString &)),
-            this, SLOT(onCategoryAppend(const QString &)));
+    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
+    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownPreviewSliderValueChanged(int)));
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -31,11 +26,13 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget)
+void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget,
+                                MainWindow *mainWindow)
 {
     mNoteModel = noteModel;
     mGroupTreeWidget = groupTreeWidget;
     mNoteListWidget = noteListWidget;
+    mMainWindow = mainWindow;
 
     ui->markdownEditor->setText(noteModel->getNoteText());
     ui->markdownPreview->setText(noteModel->getMarkdownHtml());
@@ -43,14 +40,21 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTree
     ui->label_createTime->setText(tr("创建时间: %1").arg(noteModel->getCreateDateString()));
     ui->label_updateTime->setText(tr("更新时间: %1").arg(noteModel->getUpdateDateString()));
 
-    QStringList tagModelList = noteModel->getTagList();
-    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
-        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
-        ui->horizontalLayout->removeItem(layoutItem);
-        layoutItem->widget()->close();
+    // todo: 下面删除会失败, 可能是获取widget的时候就已经失败了, 目前还不知道到是怎么回事
+//    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
+//        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
+//        ui->horizontalLayout->removeWidget(layoutItem->widget());
+//        layoutItem->widget()->close();
+//    }
+    for (auto &&tagCellWidget : mTagCellWidgetList) {
+        delete tagCellWidget;
     }
+    mTagCellWidgetList.clear();
+
+    QStringList tagModelList = noteModel->getTagList();
     for (auto &&item : tagModelList) {
         TagCellWidget *tagCellWidget = new TagCellWidget(item, this);
+        mTagCellWidgetList.append(tagCellWidget);
         ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
     }
 
@@ -98,7 +102,7 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
     }
 
     setTagList();
-    emit groupModelListDeleted(Gitnoter::Category, tagName);
+    mGroupTreeWidget->remove(Gitnoter::Category, tagName);
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -185,17 +189,19 @@ void MarkdownEditorWidget::markdownPreviewSliderValueChanged(int value, bool for
 void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 {
     removeTag(tagName);
+
+    if (Globals::configModel->getSideSelectedName() == tagName) {
+        mMainWindow->setNoteList();
+        mMainWindow->setItemSelected();
+        mMainWindow->setGroupName();
+        mMainWindow->setOpenNote();
+    }
 }
 
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 {
     if (!ui->lineEdit_tag->text().isEmpty()) {
-        if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
-            TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
-            ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-            setTagList();
-            emit groupModelListAppend(Gitnoter::Tag, ui->lineEdit_tag->text());
-        }
+        addTag();
         ui->lineEdit_tag->clear();
     }
 }
@@ -205,7 +211,7 @@ void MarkdownEditorWidget::on_markdownEditor_textChanged()
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
     mNoteModel->saveNoteToLocal();
-    emit noteModelChanged(mNoteModel);
+    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
 }
 
 void MarkdownEditorWidget::setTagList()
@@ -216,27 +222,38 @@ void MarkdownEditorWidget::setTagList()
     }
     mNoteModel->setTagList(tagList);
     mNoteModel->saveNoteDataToLocal();
-    emit noteModelChanged(mNoteModel);
+    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
 }
 
 void MarkdownEditorWidget::on_pushButton_category_clicked()
 {
-    if (categoryListWidget->isHidden()) {
-        categoryListWidget->init(mGroupTreeWidget, mNoteModel->getCategory());
-        categoryListWidget->open();
+    if (mCategoryListWidget->isHidden()) {
+        mCategoryListWidget->init(mGroupTreeWidget, mNoteModel, this);
+        mCategoryListWidget->open();
     }
 }
 
-void MarkdownEditorWidget::onCategoryChanged(const QString &category)
+void MarkdownEditorWidget::changeCategory(const QString &category)
 {
     ui->pushButton_category->setText(category);
 
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
-    emit noteModelChanged(mNoteModel);
+    mNoteListWidget->onNoteListWidgetChanged(mNoteModel);
 }
 
-void MarkdownEditorWidget::onCategoryAppend(const QString &category)
+void MarkdownEditorWidget::appendCategory(const QString &category)
 {
-//    emit categoryAppend(category);
+    mGroupTreeWidget->append(Gitnoter::Category, category);
+}
+
+void MarkdownEditorWidget::addTag()
+{
+    if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
+        TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
+        mTagCellWidgetList.append(tagCellWidget);
+        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
+        setTagList();
+        mGroupTreeWidget->append(Gitnoter::Tag, ui->lineEdit_tag->text());
+    }
 }

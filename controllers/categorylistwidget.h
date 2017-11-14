@@ -4,10 +4,15 @@
 #include "notemodel.h"
 #include "groupmodel.h"
 #include "grouptreewidget.h"
+#include "notelistwidget.h"
+#include "markdowneditorwidget.h"
 
 #include <QDialog>
 #include <QPropertyAnimation>
 #include <QDesktopWidget>
+#include <QListWidgetItem>
+
+class MarkdownEditorWidget;
 
 namespace Ui
 {
@@ -23,13 +28,7 @@ public:
 
     ~CategoryListWidget();
 
-    void init(GroupTreeWidget *groupTreeWidget, const QString &category);
-
-signals:
-
-    void categoryChanged(const QString &category);
-
-    void categoryAppend(const QString &category);
+    void init(GroupTreeWidget *groupTreeWidget, NoteModel *noteModel, MarkdownEditorWidget *markdownEditorWidget);
 
 private slots:
 
@@ -41,15 +40,21 @@ private slots:
 
     void on_buttonBox_accepted();
 
+    void on_listWidget_data_itemClicked(QListWidgetItem *item);
+
 private:
 
-    void setCategoryList(QList<GroupModel *> categoryModelList);
+    void setCategoryList(QList<GroupModel *> categoryModelList, const QString &category);
 
     void filtrateCategoryList();
 
 private:
     Ui::CategoryListWidget *ui;
-    QString mCategory;
+    GroupTreeWidget *mGroupTreeWidget;
+    MarkdownEditorWidget *mMarkdownEditorWidget;
+    NoteModel *mNoteModel;
+    GroupModel *oldGroupModel;
+    GroupModel *newGroupModel;
 
 };
 

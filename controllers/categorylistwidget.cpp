@@ -7,12 +7,12 @@
 
 CategoryListWidget::CategoryListWidget(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::CategoryListWidget)
+        ui(new Ui::CategoryListWidget),
+        newGroupModel(nullptr)
 {
     ui->setupUi(this);
 
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->pushButton_addCategory->setHidden(true);
 }
 
 CategoryListWidget::~CategoryListWidget()
@@ -20,13 +20,17 @@ CategoryListWidget::~CategoryListWidget()
     delete ui;
 }
 
-void CategoryListWidget::init(GroupTreeWidget *groupTreeWidget, const QString &category)
+void CategoryListWidget::init(GroupTreeWidget *groupTreeWidget, NoteModel *noteModel, MarkdownEditorWidget *markdownEditorWidget)
 {
-    setCategoryList(groupTreeWidget->getGroupModelList(Gitnoter::Category));
+    mGroupTreeWidget = groupTreeWidget;
+    mMarkdownEditorWidget = markdownEditorWidget;
+    mNoteModel = noteModel;
+    setCategoryList(groupTreeWidget->getGroupModelList(Gitnoter::Category), noteModel->getCategory());
     ui->lineEdit->clear();
+    ui->pushButton_addCategory->setHidden(true);
 }
 
-void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList)
+void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList, const QString &category)
 {
     ui->listWidget_data->clear();
     for (int i = 0; i < groupModelList.length(); ++i) {
@@ -36,7 +40,8 @@ void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList)
         QListWidgetItem *listWidgetItem = new QListWidgetItem(groupModelList[i]->getName());
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(groupModelList[i]));
         ui->listWidget_data->addItem(listWidgetItem);
-        if (mCategory == groupModelList[i]->getName()) {
+        if (category == groupModelList[i]->getName()) {
+            oldGroupModel = groupModelList[i];
             ui->listWidget_data->setItemSelected(listWidgetItem, true);
         }
     }
@@ -45,15 +50,19 @@ void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList)
 void CategoryListWidget::filtrateCategoryList()
 {
     const QString text = ui->lineEdit->text();
-    bool addButtonHidden = true;
+    int showCount = 0;
     for (int i = 0; i < ui->listWidget_data->count(); ++i) {
         QListWidgetItem *listWidgetItem = ui->listWidget_data->item(i);
-        listWidgetItem->setHidden(
-                listWidgetItem->text().isEmpty() || listWidgetItem->text().indexOf(text, 0, Qt::CaseInsensitive) == -1);
-        addButtonHidden = false;
+        if (listWidgetItem->text().indexOf(text, 0, Qt::CaseInsensitive) == -1) {
+            listWidgetItem->setHidden(true);
+        }
+        else {
+            listWidgetItem->setHidden(false);
+            showCount += 1;
+        }
     }
 
-    ui->pushButton_addCategory->setHidden(addButtonHidden);
+    ui->pushButton_addCategory->setHidden(!(!text.isEmpty() && showCount == 0));
 }
 
 void CategoryListWidget::on_listWidget_data_doubleClicked(const QModelIndex &)
@@ -66,7 +75,8 @@ void CategoryListWidget::on_pushButton_addCategory_clicked()
 {
     const QString text = ui->lineEdit->text();
     if (!text.isEmpty()) {
-        emit categoryAppend(text);
+        mMarkdownEditorWidget->appendCategory(text);
+        setCategoryList(mGroupTreeWidget->getGroupModelList(Gitnoter::Category), oldGroupModel->getName());
         filtrateCategoryList();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
     }
@@ -77,11 +87,17 @@ void CategoryListWidget::on_lineEdit_textChanged(const QString &)
     filtrateCategoryList();
 }
 
+void CategoryListWidget::on_listWidget_data_itemClicked(QListWidgetItem *item)
+{
+    newGroupModel = item->data(Qt::UserRole).value<GroupModel *>();
+}
+
 void CategoryListWidget::on_buttonBox_accepted()
 {
-    auto selectItemList = ui->listWidget_data->selectedItems();
-    if (selectItemList.length() > 0) {
-        mCategory = (selectItemList[0]->data(Qt::UserRole).value<GroupModel *>())->getName();
-        emit categoryChanged(mCategory);
+    if (oldGroupModel != newGroupModel) {
+        oldGroupModel->setCount(oldGroupModel->getCount() - 1);
+        newGroupModel->setCount(newGroupModel->getCount() + 1);
+
+        mMarkdownEditorWidget->changeCategory(newGroupModel->getName());
     }
 }

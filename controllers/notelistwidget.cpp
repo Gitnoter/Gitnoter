@@ -150,3 +150,15 @@ const QString NoteListWidget::setItemSelected(const QString &uuid)
 
     return "";
 }
+
+void NoteListWidget::onNoteListWidgetChanged(NoteModel *noteModel)
+{
+    for (int j = 0; j < count(); ++j) {
+        QListWidgetItem *listWidgetItem = item(j);
+        NoteModel *itemNoteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+        if (itemNoteModel == noteModel) {
+            ((NoteListCellWidget *) itemWidget(listWidgetItem))->reloadData();
+            break;
+        }
+    }
+}

@@ -293,3 +293,47 @@ bool GroupTreeWidget::has(const QList<GroupModel *> &groupModelList, Gitnoter::G
 
     return false;
 }
+
+void GroupTreeWidget::append(Gitnoter::GroupType type, const QString &text)
+{
+    if (has(getGroupModelList(type), type, text)) {
+        appendAny(getGroupModel(type, text), 1);
+    }
+    else {
+        append(new GroupModel(type, text, 1));
+        saveDataToLocal(type);
+    }
+}
+
+void GroupTreeWidget::subtract(Gitnoter::GroupType type, const QString &text)
+{
+    if (has(getGroupModelList(type), type, text)) {
+        appendAny(getGroupModel(type, text), -1);
+    }
+}
+
+void GroupTreeWidget::remove(Gitnoter::GroupType type, const QString &name)
+{
+    removeOne(type, name);
+    saveDataToLocal(type);
+}
+
+void GroupTreeWidget::saveDataToLocal(Gitnoter::GroupType type)
+{
+    if (type == Gitnoter::Category) {
+        Tools::writerFile(Globals::repoCategoryListPath, toString(type));
+    }
+    else if (type == Gitnoter::Tag) {
+        Tools::writerFile(Globals::repoTagListPath, toString(type));
+    }
+}
+
+void GroupTreeWidget::add(Gitnoter::GroupType type, const QString &text)
+{
+
+}
+
+void GroupTreeWidget::modify(Gitnoter::GroupType type, const QString &text)
+{
+
+}

@@ -33,6 +33,9 @@ public:
 
     const QString setItemSelected(const QString &uuid);
 
+public slots:
+    void onNoteListWidgetChanged(NoteModel *noteModel);
+
 public:
     void setNoteModelList(const QList<NoteModel *> &noteModelList) { mNoteModelList = noteModelList; }
 

@@ -16,6 +16,13 @@ public:
 
     void init(QList<NoteModel *> noteModelList);
 
+    void remove(Gitnoter::GroupType type, const QString &name);
+    void append(Gitnoter::GroupType type, const QString &text);
+    void subtract(Gitnoter::GroupType type, const QString &text = "");
+    void add(Gitnoter::GroupType type, const QString &text = "");
+    void modify(Gitnoter::GroupType type, const QString &text = "");
+
+public:
     QTreeWidgetItem *getTreeWidgetItem(Gitnoter::GroupType type, const QString &text = "");
 
     QTreeWidgetItem *getTreeWidgetItem(GroupModel &groupModel);
@@ -39,6 +46,8 @@ public:
     QString toString(Gitnoter::GroupType type);
 
     void setItemSelected(Gitnoter::GroupType type, const QString &text);
+
+    void saveDataToLocal(Gitnoter::GroupType type);
 
 public:
     const QList<GroupModel *> &getGroupModelList() const { return mGroupModelList; }

@@ -6,9 +6,13 @@
 #include "categorylistwidget.h"
 #include "grouptreewidget.h"
 #include "notelistwidget.h"
+#include "mainwindow.h"
 
 #include <QWidget>
 #include <QPushButton>
+
+class CategoryListWidget;
+class MainWindow;
 
 namespace Ui
 {
@@ -24,15 +28,15 @@ public:
 
     ~MarkdownEditorWidget();
 
-    void init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget);
+    void init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget, MainWindow *mainWindow);
 
-signals:
+    void addTag();
+    void removeTag(const QString &tagName = "");
+    void setTagList();  // save tagList to noteModel
 
-    void noteModelChanged(NoteModel *noteModel);
+    void changeCategory(const QString &category);
+    void appendCategory(const QString &category);
 
-    void groupModelListAppend(Gitnoter::GroupType type, const QString &tag);
-
-    void groupModelListDeleted(Gitnoter::GroupType type, const QString &tag);
 
 private slots:
 
@@ -48,10 +52,6 @@ private slots:
      */
     void markdownPreviewSliderValueChanged(int value, bool force = false);
 
-    void onCategoryChanged(const QString &category);
-
-    void onCategoryAppend(const QString &category);
-
     void onTagCellWidgetClicked(const QString tagName);
 
     void on_lineEdit_tag_returnPressed();
@@ -65,14 +65,13 @@ private:
     NoteModel *mNoteModel;
     GroupTreeWidget *mGroupTreeWidget;
     NoteListWidget *mNoteListWidget;
-    CategoryListWidget *categoryListWidget;
+    MainWindow *mMainWindow;
+    CategoryListWidget *mCategoryListWidget;
+    QList<TagCellWidget *> mTagCellWidgetList;
+
 
 private:
     void setSplitterHandleDisable(bool b);
-
-    void removeTag(const QString &tagName = "");
-
-    void setTagList();
 
     bool eventFilter(QObject *object, QEvent *event);
 
