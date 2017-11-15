@@ -26,71 +26,44 @@ MarkdownEditorWidget::~MarkdownEditorWidget()
     delete ui;
 }
 
-void MarkdownEditorWidget::init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget,
-                                MainWindow *mainWindow)
+void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
 {
-    mNoteModel = noteModel;
-    mGroupTreeWidget = groupTreeWidget;
-    mNoteListWidget = noteListWidget;
     mMainWindow = mainWindow;
-
-    ui->markdownEditor->setText(noteModel->getNoteText());
-    ui->markdownPreview->setText(noteModel->getMarkdownHtml());
-    ui->pushButton_category->setText(noteModel->getCategory().isEmpty() ? tr("所有笔记") : noteModel->getCategory());
-    ui->label_createTime->setText(tr("创建时间: %1").arg(noteModel->getCreateDateString()));
-    ui->label_updateTime->setText(tr("更新时间: %1").arg(noteModel->getUpdateDateString()));
-
-    // todo: 下面删除会失败, 可能是获取widget的时候就已经失败了, 目前还不知道到是怎么回事
-//    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
-//        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
-//        ui->horizontalLayout->removeWidget(layoutItem->widget());
-//        layoutItem->widget()->close();
-//    }
-    for (auto &&tagCellWidget : mTagCellWidgetList) {
-        mTagCellWidgetList.removeOne(tagCellWidget);
-        delete tagCellWidget;
-    }
-
-    QStringList tagModelList = noteModel->getTagList();
-    for (auto &&item : tagModelList) {
-        TagCellWidget *tagCellWidget = new TagCellWidget(item, this);
-        mTagCellWidgetList.append(tagCellWidget);
-        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-    }
-
-    if (mNoteModel->getIsDelete()) {
-        ui->pushButton_category->setDisabled(true);
-        ui->lineEdit_tag->setDisabled(true);
-        ui->label_tagIcon->setDisabled(true);
-        ui->markdownEditor->setReadOnly(true);
-        ui->stackedWidget->setCurrentIndex(1);
+    mNoteModel = mMainWindow->noteListWidget()->getNoteModel(uuid);
+    if (!mNoteModel) {
+        if (!parent()) {
+            close();
+            return;
+        }
+        mMainWindow->stackedWidget()->setCurrentIndex(1);
+        Globals::configModel->setOpenNoteUuid("");
     }
     else {
-        ui->pushButton_category->setDisabled(false);
-        ui->lineEdit_tag->setDisabled(false);
-        ui->label_tagIcon->setDisabled(false);
-        ui->markdownEditor->setReadOnly(false);
+        setOpenNote();
     }
 }
 
-void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)
+void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
 {
-    setSplitterHandleDisable(0 == pos || ui->splitter_editor->size().width() == pos);
+    mMainWindow = mainWindow;
+    mNoteModel = noteModel;
+    setOpenNote();
 }
 
-void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
+void MarkdownEditorWidget::appendTag()
 {
-    ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
-    ui->splitter_editor->handle(1)->setDisabled(b);
+    if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
+        TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
+        mTagCellWidgetList.append(tagCellWidget);
+        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
+        setTagList();
+        mMainWindow->groupTreeWidget()->append(Gitnoter::Tag, ui->lineEdit_tag->text());
+    }
 }
 
 void MarkdownEditorWidget::removeTag(const QString &tagName)
 {
     if (tagName.isEmpty()) {
-//        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(ui->horizontalLayout->count() - 2);
-//        layoutItem->widget()->close();
-//        ui->horizontalLayout->removeItem(layoutItem);
-
         TagCellWidget *tagCellWidget = mTagCellWidgetList[mTagCellWidgetList.length() - 1];
         mTagCellWidgetList.removeOne(tagCellWidget);
         delete tagCellWidget;
@@ -106,13 +79,61 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
 
     setTagList();
 
-    if (Globals::configModel->getSideSelectedName() == tagName) {
-        Globals::configModel->setSideSelected(Gitnoter::All, "");
-        mMainWindow->setNoteList();
-        mMainWindow->setItemSelected();
-        mMainWindow->setGroupName();
-        mMainWindow->setOpenNote();
+    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
+    if (Gitnoter::Tag == type && name == tagName) {
+        Globals::configModel->setSideSelected(mMainWindow->groupTreeWidget()->getGroupModel(Gitnoter::All));
+        mMainWindow->noteListWidget()->setListWidget();
+        mMainWindow->setNoteListWidgetTitle();
+        init(Globals::configModel->getSideSelectedName(), mMainWindow);
     }
+}
+
+void MarkdownEditorWidget::changeCategory(const QString &category)
+{
+    const QString oldCategory = mNoteModel->getCategory();
+
+    ui->pushButton_category->setText(category);
+    mNoteModel->setCategory(category);
+    mNoteModel->saveNoteDataToLocal();
+
+    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
+    mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, oldCategory);
+    mMainWindow->groupTreeWidget()->add(Gitnoter::Category, category);
+    mMainWindow->noteListWidget()->setListWidget();
+    mMainWindow->setNoteListWidgetTitle();
+}
+
+void MarkdownEditorWidget::appendCategory(const QString &category)
+{
+    mMainWindow->groupTreeWidget()->append(Gitnoter::Category, category);
+}
+
+void MarkdownEditorWidget::modifyNote()
+{
+    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
+    mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
+    mNoteModel->saveNoteToLocal();
+    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
+}
+
+void MarkdownEditorWidget::on_pushButton_category_clicked()
+{
+    if (mCategoryListWidget->isHidden()) {
+        mCategoryListWidget->init(mNoteModel, this);
+        mCategoryListWidget->open();
+    }
+}
+
+void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)
+{
+    setSplitterHandleDisable(0 == pos || ui->splitter_editor->size().width() == pos);
+}
+
+void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
+{
+    ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
+    ui->splitter_editor->handle(1)->setDisabled(b);
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -204,17 +225,56 @@ void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 {
     if (!ui->lineEdit_tag->text().isEmpty()) {
-        addTag();
+        appendTag();
         ui->lineEdit_tag->clear();
     }
 }
 
 void MarkdownEditorWidget::on_markdownEditor_textChanged()
 {
+    modifyNote();
+}
+
+void MarkdownEditorWidget::setOpenNote()
+{
+    ui->markdownEditor->setText(mNoteModel->getNoteText());
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
-    mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
-    mNoteModel->saveNoteToLocal();
-    mNoteListWidget->noteListWidgetChanged(mNoteModel);
+    ui->pushButton_category->setText(mNoteModel->getCategory().isEmpty() ? tr("所有笔记") : mNoteModel->getCategory());
+    ui->label_createTime->setText(tr("创建时间: %1").arg(mNoteModel->getCreateDateString()));
+    ui->label_updateTime->setText(tr("更新时间: %1").arg(mNoteModel->getUpdateDateString()));
+
+    // todo: 下面删除会失败, 可能是获取widget的时候就已经失败了, 目前还不知道到是怎么回事
+//    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
+//        QLayoutItem *layoutItem = ui->horizontalLayout->itemAt(i);
+//        ui->horizontalLayout->removeWidget(layoutItem->widget());
+//        layoutItem->widget()->close();
+//    }
+    for (auto &&tagCellWidget : mTagCellWidgetList) {
+        mTagCellWidgetList.removeOne(tagCellWidget);
+        delete tagCellWidget;
+    }
+
+    QStringList tagModelList = mNoteModel->getTagList();
+    for (auto &&item : tagModelList) {
+        TagCellWidget *tagCellWidget = new TagCellWidget(item, this);
+        mTagCellWidgetList.append(tagCellWidget);
+        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
+    }
+
+    if (mNoteModel->getIsDelete()) {
+        ui->pushButton_category->setDisabled(true);
+        ui->lineEdit_tag->setDisabled(true);
+        ui->label_tagIcon->setDisabled(true);
+        ui->markdownEditor->setReadOnly(true);
+        ui->stackedWidget->setCurrentIndex(1);
+    }
+    else {
+        ui->pushButton_category->setDisabled(false);
+        ui->lineEdit_tag->setDisabled(false);
+        ui->label_tagIcon->setDisabled(false);
+        ui->markdownEditor->setReadOnly(false);
+        mMainWindow->stackedWidget()->setCurrentIndex(0);
+    }
 }
 
 void MarkdownEditorWidget::setTagList()
@@ -225,43 +285,5 @@ void MarkdownEditorWidget::setTagList()
     }
     mNoteModel->setTagList(tagList);
     mNoteModel->saveNoteDataToLocal();
-    mNoteListWidget->noteListWidgetChanged(mNoteModel);
-}
-
-void MarkdownEditorWidget::on_pushButton_category_clicked()
-{
-    if (mCategoryListWidget->isHidden()) {
-        mCategoryListWidget->init(mGroupTreeWidget, mNoteModel, this);
-        mCategoryListWidget->open();
-    }
-}
-
-void MarkdownEditorWidget::changeCategory(const QString &category)
-{
-    ui->pushButton_category->setText(category);
-
-    mNoteModel->setCategory(category);
-    mNoteModel->saveNoteDataToLocal();
-    mNoteListWidget->noteListWidgetChanged(mNoteModel);
-
-    Globals::configModel->setSideSelected(Gitnoter::Category, category);
-    mMainWindow->setNoteList();
-    mMainWindow->setItemSelected();
-    mMainWindow->setGroupName();
-}
-
-void MarkdownEditorWidget::appendCategory(const QString &category)
-{
-    mGroupTreeWidget->append(Gitnoter::Category, category);
-}
-
-void MarkdownEditorWidget::addTag()
-{
-    if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
-        TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
-        mTagCellWidgetList.append(tagCellWidget);
-        ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
-        setTagList();
-        mGroupTreeWidget->append(Gitnoter::Tag, ui->lineEdit_tag->text());
-    }
+    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
 }

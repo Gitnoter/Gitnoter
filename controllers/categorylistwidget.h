@@ -28,10 +28,12 @@ public:
 
     ~CategoryListWidget();
 
-    void init(GroupTreeWidget *groupTreeWidget, NoteModel *noteModel, MarkdownEditorWidget *markdownEditorWidget);
+    void init(NoteModel *noteModel, MarkdownEditorWidget *markdownEditorWidget);
+    void search();
+    void append();
+    void change();
 
 private slots:
-
     void on_pushButton_addCategory_clicked();
 
     void on_lineEdit_textChanged(const QString &arg1);
@@ -43,16 +45,12 @@ private slots:
     void on_listWidget_data_itemClicked(QListWidgetItem *item);
 
 private:
-
     void setCategoryList(QList<GroupModel *> categoryModelList, const QString &category);
 
-    void filtrateCategoryList();
 
 private:
     Ui::CategoryListWidget *ui;
-    GroupTreeWidget *mGroupTreeWidget;
     MarkdownEditorWidget *mMarkdownEditorWidget;
-    NoteModel *mNoteModel;
     GroupModel *oldGroupModel;
     GroupModel *newGroupModel;
 

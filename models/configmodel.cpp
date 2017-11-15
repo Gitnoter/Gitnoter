@@ -226,6 +226,13 @@ void ConfigModel::setSideSelected(Gitnoter::GroupType type, const QString &name)
     serialize(Globals::appConfigPath);
 }
 
+void ConfigModel::setSideSelected(GroupModel *groupModel)
+{
+    ConfigModel::mSideSelectedType = groupModel->getType();
+    ConfigModel::mSideSelectedName = groupModel->getName();
+    serialize(Globals::appConfigPath);
+}
+
 int ConfigModel::getLocalRepoStatus() const
 {
     return mLocalRepoStatus;

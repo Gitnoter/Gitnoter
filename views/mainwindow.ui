@@ -857,7 +857,7 @@ QWidget#widget_6{
         </property>
         <item>
          <widget class="QStackedWidget" name="stackWidget_editor">
-          <widget class="MarkdownEditorWidget" name="page_editor"/>
+          <widget class="MarkdownEditorWidget" name="markdownEditorWidget"/>
           <widget class="QWidget" name="page_noEdit"/>
          </widget>
         </item>

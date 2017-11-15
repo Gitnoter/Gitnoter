@@ -15,8 +15,8 @@ GroupTreeWidget::~GroupTreeWidget()
 
 }
 
-void GroupTreeWidget::appendToGroupModelMap(QMap<QString, GroupModel *> &map, Gitnoter::GroupType type, QString name,
-                                            int count) {
+void GroupTreeWidget::appendToGroupModelMap(
+        QMap<QString, GroupModel *> &map, Gitnoter::GroupType type, QString name, int count) {
     if (map.contains(name)) {
         GroupModel *model = map[name];
         model->setCount(model->getCount() + count);
@@ -26,8 +26,10 @@ void GroupTreeWidget::appendToGroupModelMap(QMap<QString, GroupModel *> &map, Gi
     }
 }
 
-void GroupTreeWidget::init(QList<NoteModel *> noteModelList)
+void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWindow)
 {
+    mMainWindow = mainWindow;
+
     QMap<QString, GroupModel *> categoryModelMap = {};
     QMap<QString, GroupModel *> tagModelMap = {};
     QMap<QString, GroupModel *> systemModelMap = {};
@@ -104,6 +106,44 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList)
             topLevelItem(4)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
         }
     }
+
+    setItemSelected();
+}
+
+void GroupTreeWidget::append(Gitnoter::GroupType type, const QString &text)
+{
+    if (has(type, text)) {
+        appendAny(getGroupModel(type, text), 1);
+    }
+    else {
+        append(new GroupModel(type, text, 1));
+        saveDataToLocal(type);
+    }
+}
+
+void GroupTreeWidget::subtract(Gitnoter::GroupType type, const QString &text)
+{
+    if (has(type, text)) {
+        appendAny(getGroupModel(type, text), -1);
+    }
+}
+
+void GroupTreeWidget::remove(Gitnoter::GroupType type, const QString &name)
+{
+    removeOne(type, name);
+    saveDataToLocal(type);
+}
+
+void GroupTreeWidget::add(Gitnoter::GroupType type, const QString &text)
+{
+    if (has(type, text)) {
+        appendAny(getGroupModel(type, text), 1);
+    }
+}
+
+void GroupTreeWidget::modify(Gitnoter::GroupType type, const QString &text)
+{
+
 }
 
 GroupModel *GroupTreeWidget::append(GroupModel *groupModel)
@@ -125,6 +165,38 @@ GroupModel *GroupTreeWidget::append(GroupModel *groupModel)
     treeWidgetItem->sortChildren(0, Qt::AscendingOrder);
 
     return groupModel;
+}
+
+void GroupTreeWidget::setItemSelected()
+{
+    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
+
+    clearSelection();
+    if (type <= Gitnoter::Trash) {
+        topLevelItem(type)->setSelected(true);
+        return;
+    }
+
+    if(type == Gitnoter::Category) {
+        QTreeWidgetItem *treeWidgetItem = topLevelItem(6);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            if (childItem->text(0) == name) {
+                return childItem->setSelected(true);
+            }
+        }
+    }
+
+    if (type == Gitnoter::Tag) {
+        QTreeWidgetItem *treeWidgetItem = topLevelItem(8);
+        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
+            if (childItem->text(0) == name) {
+                return childItem->setSelected(true);
+            }
+        }
+    }
 }
 
 void GroupTreeWidget::removeOne(GroupModel *groupModel)
@@ -232,59 +304,30 @@ QString GroupTreeWidget::toString(Gitnoter::GroupType type)
     return text.trimmed();
 }
 
-void GroupTreeWidget::setItemSelected(Gitnoter::GroupType type, const QString &text)
-{
-    clearSelection();
-    if (type <= Gitnoter::Trash) {
-        topLevelItem(type)->setSelected(true);
-        return;
-    }
-
-    if(type == Gitnoter::Category) {
-        QTreeWidgetItem *treeWidgetItem = topLevelItem(6);
-        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            if (childItem->text(0) == text) {
-                return childItem->setSelected(true);
-            }
-        }
-    }
-
-    if (type == Gitnoter::Tag) {
-        QTreeWidgetItem *treeWidgetItem = topLevelItem(8);
-        for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-            QTreeWidgetItem *childItem = treeWidgetItem->child(i);
-            if (childItem->text(0) == text) {
-                return childItem->setSelected(true);
-            }
-        }
-    }
-}
-
 QList<GroupModel *> GroupTreeWidget::getGroupModelList(Gitnoter::GroupType type)
 {
     QList<GroupModel *> groupModelList = {};
     QTreeWidgetItem *treeWidgetItem = nullptr;
-    if(type == Gitnoter::Category) {
-        treeWidgetItem = topLevelItem(6);
-    }
-    else if (type == Gitnoter::Tag) {
-        treeWidgetItem = topLevelItem(8);
-    }
+    treeWidgetItem = topLevelItem(type);
 
     if (!treeWidgetItem) {
         return groupModelList;
     }
 
+    if (Gitnoter::Trash >= type) {
+        groupModelList.append(getGroupModel(treeWidgetItem));
+    }
+
     for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
-        groupModelList.append(treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>());
+        groupModelList.append(getGroupModel(treeWidgetItem->child(i)));
     }
 
     return groupModelList;
 }
 
-bool GroupTreeWidget::has(const QList<GroupModel *> &groupModelList, Gitnoter::GroupType type, const QString &text)
+bool GroupTreeWidget::has(Gitnoter::GroupType type, const QString &text)
 {
+    QList<GroupModel *>  groupModelList = getGroupModelList(type);
     for (auto &&item : groupModelList) {
         if (item->getType() == type && item->getName() == text) {
             return true;
@@ -292,30 +335,6 @@ bool GroupTreeWidget::has(const QList<GroupModel *> &groupModelList, Gitnoter::G
     }
 
     return false;
-}
-
-void GroupTreeWidget::append(Gitnoter::GroupType type, const QString &text)
-{
-    if (has(getGroupModelList(type), type, text)) {
-        appendAny(getGroupModel(type, text), 1);
-    }
-    else {
-        append(new GroupModel(type, text, 1));
-        saveDataToLocal(type);
-    }
-}
-
-void GroupTreeWidget::subtract(Gitnoter::GroupType type, const QString &text)
-{
-    if (has(getGroupModelList(type), type, text)) {
-        appendAny(getGroupModel(type, text), -1);
-    }
-}
-
-void GroupTreeWidget::remove(Gitnoter::GroupType type, const QString &name)
-{
-    removeOne(type, name);
-    saveDataToLocal(type);
 }
 
 void GroupTreeWidget::saveDataToLocal(Gitnoter::GroupType type)
@@ -328,12 +347,37 @@ void GroupTreeWidget::saveDataToLocal(Gitnoter::GroupType type)
     }
 }
 
-void GroupTreeWidget::add(Gitnoter::GroupType type, const QString &text)
+QList<GroupModel *> GroupTreeWidget::getGroupModelList()
 {
+    QList<GroupModel *> groupModelList = {};
 
+    for (int j = 1; j < 5; ++j) {
+        groupModelList.append(topLevelItem(j)->data(0, Qt::UserRole).value<GroupModel *>());
+    }
+
+    QTreeWidgetItem *treeWidgetItem = topLevelItem(6);
+    for (int k = 0; k < treeWidgetItem->childCount(); ++k) {
+        groupModelList.append(treeWidgetItem->child(k)->data(0, Qt::UserRole).value<GroupModel *>());
+    }
+
+    treeWidgetItem = topLevelItem(8);
+    for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
+        groupModelList.append(treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>());
+    }
+
+    return groupModelList;
 }
 
-void GroupTreeWidget::modify(Gitnoter::GroupType type, const QString &text)
+GroupModel *GroupTreeWidget::selectedGroupModel()
 {
+    QList<QTreeWidgetItem *> treeWidgetItemList = selectedItems();
+    if (treeWidgetItemList.length()) {
+        return treeWidgetItemList[0]->data(0, Qt::UserRole).value<GroupModel *>();
+    }
+    return nullptr;
+}
 
+GroupModel *GroupTreeWidget::getGroupModel(QTreeWidgetItem *treeWidgetItem)
+{
+    return treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>();
 }

@@ -56,6 +56,8 @@ public:
 
     void setSideSelected(Gitnoter::GroupType type, const QString &name);
 
+    void setSideSelected(GroupModel *groupModel);
+
     int getLocalRepoStatus() const;
 
     void setLocalRepoStatus(int localRepoStatus);

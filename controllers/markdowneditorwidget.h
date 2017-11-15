@@ -28,15 +28,16 @@ public:
 
     ~MarkdownEditorWidget();
 
-    void init(NoteModel *noteModel, GroupTreeWidget *groupTreeWidget, NoteListWidget *noteListWidget, MainWindow *mainWindow);
+    void init(const QString &uuid, MainWindow *mainWindow = 0);
+    void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
-    void addTag();
+    void appendTag();
     void removeTag(const QString &tagName = "");
-    void setTagList();  // save tagList to noteModel
 
     void changeCategory(const QString &category);
     void appendCategory(const QString &category);
 
+    void modifyNote();
 
 private slots:
 
@@ -61,19 +62,26 @@ private slots:
     void on_pushButton_category_clicked();
 
 private:
-    Ui::MarkdownEditorWidget *ui;
-    NoteModel *mNoteModel;
-    GroupTreeWidget *mGroupTreeWidget;
-    NoteListWidget *mNoteListWidget;
-    MainWindow *mMainWindow;
-    CategoryListWidget *mCategoryListWidget;
-    QList<TagCellWidget *> mTagCellWidgetList;
-
-
-private:
     void setSplitterHandleDisable(bool b);
 
     bool eventFilter(QObject *object, QEvent *event);
+
+    void setTagList();  // save tagList to noteModel
+
+    void setOpenNote();
+
+public:
+    MainWindow *mainWindow() { return mMainWindow; }
+
+    NoteModel *noteModel() {return mNoteModel; }
+
+private:
+    Ui::MarkdownEditorWidget *ui;
+    MainWindow *mMainWindow;
+    CategoryListWidget *mCategoryListWidget;
+
+    NoteModel *mNoteModel;
+    QList<TagCellWidget *> mTagCellWidgetList;
 
 };
 

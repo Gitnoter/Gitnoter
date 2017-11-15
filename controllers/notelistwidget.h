@@ -2,8 +2,11 @@
 #define NOTELISTWIDGET_H
 
 #include "notemodel.h"
+#include "mainwindow.h"
 
 #include <QListWidget>
+
+class MainWindow;
 
 class NoteListWidget : public QListWidget
 {
@@ -13,39 +16,39 @@ public:
     explicit NoteListWidget(QWidget *parent = 0);
     ~NoteListWidget();
 
-    void init();
+    void init(MainWindow *mainWindow);
 
-    void appendNew(NoteModel *noteModel);
+    QListWidgetItem *append(NoteModel *noteModel);
+    NoteModel *append(const QString &category);
 
-    NoteModel *appendNew(const QString &category);
+    void remove(const QString &uuid);
+    void trash(const QString &uuid);
+    void restore(const QString &uuid);
+    void modify();
+    void search();
+    void sort();
 
-    void removeOne(NoteModel *noteModel);
-
-    void deleteOne(const QString &uuid);
-
-    void appendOld(const QString &uuid);
-
-    QListWidgetItem *getItemByUuid(const QString &uuid);
-
-    NoteModel *getNoteModelByUuid(const QString &uuid);
-
-    void showListItems();
-
-    const QString setItemSelected(const QString &uuid);
+    void setListWidget();
+    void setItemSelected();
 
 public slots:
-    void noteListWidgetChanged(NoteModel *noteModel);
-
-public:
-    void setNoteModelList(const QList<NoteModel *> &noteModelList) { mNoteModelList = noteModelList; }
-
-    const QList<NoteModel *> &getNoteModelList() const { return mNoteModelList; }
-
-    int getCount() { return mCount; }
+    void noteModelChanged(NoteModel *noteModel);
 
 private:
-    QList<NoteModel *> mNoteModelList;
-    int mCount;
+    bool has(const QString &uuid);
+
+public:
+    QList<NoteModel *> getNoteModelList();
+
+    QListWidgetItem *getItem(const QString &uuid);
+
+    NoteModel *getNoteModel(const QString &uuid);
+
+    NoteModel *getNoteModel(QListWidgetItem *listWidgetItem);
+
+private:
+    MainWindow *mMainWindow;
+    QList<QListWidgetItem *> mListWidgetItemList;    // display listWidgetItem
 
 };
 

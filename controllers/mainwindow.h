@@ -5,6 +5,9 @@
 #include "configmodel.h"
 #include "settingdialog.h"
 #include "aboutdialog.h"
+#include "grouptreewidget.h"
+#include "notelistwidget.h"
+#include "markdowneditorwidget.h"
 
 #include "notemodel.h"
 
@@ -16,11 +19,17 @@
 #include <QListWidgetItem>
 #include <QTimer>
 #include <QTreeWidgetItem>
+#include <QStackedWidget>
+#include <QSplitter>
 
 namespace Ui
 {
     class MainWindow;
 }
+
+class GroupTreeWidget;
+class MarkdownEditorWidget;
+class NoteListWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -31,10 +40,26 @@ public:
 
     ~MainWindow();
 
-    void setGroupName();
-    void setOpenNote();
-    void setNoteList();
-    void setItemSelected();
+public:
+    void init();
+
+    void removeGroupTreeWidgetItem();
+    void appendGroupTreeWidgetItem();
+
+    void removeNoteListWidgetItem();    // remove from disk
+    void appendNoteListWidgetItem();
+    void trashNoteListWidget();         // set isDelete: 1
+    void restoreNoteListWidget();
+    void searchNoteListWidget();
+    void sortNoteListWidget();
+
+    void setNoteListWidgetTitle();
+
+private:
+    void setupUi();
+
+    void modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText = "");
+    void removeTextAllNote(Gitnoter::GroupType type, const QString &oldText);
 
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
@@ -57,28 +82,16 @@ private slots:
 
     void on_noteListWidget_itemClicked(QListWidgetItem *item);
 
-    void onCategoryAppend(const QString &category);
-
-    void onGroupSubtracted(Gitnoter::GroupType type, const QString &name);
-
-    void onNoteDeleted();
-
-    void onNoteAdded();
+public:
+    GroupTreeWidget *groupTreeWidget();
+    NoteListWidget *noteListWidget();
+    MarkdownEditorWidget *markdownEditorWidget();
+    QStackedWidget *stackedWidget();
+    QSplitter *splitter();
 
 private:
     Ui::MainWindow *ui;
-    NoteModel *mNoteModel;
 
-private:
-    void setupUi();
-
-    void restoreNote();
-    void newNote();
-    void removeNote();  // remove from disk
-    void deleteNote();  // set isDelete: 1
-
-    void modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText = "");
-    void removeTextAllNote(Gitnoter::GroupType type, const QString &oldText);
 };
 
 #endif // MAINWINDOW_H
