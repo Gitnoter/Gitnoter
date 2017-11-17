@@ -25,7 +25,7 @@ public:
     void trash(const QString &uuid);
     void restore(const QString &uuid);
     void modify();
-    void search();
+    void search(const QString &text);
     void sort();
 
     void setListWidget();

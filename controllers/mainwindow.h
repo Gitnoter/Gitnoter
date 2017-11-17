@@ -82,6 +82,8 @@ private slots:
 
     void on_noteListWidget_itemClicked(QListWidgetItem *item);
 
+    void on_lineEdit_noteSearch_textChanged(const QString &arg1);
+
 public:
     GroupTreeWidget *groupTreeWidget();
     NoteListWidget *noteListWidget();

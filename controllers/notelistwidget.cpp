@@ -219,9 +219,35 @@ void NoteListWidget::modify()
 
 }
 
-void NoteListWidget::search()
+void NoteListWidget::search(const QString &text)
 {
+    QList<QListWidgetItem *> listWidgetItemList = {};
+    for (auto &&listWidgetItem : mListWidgetItemList) {
+        NoteModel *noteModel = getNoteModel(listWidgetItem);
+        bool find = false;
+        if (noteModel->getNoteText().indexOf(text, 0, Qt::CaseInsensitive) != -1) {
+            find = true;
+        }
+        else if (noteModel->getCategory().indexOf(text, 0, Qt::CaseInsensitive) != -1) {
+            find = true;
+        }
+        else {
+            for (auto &&tag : noteModel->getTagList()) {
+                if (tag.indexOf(text, 0, Qt::CaseInsensitive) != -1) {
+                    find = true;
+                    break;
+                }
+            }
+        }
 
+        if (find) {
+            listWidgetItemList.append(listWidgetItem);
+            listWidgetItem->setHidden(false);
+        }
+        else {
+            listWidgetItem->setHidden(true);
+        }
+    }
 }
 
 void NoteListWidget::sort()

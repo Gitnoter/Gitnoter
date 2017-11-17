@@ -97,6 +97,7 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
         return;
     }
 
+    ui->lineEdit_noteSearch->clear();
     Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(item));
     ui->noteListWidget->setListWidget();
     ui->markdownEditorWidget->init(Globals::configModel->getOpenNoteUuid(), this);
@@ -256,4 +257,9 @@ QStackedWidget *MainWindow::stackedWidget()
 QSplitter *MainWindow::splitter()
 {
     return ui->splitter;
+}
+
+void MainWindow::on_lineEdit_noteSearch_textChanged(const QString &arg1)
+{
+    noteListWidget()->search(arg1);
 }
