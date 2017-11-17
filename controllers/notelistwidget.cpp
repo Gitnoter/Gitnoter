@@ -31,7 +31,7 @@ void NoteListWidget::init(MainWindow *mainWindow)
         }
     }
 
-    setItemSelected();
+    setListWidget();
 }
 
 QListWidgetItem *NoteListWidget::append(NoteModel *noteModel)
@@ -71,8 +71,8 @@ NoteModel *NoteListWidget::append(const QString &category)
 
 QListWidgetItem *NoteListWidget::getItem(const QString &uuid)
 {
-    for (int i = 0; i < mListWidgetItemList.length(); ++i) {
-        QListWidgetItem *listWidgetItem = QListWidget::item(i);
+    for (int i = 0; i < count(); ++i) {
+        QListWidgetItem *listWidgetItem = item(i);
         if (listWidgetItem->data(Qt::UserRole).value<NoteModel *>()->getUuid() == uuid) {
             return listWidgetItem;
         }
@@ -185,6 +185,9 @@ void NoteListWidget::setItemSelected()
     else if (mListWidgetItemList.length() > 0) {
         mListWidgetItemList[0]->setSelected(true);
         Globals::configModel->setOpenNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
+    }
+    else {
+        Globals::configModel->setOpenNoteUuid("");
     }
 }
 

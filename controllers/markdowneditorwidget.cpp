@@ -65,12 +65,14 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
 {
     if (tagName.isEmpty()) {
         TagCellWidget *tagCellWidget = mTagCellWidgetList[mTagCellWidgetList.length() - 1];
+        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagCellWidget->getTagName());
         mTagCellWidgetList.removeOne(tagCellWidget);
         delete tagCellWidget;
     }
     else {
         for (auto &&tagCellWidget : mTagCellWidgetList) {
             if (tagCellWidget->getTagName() == tagName) {
+                mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagCellWidget->getTagName());
                 mTagCellWidgetList.removeOne(tagCellWidget);
                 delete tagCellWidget;
             }
@@ -82,10 +84,9 @@ void MarkdownEditorWidget::removeTag(const QString &tagName)
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
     if (Gitnoter::Tag == type && name == tagName) {
-        Globals::configModel->setSideSelected(mMainWindow->groupTreeWidget()->getGroupModel(Gitnoter::All));
         mMainWindow->noteListWidget()->setListWidget();
         mMainWindow->setNoteListWidgetTitle();
-        init(Globals::configModel->getSideSelectedName(), mMainWindow);
+        init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
     }
 }
 
@@ -97,11 +98,9 @@ void MarkdownEditorWidget::changeCategory(const QString &category)
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
 
-    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
-    mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, oldCategory);
-    mMainWindow->groupTreeWidget()->add(Gitnoter::Category, category);
     mMainWindow->noteListWidget()->setListWidget();
     mMainWindow->setNoteListWidgetTitle();
+    init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
 }
 
 void MarkdownEditorWidget::appendCategory(const QString &category)
@@ -280,8 +279,8 @@ void MarkdownEditorWidget::setOpenNote()
 void MarkdownEditorWidget::setTagList()
 {
     QStringList tagList = {};
-    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
-        tagList.append(((TagCellWidget *) ui->horizontalLayout->itemAt(i)->widget())->getTagName());
+    for (auto &&tagCellWidget : mTagCellWidgetList) {
+        tagList.append(tagCellWidget->getTagName());
     }
     mNoteModel->setTagList(tagList);
     mNoteModel->saveNoteDataToLocal();

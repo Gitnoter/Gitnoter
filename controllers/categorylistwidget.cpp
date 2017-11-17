@@ -43,12 +43,9 @@ void CategoryListWidget::append()
 
 void CategoryListWidget::change()
 {
-    if (oldGroupModel != newGroupModel) {
-        oldGroupModel->setCount(oldGroupModel->getCount() - 1);
-        newGroupModel->setCount(newGroupModel->getCount() + 1);
-
-        mMarkdownEditorWidget->changeCategory(newGroupModel->getName());
-    }
+    oldGroupModel->setCount(oldGroupModel->getCount() - 1);
+    newGroupModel->setCount(newGroupModel->getCount() + 1);
+    mMarkdownEditorWidget->changeCategory(newGroupModel->getName());
 }
 
 void CategoryListWidget::search()
@@ -109,5 +106,7 @@ void CategoryListWidget::on_listWidget_data_itemClicked(QListWidgetItem *item)
 
 void CategoryListWidget::on_buttonBox_accepted()
 {
-    change();
+    if (oldGroupModel != newGroupModel) {
+        change();
+    }
 }
