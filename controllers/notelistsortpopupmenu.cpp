@@ -38,12 +38,13 @@ NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* p
     connect(action_desc, SIGNAL(triggered(bool)), this, SLOT(onActionDescTriggered(bool)));
 
     Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
-    Gitnoter::SortType type = Globals::configModel->getNoteSortType();
+    Qt::SortOrder type = Globals::configModel->getNoteSortType();
     action_title->setChecked(Gitnoter::Title == basis);
     action_createDate->setChecked(Gitnoter::CreateDate == basis);
     action_updateDate->setChecked(Gitnoter::UpdateDate == basis);
-    action_asc->setChecked(Gitnoter::Asc == type);
-    action_desc->setChecked(Gitnoter::Desc == type);
+    action_asc->setChecked(Qt::AscendingOrder == type);
+    action_desc->setChecked(Qt::DescendingOrder == type);
+    setPushButtonText(basis);
 }
 
 void NoteListSortPopupMenu::showEvent(QShowEvent* event)
@@ -55,48 +56,77 @@ void NoteListSortPopupMenu::showEvent(QShowEvent* event)
 
 void NoteListSortPopupMenu::onActionTitleTriggered(bool triggered)
 {
-    resetBasisActionChecked();
+    setBasisActionChecked(action_title);
     Globals::configModel->setNoteSortBasis(Gitnoter::Title);
+    setPushButtonText(Gitnoter::Title);
     emit actionTriggered();
 }
 
 void NoteListSortPopupMenu::onActionCreateDateTriggered(bool triggered)
 {
-    resetBasisActionChecked();
+    setBasisActionChecked(action_createDate);
     Globals::configModel->setNoteSortBasis(Gitnoter::CreateDate);
+    setPushButtonText(Gitnoter::CreateDate);
     emit actionTriggered();
 }
 
 void NoteListSortPopupMenu::onActionUpdateDateTriggered(bool triggered)
 {
-    resetBasisActionChecked();
+    setBasisActionChecked(action_updateDate);
     Globals::configModel->setNoteSortBasis(Gitnoter::UpdateDate);
+    setPushButtonText(Gitnoter::UpdateDate);
     emit actionTriggered();
 }
 
 void NoteListSortPopupMenu::onActionAscTriggered(bool triggered)
 {
-    resetTypeActionChecked();
-    Globals::configModel->setNoteSortType(Gitnoter::Asc);
+    setTypeActionChecked(action_asc);
+    Globals::configModel->setNoteSortType(Qt::AscendingOrder);
     emit actionTriggered();
 }
 
 void NoteListSortPopupMenu::onActionDescTriggered(bool triggered)
 {
-    resetTypeActionChecked();
-    Globals::configModel->setNoteSortType(Gitnoter::Desc);
+    setTypeActionChecked(action_desc);
+    Globals::configModel->setNoteSortType(Qt::DescendingOrder);
     emit actionTriggered();
 }
 
-void NoteListSortPopupMenu::resetBasisActionChecked()
+void NoteListSortPopupMenu::setBasisActionChecked(QAction *action)
 {
     action_title->setChecked(false);
     action_createDate->setChecked(false);
     action_updateDate->setChecked(false);
+
+    action->setChecked(true);
 }
 
-void NoteListSortPopupMenu::resetTypeActionChecked()
+void NoteListSortPopupMenu::setTypeActionChecked(QAction *action)
 {
     action_asc->setChecked(false);
     action_desc->setChecked(false);
+
+    action->setChecked(true);
+}
+
+void NoteListSortPopupMenu::setPushButtonText(Gitnoter::SortBasis basis)
+{
+    QAction *action = nullptr;
+    switch (basis) {
+        case Gitnoter::Title:action = action_title;break;
+        case Gitnoter::CreateDate:action = action_createDate;break;
+        case Gitnoter::UpdateDate:action = action_updateDate;break;
+        default:break;
+    }
+
+    if (action) {
+        QString text = tr("  按 %1 排序").arg(action->text());
+        pushButton->setText(text);
+    }
+}
+
+void NoteListSortPopupMenu::setPushButtonText(QAction *action)
+{
+    QString text = tr("  按 %1 排序").arg(action->text());
+    pushButton->setText(text);
 }

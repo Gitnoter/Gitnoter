@@ -19,11 +19,6 @@ public:
         UpdateDate = 0x001003
     };
 
-    enum SortType {
-        Asc = 0x002001,
-        Desc = 0x002002
-    };
-
 };
 
 #endif // GITNOTER_H

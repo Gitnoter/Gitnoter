@@ -25,8 +25,11 @@ private slots:
     void onActionDescTriggered(bool triggered);
 
 private:
-    void resetBasisActionChecked();
-    void resetTypeActionChecked();
+    void setBasisActionChecked(QAction *action);
+    void setTypeActionChecked(QAction *action);
+
+    void setPushButtonText(Gitnoter::SortBasis basis);
+    void setPushButtonText(QAction *action);
 
 public:
     QAction *action_title;

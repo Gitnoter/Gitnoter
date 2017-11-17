@@ -34,7 +34,7 @@ ConfigModel::ConfigModel()
     mTheme = ThemeManager::ThemeFlag::Default;
     mSplitterSizes = {0, 0, 0};
     mNoteSortBasis = Gitnoter::Title;
-    mNoteSortType = Gitnoter::Asc;
+    mNoteSortType = Qt::AscendingOrder;
 
 #ifdef Q_OS_MAC
     mFontFamily = "Helvetica Neue";
@@ -129,7 +129,7 @@ void ConfigModel::unserialize(const QString &jsonString)
     mCutWindowKeySequence = result["cutWindowKeySequence"].toString();
     mTheme = (ThemeManager::ThemeFlag) result["cutWindowKeySequence"].toInt();
     mNoteSortBasis = (Gitnoter::SortBasis) result["noteSortBasis"].toInt();
-    mNoteSortType = (Gitnoter::SortType) result["noteSortType"].toInt();
+    mNoteSortType = (Qt::SortOrder) result["noteSortType"].toInt();
 
     mSplitterSizes.clear();
     QtJson::JsonArray splitterSizesArray = result["splitterSizes"].toList();
@@ -140,31 +140,31 @@ void ConfigModel::unserialize(const QString &jsonString)
 
 void ConfigModel::setRepoDir(const QString &repoDir)
 {
-    ConfigModel::mRepoDir = repoDir;
+    mRepoDir = repoDir;
     serialize(Globals::appConfigPath);
 }
 
 void ConfigModel::setRepoUrl(const QString &repoUrl)
 {
-    ConfigModel::mRepoUrl = repoUrl;
+    mRepoUrl = repoUrl;
     serialize(Globals::appConfigPath);
 }
 
 void ConfigModel::setRepoUsername(const QString &repoUsername)
 {
-    ConfigModel::mRepoUsername = repoUsername;
+    mRepoUsername = repoUsername;
     serialize(Globals::appConfigPath);
 }
 
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
-    ConfigModel::mRepoPassword = repoPassword;
+    mRepoPassword = repoPassword;
     serialize(Globals::appConfigPath);
 }
 
 void ConfigModel::setOpenNoteUuid(const QString &openNoteUuid)
 {
-    ConfigModel::mOpenNoteUuid = openNoteUuid;
+    mOpenNoteUuid = openNoteUuid;
     serialize(Globals::appConfigPath);
 }
 
@@ -205,7 +205,7 @@ int ConfigModel::getSidebarSortKey() const
 
 void ConfigModel::setSidebarSortKey(int sidebarSortKey)
 {
-    ConfigModel::mSidebarSortKey = sidebarSortKey;
+    mSidebarSortKey = sidebarSortKey;
     serialize(Globals::appConfigPath);
 }
 
@@ -216,7 +216,7 @@ const QString &ConfigModel::getSidebarSortValue() const
 
 void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
 {
-    ConfigModel::mSidebarSortValue = sidebarSortValue;
+    mSidebarSortValue = sidebarSortValue;
     serialize(Globals::appConfigPath);
 }
 
@@ -227,15 +227,15 @@ QString ConfigModel::getSideSelectedName() const
 
 void ConfigModel::setSideSelected(Gitnoter::GroupType type, const QString &name)
 {
-    ConfigModel::mSideSelectedType = type;
-    ConfigModel::mSideSelectedName = name;
+    mSideSelectedType = type;
+    mSideSelectedName = name;
     serialize(Globals::appConfigPath);
 }
 
 void ConfigModel::setSideSelected(GroupModel *groupModel)
 {
-    ConfigModel::mSideSelectedType = groupModel->getType();
-    ConfigModel::mSideSelectedName = groupModel->getName();
+    mSideSelectedType = groupModel->getType();
+    mSideSelectedName = groupModel->getName();
     serialize(Globals::appConfigPath);
 }
 
@@ -246,7 +246,7 @@ int ConfigModel::getLocalRepoStatus() const
 
 void ConfigModel::setLocalRepoStatus(int localRepoStatus)
 {
-    ConfigModel::mLocalRepoStatus = localRepoStatus;
+    mLocalRepoStatus = localRepoStatus;
     serialize(Globals::appConfigPath);
 }
 
@@ -262,7 +262,7 @@ const QString &ConfigModel::getRepoEmail() const
 
 void ConfigModel::setRepoEmail(const QString &repoEmail)
 {
-    ConfigModel::mRepoEmail = repoEmail;
+    mRepoEmail = repoEmail;
     serialize(Globals::appConfigPath);
 }
 
@@ -273,7 +273,7 @@ int ConfigModel::getAutoSyncRepoTime() const
 
 void ConfigModel::setAutoSyncRepoTime(int autoSyncRepoTime)
 {
-    ConfigModel::mAutoSyncRepoTime = autoSyncRepoTime;
+    mAutoSyncRepoTime = autoSyncRepoTime;
     serialize(Globals::appConfigPath);
 }
 
@@ -284,7 +284,7 @@ int ConfigModel::getAutoLockTime() const
 
 void ConfigModel::setAutoLockTime(int autoLockTime)
 {
-    ConfigModel::mAutoLockTime = autoLockTime;
+    mAutoLockTime = autoLockTime;
     serialize(Globals::appConfigPath);
 }
 
@@ -295,7 +295,7 @@ const QString &ConfigModel::getUnlockPassword() const
 
 void ConfigModel::setUnlockPassword(const QString &unlockPassword)
 {
-    ConfigModel::mUnlockPassword = unlockPassword;
+    mUnlockPassword = unlockPassword;
     serialize(Globals::appConfigPath);
 }
 
@@ -306,7 +306,7 @@ const QString &ConfigModel::getFontFamily() const
 
 void ConfigModel::setFontFamily(const QString &fontFamily)
 {
-    ConfigModel::mFontFamily = fontFamily;
+    mFontFamily = fontFamily;
     serialize(Globals::appConfigPath);
 }
 
@@ -317,7 +317,7 @@ int ConfigModel::getFontPixelSize() const
 
 void ConfigModel::setFontPixelSize(int fontPixelSize)
 {
-    ConfigModel::mFontPixelSize = fontPixelSize;
+    mFontPixelSize = fontPixelSize;
     serialize(Globals::appConfigPath);
 }
 
@@ -328,7 +328,7 @@ const QString &ConfigModel::getNewNoteKeySequence() const
 
 void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
 {
-    ConfigModel::mNewNoteKeySequence = newNoteKeySequence;
+    mNewNoteKeySequence = newNoteKeySequence;
     serialize(Globals::appConfigPath);
 }
 
@@ -339,7 +339,7 @@ const QString &ConfigModel::getLockWindowKeySequence() const
 
 void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
 {
-    ConfigModel::mLockWindowKeySequence = lockWindowKeySequence;
+    mLockWindowKeySequence = lockWindowKeySequence;
     serialize(Globals::appConfigPath);
 }
 
@@ -350,7 +350,7 @@ const QString &ConfigModel::getCutWindowKeySequence() const
 
 void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
 {
-    ConfigModel::mCutWindowKeySequence = cutWindowKeySequence;
+    mCutWindowKeySequence = cutWindowKeySequence;
     serialize(Globals::appConfigPath);
 }
 
@@ -383,24 +383,24 @@ Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const
 
 void ConfigModel::setNoteSortBasis(Gitnoter::SortBasis noteSortBasis)
 {
-    ConfigModel::mNoteSortBasis = noteSortBasis;
+    mNoteSortBasis = noteSortBasis;
     serialize(Globals::appConfigPath);
 }
 
-Gitnoter::SortType ConfigModel::getNoteSortType() const
+Qt::SortOrder ConfigModel::getNoteSortType() const
 {
     return mNoteSortType;
 }
 
-void ConfigModel::setNoteSortType(Gitnoter::SortType noteSortType)
+void ConfigModel::setNoteSortType(Qt::SortOrder noteSortType)
 {
-    ConfigModel::mNoteSortType = noteSortType;
+    mNoteSortType = noteSortType;
     serialize(Globals::appConfigPath);
 }
 
-void ConfigModel::setNoteSort(Gitnoter::SortBasis noteSortBasis, Gitnoter::SortType noteSortType)
+void ConfigModel::setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder noteSortType)
 {
-    ConfigModel::mNoteSortBasis = noteSortBasis;
-    ConfigModel::mNoteSortType = noteSortType;
+    mNoteSortBasis = noteSortBasis;
+    mNoteSortType = noteSortType;
     serialize(Globals::appConfigPath);
 }

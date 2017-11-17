@@ -37,6 +37,7 @@ void NoteListWidget::init(MainWindow *mainWindow)
 QListWidgetItem *NoteListWidget::append(NoteModel *noteModel)
 {
     QListWidgetItem *listWidgetItem = new QListWidgetItem(this);
+    listWidgetItem->setText(QString(noteModel->getUpdateDate()));
     listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(noteModel));
     addItem(listWidgetItem);
     NoteListCellWidget *noteListCellWidget = new NoteListCellWidget(noteModel, this);
@@ -252,30 +253,27 @@ void NoteListWidget::search(const QString &text)
 
 void NoteListWidget::sort()
 {
+    Qt::SortOrder type = Globals::configModel->getNoteSortType();
     Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
-    Gitnoter::SortType type = Globals::configModel->getNoteSortType();
 
-//    qSort(mListWidgetItemList.begin(), mListWidgetItemList.end(),
-//          [&](QListWidgetItem listWidgetItem1, QListWidgetItem *listWidgetItem2) {
-//              if (Gitnoter::Title == basis) {
-//                  if (Gitnoter::Asc == type) {
-//                      return getNoteModel(listWidgetItem1)->getTitle() < getNoteModel(listWidgetItem2)->getTitle();
-//                  }
-//                  return getNoteModel(listWidgetItem1)->getTitle() > getNoteModel(listWidgetItem2)->getTitle();
-//              }
-//              else if (Gitnoter::CreateDate == basis) {
-//                  if (Gitnoter::Asc == type) {
-//                      return getNoteModel(listWidgetItem1)->getCreateDate() < getNoteModel(listWidgetItem2)->getCreateDate();
-//                  }
-//                  return getNoteModel(listWidgetItem1)->getCreateDate() > getNoteModel(listWidgetItem2)->getCreateDate();
-//              }
-//              else if (Gitnoter::UpdateDate == basis) {
-//                  if (Gitnoter::Asc == type) {
-//                      return getNoteModel(listWidgetItem1)->getUpdateDate() < getNoteModel(listWidgetItem2)->getUpdateDate();
-//                  }
-//                  return getNoteModel(listWidgetItem1)->getUpdateDate() > getNoteModel(listWidgetItem2)->getUpdateDate();
-//              }
-//    });
+    for (int i = 0; i < count(); ++i) {
+        QListWidgetItem *listWidgetItem = item(i);
+        switch (basis) {
+            case Gitnoter::Title:
+                listWidgetItem->setText(getNoteModel(listWidgetItem)->getTitle());
+                break;
+            case Gitnoter::CreateDate:
+                listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getCreateDate()));
+                break;
+            case Gitnoter::UpdateDate:
+                listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getUpdateDate()));
+                break;
+            default:
+                break;
+        }
+    }
+
+    sortItems(type);
 }
 
 NoteModel *NoteListWidget::getNoteModel(QListWidgetItem *listWidgetItem)

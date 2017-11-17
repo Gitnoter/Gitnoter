@@ -31,7 +31,7 @@ void MainWindow::setupUi()
 
     NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
-    connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionClicked()));
+    connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionTriggered()));
 
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());

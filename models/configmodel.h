@@ -112,11 +112,11 @@ public:
 
     void setNoteSortBasis(Gitnoter::SortBasis noteSortBasis);
 
-    Gitnoter::SortType getNoteSortType() const;
+    Qt::SortOrder getNoteSortType() const;
 
-    void setNoteSortType(Gitnoter::SortType noteSortType);
+    void setNoteSortType(Qt::SortOrder noteSortType);
 
-    void setNoteSort(Gitnoter::SortBasis noteSortBasis, Gitnoter::SortType noteSortType);
+    void setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder noteSortType);
 
 private:
     QString mVersion;
@@ -141,7 +141,7 @@ private:
     QString mSideSelectedName;
 
     Gitnoter::SortBasis mNoteSortBasis;
-    Gitnoter::SortType mNoteSortType;
+    Qt::SortOrder mNoteSortType;
 
     int mAutoSyncRepoTime;
     int mAutoLockTime;

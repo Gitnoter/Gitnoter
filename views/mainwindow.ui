@@ -119,6 +119,7 @@ QPushButton#pushButton_sort::menu-indicator{
   padding-left: 2px;
   padding-right: 6px;
 }
+
 QPushButton#pushButton_sort::menu-indicator:hover{
   image: url(:/images/icon-down-ffffff.png);
 }
@@ -127,11 +128,13 @@ QListView#noteListWidget{
 	background-color:rgb(255, 255, 255);
 	font-size: 12px;
 	border: 0;
+  color: #ffffff;
 }
 
 QListView#noteListWidget::item:selected:!active,
 QListView#noteListWidget::item:selected:active {
   background:#F5F5F5;
+  color: #F5F5F5;
 }
 
 QWidget#widget_6{
