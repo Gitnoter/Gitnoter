@@ -1,43 +1,49 @@
 #include "notelistsortpopupmenu.h"
+#include "globals.h"
 
-NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* parent) : QMenu(parent), pushButton(pushButton)
+NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* parent) :
+        QMenu(parent),
+        pushButton(pushButton),
+        mMainWindow((MainWindow *) parent)
 {
+    action_title = new QAction(tr("标题"), this);
+    action_createDate = new QAction(tr("创建日期"), this);
+    action_updateDate = new QAction(tr("更新日期"), this);
+    action_asc = new QAction(tr("升序"), this);
+    action_desc = new QAction(tr("降序"), this);
 
-    QAction *action_createCategories;
-    QAction *action_renameCategories;
-    QAction *action_removeCategories;
-    QAction *action_nameSort;
-    QAction *action_countSort;
-    QAction *action_timeSort;
+    action_title->setObjectName(QStringLiteral("action_title"));
+    action_createDate->setObjectName(QStringLiteral("action_createDate"));
+    action_updateDate->setObjectName(QStringLiteral("action_updateDate"));
+    action_asc->setObjectName(QStringLiteral("action_asc"));
+    action_desc->setObjectName(QStringLiteral("action_desc"));
 
-    action_createCategories = new QAction("新建文件夹", this);
-    action_renameCategories = new QAction("重命名笔记本", this);
-    action_removeCategories = new QAction("删除笔记本", this);
-    action_nameSort = new QAction("按笔记本名称排序", this);
-    action_countSort = new QAction("按笔记数量排序", this);
-    action_timeSort = new QAction("按笔记更新时间排序", this);
+    action_title->setCheckable(true);
+    action_createDate->setCheckable(true);
+    action_updateDate->setCheckable(true);
+    action_asc->setCheckable(true);
+    action_desc->setCheckable(true);
 
-    action_createCategories->setObjectName(QStringLiteral("action_createCategories"));
-    action_renameCategories->setObjectName(QStringLiteral("action_renameCategories"));
-    action_removeCategories->setObjectName(QStringLiteral("action_removeCategories"));
-    action_nameSort->setObjectName(QStringLiteral("action_nameSort"));
-    action_countSort->setObjectName(QStringLiteral("action_countSort"));
-    action_timeSort->setObjectName(QStringLiteral("action_timeSort"));
+    addAction(action_title);
+    addAction(action_createDate);
+    addAction(action_updateDate);
+    addSeparator();
+    addAction(action_asc);
+    addAction(action_desc);
 
-    this->addAction(action_createCategories);
-    this->addAction(action_renameCategories);
-    this->addAction(action_removeCategories);
-    this->addSeparator();
-    this->addAction(action_nameSort);
-    this->addAction(action_countSort);
-    this->addAction(action_timeSort);
+    connect(action_title, SIGNAL(triggered(bool)), this, SLOT(onActionTitleTriggered(bool)));
+    connect(action_createDate, SIGNAL(triggered(bool)), this, SLOT(onActionCreateDateTriggered(bool)));
+    connect(action_updateDate, SIGNAL(triggered(bool)), this, SLOT(onActionUpdateDateTriggered(bool)));
+    connect(action_asc, SIGNAL(triggered(bool)), this, SLOT(onActionAscTriggered(bool)));
+    connect(action_desc, SIGNAL(triggered(bool)), this, SLOT(onActionDescTriggered(bool)));
 
-//    connect(action_createCategories, &QAction::triggered, this, &MainWindow::on_pushButton_addCategories_clicked);
-//    connect(action_renameCategories, &QAction::triggered, this, &MainWindow::onActionRenameCategoriesTriggered);
-//    connect(action_removeCategories, &QAction::triggered, this, &MainWindow::on_pushButton_removeCategories_clicked);
-//    connect(action_nameSort, &QAction::triggered, this, &MainWindow::onActionNameSortTriggered);
-//    connect(action_countSort, &QAction::triggered, this, &MainWindow::onActionCountSortTriggered);
-//    connect(action_timeSort, &QAction::triggered, this, &MainWindow::onActionTimeSortTriggered);
+    Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
+    Gitnoter::SortType type = Globals::configModel->getNoteSortType();
+    action_title->setChecked(Gitnoter::Title == basis);
+    action_createDate->setChecked(Gitnoter::CreateDate == basis);
+    action_updateDate->setChecked(Gitnoter::UpdateDate == basis);
+    action_asc->setChecked(Gitnoter::Asc == type);
+    action_desc->setChecked(Gitnoter::Desc == type);
 }
 
 void NoteListSortPopupMenu::showEvent(QShowEvent* event)
@@ -45,4 +51,52 @@ void NoteListSortPopupMenu::showEvent(QShowEvent* event)
     QPoint p = this->pos();
     QRect geo = pushButton->geometry();
     this->move(p.x() +  geo.width() - this->geometry().width(), p.y() + 3);
+}
+
+void NoteListSortPopupMenu::onActionTitleTriggered(bool triggered)
+{
+    resetBasisActionChecked();
+    Globals::configModel->setNoteSortBasis(Gitnoter::Title);
+    emit actionTriggered();
+}
+
+void NoteListSortPopupMenu::onActionCreateDateTriggered(bool triggered)
+{
+    resetBasisActionChecked();
+    Globals::configModel->setNoteSortBasis(Gitnoter::CreateDate);
+    emit actionTriggered();
+}
+
+void NoteListSortPopupMenu::onActionUpdateDateTriggered(bool triggered)
+{
+    resetBasisActionChecked();
+    Globals::configModel->setNoteSortBasis(Gitnoter::UpdateDate);
+    emit actionTriggered();
+}
+
+void NoteListSortPopupMenu::onActionAscTriggered(bool triggered)
+{
+    resetTypeActionChecked();
+    Globals::configModel->setNoteSortType(Gitnoter::Asc);
+    emit actionTriggered();
+}
+
+void NoteListSortPopupMenu::onActionDescTriggered(bool triggered)
+{
+    resetTypeActionChecked();
+    Globals::configModel->setNoteSortType(Gitnoter::Desc);
+    emit actionTriggered();
+}
+
+void NoteListSortPopupMenu::resetBasisActionChecked()
+{
+    action_title->setChecked(false);
+    action_createDate->setChecked(false);
+    action_updateDate->setChecked(false);
+}
+
+void NoteListSortPopupMenu::resetTypeActionChecked()
+{
+    action_asc->setChecked(false);
+    action_desc->setChecked(false);
 }

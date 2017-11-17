@@ -28,7 +28,10 @@ void MainWindow::setupUi()
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
-    ui->pushButton_sort->setMenu(new NoteListSortPopupMenu(ui->pushButton_sort, this));
+
+    NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
+    ui->pushButton_sort->setMenu(noteListSortPopupMenu);
+    connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionClicked()));
 
     ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());

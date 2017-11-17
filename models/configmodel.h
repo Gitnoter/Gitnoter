@@ -108,6 +108,16 @@ public:
 
     void setSplitterSizes(const QList<int> &splitterSizes);
 
+    Gitnoter::SortBasis getNoteSortBasis() const;
+
+    void setNoteSortBasis(Gitnoter::SortBasis noteSortBasis);
+
+    Gitnoter::SortType getNoteSortType() const;
+
+    void setNoteSortType(Gitnoter::SortType noteSortType);
+
+    void setNoteSort(Gitnoter::SortBasis noteSortBasis, Gitnoter::SortType noteSortType);
+
 private:
     QString mVersion;
     QString mRepoDir;
@@ -130,6 +140,9 @@ private:
     Gitnoter::GroupType mSideSelectedType;
     QString mSideSelectedName;
 
+    Gitnoter::SortBasis mNoteSortBasis;
+    Gitnoter::SortType mNoteSortType;
+
     int mAutoSyncRepoTime;
     int mAutoLockTime;
     QString mUnlockPassword;
@@ -142,7 +155,7 @@ private:
     QString mCutWindowKeySequence;
 
     ThemeManager::ThemeFlag mTheme;
-    QList<int> splitterSizes;
+    QList<int> mSplitterSizes;
 
 };
 

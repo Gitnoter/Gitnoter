@@ -252,7 +252,30 @@ void NoteListWidget::search(const QString &text)
 
 void NoteListWidget::sort()
 {
+    Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
+    Gitnoter::SortType type = Globals::configModel->getNoteSortType();
 
+//    qSort(mListWidgetItemList.begin(), mListWidgetItemList.end(),
+//          [&](QListWidgetItem listWidgetItem1, QListWidgetItem *listWidgetItem2) {
+//              if (Gitnoter::Title == basis) {
+//                  if (Gitnoter::Asc == type) {
+//                      return getNoteModel(listWidgetItem1)->getTitle() < getNoteModel(listWidgetItem2)->getTitle();
+//                  }
+//                  return getNoteModel(listWidgetItem1)->getTitle() > getNoteModel(listWidgetItem2)->getTitle();
+//              }
+//              else if (Gitnoter::CreateDate == basis) {
+//                  if (Gitnoter::Asc == type) {
+//                      return getNoteModel(listWidgetItem1)->getCreateDate() < getNoteModel(listWidgetItem2)->getCreateDate();
+//                  }
+//                  return getNoteModel(listWidgetItem1)->getCreateDate() > getNoteModel(listWidgetItem2)->getCreateDate();
+//              }
+//              else if (Gitnoter::UpdateDate == basis) {
+//                  if (Gitnoter::Asc == type) {
+//                      return getNoteModel(listWidgetItem1)->getUpdateDate() < getNoteModel(listWidgetItem2)->getUpdateDate();
+//                  }
+//                  return getNoteModel(listWidgetItem1)->getUpdateDate() > getNoteModel(listWidgetItem2)->getUpdateDate();
+//              }
+//    });
 }
 
 NoteModel *NoteListWidget::getNoteModel(QListWidgetItem *listWidgetItem)
@@ -269,4 +292,9 @@ bool NoteListWidget::has(const QString &uuid)
     }
 
     return false;
+}
+
+void NoteListWidget::onActionTriggered()
+{
+    sort();
 }

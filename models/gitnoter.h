@@ -13,6 +13,17 @@ public:
         Tag = 0x000008
     };
 
+    enum SortBasis {
+        Title = 0x001001,
+        CreateDate = 0x001002,
+        UpdateDate = 0x001003
+    };
+
+    enum SortType {
+        Asc = 0x002001,
+        Desc = 0x002002
+    };
+
 };
 
 #endif // GITNOTER_H

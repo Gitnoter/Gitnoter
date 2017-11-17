@@ -32,7 +32,9 @@ ConfigModel::ConfigModel()
     mUnlockPassword = "";
     mFontPixelSize = 14;
     mTheme = ThemeManager::ThemeFlag::Default;
-    splitterSizes = {0, 0, 0};
+    mSplitterSizes = {0, 0, 0};
+    mNoteSortBasis = Gitnoter::Title;
+    mNoteSortType = Gitnoter::Asc;
 
 #ifdef Q_OS_MAC
     mFontFamily = "Helvetica Neue";
@@ -83,10 +85,12 @@ QString ConfigModel::serialize(const QString &path)
     contributor["lockWindowKeySequence"] = mLockWindowKeySequence;
     contributor["cutWindowKeySequence"] = mCutWindowKeySequence;
     contributor["theme"] = mTheme;
+    contributor["noteSortBasis"] = mNoteSortBasis;
+    contributor["noteSortType"] = mNoteSortType;
 
     QtJson::JsonArray splitterSizesArray;
-    for (int i = 0; i < splitterSizes.length(); ++i) {
-        splitterSizesArray.append(splitterSizes[i]);
+    for (int i = 0; i < mSplitterSizes.length(); ++i) {
+        splitterSizesArray.append(mSplitterSizes[i]);
     }
     contributor["splitterSizes"] = splitterSizesArray;
 
@@ -124,11 +128,13 @@ void ConfigModel::unserialize(const QString &jsonString)
     mLockWindowKeySequence = result["lockWindowKeySequence"].toString();
     mCutWindowKeySequence = result["cutWindowKeySequence"].toString();
     mTheme = (ThemeManager::ThemeFlag) result["cutWindowKeySequence"].toInt();
+    mNoteSortBasis = (Gitnoter::SortBasis) result["noteSortBasis"].toInt();
+    mNoteSortType = (Gitnoter::SortType) result["noteSortType"].toInt();
 
-    splitterSizes.clear();
+    mSplitterSizes.clear();
     QtJson::JsonArray splitterSizesArray = result["splitterSizes"].toList();
     for (int i = 0; i < splitterSizesArray.length(); ++i) {
-        splitterSizes.append(splitterSizesArray[i].toInt());
+        mSplitterSizes.append(splitterSizesArray[i].toInt());
     }
 }
 
@@ -361,11 +367,40 @@ void ConfigModel::setTheme(const ThemeManager::ThemeFlag &theme)
 
 const QList<int> &ConfigModel::getSplitterSizes() const
 {
-    return splitterSizes;
+    return mSplitterSizes;
 }
 
 void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
 {
-    this->splitterSizes = splitterSizes;
+    this->mSplitterSizes = splitterSizes;
+    serialize(Globals::appConfigPath);
+}
+
+Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const
+{
+    return mNoteSortBasis;
+}
+
+void ConfigModel::setNoteSortBasis(Gitnoter::SortBasis noteSortBasis)
+{
+    ConfigModel::mNoteSortBasis = noteSortBasis;
+    serialize(Globals::appConfigPath);
+}
+
+Gitnoter::SortType ConfigModel::getNoteSortType() const
+{
+    return mNoteSortType;
+}
+
+void ConfigModel::setNoteSortType(Gitnoter::SortType noteSortType)
+{
+    ConfigModel::mNoteSortType = noteSortType;
+    serialize(Globals::appConfigPath);
+}
+
+void ConfigModel::setNoteSort(Gitnoter::SortBasis noteSortBasis, Gitnoter::SortType noteSortType)
+{
+    ConfigModel::mNoteSortBasis = noteSortBasis;
+    ConfigModel::mNoteSortType = noteSortType;
     serialize(Globals::appConfigPath);
 }

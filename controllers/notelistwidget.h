@@ -34,6 +34,8 @@ public:
 public slots:
     void noteModelChanged(NoteModel *noteModel);
 
+    void onActionTriggered();
+
 private:
     bool has(const QString &uuid);
 
