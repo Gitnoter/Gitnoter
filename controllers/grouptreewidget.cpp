@@ -327,8 +327,12 @@ QList<GroupModel *> GroupTreeWidget::getGroupModelList(Gitnoter::GroupType type)
 
 bool GroupTreeWidget::has(Gitnoter::GroupType type, const QString &text)
 {
-    QList<GroupModel *>  groupModelList = getGroupModelList(type);
+    QList<GroupModel *> groupModelList = getGroupModelList(type);
     for (auto &&item : groupModelList) {
+        if (Gitnoter::Category > type && item->getType() == type) {
+            return true;
+        }
+
         if (item->getType() == type && item->getName() == text) {
             return true;
         }

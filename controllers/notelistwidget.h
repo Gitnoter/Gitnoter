@@ -39,6 +39,9 @@ public slots:
 private:
     bool has(const QString &uuid);
 
+    void subtract(NoteModel *noteModel);
+    void add(NoteModel *noteModel);
+
 public:
     QList<NoteModel *> getNoteModelList();
 

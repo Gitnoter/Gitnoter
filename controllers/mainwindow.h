@@ -40,20 +40,21 @@ public:
 
     ~MainWindow();
 
-public:
     void init();
 
-    void removeGroupTreeWidgetItem();
-    void appendGroupTreeWidgetItem();
+    void removeGroup();
+    void appendGroup();
 
-    void removeNoteListWidgetItem();    // remove from disk
-    void appendNoteListWidgetItem();
-    void trashNoteListWidget();         // set isDelete: 1
-    void restoreNoteListWidget();
-    void searchNoteListWidget();
-    void sortNoteListWidget();
+    void appendNote();
+    void trashNote();         // set isDelete: 1
+    void searchNote();
 
-    void setNoteListWidgetTitle();
+    void sortNote();
+
+    void setNoteListTitle();
+public slots:
+    void removeNote();    // remove from disk
+    void restoreNote();
 
 private:
     void setupUi();

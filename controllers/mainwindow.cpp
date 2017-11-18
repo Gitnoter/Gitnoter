@@ -59,7 +59,7 @@ void MainWindow::on_pushButton_noteAdd_clicked()
         }
 
         MessageDialog *messageDialog = new MessageDialog(this);
-        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNoteListWidget()));
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
         NoteModel *noteModel = ui->noteListWidget->getNoteModel(Globals::configModel->getOpenNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
                                  ui->groupTreeWidget->topLevelItem(1)->text(0) :
@@ -69,7 +69,7 @@ void MainWindow::on_pushButton_noteAdd_clicked()
                                    tr("确定恢复"));
     }
     else {
-        appendNoteListWidgetItem();
+        appendNote();
     }
 }
 
@@ -86,11 +86,11 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
         }
 
         MessageDialog *messageDialog = new MessageDialog(this);
-        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(trashNoteListWidget()));
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNote()));
         messageDialog->openMessage(tr("删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr("删除笔记提示"), tr("确定删除"));
     }
     else {
-        removeNoteListWidgetItem();
+        trashNote();
     }
 }
 
@@ -104,7 +104,7 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
     Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(item));
     ui->noteListWidget->setListWidget();
     ui->markdownEditorWidget->init(Globals::configModel->getOpenNoteUuid(), this);
-    setNoteListWidgetTitle();
+    setNoteListTitle();
 }
 
 void MainWindow::on_pushButton_add_clicked()
@@ -122,7 +122,7 @@ void MainWindow::on_pushButton_subtract_clicked()
     }
 }
 
-void MainWindow::setNoteListWidgetTitle()
+void MainWindow::setNoteListTitle()
 {
     GroupModel *groupModel = ui->groupTreeWidget->selectedGroupModel();
     if (groupModel) {
@@ -130,12 +130,16 @@ void MainWindow::setNoteListWidgetTitle()
     }
 }
 
-void MainWindow::restoreNoteListWidget()
+void MainWindow::restoreNote()
 {
     noteListWidget()->restore(Globals::configModel->getOpenNoteUuid());
+
+    noteListWidget()->setListWidget();
+    setNoteListTitle();
+    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
 }
 
-void MainWindow::appendNoteListWidgetItem()
+void MainWindow::appendNote()
 {
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
     QString category = Globals::configModel->getSideSelectedName();
@@ -144,17 +148,27 @@ void MainWindow::appendNoteListWidgetItem()
         category = "";
     }
 
-    noteListWidget()->append(category);
+    NoteModel *noteModel = noteListWidget()->append(category);
+    Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+    noteListWidget()->setListWidget();
+    groupTreeWidget()->setItemSelected();
+    markdownEditorWidget()->init(noteModel, this);
 }
 
-void MainWindow::removeNoteListWidgetItem()
+void MainWindow::removeNote()
 {
     noteListWidget()->remove(Globals::configModel->getOpenNoteUuid());
+    noteListWidget()->setListWidget();
+    setNoteListTitle();
+    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
 }
 
-void MainWindow::trashNoteListWidget()
+void MainWindow::trashNote()
 {
     noteListWidget()->trash(Globals::configModel->getOpenNoteUuid());
+    noteListWidget()->setListWidget();
+    setNoteListTitle();
+    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
 }
 
 void MainWindow::modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText)
@@ -229,25 +243,25 @@ void MainWindow::init()
     ui->groupTreeWidget->init(ui->noteListWidget->getNoteModelList(), this);
     ui->markdownEditorWidget->init(Globals::configModel->getOpenNoteUuid(), this);
 
-    setNoteListWidgetTitle();
+    setNoteListTitle();
 }
 
-void MainWindow::removeGroupTreeWidgetItem()
+void MainWindow::removeGroup()
 {
 
 }
 
-void MainWindow::appendGroupTreeWidgetItem()
+void MainWindow::appendGroup()
 {
 
 }
 
-void MainWindow::searchNoteListWidget()
+void MainWindow::searchNote()
 {
 
 }
 
-void MainWindow::sortNoteListWidget()
+void MainWindow::sortNote()
 {
 
 }
