@@ -21,9 +21,9 @@ public:
 
     void remove(Gitnoter::GroupType type, const QString &name);
     void append(Gitnoter::GroupType type, const QString &text);
+    void modify(Gitnoter::GroupType type, const QString &text = "");
     void subtract(Gitnoter::GroupType type, const QString &text = "");
     void add(Gitnoter::GroupType type, const QString &text = "");
-    void modify(Gitnoter::GroupType type, const QString &text = "");
     void setItemSelected();
 
 private:

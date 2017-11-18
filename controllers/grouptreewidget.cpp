@@ -130,8 +130,26 @@ void GroupTreeWidget::subtract(Gitnoter::GroupType type, const QString &text)
 
 void GroupTreeWidget::remove(Gitnoter::GroupType type, const QString &name)
 {
-    removeOne(type, name);
+    QTreeWidgetItem *treeWidgetItem = getTreeWidgetItem(type, name);
+    topLevelItem(type)->removeChild(treeWidgetItem);
     saveDataToLocal(type);
+
+    QList<NoteModel *> noteModelList = mainWindow()->noteListWidget()->getNoteModelList(type, name);
+    if (Gitnoter::Category == type) {
+        for (auto &&item : noteModelList) {
+            mainWindow()->noteListWidget()->trash(item);
+            item->setCategory("");
+            mainWindow()->noteListWidget()->noteModelChanged(item);
+        }
+    }
+    else if (Gitnoter::Tag == type) {
+        MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget;
+        for (auto &&item : noteModelList) {
+            markdownEditorWidget->init(item, mainWindow());
+            markdownEditorWidget->removeTag(name);
+            mainWindow()->noteListWidget()->noteModelChanged(item);
+        }
+    }
 }
 
 void GroupTreeWidget::add(Gitnoter::GroupType type, const QString &text)

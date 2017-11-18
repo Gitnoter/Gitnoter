@@ -108,6 +108,14 @@ void NoteListWidget::trash(const QString &uuid)
     subtract(noteModel);
 }
 
+void NoteListWidget::trash(NoteModel *noteModel)
+{
+    noteModel->setIsDelete(1);
+    noteModel->saveNoteDataToLocal();
+
+    subtract(noteModel);
+}
+
 void NoteListWidget::restore(const QString &uuid)
 {
     NoteModel *noteModel = getNoteModel(uuid);
@@ -121,27 +129,14 @@ void NoteListWidget::setListWidget()
 {
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
-    mListWidgetItemList.clear();
+    mListWidgetItemList = getListWidgetItemList(type, name);
+
     for (int i = 0; i < count(); ++i) {
-        QListWidgetItem *listWidgetItem = QListWidget::item(i);
-        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+        item(i)->setHidden(true);
+    }
 
-        listWidgetItem->setHidden(true);
-
-        if (noteModel->getIsDelete()) {
-            if (type == Gitnoter::Trash) {
-                listWidgetItem->setHidden(false);
-                mListWidgetItemList.append(listWidgetItem);
-            }
-        }
-        else if ((type == Gitnoter::All) ||
-                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) ||
-                 (type == Gitnoter::Unclassified && noteModel->getCategory().isEmpty()) ||
-                 (type == Gitnoter::Category && name == noteModel->getCategory()) ||
-                 (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {
-            listWidgetItem->setHidden(false);
-            mListWidgetItemList.append(listWidgetItem);
-        }
+    for (auto &&listWidgetItem : mListWidgetItemList) {
+        listWidgetItem->setHidden(false);
     }
 
     // TODO: fix layout bug
@@ -168,9 +163,9 @@ void NoteListWidget::setItemSelected()
 
 void NoteListWidget::noteModelChanged(NoteModel *noteModel)
 {
-    for (int j = 0; j < mListWidgetItemList.length(); ++j) {
-        QListWidgetItem *listWidgetItem = QListWidget::item(j);
-        NoteModel *itemNoteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
+    for (int j = 0; j < count(); ++j) {
+        QListWidgetItem *listWidgetItem = item(j);
+        NoteModel *itemNoteModel = getNoteModel(listWidgetItem);
         if (itemNoteModel == noteModel) {
             ((NoteListCellWidget *) itemWidget(listWidgetItem))->reloadData();
             break;
@@ -184,6 +179,43 @@ QList<NoteModel *> NoteListWidget::getNoteModelList()
 
     for (int i = 0; i < count(); ++i) {
         noteModelList.append(getNoteModel(QListWidget::item(i)));
+    }
+
+    return noteModelList;
+}
+
+QList<QListWidgetItem *> NoteListWidget::getListWidgetItemList(Gitnoter::GroupType type, const QString &name)
+{
+    QList<QListWidgetItem *> listWidgetItemList = {};
+
+    for (int i = 0; i < count(); ++i) {
+        QListWidgetItem *listWidgetItem = QListWidget::item(i);
+        NoteModel *noteModel = getNoteModel(listWidgetItem);
+
+        if (noteModel->getIsDelete()) {
+            if (type == Gitnoter::Trash) {
+                listWidgetItemList.append(listWidgetItem);
+            }
+        }
+        else if ((type == Gitnoter::All) ||
+                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) ||
+                 (type == Gitnoter::Unclassified && noteModel->getCategory().isEmpty()) ||
+                 (type == Gitnoter::Category && name == noteModel->getCategory()) ||
+                 (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {
+            listWidgetItemList.append(listWidgetItem);
+        }
+    }
+
+    return listWidgetItemList;
+}
+
+QList<NoteModel *> NoteListWidget::getNoteModelList(Gitnoter::GroupType type, const QString &name)
+{
+    QList<NoteModel *> noteModelList = {};
+    QList<QListWidgetItem *> listWidgetItemList = getListWidgetItemList(type, name);
+
+    for (auto &&listWidgetItem : listWidgetItemList) {
+        noteModelList.append(getNoteModel(listWidgetItem));
     }
 
     return noteModelList;
@@ -308,3 +340,4 @@ void NoteListWidget::add(NoteModel *noteModel)
     }
     mMainWindow->groupTreeWidget()->subtract(Gitnoter::Trash);
 }
+

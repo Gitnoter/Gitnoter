@@ -109,16 +109,16 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
 
 void MainWindow::on_pushButton_add_clicked()
 {
-
+//    groupTreeWidget()->remove();
 }
 
 void MainWindow::on_pushButton_subtract_clicked()
 {
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    const QString name = Globals::configModel->getSideSelectedName();
-
-    if (type == Gitnoter::Category || type == Gitnoter::Tag) {
-        ui->groupTreeWidget->remove(type, name);
+    if (Gitnoter::Category <= type) {
+        MessageDialog *messageDialog = new MessageDialog(this);
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeGroup()));
+        messageDialog->openMessage(tr("笔记本删除后, 笔记本内的笔记将会移动到回收站~ \n\nTip: 还没想好要说些什么o(╯□╰)o"), tr("删除笔记本提示"), tr("确定删除"));
     }
 }
 
@@ -248,7 +248,17 @@ void MainWindow::init()
 
 void MainWindow::removeGroup()
 {
+    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    const QString name = Globals::configModel->getSideSelectedName();
 
+    if (Gitnoter::Category <= type) {
+        Globals::configModel->setSideSelected(Gitnoter::All, groupTreeWidget()->getGroupModel(Gitnoter::All)->getName());
+
+        ui->groupTreeWidget->remove(type, name);
+        noteListWidget()->setListWidget();
+        setNoteListTitle();
+        markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+    }
 }
 
 void MainWindow::appendGroup()
@@ -256,9 +266,9 @@ void MainWindow::appendGroup()
 
 }
 
-void MainWindow::searchNote()
+void MainWindow::searchNote(const QString &text)
 {
-
+    noteListWidget()->search(text);
 }
 
 void MainWindow::sortNote()
@@ -278,5 +288,5 @@ QSplitter *MainWindow::splitter()
 
 void MainWindow::on_lineEdit_noteSearch_textChanged(const QString &arg1)
 {
-    noteListWidget()->search(arg1);
+    searchNote(arg1);
 }

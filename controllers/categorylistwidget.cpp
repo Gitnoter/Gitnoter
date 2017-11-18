@@ -21,9 +21,14 @@ CategoryListWidget::~CategoryListWidget()
 void CategoryListWidget::init(NoteModel *noteModel, MarkdownEditorWidget *markdownEditorWidget)
 {
     mMarkdownEditorWidget = markdownEditorWidget;
-    QList<GroupModel *> groupModelList = markdownEditorWidget->mainWindow()->groupTreeWidget()
-            ->getGroupModelList(Gitnoter::Category);
-    setCategoryList(groupModelList, noteModel->getCategory());
+    if (noteModel->getCategory().isEmpty()) {
+        oldGroupModel = mMarkdownEditorWidget->mainWindow()->groupTreeWidget()->getGroupModel(Gitnoter::Unclassified);
+    }
+    else {
+        oldGroupModel = mMarkdownEditorWidget->mainWindow()->groupTreeWidget()->getGroupModel(
+                Gitnoter::Category, noteModel->getCategory());
+    }
+    setCategoryList(oldGroupModel);
     ui->lineEdit->clear();
     ui->pushButton_addCategory->setHidden(true);
 }
@@ -33,9 +38,7 @@ void CategoryListWidget::append()
     const QString text = ui->lineEdit->text();
     if (!text.isEmpty()) {
         mMarkdownEditorWidget->appendCategory(text);
-        QList<GroupModel *> groupModelList = mMarkdownEditorWidget->mainWindow()->groupTreeWidget()
-                ->getGroupModelList(Gitnoter::Category);
-        setCategoryList(groupModelList, oldGroupModel->getName());
+        setCategoryList(oldGroupModel);
         search();
         ui->listWidget_data->sortItems(Qt::AscendingOrder);
     }
@@ -66,8 +69,10 @@ void CategoryListWidget::search()
     ui->pushButton_addCategory->setHidden(!(!text.isEmpty() && showCount == 0));
 }
 
-void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList, const QString &category)
+void CategoryListWidget::setCategoryList(GroupModel *groupModel)
 {
+    QList<GroupModel *> groupModelList = mMarkdownEditorWidget->mainWindow()->groupTreeWidget()
+            ->getGroupModelList(Gitnoter::Category);
     ui->listWidget_data->clear();
     for (int i = 0; i < groupModelList.length(); ++i) {
         if (groupModelList[i]->getName().isEmpty()) {
@@ -76,8 +81,7 @@ void CategoryListWidget::setCategoryList(QList<GroupModel *> groupModelList, con
         QListWidgetItem *listWidgetItem = new QListWidgetItem(groupModelList[i]->getName());
         listWidgetItem->setData(Qt::UserRole, QVariant::fromValue(groupModelList[i]));
         ui->listWidget_data->addItem(listWidgetItem);
-        if (category == groupModelList[i]->getName()) {
-            oldGroupModel = groupModelList[i];
+        if (groupModel->getName() == groupModelList[i]->getName()) {
             ui->listWidget_data->setItemSelected(listWidgetItem, true);
         }
     }
@@ -106,7 +110,7 @@ void CategoryListWidget::on_listWidget_data_itemClicked(QListWidgetItem *item)
 
 void CategoryListWidget::on_buttonBox_accepted()
 {
-    if (oldGroupModel != newGroupModel) {
+    if (newGroupModel && oldGroupModel != newGroupModel) {
         change();
     }
 }

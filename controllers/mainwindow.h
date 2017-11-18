@@ -42,17 +42,17 @@ public:
 
     void init();
 
-    void removeGroup();
     void appendGroup();
 
     void appendNote();
     void trashNote();         // set isDelete: 1
-    void searchNote();
-
+    void searchNote(const QString &text);
     void sortNote();
-
     void setNoteListTitle();
+
 public slots:
+    void removeGroup();
+
     void removeNote();    // remove from disk
     void restoreNote();
 

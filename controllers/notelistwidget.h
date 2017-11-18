@@ -23,6 +23,7 @@ public:
 
     void remove(const QString &uuid);
     void trash(const QString &uuid);
+    void trash(NoteModel *noteModel);
     void restore(const QString &uuid);
     void modify();
     void search(const QString &text);
@@ -42,8 +43,12 @@ private:
     void subtract(NoteModel *noteModel);
     void add(NoteModel *noteModel);
 
+    QList<QListWidgetItem *> getListWidgetItemList(Gitnoter::GroupType type, const QString &name = "");
+
 public:
     QList<NoteModel *> getNoteModelList();
+
+    QList<NoteModel *> getNoteModelList(Gitnoter::GroupType type, const QString &name = "");
 
     QListWidgetItem *getItem(const QString &uuid);
 

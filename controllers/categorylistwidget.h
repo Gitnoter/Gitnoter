@@ -45,7 +45,7 @@ private slots:
     void on_listWidget_data_itemClicked(QListWidgetItem *item);
 
 private:
-    void setCategoryList(QList<GroupModel *> categoryModelList, const QString &category);
+    void setCategoryList(GroupModel *groupModel);
 
 
 private:
