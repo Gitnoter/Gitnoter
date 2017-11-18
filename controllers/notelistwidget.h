@@ -40,9 +40,6 @@ public slots:
 private:
     bool has(const QString &uuid);
 
-    void subtract(NoteModel *noteModel);
-    void add(NoteModel *noteModel);
-
     QList<QListWidgetItem *> getListWidgetItemList(Gitnoter::GroupType type, const QString &name = "");
 
 public:

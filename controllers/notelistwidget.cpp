@@ -105,7 +105,7 @@ void NoteListWidget::trash(const QString &uuid)
     noteModel->setIsDelete(1);
     noteModel->saveNoteDataToLocal();
 
-    subtract(noteModel);
+    mMainWindow->groupTreeWidget()->subtract(noteModel);
 }
 
 void NoteListWidget::trash(NoteModel *noteModel)
@@ -113,7 +113,7 @@ void NoteListWidget::trash(NoteModel *noteModel)
     noteModel->setIsDelete(1);
     noteModel->saveNoteDataToLocal();
 
-    subtract(noteModel);
+    mMainWindow->groupTreeWidget()->subtract(noteModel);
 }
 
 void NoteListWidget::restore(const QString &uuid)
@@ -122,7 +122,7 @@ void NoteListWidget::restore(const QString &uuid)
     noteModel->setIsDelete(0);
     noteModel->saveNoteDataToLocal();
 
-    add(noteModel);
+    mMainWindow->groupTreeWidget()->add(noteModel);
 }
 
 void NoteListWidget::setListWidget()
@@ -302,42 +302,3 @@ void NoteListWidget::onActionTriggered()
 {
     sort();
 }
-
-void NoteListWidget::subtract(NoteModel *noteModel)
-{
-    if (noteModel->getCategory().isEmpty()) {
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Unclassified);
-    }
-    else {
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, noteModel->getCategory());
-    }
-    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Recent);
-    }
-    mMainWindow->groupTreeWidget()->subtract(Gitnoter::All);
-
-    for (auto &&tagName : noteModel->getTagList()) {
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagName);
-    }
-    mMainWindow->groupTreeWidget()->add(Gitnoter::Trash);
-}
-
-void NoteListWidget::add(NoteModel *noteModel)
-{
-    if (noteModel->getCategory().isEmpty()) {
-        mMainWindow->groupTreeWidget()->add(Gitnoter::Unclassified);
-    }
-    else {
-        mMainWindow->groupTreeWidget()->add(Gitnoter::Category, noteModel->getCategory());
-    }
-    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-        mMainWindow->groupTreeWidget()->add(Gitnoter::Recent);
-    }
-    mMainWindow->groupTreeWidget()->add(Gitnoter::All);
-
-    for (auto &&tagName : noteModel->getTagList()) {
-        mMainWindow->groupTreeWidget()->add(Gitnoter::Tag, tagName);
-    }
-    mMainWindow->groupTreeWidget()->subtract(Gitnoter::Trash);
-}
-

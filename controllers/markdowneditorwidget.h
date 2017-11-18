@@ -11,13 +11,14 @@
 #include <QWidget>
 #include <QPushButton>
 
-class CategoryListWidget;
-class MainWindow;
-
 namespace Ui
 {
     class MarkdownEditorWidget;
 }
+
+class CategoryListWidget;
+class MainWindow;
+class GroupTreeWidget;
 
 class MarkdownEditorWidget : public QWidget
 {
@@ -31,7 +32,7 @@ public:
     void init(const QString &uuid, MainWindow *mainWindow = 0);
     void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
-    void appendTag();
+    void appendTag(const QString &tag);
     void removeTag(const QString &tagName = "");
 
     void changeCategory(const QString &category);

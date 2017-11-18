@@ -50,14 +50,14 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
     setOpenNote();
 }
 
-void MarkdownEditorWidget::appendTag()
+void MarkdownEditorWidget::appendTag(const QString &tag)
 {
-    if (mNoteModel->getTagList().indexOf(ui->lineEdit_tag->text()) == -1) {
-        TagCellWidget *tagCellWidget = new TagCellWidget(ui->lineEdit_tag->text(), this);
+    if (mNoteModel->getTagList().indexOf(tag) == -1) {
+        TagCellWidget *tagCellWidget = new TagCellWidget(tag, this);
         mTagCellWidgetList.append(tagCellWidget);
         ui->horizontalLayout->insertWidget(ui->horizontalLayout->count() - 1, tagCellWidget);
         setTagList();
-        mMainWindow->groupTreeWidget()->append(Gitnoter::Tag, ui->lineEdit_tag->text());
+        mMainWindow->groupTreeWidget()->append(Gitnoter::Tag, tag);
     }
 }
 
@@ -224,7 +224,7 @@ void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
 void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 {
     if (!ui->lineEdit_tag->text().isEmpty()) {
-        appendTag();
+        appendTag(ui->lineEdit_tag->text());
         ui->lineEdit_tag->clear();
     }
 }

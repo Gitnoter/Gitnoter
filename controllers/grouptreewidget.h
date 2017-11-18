@@ -21,10 +21,15 @@ public:
 
     void remove(Gitnoter::GroupType type, const QString &name);
     void append(Gitnoter::GroupType type, const QString &text);
-    void modify(Gitnoter::GroupType type, const QString &text = "");
-    void subtract(Gitnoter::GroupType type, const QString &text = "");
-    void add(Gitnoter::GroupType type, const QString &text = "");
+    void modify(GroupModel *groupModel, const QString &oldText, const QString &newText);
+    void subtract(Gitnoter::GroupType type, const QString &text = "", int num = 1);
+    void subtract(NoteModel *noteModel, bool remove = false);
+    void add(Gitnoter::GroupType type, const QString &text = "", int num = 1);
+    void add(NoteModel *noteModel);
     void setItemSelected();
+
+public slots:
+    void onItemChanged(QTreeWidgetItem *item, int column);
 
 private:
     QTreeWidgetItem *getTreeWidgetItem(Gitnoter::GroupType type, const QString &text = "");
