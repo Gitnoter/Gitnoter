@@ -33,7 +33,7 @@ public:
     void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
     void appendTag(const QString &tag);
-    void removeTag(const QString &tagName = "");
+    void removeTag(QString tagName = "");
 
     void changeCategory(const QString &category);
     void appendCategory(const QString &category);

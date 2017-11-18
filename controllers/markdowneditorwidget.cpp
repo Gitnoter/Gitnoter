@@ -61,12 +61,13 @@ void MarkdownEditorWidget::appendTag(const QString &tag)
     }
 }
 
-void MarkdownEditorWidget::removeTag(const QString &tagName)
+void MarkdownEditorWidget::removeTag(QString tagName)
 {
     if (tagName.isEmpty()) {
         TagCellWidget *tagCellWidget = mTagCellWidgetList[mTagCellWidgetList.length() - 1];
         mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagCellWidget->getTagName());
         mTagCellWidgetList.removeOne(tagCellWidget);
+        tagName = tagCellWidget->getTagName();
         delete tagCellWidget;
     }
     else {
