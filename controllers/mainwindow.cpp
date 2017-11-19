@@ -199,20 +199,15 @@ void MainWindow::removeGroup()
 void MainWindow::appendGroup()
 {
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    if (Gitnoter::Tag == type) {
-        QString categoriesName = "";
-        for (int i = 0; i < 100; ++i) {
-            categoriesName = tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i));
-            if (groupTreeWidget()->append(Gitnoter::Tag, categoriesName)) {
-                groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(Gitnoter::Tag, categoriesName));
-                Globals::configModel->setSideSelected(Gitnoter::Tag, categoriesName);
-                updateView(Gitnoter::GroupTreeWidget);
-                break;
-            }
+    QString name = "";
+    for (int i = 0; i < 100; ++i) {
+        name = ((Gitnoter::Tag == type) ? tr("新建标签%1") : tr("新建笔记本%1")).arg(i == 0 ? "" : QString::number(i));
+        if (groupTreeWidget()->append(type, name)) {
+            groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(type, name));
+            Globals::configModel->setSideSelected(type, name);
+            updateView(Gitnoter::GroupTreeWidget);
+            break;
         }
-    }
-    else {
-
     }
 }
 
