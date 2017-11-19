@@ -41,6 +41,7 @@ public:
     ~MainWindow();
 
     void init();
+    void updateView(Gitnoter::UpdateViewFlags flags = Gitnoter::GroupTreeWidget);
 
     void appendGroup();
 

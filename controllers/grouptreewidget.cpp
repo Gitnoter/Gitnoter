@@ -187,8 +187,7 @@ void GroupTreeWidget::modify(GroupModel *groupModel, const QString &oldText, con
         }
         saveDataToLocal(Gitnoter::Tag);
     }
-    mMainWindow->setNoteListTitle();
-    mMainWindow->markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
+    mMainWindow->updateView(Gitnoter::NoteListTitle | Gitnoter::MarkdownEditorWidget);
 }
 
 GroupModel *GroupTreeWidget::append(GroupModel *groupModel)

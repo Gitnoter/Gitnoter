@@ -85,9 +85,7 @@ void MarkdownEditorWidget::removeTag(QString tagName)
     Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
     const QString name = Globals::configModel->getSideSelectedName();
     if (Gitnoter::Tag == type && name == tagName) {
-        mMainWindow->noteListWidget()->setListWidget();
-        mMainWindow->setNoteListTitle();
-        init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
+        mMainWindow->updateView(Gitnoter::NoteListWidget);
     }
 }
 
@@ -99,9 +97,7 @@ void MarkdownEditorWidget::changeCategory(const QString &category)
     mNoteModel->setCategory(category);
     mNoteModel->saveNoteDataToLocal();
 
-    mMainWindow->noteListWidget()->setListWidget();
-    mMainWindow->setNoteListTitle();
-    init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
+    mMainWindow->updateView(Gitnoter::GroupTreeWidget);
 }
 
 void MarkdownEditorWidget::appendCategory(const QString &category)

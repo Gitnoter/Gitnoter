@@ -102,9 +102,7 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
 
     ui->lineEdit_noteSearch->clear();
     Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(item));
-    ui->noteListWidget->setListWidget();
-    ui->markdownEditorWidget->init(Globals::configModel->getOpenNoteUuid(), this);
-    setNoteListTitle();
+    updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::on_pushButton_add_clicked()
@@ -133,10 +131,7 @@ void MainWindow::setNoteListTitle()
 void MainWindow::restoreNote()
 {
     noteListWidget()->restore(Globals::configModel->getOpenNoteUuid());
-
-    noteListWidget()->setListWidget();
-    setNoteListTitle();
-    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+    updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::appendNote()
@@ -158,17 +153,13 @@ void MainWindow::appendNote()
 void MainWindow::removeNote()
 {
     noteListWidget()->remove(Globals::configModel->getOpenNoteUuid());
-    noteListWidget()->setListWidget();
-    setNoteListTitle();
-    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+    updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::trashNote()
 {
     noteListWidget()->trash(Globals::configModel->getOpenNoteUuid());
-    noteListWidget()->setListWidget();
-    setNoteListTitle();
-    markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+    updateView(Gitnoter::NoteListWidget);
 }
 
 GroupTreeWidget *MainWindow::groupTreeWidget()
@@ -190,9 +181,7 @@ void MainWindow::init()
 {
     ui->noteListWidget->init(this);
     ui->groupTreeWidget->init(ui->noteListWidget->getNoteModelList(), this);
-    ui->markdownEditorWidget->init(Globals::configModel->getOpenNoteUuid(), this);
-
-    setNoteListTitle();
+    updateView(Gitnoter::NoteListTitle | Gitnoter::MarkdownEditorWidget);
 }
 
 void MainWindow::removeGroup()
@@ -201,12 +190,9 @@ void MainWindow::removeGroup()
     const QString name = Globals::configModel->getSideSelectedName();
 
     if (Gitnoter::Category <= type) {
-        Globals::configModel->setSideSelected(Gitnoter::All, groupTreeWidget()->getGroupModel(Gitnoter::All)->getName());
-
+        Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(Gitnoter::All));
         ui->groupTreeWidget->remove(type, name);
-        noteListWidget()->setListWidget();
-        setNoteListTitle();
-        markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+        updateView(Gitnoter::NoteListWidget);
     }
 }
 
@@ -220,10 +206,7 @@ void MainWindow::appendGroup()
             if (groupTreeWidget()->append(Gitnoter::Tag, categoriesName)) {
                 groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(Gitnoter::Tag, categoriesName));
                 Globals::configModel->setSideSelected(Gitnoter::Tag, categoriesName);
-                noteListWidget()->setListWidget();
-                groupTreeWidget()->setItemSelected();
-                setNoteListTitle();
-                markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+
                 break;
             }
         }
@@ -256,4 +239,23 @@ QSplitter *MainWindow::splitter()
 void MainWindow::on_lineEdit_noteSearch_textChanged(const QString &arg1)
 {
     searchNote(arg1);
+}
+
+void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)
+{
+    if (flags.testFlag(Gitnoter::GroupTreeWidget)) {
+        groupTreeWidget()->setItemSelected();
+    }
+
+    if (flags.testFlag(Gitnoter::NoteListWidget)) {
+        noteListWidget()->setListWidget();
+    }
+
+    if (flags.testFlag(Gitnoter::MarkdownEditorWidget)) {
+        markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+    }
+
+    if (flags.testFlag(Gitnoter::NoteListTitle)) {
+        setNoteListTitle();
+    }
 }

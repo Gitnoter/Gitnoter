@@ -1,8 +1,11 @@
 #ifndef GITNOTER_H
 #define GITNOTER_H
 
-class Gitnoter
+#include <QObject>
+
+class Gitnoter : public QObject
 {
+    Q_OBJECT
 public:
     enum GroupType {
         All = 0x000001,
@@ -19,6 +22,17 @@ public:
         UpdateDate = 0x001003
     };
 
+    enum UpdateViewFlag {
+        MarkdownEditorWidget = 0x002001,
+        NoteListTitle = 0x002002,
+        NoteListWidget = 0x002003 | NoteListTitle | MarkdownEditorWidget,
+        GroupTreeWidget = 0x002004 | NoteListWidget,
+    };
+    Q_DECLARE_FLAGS(UpdateViewFlags, UpdateViewFlag)
+    Q_FLAGS(UpdateViewFlags)
+
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Gitnoter::UpdateViewFlags)
 
 #endif // GITNOTER_H
