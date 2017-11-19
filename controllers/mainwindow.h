@@ -59,9 +59,6 @@ public slots:
 private:
     void setupUi();
 
-    void modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText = "");
-    void removeTextAllNote(Gitnoter::GroupType type, const QString &oldText);
-
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 

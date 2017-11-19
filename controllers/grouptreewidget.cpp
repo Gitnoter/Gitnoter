@@ -111,15 +111,15 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
     setItemSelected();
 }
 
-void GroupTreeWidget::append(Gitnoter::GroupType type, const QString &text)
+bool GroupTreeWidget::append(Gitnoter::GroupType type, const QString &text, int num)
 {
-    if (has(type, text)) {
-        appendAny(getGroupModel(type, text), 1);
-    }
-    else {
-        append(new GroupModel(type, text, 1));
+    if (!has(type, text)) {
+        append(new GroupModel(type, text, num));
         saveDataToLocal(type);
+        return true;
     }
+
+    return false;
 }
 
 void GroupTreeWidget::subtract(Gitnoter::GroupType type, const QString &text, int num)

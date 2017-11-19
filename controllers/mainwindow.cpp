@@ -109,7 +109,7 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
 
 void MainWindow::on_pushButton_add_clicked()
 {
-//    groupTreeWidget()->remove();
+    appendGroup();
 }
 
 void MainWindow::on_pushButton_subtract_clicked()
@@ -171,57 +171,6 @@ void MainWindow::trashNote()
     markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
 }
 
-void MainWindow::modifyTextAllNote(Gitnoter::GroupType type, const QString &oldText, const QString &newText)
-{
-//    for (int i = 0; i < ui->noteListWidget->count(); ++i) {
-//        QListWidgetItem *listWidgetItem = ui->noteListWidget->item(i);
-//        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-
-//        if (Gitnoter::Tag == type) {
-//            QStringList tagList = noteModel->getTagList();
-//            if (tagList.removeOne(oldText)) {
-//                if (!newText.isEmpty()) {
-//                    tagList.append(newText);
-//                }
-//                noteModel->saveNoteToLocal();
-
-//                qDebug() << noteModel->getTagList();
-//            }
-//        }
-//        else if (Gitnoter::Category == type) {
-//            if (noteModel->getCategory() == oldText) {
-//                if (!newText.isEmpty()) {
-//                    noteModel->setCategory(newText);
-//                    noteModel->saveNoteToLocal();
-//                }
-//            }
-//        }
-//    }
-}
-
-void MainWindow::removeTextAllNote(Gitnoter::GroupType type, const QString &oldText)
-{
-//    for (int i = 0; i < ui->noteListWidget->count(); ++i) {
-//        QListWidgetItem *listWidgetItem = ui->noteListWidget->item(i);
-//        NoteModel *noteModel = listWidgetItem->data(Qt::UserRole).value<NoteModel *>();
-
-//        if (Gitnoter::Tag == type) {
-//            QStringList tagList = noteModel->getTagList();
-//            tagList.removeOne(oldText);
-//            noteModel->saveNoteToLocal();
-//        }
-//        else if (Gitnoter::Category == type) {
-//            if (noteModel->getCategory() == oldText) {
-//                ui->groupTreeWidget->appendOne(noteModel, -1);
-//                noteModel->setCategory("");
-//                noteModel->setIsDelete(1);
-//                ui->groupTreeWidget->appendAny(ui->groupTreeWidget->getGroupModel(Gitnoter::Trash), 1);
-//                noteModel->saveNoteToLocal();
-//            }
-//        }
-//    }
-}
-
 GroupTreeWidget *MainWindow::groupTreeWidget()
 {
     return ui->groupTreeWidget;
@@ -263,7 +212,25 @@ void MainWindow::removeGroup()
 
 void MainWindow::appendGroup()
 {
+    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    if (Gitnoter::Tag == type) {
+        QString categoriesName = "";
+        for (int i = 0; i < 100; ++i) {
+            categoriesName = tr("新建笔记本%1").arg(i == 0 ? "" : QString::number(i));
+            if (groupTreeWidget()->append(Gitnoter::Tag, categoriesName)) {
+                groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(Gitnoter::Tag, categoriesName));
+                Globals::configModel->setSideSelected(Gitnoter::Tag, categoriesName);
+                noteListWidget()->setListWidget();
+                groupTreeWidget()->setItemSelected();
+                setNoteListTitle();
+                markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+                break;
+            }
+        }
+    }
+    else {
 
+    }
 }
 
 void MainWindow::searchNote(const QString &text)

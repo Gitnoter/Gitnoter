@@ -20,7 +20,7 @@ public:
     void init(QList<NoteModel *> noteModelList, MainWindow *mainWindow);
 
     void remove(Gitnoter::GroupType type, const QString &name);
-    void append(Gitnoter::GroupType type, const QString &text);
+    bool append(Gitnoter::GroupType type, const QString &text, int num = 0);
     void modify(GroupModel *groupModel, const QString &oldText, const QString &newText);
     void subtract(Gitnoter::GroupType type, const QString &text = "", int num = 1);
     void subtract(NoteModel *noteModel, bool remove = false);
@@ -32,10 +32,6 @@ public slots:
     void onItemChanged(QTreeWidgetItem *item, int column);
 
 private:
-    QTreeWidgetItem *getTreeWidgetItem(Gitnoter::GroupType type, const QString &text = "");
-
-    QTreeWidgetItem *getTreeWidgetItem(GroupModel &groupModel);
-
     GroupModel *append(GroupModel *groupModel);
 
     void removeOne(GroupModel *groupModel);
@@ -58,6 +54,10 @@ public:
     MainWindow *mainWindow() { return mMainWindow; }
 
     int count() { return mCount; }
+
+    QTreeWidgetItem *getTreeWidgetItem(Gitnoter::GroupType type, const QString &text = "");
+
+    QTreeWidgetItem *getTreeWidgetItem(GroupModel &groupModel);
 
     QList<GroupModel *> getGroupModelList();
 
