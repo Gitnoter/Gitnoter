@@ -44,23 +44,15 @@ public:
 
     const QString &getOpenNoteUuid() const;
 
-    int getSidebarSortKey() const;
-
-    void setSidebarSortKey(int sidebarSortKey);
-
-    const QString &getSidebarSortValue() const;
-
-    void setSidebarSortValue(const QString &sidebarSortValue);
-
     QString getSideSelectedName() const;
 
     void setSideSelected(Gitnoter::GroupType type, const QString &name);
 
     void setSideSelected(GroupModel *groupModel);
 
-    int getLocalRepoStatus() const;
+    Gitnoter::RepoStatus getLocalRepoStatus() const;
 
-    void setLocalRepoStatus(int localRepoStatus);
+    void setLocalRepoStatus(Gitnoter::RepoStatus status);
 
     Gitnoter::GroupType getSideSelectedType() const;
 
@@ -126,11 +118,8 @@ private:
     QString mRepoUsername;
     QString mRepoPassword;
     QString mOpenNoteUuid;
-    // -1: 没有选择没任何排序, 0: 选择名称排序, 1: 选择时间排序
-    int mSidebarSortKey;
-    QString mSidebarSortValue;
-    // 0: 还没有初始化仓库, 1: 初始化远程仓库, 2: 初始化本地仓库
-    int mLocalRepoStatus;
+
+    Gitnoter::RepoStatus mLocalRepoStatus;
     // type: 1 - 第一层及
     //      name: all, recent, unclassified, trash, category, tag
     // type: 2 - 第二层级

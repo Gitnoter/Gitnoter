@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    if (Globals::configModel->getLocalRepoStatus()) {
+    if (Globals::configModel->getLocalRepoStatus() > Gitnoter::NoneRepo) {
         MainWindow *w = new MainWindow;
         w->show();
     }

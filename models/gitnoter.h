@@ -31,6 +31,12 @@ public:
     Q_DECLARE_FLAGS(UpdateViewFlags, UpdateViewFlag)
     Q_FLAGS(UpdateViewFlags)
 
+    enum RepoStatus {
+        NoneRepo = 0x003001,
+        RemoteRepo = 0x003002,
+        LocalRepo = 0x003003
+    };
+
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Gitnoter::UpdateViewFlags)

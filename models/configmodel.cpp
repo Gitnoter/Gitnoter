@@ -22,10 +22,8 @@ ConfigModel::ConfigModel()
     mRepoUsername = "";
     mRepoPassword = "";
     mOpenNoteUuid = "";
-    mSidebarSortValue = "";
-    mSidebarSortKey = -1;
     mSideSelectedType = Gitnoter::All;
-    mLocalRepoStatus = 0;
+    mLocalRepoStatus = Gitnoter::NoneRepo;
     mSideSelectedName = "all";
     mAutoSyncRepoTime = 15 * 60 * 1000;
     mAutoLockTime = 15 * 60 * 1000;
@@ -71,8 +69,6 @@ QString ConfigModel::serialize(const QString &path)
     contributor["repoUsername"] = mRepoUsername;
     contributor["repoPassword"] = mRepoPassword;
     contributor["openNotesUuid"] = mOpenNoteUuid;
-    contributor["sidebarSortValue"] = mSidebarSortValue;
-    contributor["sidebarSortKey"] = mSidebarSortKey;
     contributor["sideSelectedType"] = mSideSelectedType;
     contributor["localRepoStatus"] = mLocalRepoStatus;
     contributor["sideSelectedName"] = mSideSelectedName;
@@ -114,10 +110,8 @@ void ConfigModel::unserialize(const QString &jsonString)
     mRepoUsername = result["repoUsername"].toString();
     mRepoPassword = result["repoPassword"].toString();
     mOpenNoteUuid = result["openNotesUuid"].toString();
-    mSidebarSortValue = result["sidebarSortValue"].toString();
-    mSidebarSortKey = result["sidebarSortKey"].toInt();
     mSideSelectedType = (Gitnoter::GroupType) result["sideSelectedType"].toInt();
-    mLocalRepoStatus = result["localRepoStatus"].toInt();
+    mLocalRepoStatus = (Gitnoter::RepoStatus) result["localRepoStatus"].toInt();
     mSideSelectedName = result["sideSelectedName"].toString();
     mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
     mAutoLockTime = result["autoLockTime"].toInt();
@@ -198,28 +192,6 @@ const QString &ConfigModel::getOpenNoteUuid() const
     return mOpenNoteUuid;
 }
 
-int ConfigModel::getSidebarSortKey() const
-{
-    return mSidebarSortKey;
-}
-
-void ConfigModel::setSidebarSortKey(int sidebarSortKey)
-{
-    mSidebarSortKey = sidebarSortKey;
-    serialize(Globals::appConfigPath);
-}
-
-const QString &ConfigModel::getSidebarSortValue() const
-{
-    return mSidebarSortValue;
-}
-
-void ConfigModel::setSidebarSortValue(const QString &sidebarSortValue)
-{
-    mSidebarSortValue = sidebarSortValue;
-    serialize(Globals::appConfigPath);
-}
-
 QString ConfigModel::getSideSelectedName() const
 {
     return mSideSelectedName;
@@ -239,14 +211,14 @@ void ConfigModel::setSideSelected(GroupModel *groupModel)
     serialize(Globals::appConfigPath);
 }
 
-int ConfigModel::getLocalRepoStatus() const
+Gitnoter::RepoStatus ConfigModel::getLocalRepoStatus() const
 {
     return mLocalRepoStatus;
 }
 
-void ConfigModel::setLocalRepoStatus(int localRepoStatus)
+void ConfigModel::setLocalRepoStatus(Gitnoter::RepoStatus status)
 {
-    mLocalRepoStatus = localRepoStatus;
+    mLocalRepoStatus = status;
     serialize(Globals::appConfigPath);
 }
 

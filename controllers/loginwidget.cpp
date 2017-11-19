@@ -52,7 +52,7 @@ void LoginWidget::on_pushButton_enter_clicked()
 
         int result = initGitManager();
         if (!result) {
-            Globals::configModel->setLocalRepoStatus(1);
+            Globals::configModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
             openMainWindow();
         }
         else {
@@ -90,7 +90,7 @@ void LoginWidget::on_pushButton_initLocal_clicked()
 {
     int result = initGitManager();
     if (!result) {
-        Globals::configModel->setLocalRepoStatus(2);
+        Globals::configModel->setLocalRepoStatus(Gitnoter::LocalRepo);
         openMainWindow();
     }
     else {
