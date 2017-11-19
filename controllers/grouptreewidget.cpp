@@ -163,9 +163,9 @@ void GroupTreeWidget::add(Gitnoter::GroupType type, const QString &text, int num
     }
 }
 
-void GroupTreeWidget::modify(GroupModel *groupModel, const QString &oldText, const QString &newText)
+void GroupTreeWidget::modify(GroupModel *groupModel, QString oldText, const QString &newText)
 {
-    QList<NoteModel *> noteModelList = mMainWindow->noteListWidget()->getNoteModelList(groupModel->getType(), oldText);
+    QList<NoteModel *> noteModelList = mMainWindow->noteListWidget()->getNoteModelList(groupModel);
     groupModel->setName(newText);
 
     if (Gitnoter::Category == groupModel->getType()) {
@@ -187,6 +187,7 @@ void GroupTreeWidget::modify(GroupModel *groupModel, const QString &oldText, con
         }
         saveDataToLocal(Gitnoter::Tag);
     }
+    Globals::configModel->setSideSelected(groupModel);
     mMainWindow->updateView(Gitnoter::NoteListTitle | Gitnoter::MarkdownEditorWidget);
 }
 
@@ -448,41 +449,42 @@ void GroupTreeWidget::onItemChanged(QTreeWidgetItem *item, int column)
 void GroupTreeWidget::subtract(NoteModel *noteModel, bool remove)
 {
     if (noteModel->getCategory().isEmpty()) {
-            mMainWindow->groupTreeWidget()->subtract(Gitnoter::Unclassified);
+        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Unclassified);
     }
     else {
-            mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, noteModel->getCategory());
+        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, noteModel->getCategory());
     }
     if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-            mMainWindow->groupTreeWidget()->subtract(Gitnoter::Recent);
+        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Recent);
     }
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::All);
+    mMainWindow->groupTreeWidget()->subtract(Gitnoter::All);
 
     for (auto &&tagName : noteModel->getTagList()) {
-            mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagName);
+        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Tag, tagName);
     }
 
     if (!remove) {
-            mMainWindow->groupTreeWidget()->add(Gitnoter::Trash);
+        mMainWindow->groupTreeWidget()->add(Gitnoter::Trash);
     }
 }
 
 void GroupTreeWidget::add(NoteModel *noteModel)
 {
     if (noteModel->getCategory().isEmpty()) {
-            mMainWindow->groupTreeWidget()->add(Gitnoter::Unclassified);
+        mMainWindow->groupTreeWidget()->add(Gitnoter::Unclassified);
     }
     else {
-            mMainWindow->groupTreeWidget()->add(Gitnoter::Category, noteModel->getCategory());
+        mMainWindow->groupTreeWidget()->add(Gitnoter::Category, noteModel->getCategory());
     }
     if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) {
-            mMainWindow->groupTreeWidget()->add(Gitnoter::Recent);
+        mMainWindow->groupTreeWidget()->add(Gitnoter::Recent);
     }
-        mMainWindow->groupTreeWidget()->add(Gitnoter::All);
+    mMainWindow->groupTreeWidget()->add(Gitnoter::All);
 
     for (auto &&tagName : noteModel->getTagList()) {
-            mMainWindow->groupTreeWidget()->add(Gitnoter::Tag, tagName);
+        mMainWindow->groupTreeWidget()->add(Gitnoter::Tag, tagName);
     }
-        mMainWindow->groupTreeWidget()->subtract(Gitnoter::Trash);
+
+    mMainWindow->groupTreeWidget()->subtract(Gitnoter::Trash);
 }
 

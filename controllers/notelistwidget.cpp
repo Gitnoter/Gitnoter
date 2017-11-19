@@ -163,13 +163,9 @@ void NoteListWidget::setItemSelected()
 
 void NoteListWidget::noteModelChanged(NoteModel *noteModel)
 {
-    for (int j = 0; j < count(); ++j) {
-        QListWidgetItem *listWidgetItem = item(j);
-        NoteModel *itemNoteModel = getNoteModel(listWidgetItem);
-        if (itemNoteModel == noteModel) {
-            ((NoteListCellWidget *) itemWidget(listWidgetItem))->reloadData();
-            break;
-        }
+    QListWidgetItem *listWidgetItem = getItem(noteModel->getUuid());
+    if (listWidgetItem) {
+        ((NoteListCellWidget *) itemWidget(listWidgetItem))->reloadData();
     }
 }
 
@@ -207,6 +203,11 @@ QList<QListWidgetItem *> NoteListWidget::getListWidgetItemList(Gitnoter::GroupTy
     }
 
     return listWidgetItemList;
+}
+
+QList<NoteModel *> NoteListWidget::getNoteModelList(GroupModel *groupModel)
+{
+    return getNoteModelList(groupModel->getType(), groupModel->getName());
 }
 
 QList<NoteModel *> NoteListWidget::getNoteModelList(Gitnoter::GroupType type, const QString &name)

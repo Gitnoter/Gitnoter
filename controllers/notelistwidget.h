@@ -45,6 +45,8 @@ private:
 public:
     QList<NoteModel *> getNoteModelList();
 
+    QList<NoteModel *> getNoteModelList(GroupModel *groupModel);
+
     QList<NoteModel *> getNoteModelList(Gitnoter::GroupType type, const QString &name = "");
 
     QListWidgetItem *getItem(const QString &uuid);

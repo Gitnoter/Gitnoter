@@ -21,7 +21,7 @@ public:
 
     void remove(Gitnoter::GroupType type, const QString &name);
     bool append(Gitnoter::GroupType type, const QString &text, int num = 0);
-    void modify(GroupModel *groupModel, const QString &oldText, const QString &newText);
+    void modify(GroupModel *groupModel, QString oldText, const QString &newText);
     void subtract(Gitnoter::GroupType type, const QString &text = "", int num = 1);
     void subtract(NoteModel *noteModel, bool remove = false);
     void add(Gitnoter::GroupType type, const QString &text = "", int num = 1);
