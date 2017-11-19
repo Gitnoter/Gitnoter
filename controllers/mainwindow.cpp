@@ -206,7 +206,7 @@ void MainWindow::appendGroup()
             if (groupTreeWidget()->append(Gitnoter::Tag, categoriesName)) {
                 groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(Gitnoter::Tag, categoriesName));
                 Globals::configModel->setSideSelected(Gitnoter::Tag, categoriesName);
-
+                updateView(Gitnoter::GroupTreeWidget);
                 break;
             }
         }
