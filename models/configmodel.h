@@ -29,17 +29,17 @@ public:
 
     void setOpenNoteUuid(const QString &openNoteUuid);
 
-    const QString &getVersion() const;
+    const QString getVersion() const;
 
-    const QString &getRepoDir() const;
+    const QString getRepoDir() const;
 
-    const QString &getRepoUrl() const;
+    const QString getRepoUrl() const;
 
-    const QString &getRepoUsername() const;
+    const QString getRepoUsername() const;
 
-    const QString &getRepoPassword() const;
+    const QString getRepoPassword() const;
 
-    const QString &getOpenNoteUuid() const;
+    const QString getOpenNoteUuid() const;
 
     QString getSideSelectedName() const;
 
@@ -53,7 +53,7 @@ public:
 
     Gitnoter::GroupType getSideSelectedType() const;
 
-    const QString &getRepoEmail() const;
+    const QString getRepoEmail() const;
 
     void setRepoEmail(const QString &repoEmail);
 
@@ -65,31 +65,27 @@ public:
 
     void setAutoLockTime(int autoLockTime);
 
-    const QString &getUnlockPassword() const;
+    const QString getUnlockPassword() const;
 
     void setUnlockPassword(const QString &unlockPassword);
 
-    const QString &getFontFamily() const;
+    QFont getEditorFont() const;
 
-    void setFontFamily(const QString &fontFamily);
+    void setEditorFont(const QFont &font);
 
-    int getFontPixelSize() const;
-
-    void setFontPixelSize(int fontPixelSize);
-
-    const QString &getNewNoteKeySequence() const;
+    const QString getNewNoteKeySequence() const;
 
     void setNewNoteKeySequence(const QString &newNoteKeySequence);
 
-    const QString &getLockWindowKeySequence() const;
+    const QString getLockWindowKeySequence() const;
 
     void setLockWindowKeySequence(const QString &lockWindowKeySequence);
 
-    const QString &getCutWindowKeySequence() const;
+    const QString getCutWindowKeySequence() const;
 
     void setCutWindowKeySequence(const QString &cutWindowKeySequence);
 
-    ThemeManager::ThemeFlag getTheme();
+    ThemeManager::ThemeFlag getTheme() const;
 
     void setTheme(const ThemeManager::ThemeFlag &theme);
 
@@ -113,7 +109,7 @@ public:
 
     void clearPopupNoteUuid();
 
-    QStringList getPopupNoteUuidList();
+    QStringList getPopupNoteUuidList() const;
 
 private:
     template <typename T>
@@ -155,8 +151,7 @@ private:
     QString mAutoLockTime;
     QString mUnlockPassword;
 
-    QString mFontFamily;
-    QString mFontPixelSize;
+    QString mEditorFont;
 
     QString mNewNoteKeySequence;
     QString mLockWindowKeySequence;

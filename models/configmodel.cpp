@@ -28,8 +28,7 @@ ConfigModel::ConfigModel()
     mSideSelectedName = "groupTree/selectedName";
     mAutoLockTime = "lock/autoLockTime";
     mUnlockPassword = "lock/unlockPassword";
-    mFontPixelSize = "editor/fontPixeSize";
-    mFontFamily = "editor/fontFamily";
+    mEditorFont = "editor/font";
     mTheme = "window/theme";
     mSplitterSizes = "window/splitterSizes";
     mNoteSortBasis = "noteList/noteSortBasis";
@@ -102,32 +101,32 @@ void ConfigModel::setOpenNoteUuid(const QString &openNoteUuid)
     settings->setValue(mOpenNoteUuid, openNoteUuid);
 }
 
-const QString &ConfigModel::getVersion() const
+const QString ConfigModel::getVersion() const
 {
     return settings->value(mVersion, Globals::version).toString();
 }
 
-const QString &ConfigModel::getRepoDir() const
+const QString ConfigModel::getRepoDir() const
 {
     return settings->value(mRepoDir, "").toString();
 }
 
-const QString &ConfigModel::getRepoUrl() const
+const QString ConfigModel::getRepoUrl() const
 {
     return settings->value(mRepoUrl, "").toString();
 }
 
-const QString &ConfigModel::getRepoUsername() const
+const QString ConfigModel::getRepoUsername() const
 {
     return settings->value(mRepoUsername, "").toString();
 }
 
-const QString &ConfigModel::getRepoPassword() const
+const QString ConfigModel::getRepoPassword() const
 {
     return decrypt(settings->value(mRepoPassword, "").toString());
 }
 
-const QString &ConfigModel::getOpenNoteUuid() const
+const QString ConfigModel::getOpenNoteUuid() const
 {
     return settings->value(mOpenNoteUuid, "").toString();
 }
@@ -164,7 +163,7 @@ Gitnoter::GroupType ConfigModel::getSideSelectedType() const
     return (Gitnoter::GroupType) settings->value(mSideSelectedType, Gitnoter::All).toInt();
 }
 
-const QString &ConfigModel::getRepoEmail() const
+const QString ConfigModel::getRepoEmail() const
 {
     return settings->value(mRepoEmail, "").toString();
 }
@@ -194,7 +193,7 @@ void ConfigModel::setAutoLockTime(int autoLockTime)
     settings->setValue(mAutoLockTime, autoLockTime);
 }
 
-const QString &ConfigModel::getUnlockPassword() const
+const QString ConfigModel::getUnlockPassword() const
 {
     return settings->value(mUnlockPassword, "").toString();
 }
@@ -204,35 +203,20 @@ void ConfigModel::setUnlockPassword(const QString &unlockPassword)
     settings->setValue(mUnlockPassword, unlockPassword);
 }
 
-const QString &ConfigModel::getFontFamily() const
+QFont ConfigModel::getEditorFont() const
 {
-#ifdef Q_OS_MAC
-    QString fontFamily = "Helvetica Neue";
-#elif Q_OS_WIN
-    QString fontFamily = "Courier New";
-#elif Q_OS_LINUX
-    QString fontFamily= "Menlo2";
-#else
-#endif
-    return settings->value(mFontFamily, fontFamily).toString();
+    QFont font;
+    font.fromString(settings->value(mEditorFont, QFont().defaultFamily()).toString());
+
+    return font;
 }
 
-void ConfigModel::setFontFamily(const QString &fontFamily)
+void ConfigModel::setEditorFont(const QFont &font)
 {
-    settings->setValue(mFontFamily, fontFamily);
+    settings->setValue(mEditorFont, font.toString());
 }
 
-int ConfigModel::getFontPixelSize() const
-{
-    return settings->value(mFontPixelSize, 14).toInt();
-}
-
-void ConfigModel::setFontPixelSize(int fontPixelSize)
-{
-    settings->setValue(mFontPixelSize, fontPixelSize);
-}
-
-const QString &ConfigModel::getNewNoteKeySequence() const
+const QString ConfigModel::getNewNoteKeySequence() const
 {
     return settings->value(mNewNoteKeySequence, Globals::newNoteKeySequence).toString();
 }
@@ -242,7 +226,7 @@ void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
     settings->setValue(mNewNoteKeySequence, newNoteKeySequence);
 }
 
-const QString &ConfigModel::getLockWindowKeySequence() const
+const QString ConfigModel::getLockWindowKeySequence() const
 {
     return settings->value(mLockWindowKeySequence, Globals::lockWindowKeySequence).toString();
 }
@@ -253,7 +237,7 @@ void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
     settings->setValue(mLockWindowKeySequence, lockWindowKeySequence);
 }
 
-const QString &ConfigModel::getCutWindowKeySequence() const
+const QString ConfigModel::getCutWindowKeySequence() const
 {
     return settings->value(mCutWindowKeySequence, Globals::cutWindowKeySequence).toString();
 }
@@ -264,7 +248,7 @@ void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
     settings->setValue(mCutWindowKeySequence, cutWindowKeySequence);
 }
 
-ThemeManager::ThemeFlag ConfigModel::getTheme()
+ThemeManager::ThemeFlag ConfigModel::getTheme() const
 {
     return (ThemeManager::ThemeFlag) settings->value(mTheme, ThemeManager::Default).toInt();
 }
@@ -328,7 +312,7 @@ void ConfigModel::clearPopupNoteUuid()
     settings->setValue(mPopupNoteUuidList, {});
 }
 
-QStringList ConfigModel::getPopupNoteUuidList()
+QStringList ConfigModel::getPopupNoteUuidList() const
 {
     return settings->value(mPopupNoteUuidList, {}).toStringList();
 }
