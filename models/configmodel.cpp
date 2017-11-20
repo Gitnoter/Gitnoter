@@ -3,376 +3,332 @@
 #include "tools.h"
 
 #include <qtinyaes.h>
-#include <json.h>
 
 ConfigModel::ConfigModel(const QString &jsonString)
 {
-    unserialize(jsonString);
+    decrypt(jsonString);
 }
 
 ConfigModel::ConfigModel()
 {
-    mVersion = Globals::version;
-    mNewNoteKeySequence = Globals::newNoteKeySequence;
-    mLockWindowKeySequence = Globals::lockWindowKeySequence;
-    mCutWindowKeySequence = Globals::cutWindowKeySequence;
-    mRepoDir = "";
-    mRepoUrl = "";
-    mRepoEmail = "";
-    mRepoUsername = "";
-    mRepoPassword = "";
-    mOpenNoteUuid = "";
-    mSideSelectedType = Gitnoter::All;
-    mLocalRepoStatus = Gitnoter::NoneRepo;
-    mSideSelectedName = "all";
-    mAutoSyncRepoTime = 15 * 60 * 1000;
-    mAutoLockTime = 15 * 60 * 1000;
-    mUnlockPassword = "";
-    mFontPixelSize = 14;
-    mTheme = ThemeManager::ThemeFlag::Default;
-    mSplitterSizes = {0, 0, 0};
-    mNoteSortBasis = Gitnoter::Title;
-    mNoteSortType = Qt::AscendingOrder;
-
-#ifdef Q_OS_MAC
-    mFontFamily = "Helvetica Neue";
-#elif Q_OS_WIN
-    mFontFamily = "Courier New";
-#elif Q_OS_LINUX
-    mFontFamily = "Menlo2";
-#else
-
-#endif
+    mVersion = "version";
+    mNewNoteKeySequence = "keySequence/newNote";
+    mLockWindowKeySequence = "keySequence/lockWindow";
+    mCutWindowKeySequence = "keySequence/cutWindow";
+    mRepoDir = "git/repoDir";
+    mRepoUrl = "git/repoUrl";
+    mRepoEmail = "git/repoEmail";
+    mRepoUsername = "git/repoUsername";
+    mRepoPassword = "git/repoPassword";
+    mRepoStatus = "git/repoStatus";
+    mAutoSyncRepoTime = "git/autoSyncRepoTime";
+    mOpenNoteUuid = "editor/openNoteUuid";
+    mPopupNoteUuidList = "editor/popupNoteUuid";
+    mSideSelectedType = "groupTree/selectedType";
+    mSideSelectedName = "groupTree/selectedName";
+    mAutoLockTime = "lock/autoLockTime";
+    mUnlockPassword = "lock/unlockPassword";
+    mFontPixelSize = "editor/fontPixeSize";
+    mFontFamily = "editor/fontFamily";
+    mTheme = "window/theme";
+    mSplitterSizes = "window/splitterSizes";
+    mNoteSortBasis = "noteList/noteSortBasis";
+    mNoteSortType = "noteList/noteSortType";
 }
 
 void ConfigModel::init()
 {
     Tools::createMkDir(Globals::appDataPath);
-    QString jsonString = Tools::readerFile(Globals::appConfigPath);
-    if (jsonString.isEmpty()) {
-        serialize(Globals::appConfigPath);
-    }
-    else {
-        unserialize(jsonString);
-    }
+    settings = new QSettings(Globals::appConfigPath, QSettings::NativeFormat);
 }
 
-QString ConfigModel::serialize(const QString &path)
+QString ConfigModel::encrypt(const QString &string)
 {
     QTinyAes aes(QTinyAes::CBC, Globals::aesKey, Globals::aesIv);
-    QtJson::JsonObject contributor;
-
-    contributor["version"] = mVersion;
-    contributor["repoDir"] = mRepoDir;
-    contributor["repoUrl"] = mRepoUrl;
-    contributor["repoEmail"] = mRepoEmail;
-    contributor["repoUsername"] = mRepoUsername;
-    contributor["repoPassword"] = mRepoPassword;
-    contributor["openNotesUuid"] = mOpenNoteUuid;
-    contributor["sideSelectedType"] = mSideSelectedType;
-    contributor["localRepoStatus"] = mLocalRepoStatus;
-    contributor["sideSelectedName"] = mSideSelectedName;
-    contributor["autoSyncRepoTime"] = mAutoSyncRepoTime;
-    contributor["autoLockTime"] = mAutoLockTime;
-    contributor["unlockPassword"] = mUnlockPassword;
-    contributor["fontFamily"] = mFontFamily;
-    contributor["fontPixelSize"] = mFontPixelSize;
-    contributor["newNoteKeySequence"] = mNewNoteKeySequence;
-    contributor["lockWindowKeySequence"] = mLockWindowKeySequence;
-    contributor["cutWindowKeySequence"] = mCutWindowKeySequence;
-    contributor["theme"] = mTheme;
-    contributor["noteSortBasis"] = mNoteSortBasis;
-    contributor["noteSortType"] = mNoteSortType;
-
-    QtJson::JsonArray splitterSizesArray;
-    for (int i = 0; i < mSplitterSizes.length(); ++i) {
-        splitterSizesArray.append(mSplitterSizes[i]);
-    }
-    contributor["splitterSizes"] = splitterSizesArray;
-
-    QString jsonString = aes.encrypt(QtJson::serialize(contributor)).toBase64();
-    if (!path.isEmpty()) {
-        Tools::writerFile(path, jsonString);
-    }
-
-    return jsonString;
+    return aes.encrypt(string.toUtf8()).toBase64();
 }
 
-void ConfigModel::unserialize(const QString &jsonString)
+const QString &ConfigModel::decrypt(const QString &string) const
 {
     QTinyAes aes(QTinyAes::CBC, Globals::aesKey, Globals::aesIv);
-    QtJson::JsonObject result = QtJson::parse(aes.decrypt(QByteArray::fromBase64(jsonString.toUtf8()))).toMap();
-
-    mVersion = result["version"].toString();
-    mRepoDir = result["repoDir"].toString();
-    mRepoUrl = result["repoUrl"].toString();
-    mRepoEmail = result["repoEmail"].toString();
-    mRepoUsername = result["repoUsername"].toString();
-    mRepoPassword = result["repoPassword"].toString();
-    mOpenNoteUuid = result["openNotesUuid"].toString();
-    mSideSelectedType = (Gitnoter::GroupType) result["sideSelectedType"].toInt();
-    mLocalRepoStatus = (Gitnoter::RepoStatus) result["localRepoStatus"].toInt();
-    mSideSelectedName = result["sideSelectedName"].toString();
-    mAutoSyncRepoTime = result["autoSyncRepoTime"].toInt();
-    mAutoLockTime = result["autoLockTime"].toInt();
-    mUnlockPassword = result["unlockPassword"].toString();
-    mFontFamily = result["fontFamily"].toString();
-    mFontPixelSize = result["fontPixelSize"].toInt();
-    mNewNoteKeySequence = result["newNoteKeySequence"].toString();
-    mLockWindowKeySequence = result["lockWindowKeySequence"].toString();
-    mCutWindowKeySequence = result["cutWindowKeySequence"].toString();
-    mTheme = (ThemeManager::ThemeFlag) result["cutWindowKeySequence"].toInt();
-    mNoteSortBasis = (Gitnoter::SortBasis) result["noteSortBasis"].toInt();
-    mNoteSortType = (Qt::SortOrder) result["noteSortType"].toInt();
-
-    mSplitterSizes.clear();
-    QtJson::JsonArray splitterSizesArray = result["splitterSizes"].toList();
-    for (int i = 0; i < splitterSizesArray.length(); ++i) {
-        mSplitterSizes.append(splitterSizesArray[i].toInt());
-    }
+    return aes.decrypt(QByteArray::fromBase64(string.toUtf8()));
 }
+
+template <typename T>
+QVariantList ConfigModel::toVariantList(const QList<T> &list)
+{
+    QVariantList newList;
+    for (auto &&item : list) {
+        newList << item;
+    }
+
+    return newList;
+}
+
+template <typename T>
+QList<T> ConfigModel::fromVariantList(const QVariantList &list)
+{
+    QList<T> newList;
+    for (auto &&item : list) {
+        newList << item.value<T>();
+    }
+
+    return newList;
+}
+
 
 void ConfigModel::setRepoDir(const QString &repoDir)
 {
-    mRepoDir = repoDir;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoDir, repoDir);
 }
 
 void ConfigModel::setRepoUrl(const QString &repoUrl)
 {
-    mRepoUrl = repoUrl;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoUrl, repoUrl);
 }
 
 void ConfigModel::setRepoUsername(const QString &repoUsername)
 {
-    mRepoUsername = repoUsername;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoUsername, repoUsername);
 }
 
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
-    mRepoPassword = repoPassword;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoPassword, encrypt(repoPassword));
 }
 
 void ConfigModel::setOpenNoteUuid(const QString &openNoteUuid)
 {
-    mOpenNoteUuid = openNoteUuid;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mOpenNoteUuid, openNoteUuid);
 }
 
 const QString &ConfigModel::getVersion() const
 {
-    return mVersion;
+    return settings->value(mVersion, Globals::version).toString();
 }
 
 const QString &ConfigModel::getRepoDir() const
 {
-    return mRepoDir;
+    return settings->value(mRepoDir, "").toString();
 }
 
 const QString &ConfigModel::getRepoUrl() const
 {
-    return mRepoUrl;
+    return settings->value(mRepoUrl, "").toString();
 }
 
 const QString &ConfigModel::getRepoUsername() const
 {
-    return mRepoUsername;
+    return settings->value(mRepoUsername, "").toString();
 }
 
 const QString &ConfigModel::getRepoPassword() const
 {
-    return mRepoPassword;
+    return decrypt(settings->value(mRepoPassword, "").toString());
 }
 
 const QString &ConfigModel::getOpenNoteUuid() const
 {
-    return mOpenNoteUuid;
+    return settings->value(mOpenNoteUuid, "").toString();
 }
 
 QString ConfigModel::getSideSelectedName() const
 {
-    return mSideSelectedName;
+    return settings->value(mSideSelectedName, "").toString();
 }
 
 void ConfigModel::setSideSelected(Gitnoter::GroupType type, const QString &name)
 {
-    mSideSelectedType = type;
-    mSideSelectedName = name;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mSideSelectedType, type);
+    settings->setValue(mSideSelectedName, name);
 }
 
 void ConfigModel::setSideSelected(GroupModel *groupModel)
 {
-    mSideSelectedType = groupModel->getType();
-    mSideSelectedName = groupModel->getName();
-    serialize(Globals::appConfigPath);
+    settings->setValue(mSideSelectedType, groupModel->getType());
+    settings->setValue(mSideSelectedName, groupModel->getName());
 }
 
 Gitnoter::RepoStatus ConfigModel::getLocalRepoStatus() const
 {
-    return mLocalRepoStatus;
+    return (Gitnoter::RepoStatus) settings->value(mRepoStatus, Gitnoter::NoneRepo).toInt();
 }
 
 void ConfigModel::setLocalRepoStatus(Gitnoter::RepoStatus status)
 {
-    mLocalRepoStatus = status;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoStatus, status);
 }
 
 Gitnoter::GroupType ConfigModel::getSideSelectedType() const
 {
-    return mSideSelectedType;
+    return (Gitnoter::GroupType) settings->value(mSideSelectedType, Gitnoter::All).toInt();
 }
 
 const QString &ConfigModel::getRepoEmail() const
 {
-    return mRepoEmail;
+    return settings->value(mRepoEmail, "").toString();
 }
 
 void ConfigModel::setRepoEmail(const QString &repoEmail)
 {
-    mRepoEmail = repoEmail;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mRepoEmail, repoEmail);
 }
 
 int ConfigModel::getAutoSyncRepoTime() const
 {
-    return mAutoSyncRepoTime;
+    return settings->value(mAutoSyncRepoTime, 15 * 60 * 1000).toInt();
 }
 
 void ConfigModel::setAutoSyncRepoTime(int autoSyncRepoTime)
 {
-    mAutoSyncRepoTime = autoSyncRepoTime;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mAutoSyncRepoTime, autoSyncRepoTime);
 }
 
 int ConfigModel::getAutoLockTime() const
 {
-    return mAutoLockTime;
+    return settings->value(mAutoLockTime, 15 * 60 * 1000).toInt();
 }
 
 void ConfigModel::setAutoLockTime(int autoLockTime)
 {
-    mAutoLockTime = autoLockTime;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mAutoLockTime, autoLockTime);
 }
 
 const QString &ConfigModel::getUnlockPassword() const
 {
-    return mUnlockPassword;
+    return settings->value(mUnlockPassword, "").toString();
 }
 
 void ConfigModel::setUnlockPassword(const QString &unlockPassword)
 {
-    mUnlockPassword = unlockPassword;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mUnlockPassword, unlockPassword);
 }
 
 const QString &ConfigModel::getFontFamily() const
 {
-    return mFontFamily;
+#ifdef Q_OS_MAC
+    QString fontFamily = "Helvetica Neue";
+#elif Q_OS_WIN
+    QString fontFamily = "Courier New";
+#elif Q_OS_LINUX
+    QString fontFamily= "Menlo2";
+#else
+#endif
+    return settings->value(mFontFamily, fontFamily).toString();
 }
 
 void ConfigModel::setFontFamily(const QString &fontFamily)
 {
-    mFontFamily = fontFamily;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mFontFamily, fontFamily);
 }
 
 int ConfigModel::getFontPixelSize() const
 {
-    return mFontPixelSize;
+    return settings->value(mFontPixelSize, 14).toInt();
 }
 
 void ConfigModel::setFontPixelSize(int fontPixelSize)
 {
-    mFontPixelSize = fontPixelSize;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mFontPixelSize, fontPixelSize);
 }
 
 const QString &ConfigModel::getNewNoteKeySequence() const
 {
-    return mNewNoteKeySequence;
+    return settings->value(mNewNoteKeySequence, Globals::newNoteKeySequence).toString();
 }
 
 void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
 {
-    mNewNoteKeySequence = newNoteKeySequence;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mNewNoteKeySequence, newNoteKeySequence);
 }
 
 const QString &ConfigModel::getLockWindowKeySequence() const
 {
-    return mLockWindowKeySequence;
+    return settings->value(mLockWindowKeySequence, Globals::lockWindowKeySequence).toString();
 }
 
 void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
 {
     mLockWindowKeySequence = lockWindowKeySequence;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mLockWindowKeySequence, lockWindowKeySequence);
 }
 
 const QString &ConfigModel::getCutWindowKeySequence() const
 {
-    return mCutWindowKeySequence;
+    return settings->value(mCutWindowKeySequence, Globals::cutWindowKeySequence).toString();
 }
 
 void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
 {
     mCutWindowKeySequence = cutWindowKeySequence;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mCutWindowKeySequence, cutWindowKeySequence);
 }
 
-const ThemeManager::ThemeFlag &ConfigModel::getTheme() const
+ThemeManager::ThemeFlag ConfigModel::getTheme()
 {
-    return mTheme;
+    return (ThemeManager::ThemeFlag) settings->value(mTheme, ThemeManager::Default).toInt();
 }
 
 void ConfigModel::setTheme(const ThemeManager::ThemeFlag &theme)
 {
     mTheme = theme;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mTheme, theme);
 }
 
-const QList<int> &ConfigModel::getSplitterSizes() const
+QList<int> ConfigModel::getSplitterSizes()
 {
-    return mSplitterSizes;
+    return fromVariantList<int>(settings->value(mSplitterSizes, {0, 0, 0}).toList());
 }
 
 void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
 {
-    this->mSplitterSizes = splitterSizes;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mSplitterSizes, toVariantList(splitterSizes));
 }
 
 Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const
 {
-    return mNoteSortBasis;
+    return (Gitnoter::SortBasis) settings->value(mNoteSortBasis, Gitnoter::Title).toInt();
 }
 
 void ConfigModel::setNoteSortBasis(Gitnoter::SortBasis noteSortBasis)
 {
-    mNoteSortBasis = noteSortBasis;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mNoteSortBasis, noteSortBasis);
 }
 
 Qt::SortOrder ConfigModel::getNoteSortType() const
 {
-    return mNoteSortType;
+    return (Qt::SortOrder) settings->value(mNoteSortType, Qt::AscendingOrder).toInt();
 }
 
 void ConfigModel::setNoteSortType(Qt::SortOrder noteSortType)
 {
-    mNoteSortType = noteSortType;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mNoteSortType, noteSortType);
 }
 
 void ConfigModel::setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder noteSortType)
 {
-    mNoteSortBasis = noteSortBasis;
-    mNoteSortType = noteSortType;
-    serialize(Globals::appConfigPath);
+    settings->setValue(mNoteSortBasis, noteSortBasis);
+    settings->setValue(mNoteSortType, noteSortType);
+}
+
+void ConfigModel::appendPopupNoteUuid(const QString &noteUuid)
+{
+    settings->setValue(mPopupNoteUuidList, noteUuid);
+}
+
+void ConfigModel::removePopupNoteUuid(const QString &noteUuid)
+{
+    QStringList uuidList = getPopupNoteUuidList();
+    uuidList.removeOne(noteUuid);
+    settings->setValue(mPopupNoteUuidList, uuidList);
+}
+
+void ConfigModel::clearPopupNoteUuid()
+{
+    settings->setValue(mPopupNoteUuidList, {});
+}
+
+QStringList ConfigModel::getPopupNoteUuidList()
+{
+    return settings->value(mPopupNoteUuidList, {}).toStringList();
 }

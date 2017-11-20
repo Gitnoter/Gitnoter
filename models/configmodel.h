@@ -6,6 +6,7 @@
 #include "groupmodel.h"
 
 #include <QObject>
+#include <QSettings>
 
 class ConfigModel : public QObject
 {
@@ -17,10 +18,6 @@ public:
     ConfigModel(const QString &jsonString);
 
     void init();
-
-    QString serialize(const QString &path = "");
-
-    void unserialize(const QString &jsonString);
 
     void setRepoDir(const QString &repoDir);
 
@@ -92,11 +89,11 @@ public:
 
     void setCutWindowKeySequence(const QString &cutWindowKeySequence);
 
-    const ThemeManager::ThemeFlag &getTheme() const;
+    ThemeManager::ThemeFlag getTheme();
 
     void setTheme(const ThemeManager::ThemeFlag &theme);
 
-    const QList<int> &getSplitterSizes() const;
+    QList<int> getSplitterSizes();
 
     void setSplitterSizes(const QList<int> &splitterSizes);
 
@@ -110,7 +107,28 @@ public:
 
     void setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder noteSortType);
 
+    void appendPopupNoteUuid(const QString &noteUuid);
+
+    void removePopupNoteUuid(const QString &noteUuid);
+
+    void clearPopupNoteUuid();
+
+    QStringList getPopupNoteUuidList();
+
 private:
+    template <typename T>
+    QVariantList toVariantList(const QList<T> &list);
+
+    template <typename T>
+    QList<T> fromVariantList(const QVariantList &list);
+
+    QString encrypt(const QString &string);
+
+    const QString &decrypt(const QString &string) const;
+
+private:
+    QSettings *settings;
+
     QString mVersion;
     QString mRepoDir;
     QString mRepoUrl;
@@ -118,33 +136,34 @@ private:
     QString mRepoUsername;
     QString mRepoPassword;
     QString mOpenNoteUuid;
+    QString mPopupNoteUuidList;
 
-    Gitnoter::RepoStatus mLocalRepoStatus;
+    QString mRepoStatus;
     // type: 1 - 第一层及
     //      name: all, recent, unclassified, trash, category, tag
     // type: 2 - 第二层级
     //      name: categoryName
     // type: 3
     //      name: tagName
-    Gitnoter::GroupType mSideSelectedType;
+    QString mSideSelectedType;
     QString mSideSelectedName;
 
-    Gitnoter::SortBasis mNoteSortBasis;
-    Qt::SortOrder mNoteSortType;
+    QString mNoteSortBasis;
+    QString mNoteSortType;
 
-    int mAutoSyncRepoTime;
-    int mAutoLockTime;
+    QString mAutoSyncRepoTime;
+    QString mAutoLockTime;
     QString mUnlockPassword;
 
     QString mFontFamily;
-    int mFontPixelSize;
+    QString mFontPixelSize;
 
     QString mNewNoteKeySequence;
     QString mLockWindowKeySequence;
     QString mCutWindowKeySequence;
 
-    ThemeManager::ThemeFlag mTheme;
-    QList<int> mSplitterSizes;
+    QString mTheme;
+    QString mSplitterSizes;
 
 };
 
