@@ -27,7 +27,7 @@ ConfigModel::ConfigModel()
     mEditorSplitterSizes = "editor/splitterSizes";
     mTheme = "window/theme";
     mMainWindowSplitterSizes = "mainWindow/splitterSizes";
-    mMainWindowSize = "mainWindow/size";
+    mMainWindowRect = "mainWindow/rect";
     mMainWindowFullScreen = "mainWindow/fullScreen";
     mNoteSortBasis = "noteList/noteSortBasis";
     mNoteSortType = "noteList/noteSortType";
@@ -267,14 +267,14 @@ void ConfigModel::setMainWindowSplitterSizes(const QList<int> &splitterSizes)
     settings->setValue(mMainWindowSplitterSizes, toVariantList(splitterSizes));
 }
 
-QSize ConfigModel::getMainWindowSize()
+QRect ConfigModel::getMainWindowRect()
 {
-    return settings->value(mMainWindowSize, QSize()).toSize();
+    return settings->value(mMainWindowRect, QRect()).toRect();
 }
 
-void ConfigModel::setMainWindowSize(const QSize &size)
+void ConfigModel::setMainWindowRect(const QRect &rect)
 {
-    settings->setValue(mMainWindowSize, size);
+    settings->setValue(mMainWindowRect, rect);
 }
 
 Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const

@@ -91,9 +91,9 @@ public:
 
     void setMainWindowSplitterSizes(const QList<int> &splitterSizes);
 
-    QSize getMainWindowSize();
+    QRect getMainWindowRect();
 
-    void setMainWindowSize(const QSize &size);
+    void setMainWindowRect(const QRect &rect);
 
     Gitnoter::SortBasis getNoteSortBasis() const;
 
@@ -169,7 +169,7 @@ private:
 
     QString mTheme;
     QString mMainWindowSplitterSizes;
-    QString mMainWindowSize;
+    QString mMainWindowRect;
     QString mMainWindowFullScreen;
     QString mEditorSplitterSizes;
 

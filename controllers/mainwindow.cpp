@@ -36,7 +36,7 @@ void MainWindow::setupUi()
     ui->splitter->setSizes(Globals::configModel->getMainWindowSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
 
-    resize(Globals::configModel->getMainWindowSize());
+    setGeometry(Globals::configModel->getMainWindowRect());
     if (Globals::configModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
@@ -260,20 +260,20 @@ void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)
     }
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event)
-{
-    QMainWindow::resizeEvent(event);
-    Globals::configModel->setMainWindowSize(event->size());
-}
-
 void MainWindow::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::WindowStateChange) {
-        if (windowState() == Qt::WindowFullScreen) {
+    if (event->type() == QEvent::WindowStateChange || event->type() == QEvent::ActivationChange) {
+        if (windowState().testFlag(Qt::WindowFullScreen)) {
             Globals::configModel->setMainWindowFullScreen(true);
         }
-        else if (windowState() == Qt::WindowNoState && !isFullScreen()) {
+        else if ((windowState() == Qt::WindowNoState || windowState() == Qt::WindowMaximized) && !isFullScreen()) {
             Globals::configModel->setMainWindowFullScreen(false);
         }
     }
+}
+
+void MainWindow::moveEvent(QMoveEvent *event)
+{
+    QMainWindow::moveEvent(event);
+    Globals::configModel->setMainWindowRect(geometry());
 }
