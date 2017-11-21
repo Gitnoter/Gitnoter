@@ -664,7 +664,7 @@ QWidget#widget_6{
               <enum>Qt::AutoText</enum>
              </property>
              <property name="alignment">
-              <set>Qt::AlignCenter</set>
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
              <property name="margin">
               <number>0</number>
