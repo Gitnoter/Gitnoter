@@ -140,7 +140,7 @@ void NoteListWidget::setListWidget()
     }
 
     // TODO: fix layout bug
-    mMainWindow->splitter()->setSizes(Globals::configModel->getSplitterSizes());
+    mMainWindow->splitter()->setSizes(Globals::configModel->getMainWindowSplitterSizes());
 
     setItemSelected();
 }

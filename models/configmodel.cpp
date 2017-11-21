@@ -4,11 +4,6 @@
 
 #include <qtinyaes.h>
 
-ConfigModel::ConfigModel(const QString &jsonString)
-{
-    decrypt(jsonString);
-}
-
 ConfigModel::ConfigModel()
 {
     mVersion = "version";
@@ -29,8 +24,11 @@ ConfigModel::ConfigModel()
     mAutoLockTime = "lock/autoLockTime";
     mUnlockPassword = "lock/unlockPassword";
     mEditorFont = "editor/font";
+    mEditorSplitterSizes = "editor/splitterSizes";
     mTheme = "window/theme";
-    mSplitterSizes = "window/splitterSizes";
+    mMainWindowSplitterSizes = "mainWindow/splitterSizes";
+    mMainWindowSize = "mainWindow/size";
+    mMainWindowFullScreen = "mainWindow/fullScreen";
     mNoteSortBasis = "noteList/noteSortBasis";
     mNoteSortType = "noteList/noteSortType";
 }
@@ -259,14 +257,24 @@ void ConfigModel::setTheme(const ThemeManager::ThemeFlag &theme)
     settings->setValue(mTheme, theme);
 }
 
-QList<int> ConfigModel::getSplitterSizes()
+QList<int> ConfigModel::getMainWindowSplitterSizes()
 {
-    return fromVariantList<int>(settings->value(mSplitterSizes, {0, 0, 0}).toList());
+    return fromVariantList<int>(settings->value(mMainWindowSplitterSizes, {0, 0, 0}).toList());
 }
 
-void ConfigModel::setSplitterSizes(const QList<int> &splitterSizes)
+void ConfigModel::setMainWindowSplitterSizes(const QList<int> &splitterSizes)
 {
-    settings->setValue(mSplitterSizes, toVariantList(splitterSizes));
+    settings->setValue(mMainWindowSplitterSizes, toVariantList(splitterSizes));
+}
+
+QSize ConfigModel::getMainWindowSize()
+{
+    return settings->value(mMainWindowSize, QSize()).toSize();
+}
+
+void ConfigModel::setMainWindowSize(const QSize &size)
+{
+    settings->setValue(mMainWindowSize, size);
 }
 
 Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const
@@ -315,4 +323,24 @@ void ConfigModel::clearPopupNoteUuid()
 QStringList ConfigModel::getPopupNoteUuidList() const
 {
     return settings->value(mPopupNoteUuidList, {}).toStringList();
+}
+
+QList<int> ConfigModel::getEditorSplitterSizes()
+{
+    return fromVariantList<int>(settings->value(mEditorSplitterSizes, {0, 0}).toList());
+}
+
+void ConfigModel::setEditorSplitterSizes(const QList<int> &splitterSizes)
+{
+    settings->setValue(mEditorSplitterSizes, toVariantList(splitterSizes));
+}
+
+bool ConfigModel::getMainWindowFullScreen() const
+{
+    return settings->value(mMainWindowFullScreen, false).toBool();
+}
+
+void ConfigModel::setMainWindowFullScreen(bool fullScreen)
+{
+    settings->setValue(mMainWindowFullScreen, fullScreen);
 }

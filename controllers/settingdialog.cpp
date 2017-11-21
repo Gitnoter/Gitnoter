@@ -17,8 +17,8 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_repoUrl->setText(Globals::configModel->getRepoUrl());
     ui->lineEdit_username->setText(Globals::configModel->getRepoUsername());
     ui->lineEdit_password->setText(Globals::configModel->getRepoPassword());
-    ui->fontComboBox->setCurrentText(Globals::configModel->getFontFamily());
-    ui->comboBox_fontSize->setCurrentText(QString::number(Globals::configModel->getFontPixelSize()));
+//    ui->fontComboBox->setCurrentText(Globals::configModel->getEditorFont());
+//    ui->comboBox_fontSize->setCurrentText(QString::number(Globals::configModel->getFontPixelSize()));
     ui->keySequenceEdit_newNote->setKeySequence(QKeySequence(Globals::configModel->getNewNoteKeySequence()));
     ui->keySequenceEdit_lockWindow->setKeySequence(QKeySequence(Globals::configModel->getLockWindowKeySequence()));
     ui->keySequenceEdit_cutWindow->setKeySequence(QKeySequence(Globals::configModel->getCutWindowKeySequence()));
@@ -169,13 +169,13 @@ void SettingDialog::on_lineEdit_password_editingFinished()
 
 void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
 {
-    Globals::configModel->setFontFamily(f.family());
+    Globals::configModel->setEditorFont(f.family());
     emit editorFontChanged();
 }
 
 void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
 {
-    Globals::configModel->setFontPixelSize(arg1.toInt());
+//    Globals::configModel->setFontPixelSize(arg1.toInt());
     emit editorFontChanged();
 }
 

@@ -19,6 +19,8 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
 
     connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
     connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownPreviewSliderValueChanged(int)));
+
+    setSplitterSizes();
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -121,15 +123,10 @@ void MarkdownEditorWidget::on_pushButton_category_clicked()
     }
 }
 
-void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int pos, int)
+void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int, int)
 {
-    setSplitterHandleDisable(0 == pos || ui->splitter_editor->size().width() == pos);
-}
-
-void MarkdownEditorWidget::setSplitterHandleDisable(bool b)
-{
-    ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
-    ui->splitter_editor->handle(1)->setDisabled(b);
+    Globals::configModel->setEditorSplitterSizes(ui->splitter_editor->sizes());
+    setSplitterSizes();
 }
 
 bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
@@ -282,4 +279,29 @@ void MarkdownEditorWidget::setTagList()
     mNoteModel->setTagList(tagList);
     mNoteModel->saveNoteDataToLocal();
     mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
+}
+
+void MarkdownEditorWidget::on_pushButton_splitterPreview_clicked()
+{
+    int width = ui->splitter_editor->size().width() / 2;
+    QList<int> sizes = {width, width};
+    Globals::configModel->setEditorSplitterSizes(sizes);
+    setSplitterSizes();
+}
+
+void MarkdownEditorWidget::on_pushButton_markdownPeview_clicked()
+{
+    QList<int> sizes = {0, ui->splitter_editor->size().width()};
+    Globals::configModel->setEditorSplitterSizes(sizes);
+    setSplitterSizes();
+}
+
+void MarkdownEditorWidget::setSplitterSizes()
+{
+    QList<int> sizes = Globals::configModel->getEditorSplitterSizes();
+    ui->splitter_editor->setSizes(sizes);
+
+    bool b = sizes.indexOf(0) != -1;
+    ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
+    ui->splitter_editor->handle(1)->setDisabled(b);
 }

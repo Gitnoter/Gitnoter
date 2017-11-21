@@ -15,8 +15,6 @@ Q_OBJECT
 public:
     ConfigModel();
 
-    ConfigModel(const QString &jsonString);
-
     void init();
 
     void setRepoDir(const QString &repoDir);
@@ -89,9 +87,13 @@ public:
 
     void setTheme(const ThemeManager::ThemeFlag &theme);
 
-    QList<int> getSplitterSizes();
+    QList<int> getMainWindowSplitterSizes();
 
-    void setSplitterSizes(const QList<int> &splitterSizes);
+    void setMainWindowSplitterSizes(const QList<int> &splitterSizes);
+
+    QSize getMainWindowSize();
+
+    void setMainWindowSize(const QSize &size);
 
     Gitnoter::SortBasis getNoteSortBasis() const;
 
@@ -110,6 +112,14 @@ public:
     void clearPopupNoteUuid();
 
     QStringList getPopupNoteUuidList() const;
+
+    QList<int> getEditorSplitterSizes();
+
+    void setEditorSplitterSizes(const QList<int> &splitterSizes);
+
+    bool getMainWindowFullScreen() const;
+
+    void setMainWindowFullScreen(bool fullScreen);
 
 private:
     template <typename T>
@@ -158,7 +168,10 @@ private:
     QString mCutWindowKeySequence;
 
     QString mTheme;
-    QString mSplitterSizes;
+    QString mMainWindowSplitterSizes;
+    QString mMainWindowSize;
+    QString mMainWindowFullScreen;
+    QString mEditorSplitterSizes;
 
 };
 

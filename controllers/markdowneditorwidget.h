@@ -62,14 +62,18 @@ private slots:
 
     void on_pushButton_category_clicked();
 
-private:
-    void setSplitterHandleDisable(bool b);
+    void on_pushButton_splitterPreview_clicked();
 
+    void on_pushButton_markdownPeview_clicked();
+
+private:
     bool eventFilter(QObject *object, QEvent *event);
 
     void setTagList();  // save tagList to noteModel
 
     void setOpenNote();
+
+    void setSplitterSizes();
 
 public:
     MainWindow *mainWindow() { return mMainWindow; }
