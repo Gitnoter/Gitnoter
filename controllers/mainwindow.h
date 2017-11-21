@@ -60,6 +60,9 @@ public slots:
 private:
     void setupUi();
 
+    void resizeEvent(QResizeEvent* event) override;
+    void changeEvent(QEvent *event) override;
+
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 

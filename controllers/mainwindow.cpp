@@ -33,8 +33,13 @@ void MainWindow::setupUi()
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
     connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionTriggered()));
 
-    ui->splitter->setSizes(Globals::configModel->getSplitterSizes());
+    ui->splitter->setSizes(Globals::configModel->getMainWindowSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
+
+    resize(Globals::configModel->getMainWindowSize());
+    if (Globals::configModel->getMainWindowFullScreen()) {
+        showFullScreen();
+    }
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -48,7 +53,7 @@ void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_splitter_splitterMoved(int, int)
 {
-    Globals::configModel->setSplitterSizes(ui->splitter->sizes());
+    Globals::configModel->setMainWindowSplitterSizes(ui->splitter->sizes());
 }
 
 void MainWindow::on_pushButton_noteAdd_clicked()
@@ -252,5 +257,23 @@ void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)
 
     if (flags.testFlag(Gitnoter::NoteListTitle)) {
         setNoteListTitle();
+    }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    Globals::configModel->setMainWindowSize(event->size());
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange) {
+        if (windowState() == Qt::WindowFullScreen) {
+            Globals::configModel->setMainWindowFullScreen(true);
+        }
+        else if (windowState() == Qt::WindowNoState && !isFullScreen()) {
+            Globals::configModel->setMainWindowFullScreen(false);
+        }
     }
 }
