@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME}
         controllers/messagedialog.h         controllers/messagedialog.cpp
         controllers/notelistwidget.h        controllers/notelistwidget.cpp
         controllers/grouptreewidget.h       controllers/grouptreewidget.cpp
+        controllers/menubar.h               controllers/menubar.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp

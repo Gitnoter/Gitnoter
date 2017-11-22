@@ -56,7 +56,8 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp
+    helps/notepreviewwidget.cpp \
+    controllers/menubar.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -81,7 +82,8 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h
+    helps/notepreviewwidget.h \
+    controllers/menubar.h
 
 FORMS += \
     views/mainwindow.ui \
