@@ -10,7 +10,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
-        ui(new Ui::MainWindow)
+        ui(new Ui::MainWindow),
+        mMenuBar(new MenuBar(this))
 {
     ui->setupUi(this);
     init();
@@ -24,6 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
+    setMenuBar(mMenuBar);
     ui->groupTreeWidget->expandAll();
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);

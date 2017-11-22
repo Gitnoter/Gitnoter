@@ -8,7 +8,7 @@
 #include "grouptreewidget.h"
 #include "notelistwidget.h"
 #include "markdowneditorwidget.h"
-
+#include "menubar.h"
 #include "notemodel.h"
 
 #include <QMainWindow>
@@ -95,6 +95,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    MenuBar *mMenuBar;
+
 
 };
 
