@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MenuBar</class>
+ <widget class="QMainWindow" name="MenuBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>880</width>
+    <height>38</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>880</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="action_newNote"/>
+    <addaction name="action_newCategories"/>
+    <addaction name="action_newTags"/>
+    <addaction name="separator"/>
+    <addaction name="action_saveNote"/>
+    <addaction name="action_quitNote"/>
+    <addaction name="separator"/>
+    <addaction name="action_synch"/>
+    <addaction name="action_preferences"/>
+   </widget>
+   <widget class="QMenu" name="menu_edit">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+    <widget class="QMenu" name="menu_search">
+     <property name="title">
+      <string>搜索</string>
+     </property>
+     <addaction name="action_notes"/>
+     <addaction name="action_noteText"/>
+    </widget>
+    <widget class="QMenu" name="menu_switch">
+     <property name="title">
+      <string>转换</string>
+     </property>
+     <addaction name="action_toUppercase"/>
+     <addaction name="action_toLowercase"/>
+     <addaction name="action_toUppercaseAtFirst"/>
+    </widget>
+    <addaction name="action_repeal"/>
+    <addaction name="action_reform"/>
+    <addaction name="separator"/>
+    <addaction name="action_cut"/>
+    <addaction name="action_copy"/>
+    <addaction name="action_paste"/>
+    <addaction name="action_selectAll"/>
+    <addaction name="separator"/>
+    <addaction name="menu_search"/>
+    <addaction name="menu_switch"/>
+   </widget>
+   <widget class="QMenu" name="menu_note">
+    <property name="title">
+     <string>笔记</string>
+    </property>
+    <addaction name="action_deleteNote"/>
+   </widget>
+   <widget class="QMenu" name="menu_sign">
+    <property name="title">
+     <string>标记</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_view">
+    <property name="title">
+     <string>视图</string>
+    </property>
+    <addaction name="action_editorMode"/>
+    <addaction name="separator"/>
+    <addaction name="action_fullScreen"/>
+   </widget>
+   <widget class="QMenu" name="menumenu_window">
+    <property name="title">
+     <string>窗口</string>
+    </property>
+    <addaction name="action_mixWindow"/>
+    <addaction name="action_maxWindow"/>
+    <addaction name="separator"/>
+    <addaction name="action_prepose"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="action_guide"/>
+    <addaction name="action_history"/>
+    <addaction name="action_markdownLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="action_feedback"/>
+    <addaction name="action_issue"/>
+    <addaction name="action_about"/>
+   </widget>
+   <addaction name="menu_file"/>
+   <addaction name="menu_edit"/>
+   <addaction name="menu_note"/>
+   <addaction name="menu_sign"/>
+   <addaction name="menu_view"/>
+   <addaction name="menumenu_window"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <action name="action_newNote">
+   <property name="text">
+    <string>新建笔记</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_newCategories">
+   <property name="text">
+    <string>新建笔记本</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_newTags">
+   <property name="text">
+    <string>新建标签</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_saveNote">
+   <property name="text">
+    <string>保存</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_quitNote">
+   <property name="text">
+    <string>关闭</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_synch">
+   <property name="text">
+    <string>同步笔记</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_repeal">
+   <property name="text">
+    <string>撤销</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="action_reform">
+   <property name="text">
+    <string>重做</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="action_cut">
+   <property name="text">
+    <string>剪切</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_copy">
+   <property name="text">
+    <string>复制</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_paste">
+   <property name="text">
+    <string>粘贴</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="action_selectAll">
+   <property name="text">
+    <string>全选</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_notes">
+   <property name="text">
+    <string>搜索笔记</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
+   </property>
+  </action>
+  <action name="action_noteText">
+   <property name="text">
+    <string>在笔记中搜索</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="action_toUppercase">
+   <property name="text">
+    <string>使用大写字母</string>
+   </property>
+  </action>
+  <action name="action_toLowercase">
+   <property name="text">
+    <string>使用小写字母</string>
+   </property>
+  </action>
+  <action name="action_toUppercaseAtFirst">
+   <property name="text">
+    <string>开头字母大写</string>
+   </property>
+  </action>
+  <action name="action_deleteNote">
+   <property name="text">
+    <string>删除笔记</string>
+   </property>
+  </action>
+  <action name="action_guide">
+   <property name="text">
+    <string>使用指南...</string>
+   </property>
+  </action>
+  <action name="action_markdownLanguage">
+   <property name="text">
+    <string>markdown 语法...</string>
+   </property>
+  </action>
+  <action name="action_feedback">
+   <property name="text">
+    <string>意见反馈...</string>
+   </property>
+  </action>
+  <action name="action_history">
+   <property name="text">
+    <string>更新记录...</string>
+   </property>
+  </action>
+  <action name="action_issue">
+   <property name="text">
+    <string>GitHub issues...</string>
+   </property>
+  </action>
+  <action name="action_prepose">
+   <property name="text">
+    <string>前置所有窗口</string>
+   </property>
+  </action>
+  <action name="action_mixWindow">
+   <property name="text">
+    <string>最小化</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="action_maxWindow">
+   <property name="text">
+    <string>最大化</string>
+   </property>
+  </action>
+  <action name="action_editorMode">
+   <property name="text">
+    <string>编辑模式</string>
+   </property>
+  </action>
+  <action name="action_fullScreen">
+   <property name="text">
+    <string>进入全屏幕</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>&amp;关于 Gitnoter</string>
+   </property>
+  </action>
+  <action name="action_preferences">
+   <property name="text">
+    <string>&amp;设置...</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

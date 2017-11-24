@@ -95,7 +95,8 @@ FORMS += \
     views/notelistcellwidget.ui \
     views/markdowneditorwidget.ui \
     views/tagcellwidget.ui \
-    views/messagedialog.ui
+    views/messagedialog.ui \
+    views/menubar.ui
 
 RESOURCES += \
     resources/resources.qrc

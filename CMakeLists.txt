@@ -21,7 +21,8 @@ qt5_wrap_ui(UIS_HDRS
         views/notelistcellwidget.ui
         views/markdowneditorwidget.ui
         views/tagcellwidget.ui
-        views/messagedialog.ui)
+        views/messagedialog.ui
+        views/menubar.ui)
 
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}

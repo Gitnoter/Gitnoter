@@ -25,7 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
-    setMenuBar(mMenuBar);
+    setMenuBar(mMenuBar->menuBar());
     ui->groupTreeWidget->expandAll();
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
