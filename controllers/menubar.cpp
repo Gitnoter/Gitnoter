@@ -1,8 +1,6 @@
 #include "menubar.h"
 #include "ui_menubar.h"
 
-#include <qDebug>
-
 MenuBar::MenuBar(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MenuBar)
@@ -32,7 +30,7 @@ void MenuBar::setupUi(QWidget *parent)
     // qDebug() << menuBar()->findChild<QMenu *>("menu_file")  // 这里可以查找到
     //      ->findChild<QAction *>("action_preferences");  // 这里死都查找不到, 不知道是什么原因
 
-    QList<QAction *> actionList = menuBar()->findChild<QMenu *>("menu_file")->actions();
+    QList<QAction *> actionList = menuBar()->findChild<QMenu *>("menu_notes")->actions();
     for (auto &&item : actionList) {
         if (item->objectName() == "action_preferences") {
             item->setMenuRole(QAction::PreferencesRole);
