@@ -30,6 +30,7 @@ namespace Ui
 class GroupTreeWidget;
 class MarkdownEditorWidget;
 class NoteListWidget;
+class MenuBar;
 
 class MainWindow : public QMainWindow
 {
