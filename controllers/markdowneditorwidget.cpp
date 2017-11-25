@@ -10,7 +10,8 @@
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
-    mCategoryListWidget(new CategoryListWidget(this))
+    mCategoryListWidget(new CategoryListWidget(this)),
+    mNoteModel(nullptr)
 {
     ui->setupUi(this);
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
