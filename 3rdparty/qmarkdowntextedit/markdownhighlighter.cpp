@@ -645,7 +645,9 @@ void MarkdownHighlighter::highlightAdditionalRules(
                 if (capturingGroup > 0) {
                     QTextCharFormat &currentMaskedFormat = maskedFormat;
                     // set the font size from the current rule's font format
-                    maskedFormat.setFontPointSize(format.fontPointSize());
+                    if (format.fontPointSize() > 0) {
+                        maskedFormat.setFontPointSize(format.fontPointSize());
+                    }
 
                     setFormat(match.capturedStart(maskedGroup),
                               match.capturedLength(maskedGroup),
