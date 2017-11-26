@@ -21,6 +21,11 @@ public:
 
     void setGroupEnable();
 
+//    void initFormMarkdownEditorWidget();
+//    void initFormGroupTreeWidget();
+//    void initFormNoteListWidget();
+
+
 private:
     void setupUi(QWidget *parent);
 
@@ -44,8 +49,8 @@ private slots:
     void onPrintDialogAccepted();
     void onPageSetupDialogAccepted();
 
-    void on_action_repeal_triggered();
-    void on_action_reform_triggered();
+    void on_action_undo_triggered();
+    void on_action_redo_triggered();
     void on_action_cut_triggered();
     void on_action_copy_triggered();
     void on_action_paste_triggered();
@@ -124,7 +129,7 @@ private slots:
     void on_action_issue_triggered();
     void on_action_about_triggered();
 
-private:
+public:
     Ui::MenuBar *ui;
 
 };

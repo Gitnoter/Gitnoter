@@ -279,3 +279,8 @@ void MainWindow::moveEvent(QMoveEvent *event)
     QMainWindow::moveEvent(event);
     Globals::configModel->setMainWindowRect(geometry());
 }
+
+MenuBar *MainWindow::menuBar()
+{
+    return mMenuBar;
+}

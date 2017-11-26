@@ -86,12 +86,12 @@ void MenuBar::on_action_saveNote_triggered()
     }
 }
 
-void MenuBar::on_action_repeal_triggered()
+void MenuBar::on_action_undo_triggered()
 {
 
 }
 
-void MenuBar::on_action_reform_triggered()
+void MenuBar::on_action_redo_triggered()
 {
 
 }

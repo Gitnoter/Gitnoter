@@ -1,10 +1,11 @@
 #include "ui_markdowneditorwidget.h"
+#include "ui_menubar.h"
 
 #include "markdowneditorwidget.h"
-#include "mainwindow.h"
 #include "globals.h"
 
 #include <QScrollBar>
+#include <QMenu>
 #include <QDebug>
 
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
@@ -138,35 +139,49 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             ui->pushButton_markdownPeview->setHidden(true);
             ui->pushButton_splitterPreview->setHidden(true);
             ui->stackedWidget->setCurrentIndex(1);
-            return false;
         }
         else if (event->type() == QEvent::FocusOut) {
             ui->frame->setStyleSheet("");
             ui->pushButton_markdownPeview->setHidden(false);
             ui->pushButton_splitterPreview->setHidden(false);
             ui->stackedWidget->setCurrentIndex(0);
-            return false;
         }
         // if lintEdit_tag is empty and press Backspace key, delete tag
         else if (event->type() == QEvent::KeyPress && ((QKeyEvent *) event)->key() == Qt::Key_Backspace) {
             if (ui->lineEdit_tag->text().isEmpty() && mTagCellWidgetList.length() > 0) {
                 removeTag();
-                return false;
             }
         }
     }
     else if (object == ui->markdownEditor) {
+        // If show edit tools
         if (mNoteModel && !mNoteModel->getIsDelete()) {
             if (event->type() == QEvent::FocusIn) {
                 ui->stackedWidget->setCurrentIndex(0);
-                return false;
             }
             else if (event->type() == QEvent::FocusOut) {
                 ui->stackedWidget->setCurrentIndex(1);
-                return false;
             }
         }
+
+        // set menuBar enabled
+        if (event->type() == QEvent::FocusIn) {
+            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+            menuBarUi->action_selectAll->setEnabled(true);
+            menuBarUi->action_undo->setEnabled(ui->markdownEditor->document()->isUndoAvailable());
+            menuBarUi->action_redo->setEnabled(ui->markdownEditor->document()->isRedoAvailable());
+
+            const QString selectedText = ui->markdownEditor->textCursor().selectedText();
+            menuBarUi->action_cut->setEnabled(!selectedText.isEmpty());
+            menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
+        }
+        else if (event->type() == QEvent::FocusOut) {
+            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+            menuBarUi->action_undo->setEnabled(false);
+            menuBarUi->action_redo->setEnabled(false);
+        }
     }
+
     return QWidget::eventFilter(object, event);
 }
 
@@ -305,4 +320,32 @@ void MarkdownEditorWidget::setSplitterSizes()
     bool b = sizes.indexOf(0) != -1;
     ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
     ui->splitter_editor->handle(1)->setDisabled(b);
+}
+
+void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QPoint &pos)
+{
+//    QTextEdit().isUndoRedoEnabled();
+//    QTextEdit().textCursor().selection();
+//    QPoint globalPos = ui->markdownEditor->mapToGlobal(pos);
+//    QMenu *menu = ui->markdownEditor->createStandardContextMenu();
+
+//    menu->findChild<QAction *>("edit-undo")->setText(tr("撤销"));
+//    menu->findChild<QAction *>("edit-redo")->setText(tr("重做"));
+//    menu->findChild<QAction *>("edit-cut")->setText(tr("剪切"));
+//    menu->findChild<QAction *>("edit-copy")->setText(tr("拷贝"));
+//    menu->findChild<QAction *>("edit-paste")->setText(tr("粘贴"));
+//    menu->findChild<QAction *>("edit-delete")->setText(tr("删除"));
+//    menu->findChild<QAction *>("select-all")->setText(tr("全选"));
+
+//    menu->exec(globalPos);
+}
+
+
+void MarkdownEditorWidget::on_markdownEditor_selectionChanged()
+{
+    const QString selectedText = ui->markdownEditor->textCursor().selectedText();
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+
+    menuBarUi->action_cut->setEnabled(!selectedText.isEmpty());
+    menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
 }

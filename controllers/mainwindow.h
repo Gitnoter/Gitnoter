@@ -93,6 +93,7 @@ public:
     MarkdownEditorWidget *markdownEditorWidget();
     QStackedWidget *stackedWidget();
     QSplitter *splitter();
+    MenuBar *menuBar();
 
 private:
     Ui::MainWindow *ui;

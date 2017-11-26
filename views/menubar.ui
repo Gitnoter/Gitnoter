@@ -85,8 +85,8 @@
      <addaction name="action_toLowercase"/>
      <addaction name="action_toUppercaseAtFirst"/>
     </widget>
-    <addaction name="action_repeal"/>
-    <addaction name="action_reform"/>
+    <addaction name="action_undo"/>
+    <addaction name="action_redo"/>
     <addaction name="separator"/>
     <addaction name="action_cut"/>
     <addaction name="action_copy"/>
@@ -237,7 +237,7 @@
     <string>Meta+Ctrl+S</string>
    </property>
   </action>
-  <action name="action_repeal">
+  <action name="action_undo">
    <property name="text">
     <string>撤销</string>
    </property>
@@ -245,7 +245,7 @@
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="action_reform">
+  <action name="action_redo">
    <property name="text">
     <string>重做</string>
    </property>

@@ -10,6 +10,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QMenuBar>
 
 namespace Ui
 {
@@ -65,6 +66,10 @@ private slots:
     void on_pushButton_splitterPreview_clicked();
 
     void on_pushButton_markdownPeview_clicked();
+
+    void on_markdownEditor_customContextMenuRequested(const QPoint &pos);
+
+    void on_markdownEditor_selectionChanged();
 
 private:
     bool eventFilter(QObject *object, QEvent *event);
