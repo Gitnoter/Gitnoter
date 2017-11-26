@@ -50,72 +50,6 @@ void MenuBar::setGroupEnable()
     }
 }
 
-void MenuBar::on_action_newNote_triggered()
-{
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        mainWindow->appendNote();
-    }
-}
-
-void MenuBar::on_action_newCategories_triggered()
-{
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        mainWindow->appendGroup();
-    }
-}
-
-void MenuBar::on_action_newTags_triggered()
-{
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        mainWindow->appendGroup();
-    }
-}
-
-void MenuBar::on_action_saveNote_triggered()
-{
-    NoteModel *noteModel = nullptr;
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        noteModel = mainWindow->markdownEditorWidget()->noteModel();
-    }
-    else if (MarkdownEditorWidget *markdownEditorWidget = qobject_cast<MarkdownEditorWidget *>(parent())) {
-        noteModel = markdownEditorWidget->noteModel();
-    }
-
-    if (noteModel) {
-        noteModel->saveNoteToLocal();
-    }
-}
-
-void MenuBar::on_action_undo_triggered()
-{
-
-}
-
-void MenuBar::on_action_redo_triggered()
-{
-
-}
-
-void MenuBar::on_action_cut_triggered()
-{
-
-}
-
-void MenuBar::on_action_copy_triggered()
-{
-
-}
-
-void MenuBar::on_action_paste_triggered()
-{
-
-}
-
-void MenuBar::on_action_selectAll_triggered()
-{
-
-}
-
 void MenuBar::on_action_toUppercase_triggered()
 {
 
@@ -127,11 +61,6 @@ void MenuBar::on_action_toLowercase_triggered()
 }
 
 void MenuBar::on_action_toUppercaseAtFirst_triggered()
-{
-
-}
-
-void MenuBar::on_action_deleteNote_triggered()
 {
 
 }
@@ -176,41 +105,10 @@ void MenuBar::on_action_about_triggered()
 
 }
 
-void MenuBar::on_action_preferences_triggered()
-{
-
-}
 
 void MenuBar::on_action_synchNote_triggered()
 {
 
-}
-
-void MenuBar::on_action_reloadNotes_triggered()
-{
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        mainWindow->init();
-    }
-}
-
-void MenuBar::on_action_findWithFolder_triggered()
-{
-    QString path = "";
-
-    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
-        NoteModel *noteModel = mainWindow->markdownEditorWidget()->noteModel();
-        if (noteModel) {
-            path = noteModel->getNoteDir();
-        }
-    }
-
-    if (MarkdownEditorWidget *markdownEditorWidget = qobject_cast<MarkdownEditorWidget *>(parent())) {
-        path = markdownEditorWidget->noteModel()->getNoteDir();
-    }
-
-    if (!path.isEmpty()) {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-    }
 }
 
 void MenuBar::on_action_importEvernote_triggered()
@@ -240,22 +138,19 @@ void MenuBar::on_action_exportMarkdown_triggered()
 
 void MenuBar::on_action_printPageSetting_triggered()
 {
-    QPrintDialog *dialog = new QPrintDialog(new QPrinter(), parentWidget());
-    dialog->open(this, SLOT(onPrintDialogAccepted()));
+    mPrinter = new QPrinter();
+    QPrintDialog *dialog = new QPrintDialog(mPrinter, parentWidget());
+    dialog->open(this, SLOT(onPrintAccepted()));
 }
 
 void MenuBar::on_action_print_triggered()
 {
-    QPageSetupDialog *dialog = new QPageSetupDialog(new QPrinter(), parentWidget());
-    dialog->open(this, SLOT(onPageSetupDialogAccepted()));
+    mPrinter = new QPrinter();
+    QPageSetupDialog *dialog = new QPageSetupDialog(mPrinter, parentWidget());
+    dialog->open(this, SLOT(onPrintAccepted()));
 }
 
 void MenuBar::on_action_pasteHtml_triggered()
-{
-
-}
-
-void MenuBar::on_action_deleteSelected_triggered()
 {
 
 }
@@ -525,12 +420,7 @@ void MenuBar::on_action_lock_triggered()
 
 }
 
-void MenuBar::onPrintDialogAccepted()
+void MenuBar::onPrintAccepted()
 {
-    qDebug() << "onPrintDialogAccepted";
-}
-
-void MenuBar::onPageSetupDialogAccepted()
-{
-    qDebug() << "onPageSetupDialogAccepted";
+    emit printAccepted(mPrinter);
 }

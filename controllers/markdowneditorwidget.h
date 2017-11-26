@@ -11,6 +11,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QMenuBar>
+#include <QPrinter>
 
 namespace Ui
 {
@@ -33,6 +34,7 @@ public:
     void init(const QString &uuid, MainWindow *mainWindow = 0);
     void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
+public slots:
     void appendTag(const QString &tag);
     void removeTag(QString tagName = "");
 
@@ -40,6 +42,12 @@ public:
     void appendCategory(const QString &category);
 
     void modifyNote();
+    void saveNote();
+
+    void openPath();
+    void print(QPrinter *printer);
+    void copyLine();
+
 
 private slots:
 
@@ -69,9 +77,9 @@ private slots:
 
     void on_markdownEditor_customContextMenuRequested(const QPoint &pos);
 
-    void on_markdownEditor_selectionChanged();
-
 private:
+    void setupUi();
+
     bool eventFilter(QObject *object, QEvent *event);
 
     void setTagList();  // save tagList to noteModel

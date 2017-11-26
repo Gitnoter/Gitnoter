@@ -41,22 +41,23 @@ public:
 
     ~MainWindow();
 
-    void init();
     void updateView(Gitnoter::UpdateViewFlags flags = Gitnoter::GroupTreeWidget);
-
-    void appendGroup();
-
-    void appendNote();
-    void trashNote();         // set isDelete: 1
-    void searchNote(const QString &text);
-    void sortNote();
     void setNoteListTitle();
 
 public slots:
+    void init();
+
+    void appendGroup();
     void removeGroup();
 
+    void appendNote();
+    void trashNote();         // set isDelete: 1
     void removeNote();    // remove from disk
     void restoreNote();
+
+    void sortNote();
+    void searchNote(const QString &text);
+    void openSettingWidget();
 
 private:
     void setupUi();

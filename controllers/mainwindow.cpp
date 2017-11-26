@@ -1,4 +1,5 @@
 #include "ui_mainwindow.h"
+#include "ui_menubar.h"
 
 #include "mainwindow.h"
 #include "notelistsortpopupmenu.h"
@@ -42,6 +43,14 @@ void MainWindow::setupUi()
     if (Globals::configModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
+
+    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
+    connect(menuBarUi->action_newNote, SIGNAL(triggered()), this, SLOT(appendNote()));
+    connect(menuBarUi->action_newCategories, SIGNAL(triggered()), this, SLOT(appendGroup()));
+    connect(menuBarUi->action_newTags, SIGNAL(triggered()), this, SLOT(appendGroup()));
+    connect(menuBarUi->action_reloadNotes, SIGNAL(triggered()), this, SLOT(init()));
+    connect(menuBarUi->action_preferences, SIGNAL(triggered()), this, SLOT(openSettingWidget()));
+    connect(menuBarUi->action_deleteNote, SIGNAL(triggered()), this, SLOT(trashNote()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -283,4 +292,9 @@ void MainWindow::moveEvent(QMoveEvent *event)
 MenuBar *MainWindow::menuBar()
 {
     return mMenuBar;
+}
+
+void MainWindow::openSettingWidget()
+{
+
 }

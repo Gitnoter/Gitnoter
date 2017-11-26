@@ -15,14 +15,9 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     mNoteModel(nullptr)
 {
     ui->setupUi(this);
-    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEdit_tag->installEventFilter(this);
-    ui->markdownEditor->installEventFilter(this);
-
-    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
-    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownPreviewSliderValueChanged(int)));
-
-    setSplitterSizes();
+    if (mMainWindow = qobject_cast<MainWindow *>(parent)) {
+        init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
+    }
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -45,6 +40,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
     else {
         setOpenNote();
     }
+    setupUi();
 }
 
 void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
@@ -166,7 +162,7 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
 
         // set menuBar enabled
         if (event->type() == QEvent::FocusIn) {
-            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
             menuBarUi->action_selectAll->setEnabled(true);
             menuBarUi->action_undo->setEnabled(ui->markdownEditor->document()->isUndoAvailable());
             menuBarUi->action_redo->setEnabled(ui->markdownEditor->document()->isRedoAvailable());
@@ -176,7 +172,7 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
         }
         else if (event->type() == QEvent::FocusOut) {
-            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
             menuBarUi->action_undo->setEnabled(false);
             menuBarUi->action_redo->setEnabled(false);
         }
@@ -340,12 +336,66 @@ void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QP
 //    menu->exec(globalPos);
 }
 
-
-void MarkdownEditorWidget::on_markdownEditor_selectionChanged()
+void MarkdownEditorWidget::setupUi()
 {
-    const QString selectedText = ui->markdownEditor->textCursor().selectedText();
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->ui;
+    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->lineEdit_tag->installEventFilter(this);
+    ui->markdownEditor->installEventFilter(this);
 
-    menuBarUi->action_cut->setEnabled(!selectedText.isEmpty());
-    menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
+    setSplitterSizes();
+
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+
+    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
+    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownPreviewSliderValueChanged(int)));
+
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_cut, SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_copy, SLOT(setEnabled(bool)));
+
+    connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBarUi->action_undo, SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBarUi->action_redo, SLOT(setEnabled(bool)));
+
+
+    connect(menuBarUi->action_undo, SIGNAL(triggered()), ui->markdownEditor, SLOT(undo()));
+    connect(menuBarUi->action_redo, SIGNAL(triggered()), ui->markdownEditor, SLOT(redo()));
+
+    connect(menuBarUi->action_cut, SIGNAL(triggered()), ui->markdownEditor, SLOT(cut()));
+    connect(menuBarUi->action_copy, SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
+    connect(menuBarUi->action_paste, SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
+    connect(menuBarUi->action_selectAll, SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
+    connect(menuBarUi->action_deleteText, SIGNAL(triggered()), ui->markdownEditor, SLOT(clear()));
+
+    connect(mMainWindow->menuBar(), SIGNAL(printAccepted(QPrinter *)), this, SLOT(print(QPrinter *)));
+
+    connect(menuBarUi->action_saveNote, SIGNAL(triggered()), this, SLOT(saveNote()));
+    connect(menuBarUi->action_findWithFolder, SIGNAL(triggered()), this, SLOT(openPath()));
+    connect(menuBarUi->action_copyLine, SIGNAL(triggered()), this, SLOT(copyLine()));
+}
+
+void MarkdownEditorWidget::saveNote()
+{
+    if (mNoteModel) {
+        mNoteModel->saveNoteToLocal();
+    }
+}
+
+void MarkdownEditorWidget::openPath()
+{
+    if (mNoteModel) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(mNoteModel->getNoteDir()));
+    }
+}
+
+void MarkdownEditorWidget::print(QPrinter *printer)
+{
+
+}
+
+void MarkdownEditorWidget::copyLine()
+{
+    int blockNumber = ui->markdownEditor->textCursor().blockNumber();
+    QTextDocument *doc = ui->markdownEditor->document();
+    QTextBlock tb = doc->findBlockByLineNumber(blockNumber); // The second line.
+    QClipboard *board = QApplication::clipboard();
+    board->setText(tb.text());
 }

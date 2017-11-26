@@ -6,6 +6,7 @@
 #include "markdowneditorwidget.h"
 
 #include <QMainWindow>
+#include <QPrinter>
 
 namespace Ui {
 class MenuBar;
@@ -25,18 +26,19 @@ public:
 //    void initFormGroupTreeWidget();
 //    void initFormNoteListWidget();
 
-
 private:
     void setupUi(QWidget *parent);
 
+signals:
+    void printAccepted(QPrinter *printer);
+
 private slots:
-    void on_action_newNote_triggered();
-    void on_action_newCategories_triggered();
-    void on_action_newTags_triggered();
-    void on_action_saveNote_triggered();
+//    void on_action_newCategories_triggered();
+//    void on_action_newTags_triggered();
+//    void on_action_saveNote_triggered();
     void on_action_synchNote_triggered();
-    void on_action_reloadNotes_triggered();
-    void on_action_findWithFolder_triggered();
+//    void on_action_reloadNotes_triggered();
+//    void on_action_findWithFolder_triggered();
     void on_action_importEvernote_triggered();
     void on_action_exportHtmlForPDF_triggered();
     void on_action_exportMarkdownForPDF_triggered();
@@ -44,20 +46,20 @@ private slots:
     void on_action_exportMarkdown_triggered();
     void on_action_printPageSetting_triggered();
     void on_action_print_triggered();
-    void on_action_preferences_triggered();
+//    void on_action_preferences_triggered();
 
-    void onPrintDialogAccepted();
-    void onPageSetupDialogAccepted();
+    void onPrintAccepted();
+//    void onPageSetupDialogAccepted();
 
-    void on_action_undo_triggered();
-    void on_action_redo_triggered();
-    void on_action_cut_triggered();
-    void on_action_copy_triggered();
-    void on_action_paste_triggered();
+//    void on_action_undo_triggered();
+//    void on_action_redo_triggered();
+//    void on_action_cut_triggered();
+//    void on_action_copy_triggered();
+//    void on_action_paste_triggered();
     void on_action_pasteHtml_triggered();
-    void on_action_selectAll_triggered();
-    void on_action_deleteSelected_triggered();
-    void on_action_deleteNote_triggered();
+//    void on_action_selectAll_triggered();
+//    void on_action_deleteText_triggered();
+//    void on_action_deleteNote_triggered();
     void on_action_copyLine_triggered();
     void on_action_deleteLine_triggered();
     void on_action_webSearch_triggered();
@@ -130,8 +132,11 @@ private slots:
     void on_action_about_triggered();
 
 public:
-    Ui::MenuBar *ui;
+    Ui::MenuBar *getUi() { return ui; }
 
+private:
+    Ui::MenuBar *ui;
+    QPrinter *mPrinter;
 };
 
 #endif // MENUBAR_H
