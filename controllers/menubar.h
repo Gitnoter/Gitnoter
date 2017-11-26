@@ -41,6 +41,9 @@ private slots:
     void on_action_print_triggered();
     void on_action_preferences_triggered();
 
+    void onPrintDialogAccepted();
+    void onPageSetupDialogAccepted();
+
     void on_action_repeal_triggered();
     void on_action_reform_triggered();
     void on_action_cut_triggered();

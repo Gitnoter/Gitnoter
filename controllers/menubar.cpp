@@ -2,6 +2,10 @@
 #include "menubar.h"
 #include "globals.h"
 
+#include <QPrintDialog>
+#include <QPageSetupDialog>
+#include <QPrinter>
+
 MenuBar::MenuBar(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MenuBar)
@@ -191,7 +195,22 @@ void MenuBar::on_action_reloadNotes_triggered()
 
 void MenuBar::on_action_findWithFolder_triggered()
 {
+    QString path = "";
 
+    if (MainWindow *mainWindow = qobject_cast<MainWindow *>(parent())) {
+        NoteModel *noteModel = mainWindow->markdownEditorWidget()->noteModel();
+        if (noteModel) {
+            path = noteModel->getNoteDir();
+        }
+    }
+
+    if (MarkdownEditorWidget *markdownEditorWidget = qobject_cast<MarkdownEditorWidget *>(parent())) {
+        path = markdownEditorWidget->noteModel()->getNoteDir();
+    }
+
+    if (!path.isEmpty()) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    }
 }
 
 void MenuBar::on_action_importEvernote_triggered()
@@ -221,12 +240,14 @@ void MenuBar::on_action_exportMarkdown_triggered()
 
 void MenuBar::on_action_printPageSetting_triggered()
 {
-
+    QPrintDialog *dialog = new QPrintDialog(new QPrinter(), parentWidget());
+    dialog->open(this, SLOT(onPrintDialogAccepted()));
 }
 
 void MenuBar::on_action_print_triggered()
 {
-
+    QPageSetupDialog *dialog = new QPageSetupDialog(new QPrinter(), parentWidget());
+    dialog->open(this, SLOT(onPageSetupDialogAccepted()));
 }
 
 void MenuBar::on_action_pasteHtml_triggered()
@@ -502,4 +523,14 @@ void MenuBar::on_action_closeAllWindow_triggered()
 void MenuBar::on_action_lock_triggered()
 {
 
+}
+
+void MenuBar::onPrintDialogAccepted()
+{
+    qDebug() << "onPrintDialogAccepted";
+}
+
+void MenuBar::onPageSetupDialogAccepted()
+{
+    qDebug() << "onPageSetupDialogAccepted";
 }
