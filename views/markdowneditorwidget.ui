@@ -1016,7 +1016,7 @@ Bob--&gt;Alice: I am good thanks!
   <customwidget>
    <class>QMarkdownTextEdit</class>
    <extends>QPlainTextEdit</extends>
-   <header location="global">qmarkdowntextedit.h</header>
+   <header location="global">qmarkdowntextedit/qmarkdowntextedit.h</header>
   </customwidget>
   <customwidget>
    <class>NotePreviewWidget</class>

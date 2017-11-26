@@ -6,10 +6,22 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Gui Widgets Network PrintSupport REQUIRED)
 
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/hoedown HOEDOWN)
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include LIBGIT2)
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/json JSON)
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qmarkdowntextedit)
+
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include)
+link_directories(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/lib)
+find_library(git2 libgit2)
+
 include_directories(${PROJECT_SOURCE_DIR}/models)
 include_directories(${PROJECT_SOURCE_DIR}/views)
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/helps)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui
@@ -54,6 +66,8 @@ add_executable(${PROJECT_NAME}
         helps/tools.h           helps/tools.cpp
         helps/gitmanager.h      helps/gitmanager.cpp
         helps/thememanager.h        helps/thememanager.cpp
-        helps/notepreviewwidget.h   helps/notepreviewwidget.cpp)
+        helps/notepreviewwidget.h   helps/notepreviewwidget.cpp
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport)
+        ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES})
+
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport git2)

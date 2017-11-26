@@ -3,8 +3,8 @@
 #include "globals.h"
 #include "notelistcellwidget.h"
 
-#include <json.h>
-#include <html.h>
+#include <json/json.h>
+#include <hoedown/html.h>
 
 #include <QUrl>
 #include <QMimeDatabase>

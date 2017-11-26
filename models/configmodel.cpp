@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "tools.h"
 
-#include <qtinyaes.h>
+#include <qtinyaes/qtinyaes.h>
 
 ConfigModel::ConfigModel()
 {
