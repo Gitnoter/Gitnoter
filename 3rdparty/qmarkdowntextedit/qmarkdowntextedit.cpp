@@ -781,7 +781,7 @@ void QMarkdownTextEdit::setPlainText(const QString & text) {
 /**
  * Uses an other widget as parent for the search widget
  */
-void QMarkdownTextEdit::initSearchFrame(QWidget *searchFrame) {
+void QMarkdownTextEdit::initSearchFrame(QWidget *searchFrame, bool darkMode) {
     _searchFrame = searchFrame;
 
     // remove the search widget from our layout
@@ -796,6 +796,7 @@ void QMarkdownTextEdit::initSearchFrame(QWidget *searchFrame) {
         layout->setContentsMargins(0, 0, 0, 0);
     }
 
+    _searchWidget->setDarkMode(darkMode);
     layout->addWidget(_searchWidget);
     _searchFrame->setLayout(layout);
 }
@@ -820,7 +821,7 @@ bool QMarkdownTextEdit::handleReturnEntered() {
 
     // if return is pressed and there is just a list symbol then we want to
     // remove the list symbol
-    QRegularExpression re("^\\s*[+\\-\\*]\\s*$");
+    QRegularExpression re("^\\s*[+\\-\\*]\\s+$");
     QRegularExpressionMatchIterator i = re.globalMatch(currentLineText);
     if (i.hasNext()) {
         c.removeSelectedText();
@@ -828,12 +829,12 @@ bool QMarkdownTextEdit::handleReturnEntered() {
     }
 
     // Check if we are in a list.
-    // We are in a list when we have '* ' or '- ', possibly with preceding
+    // We are in a list when we have '* ', '- ' or '+ ', possibly with preceding
     // whitespace. If e.g. user has entered '**text**' and pressed enter - we
     // don't want do anymore list-stuff.
     QChar char0 = currentLineText.trimmed()[0];
     QChar char1 = currentLineText.trimmed()[1];
-    bool inList = ((char0 == '*' || char0 == '-') && char1 == ' ');
+    bool inList = ((char0 == '*' || char0 == '-' || char0 == '+') && char1 == ' ');
 
     if (inList) {
         // if the current line starts with a list character (possibly after
