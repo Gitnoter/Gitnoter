@@ -154,17 +154,6 @@ void MenuBar::on_action_pasteHtml_triggered()
 {
 
 }
-
-void MenuBar::on_action_copyLine_triggered()
-{
-
-}
-
-void MenuBar::on_action_deleteLine_triggered()
-{
-
-}
-
 void MenuBar::on_action_webSearch_triggered()
 {
 

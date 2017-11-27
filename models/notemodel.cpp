@@ -10,6 +10,8 @@
 #include <QMimeDatabase>
 #include <QDateTime>
 #include <QDebug>
+#include <QDir>
+#include <QTemporaryFile>
 
 NoteModel::NoteModel(const QString noteText)
 {
@@ -265,6 +267,118 @@ QString NoteModel::getMarkdownHtml(int maxImageWidth, bool forExport, bool decry
     return result;
 }
 
+QString NoteModel::htmlToMarkdown(QString text) {
+    // replace Windows line breaks
+    text.replace(QRegularExpression("\r\n"), "\n");
+
+    // remove all null characters
+    // we can get those from Google Chrome via the clipboard
+    text.remove(QChar(0));
+
+    // remove some blocks
+    text.remove(QRegularExpression(
+            "<head.*?>(.+?)<\\/head>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption));
+
+    text.remove(QRegularExpression(
+            "<script.*?>(.+?)<\\/script>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption));
+
+    text.remove(QRegularExpression(
+            "<style.*?>(.+?)<\\/style>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption));
+
+    // replace some html tags with markdown
+    text.replace(QRegularExpression(
+            "<strong.*?>(.+?)<\\/strong>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "**\\1**");
+    text.replace(QRegularExpression(
+            "<b.*?>(.+?)<\\/b>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "**\\1**");
+    text.replace(QRegularExpression(
+            "<em.*?>(.+?)<\\/em>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "*\\1*");
+    text.replace(QRegularExpression(
+            "<i.*?>(.+?)<\\/i>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "*\\1*");
+    text.replace(QRegularExpression(
+            "<pre.*?>(.+?)<\\/pre>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption),
+                 "\n```\n\\1\n```\n");
+    text.replace(QRegularExpression(
+            "<code.*?>(.+?)<\\/code>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption),
+                 "\n```\n\\1\n```\n");
+    text.replace(QRegularExpression(
+            "<h1.*?>(.+?)<\\/h1>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n# \\1\n");
+    text.replace(QRegularExpression(
+            "<h2.*?>(.+?)<\\/h2>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n## \\1\n");
+    text.replace(QRegularExpression(
+            "<h3.*?>(.+?)<\\/h3>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n### \\1\n");
+    text.replace(QRegularExpression(
+            "<h4.*?>(.+?)<\\/h4>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n#### \\1\n");
+    text.replace(QRegularExpression(
+            "<h5.*?>(.+?)<\\/h5>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n##### \\1\n");
+    text.replace(QRegularExpression(
+            "<li.*?>(.+?)<\\/li>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "- \\1");
+    text.replace(QRegularExpression(
+            "<br.*?>",
+            QRegularExpression::CaseInsensitiveOption), "\n");
+    text.replace(QRegularExpression(
+            "<a[^>]+href=\"(.+?)\".*?>(.+?)<\\/a>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "[\\2](\\1)");
+    text.replace(QRegularExpression(
+            "<p.*?>(.+?)</p>",
+            QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::DotMatchesEverythingOption), "\n\n\\1\n\n");
+
+    // replace multiple line breaks
+    text.replace(QRegularExpression("\n\n+"), "\n\n");
+
+    return text;
+}
+
+QString NoteModel::downloadUrlToMedia(QString url, NoteModel *noteModel, bool returnUrlOnly) {
+    QByteArray imageData = Tools::downloadUrlToData(QUrl(url));
+    if (imageData.isEmpty()) { return ""; }
+
+    // remove strings like "?b=16068071000" and non-characters from the suffix
+    url.remove(QRegularExpression("\\?.+$")).remove(QRegularExpression("[^a-zA-Z0-9]"));
+
+    const QString saveName = Tools::getShortUuid();
+    const QStringList splitList = url.split("/", QString::SkipEmptyParts).last().split(".");
+    const QString name = splitList.length() >= 2 ? splitList.first() : "";
+    const QString suffix = splitList.length() >= 2 ? splitList.last() : "image";
+    const QString savePath = noteModel->getNoteDir() + QDir::separator() + saveName + "." + suffix;
+
+    Tools::writerFile(savePath, imageData);
+
+    return returnUrlOnly
+           ? savePath : "![" + name + "](" + "gnr://" + noteModel->getShortUuid() + "/" + saveName + "." + suffix + ")";
+}
+
 QString NoteModel::encodeCssFont(const QFont& refFont) {
 //-----------------------------------------------------------------------
 // This function assembles a CSS Font specification string from
@@ -431,8 +545,8 @@ void NoteModel::saveNoteToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText());
-    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData());
+    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText().toUtf8());
+    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData().toUtf8());
 }
 
 void NoteModel::saveNoteTextToLocal()
@@ -440,7 +554,7 @@ void NoteModel::saveNoteTextToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText());
+    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText().toUtf8());
 }
 
 void NoteModel::saveNoteDataToLocal()
@@ -448,7 +562,7 @@ void NoteModel::saveNoteDataToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData());
+    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData().toUtf8());
 }
 
 QString NoteModel::getUuid()
@@ -551,4 +665,9 @@ int NoteModel::getIsDelete() const
 void NoteModel::setIsDelete(int isDelete)
 {
     NoteModel::isDelete = isDelete;
+}
+
+QString NoteModel::getShortUuid() const
+{
+    return mUuid.mid(0, 7);
 }

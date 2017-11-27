@@ -390,10 +390,10 @@ bool GroupTreeWidget::has(Gitnoter::GroupType type, const QString &text)
 void GroupTreeWidget::saveDataToLocal(Gitnoter::GroupType type)
 {
     if (type == Gitnoter::Category) {
-        Tools::writerFile(Globals::repoCategoryListPath, toString(type));
+        Tools::writerFile(Globals::repoCategoryListPath, toString(type).toUtf8());
     }
     else if (type == Gitnoter::Tag) {
-        Tools::writerFile(Globals::repoTagListPath, toString(type));
+        Tools::writerFile(Globals::repoTagListPath, toString(type).toUtf8());
     }
 }
 

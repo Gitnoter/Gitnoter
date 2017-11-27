@@ -60,8 +60,8 @@ private slots:
 //    void on_action_selectAll_triggered();
 //    void on_action_deleteText_triggered();
 //    void on_action_deleteNote_triggered();
-    void on_action_copyLine_triggered();
-    void on_action_deleteLine_triggered();
+//    void on_action_copyLine_triggered();
+//    void on_action_deleteLine_triggered();
     void on_action_webSearch_triggered();
 
     void on_action_groupSearch_triggered();

@@ -4,6 +4,8 @@
 #include "groupmodel.h"
 
 #include <QObject>
+#include <QUrl>
+#include <QFile>
 
 class GroupModel;
 
@@ -13,6 +15,8 @@ Q_OBJECT
 
 public:
     QString getUuid();
+
+    QString getShortUuid() const;
 
     int getCreateDate();
 
@@ -76,12 +80,16 @@ public:
 
     void clear();
 
-private:
+public:
     /**
      * Returns the CSS code for a QFont
      * Thank you to Phil Weinstein for the code
      */
     static QString encodeCssFont(const QFont& refFont);
+
+    static QString htmlToMarkdown(QString text);
+
+    static QString downloadUrlToMedia(QString url, NoteModel *noteModel, bool returnUrlOnly = false);
 
 private:
     QString mUuid;

@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QTableWidget>
 #include <QListWidget>
+#include <QUrl>
 
 class Tools : public QObject
 {
@@ -15,11 +16,13 @@ public:
 
     static QString getUuid();
 
+    static QString getShortUuid();
+
     static QString readerFile(QString path);
 
     static QStringList readerFileToList(QString path);
 
-    static bool writerFile(QString path, const QString &text);
+    static bool writerFile(QString path, const QByteArray &data);
 
     static QStringList textToStringList(QString text);
 
@@ -40,6 +43,8 @@ public:
     static int rowShowCount(QListWidget *listWidget);
 
     static bool urlExists(QString urlString);
+
+    static QByteArray downloadUrlToData(QUrl url);
 
 };
 

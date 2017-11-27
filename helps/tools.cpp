@@ -4,7 +4,10 @@
 #include <QTcpSocket>
 #include <QUuid>
 #include <QDateTime>
-#include <QUrl>
+#include <QNetworkAccessManager>
+#include <QEventLoop>
+#include <QTimer>
+#include <QNetworkReply>
 
 QFileInfoList Tools::getFilesPath(const QString path)
 {
@@ -29,6 +32,11 @@ QFileInfoList Tools::getFilesPath(const QString path)
 QString Tools::getUuid()
 {
     return (QUuid::createUuid()).toString().mid(1, 36);
+}
+
+QString Tools::getShortUuid()
+{
+    return (QUuid::createUuid()).toString().mid(1, 8);
 }
 
 int Tools::timestampFromDateTime(const QString dateTime)
@@ -119,16 +127,14 @@ void Tools::changeWidgetBorder(QWidget *widget, const QString color, int width)
             widget->styleSheet().replace(QRegExp("border-width: ?[0-9]+px"), tr("border-width: %1px").arg(width)));
 }
 
-bool Tools::writerFile(QString path, const QString &text)
+bool Tools::writerFile(QString path, const QByteArray &data)
 {
     QFile f(path);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!f.open(QIODevice::WriteOnly)) {
         return false;
     }
 
-    QTextStream str(&f);
-    str << text;
-
+    f.write(data);
     f.close();
 
     return true;
@@ -204,4 +210,49 @@ bool Tools::urlExists(QString urlString) {
         } //socket wait for ready read
     }//socket write
     return false;
+}
+
+/**
+ * Downloads an url and returns the data
+ *
+ * @param url
+ * @return {QByteArray} the content of the downloaded url
+ */
+QByteArray Tools::downloadUrlToData(QUrl url) {
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
+    QEventLoop loop;
+    QTimer timer;
+
+    timer.setSingleShot(true);
+    QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply *)), &loop, SLOT(quit()));
+
+    // 10 sec timeout for the request
+    timer.start(10000);
+
+    QNetworkRequest networkRequest = QNetworkRequest(url);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+    networkRequest.setAttribute(QNetworkRequest::FollowRedirectsAttribute,
+                                true);
+#endif
+
+    QByteArray data;
+    QNetworkReply *reply = manager->get(networkRequest);
+    loop.exec();
+
+    // if we didn't get a timeout let us return the content
+    if (timer.isActive()) {
+        int statusCode = reply->attribute(
+                QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+        // only get the data if the status code was "success"
+        // see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+        if (statusCode >= 200 && statusCode < 300) {
+            // get the data from the network reply
+            data = reply->readAll();
+        }
+    }
+
+    return data;
 }

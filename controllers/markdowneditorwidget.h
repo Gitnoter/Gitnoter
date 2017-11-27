@@ -47,7 +47,10 @@ public slots:
     void openPath();
     void print(QPrinter *printer);
     void copyLine();
-
+    void removeLine();
+    void removeSelectedText();
+    void clearText();
+    void pasteHtml();
 
 private slots:
 
@@ -87,7 +90,7 @@ private:
     void setOpenNote();
 
     void setSplitterSizes();
-
+    
 public:
     MainWindow *mainWindow() { return mMainWindow; }
 

@@ -94,6 +94,7 @@
     <addaction name="action_pasteHtml"/>
     <addaction name="action_selectAll"/>
     <addaction name="action_deleteText"/>
+    <addaction name="action_clearText"/>
     <addaction name="separator"/>
     <addaction name="action_deleteNote"/>
     <addaction name="separator"/>
@@ -451,6 +452,11 @@
    </property>
    <property name="toolTip">
     <string>删除</string>
+   </property>
+  </action>
+  <action name="action_clearText">
+   <property name="text">
+    <string>清空</string>
    </property>
   </action>
   <action name="action_title1">

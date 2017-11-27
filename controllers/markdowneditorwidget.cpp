@@ -107,8 +107,8 @@ void MarkdownEditorWidget::appendCategory(const QString &category)
 
 void MarkdownEditorWidget::modifyNote()
 {
-    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
+    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->saveNoteToLocal();
     mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
 }
@@ -363,27 +363,30 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_copy, SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
     connect(menuBarUi->action_paste, SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
     connect(menuBarUi->action_selectAll, SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
-    connect(menuBarUi->action_deleteText, SIGNAL(triggered()), ui->markdownEditor, SLOT(clear()));
+    connect(menuBarUi->action_pasteHtml, SIGNAL(triggered()), this, SLOT(pasteHtml()));
+    connect(menuBarUi->action_deleteText, SIGNAL(triggered()), this, SLOT(removeSelectedText()));
+    connect(menuBarUi->action_clearText, SIGNAL(triggered()), this, SLOT(clearText()));
 
     connect(mMainWindow->menuBar(), SIGNAL(printAccepted(QPrinter *)), this, SLOT(print(QPrinter *)));
 
     connect(menuBarUi->action_saveNote, SIGNAL(triggered()), this, SLOT(saveNote()));
     connect(menuBarUi->action_findWithFolder, SIGNAL(triggered()), this, SLOT(openPath()));
     connect(menuBarUi->action_copyLine, SIGNAL(triggered()), this, SLOT(copyLine()));
+    connect(menuBarUi->action_deleteLine, SIGNAL(triggered()), this, SLOT(removeLine()));
 }
 
 void MarkdownEditorWidget::saveNote()
 {
-    if (mNoteModel) {
-        mNoteModel->saveNoteToLocal();
-    }
+    if (!mNoteModel) { return; }
+
+    mNoteModel->saveNoteToLocal();
 }
 
 void MarkdownEditorWidget::openPath()
 {
-    if (mNoteModel) {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(mNoteModel->getNoteDir()));
-    }
+    if (!mNoteModel) { return; }
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(mNoteModel->getNoteDir()));
 }
 
 void MarkdownEditorWidget::print(QPrinter *printer)
@@ -393,9 +396,82 @@ void MarkdownEditorWidget::print(QPrinter *printer)
 
 void MarkdownEditorWidget::copyLine()
 {
-    int blockNumber = ui->markdownEditor->textCursor().blockNumber();
-    QTextDocument *doc = ui->markdownEditor->document();
-    QTextBlock tb = doc->findBlockByLineNumber(blockNumber); // The second line.
-    QClipboard *board = QApplication::clipboard();
-    board->setText(tb.text());
+    if (!mNoteModel) { return; }
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.movePosition(QTextCursor::EndOfBlock);
+
+    const QString lineText = ui->markdownEditor->document()->findBlockByLineNumber(textCursor.blockNumber()).text();
+    textCursor.insertText(QString("\n%1").arg(lineText));
+
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::removeLine()
+{
+    if (!mNoteModel) { return; }
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::BlockUnderCursor);
+    textCursor.removeSelectedText();
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::removeSelectedText()
+{
+    if (!mNoteModel) { return; }
+    ui->markdownEditor->textCursor().removeSelectedText();
+//
+//    QTextCursor textCursor = ui->markdownEditor->textCursor();
+//    textCursor.removeSelectedText();
+//    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::clearText()
+{
+    ui->markdownEditor->selectAll();
+    ui->markdownEditor->textCursor().removeSelectedText();
+}
+
+void MarkdownEditorWidget::pasteHtml()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    const QMimeData * mimeData = clipboard->mimeData(QClipboard::Clipboard);
+    if (mimeData->hasHtml()) {
+        QString html = mimeData->html();
+        // convert html tags to markdown
+        html = NoteModel::htmlToMarkdown(html);
+
+        // match image tags
+        QRegularExpression re("<img.+?src=\"(.+?)\".*?>", QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatchIterator i = re.globalMatch(html);
+
+        // find, download locally and replace all images
+        while (i.hasNext()) {
+            QRegularExpressionMatch match = i.next();
+            QString imageTag = match.captured(0);
+            QString imageUrl = match.captured(1);
+
+            qDebug() << __func__ << " - 'imageUrl': " << imageUrl;
+
+            if (!QUrl(imageUrl).isValid()) {
+                continue;
+            }
+
+            // download the image and get the media markdown code for it
+            QString markdownCode = NoteModel::downloadUrlToMedia(imageUrl, mNoteModel);
+
+            if (!markdownCode.isEmpty()) {
+                // replace the image tag with markdown code
+                html.replace(imageTag, markdownCode + "\n");
+            }
+        }
+        // remove all html tags
+        html.remove(QRegularExpression("<.+?>"));
+
+        ui->markdownEditor->textCursor().insertText(html);
+    }
+    else if (mimeData->hasText()) {
+        ui->markdownEditor->textCursor().insertText(mimeData->text());
+    }
 }
