@@ -51,6 +51,7 @@ void MainWindow::setupUi()
     connect(menuBarUi->action_reloadNotes, SIGNAL(triggered()), this, SLOT(init()));
     connect(menuBarUi->action_preferences, SIGNAL(triggered()), this, SLOT(openSettingWidget()));
     connect(menuBarUi->action_deleteNote, SIGNAL(triggered()), this, SLOT(trashNote()));
+    connect(menuBarUi->action_groupSearch, SIGNAL(triggered()), this, SLOT(setSearchFocus()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -297,4 +298,9 @@ MenuBar *MainWindow::menuBar()
 void MainWindow::openSettingWidget()
 {
 
+}
+
+void MainWindow::setSearchFocus()
+{
+    ui->lineEdit_noteSearch->setFocus();
 }

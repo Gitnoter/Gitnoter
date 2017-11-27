@@ -34,6 +34,9 @@ public:
     static const QString lockWindowKeySequence;
     static const QString cutWindowKeySequence;
 
+//    static const QStringList searchEngines;
+    static const QString searchEngine;
+
     static const QByteArray aesKey;
     static const QByteArray aesIv;
 

@@ -58,6 +58,7 @@ public slots:
     void sortNote();
     void searchNote(const QString &text);
     void openSettingWidget();
+    void setSearchFocus();
 
 private:
     void setupUi();

@@ -291,7 +291,7 @@
     <string>分组中搜索...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+F</string>
+    <string>Ctrl+Shift+F</string>
    </property>
   </action>
   <action name="action_findText">
@@ -370,7 +370,7 @@
     <string>进入全屏幕</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+G</string>
+    <string>Meta+Ctrl+F</string>
    </property>
   </action>
   <action name="action_about">

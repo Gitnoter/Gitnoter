@@ -26,6 +26,10 @@ const QString Globals::newNoteKeySequence = "Ctrl+N";
 const QString Globals::lockWindowKeySequence = "Ctrl+Shift+L";
 const QString Globals::cutWindowKeySequence = "Ctrl+Shift+X";
 
+//const QStringList Globals::searchEngines = {"https://www.baidu.com/s?wd=", "https://www.google.com/search?&q="};
+const QString Globals::searchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
+                                                                          : "https://www.google.com/search?&q=";
+
 const QByteArray Globals::aesKey = "Q5tO3jUB0oe7FmWq";
 const QByteArray Globals::aesIv  = "RNNSR8XNbMTuOSGd";
 

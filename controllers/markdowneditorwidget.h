@@ -51,6 +51,9 @@ public slots:
     void removeSelectedText();
     void clearText();
     void pasteHtml();
+    void webSearchText();
+    void showSearchFindWidget();
+    void showSearchReplaceWidget();
 
 private slots:
 
@@ -90,7 +93,7 @@ private:
     void setOpenNote();
 
     void setSplitterSizes();
-    
+
 public:
     MainWindow *mainWindow() { return mMainWindow; }
 

@@ -56,21 +56,21 @@ private slots:
 //    void on_action_cut_triggered();
 //    void on_action_copy_triggered();
 //    void on_action_paste_triggered();
-    void on_action_pasteHtml_triggered();
+//    void on_action_pasteHtml_triggered();
 //    void on_action_selectAll_triggered();
 //    void on_action_deleteText_triggered();
 //    void on_action_deleteNote_triggered();
 //    void on_action_copyLine_triggered();
 //    void on_action_deleteLine_triggered();
-    void on_action_webSearch_triggered();
+//    void on_action_webSearch_triggered();
 
-    void on_action_groupSearch_triggered();
-    void on_action_findText_triggered();
-    void on_action_findNext_triggered();
-    void on_action_findLast_triggered();
-    void on_action_replaceText_triggered();
-    void on_action_replaceAndNext_triggered();
-    void on_action_replaceAll_triggered();
+//    void on_action_groupSearch_triggered();
+//    void on_action_findText_triggered();
+//    void on_action_findNext_triggered();
+//    void on_action_findLast_triggered();
+//    void on_action_replaceText_triggered();
+//    void on_action_replaceAndNext_triggered();
+//    void on_action_replaceAll_triggered();
 
     void on_action_toUppercase_triggered();
     void on_action_toLowercase_triggered();

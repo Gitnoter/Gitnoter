@@ -170,10 +170,12 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             const QString selectedText = ui->markdownEditor->textCursor().selectedText();
             menuBarUi->action_cut->setEnabled(!selectedText.isEmpty());
             menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
+            menuBarUi->action_webSearch->setEnabled(!selectedText.isEmpty());
         }
         else if (event->type() == QEvent::FocusOut) {
             Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
             menuBarUi->action_undo->setEnabled(false);
+            menuBarUi->action_redo->setEnabled(false);
             menuBarUi->action_redo->setEnabled(false);
         }
     }
@@ -351,6 +353,7 @@ void MarkdownEditorWidget::setupUi()
 
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_cut, SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_copy, SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_webSearch, SLOT(setEnabled(bool)));
 
     connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBarUi->action_undo, SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBarUi->action_redo, SLOT(setEnabled(bool)));
@@ -373,6 +376,14 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_findWithFolder, SIGNAL(triggered()), this, SLOT(openPath()));
     connect(menuBarUi->action_copyLine, SIGNAL(triggered()), this, SLOT(copyLine()));
     connect(menuBarUi->action_deleteLine, SIGNAL(triggered()), this, SLOT(removeLine()));
+    connect(menuBarUi->action_webSearch, SIGNAL(triggered()), this, SLOT(webSearchText()));
+
+    connect(menuBarUi->action_findText, SIGNAL(triggered()), this, SLOT(showSearchFindWidget()));
+    connect(menuBarUi->action_findNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchDown()));
+    connect(menuBarUi->action_findLast, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchUp()));
+    connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
+    connect(menuBarUi->action_replaceAndNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
+    connect(menuBarUi->action_replaceAll, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -473,5 +484,55 @@ void MarkdownEditorWidget::pasteHtml()
     }
     else if (mimeData->hasText()) {
         ui->markdownEditor->textCursor().insertText(mimeData->text());
+    }
+}
+
+void MarkdownEditorWidget::webSearchText()
+{
+    const QString selectedText = ui->markdownEditor->textCursor().selectedText().trimmed();
+    if (selectedText.isEmpty()) { return; }
+
+    QDesktopServices::openUrl(QUrl(Globals::searchEngine + selectedText));
+}
+
+void MarkdownEditorWidget::showSearchFindWidget()
+{
+    QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+
+    if (textEditSearchWidget->isHidden()) {
+        textEditSearchWidget->setReplaceMode(false);
+        textEditSearchWidget->show();
+        menuBarUi->action_findLast->setEnabled(true);
+        menuBarUi->action_findNext->setEnabled(true);
+        menuBarUi->action_replaceAll->setEnabled(false);
+        menuBarUi->action_replaceAndNext->setEnabled(false);
+    }
+    else {
+        textEditSearchWidget->hide();
+        menuBarUi->action_findLast->setEnabled(false);
+        menuBarUi->action_findNext->setEnabled(false);
+    }
+}
+
+void MarkdownEditorWidget::showSearchReplaceWidget()
+{
+    QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+
+    if (textEditSearchWidget->isHidden()) {
+        textEditSearchWidget->setReplaceMode(true);
+        textEditSearchWidget->show();
+        menuBarUi->action_findLast->setEnabled(true);
+        menuBarUi->action_findNext->setEnabled(true);
+        menuBarUi->action_replaceAll->setEnabled(true);
+        menuBarUi->action_replaceAndNext->setEnabled(true);
+    }
+    else {
+        textEditSearchWidget->hide();
+        menuBarUi->action_findLast->setEnabled(false);
+        menuBarUi->action_findNext->setEnabled(false);
+        menuBarUi->action_replaceAll->setEnabled(false);
+        menuBarUi->action_replaceAndNext->setEnabled(false);
     }
 }

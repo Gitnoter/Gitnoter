@@ -150,49 +150,6 @@ void MenuBar::on_action_print_triggered()
     dialog->open(this, SLOT(onPrintAccepted()));
 }
 
-void MenuBar::on_action_pasteHtml_triggered()
-{
-
-}
-void MenuBar::on_action_webSearch_triggered()
-{
-
-}
-
-void MenuBar::on_action_groupSearch_triggered()
-{
-
-}
-
-void MenuBar::on_action_findText_triggered()
-{
-
-}
-
-void MenuBar::on_action_findNext_triggered()
-{
-
-}
-
-void MenuBar::on_action_findLast_triggered()
-{
-
-}
-
-void MenuBar::on_action_replaceText_triggered()
-{
-
-}
-
-void MenuBar::on_action_replaceAndNext_triggered()
-{
-
-}
-
-void MenuBar::on_action_replaceAll_triggered()
-{
-
-}
 
 void MenuBar::on_action_title1_triggered()
 {
