@@ -94,6 +94,8 @@ private:
 
     void setSplitterSizes();
 
+    void setSearchWidgetActivate(bool enabled, int height);
+
 public:
     MainWindow *mainWindow() { return mMainWindow; }
 

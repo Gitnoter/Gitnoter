@@ -26,8 +26,6 @@
         <file>images/icon-tags.png</file>
         <file>images/icon-down-848484.png</file>
         <file>images/icon-down-ffffff.png</file>
-        <file>theme/notelistcellwidget-selected.qss</file>
-        <file>theme/notelistcellwidget-unselected.qss</file>
         <file>theme/default.qss</file>
         <file>images/icon-markdownpreview.png</file>
         <file>images/icon-splitterpreview.png</file>

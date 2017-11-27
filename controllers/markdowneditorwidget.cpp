@@ -8,6 +8,12 @@
 #include <QMenu>
 #include <QDebug>
 
+enum WidgetToolsHeight {
+    None = 64,
+    Find = 92,
+    Replace = 118
+};
+
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
@@ -343,7 +349,8 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
-
+    ui->markdownEditor->initSearchFrame(ui->widget_searchWidget, true);
+    setSearchWidgetActivate(false, WidgetToolsHeight::None);
     setSplitterSizes();
 
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
@@ -503,12 +510,14 @@ void MarkdownEditorWidget::showSearchFindWidget()
     if (textEditSearchWidget->isHidden()) {
         textEditSearchWidget->setReplaceMode(false);
         textEditSearchWidget->show();
+        setSearchWidgetActivate(true, WidgetToolsHeight::Find);
         menuBarUi->action_findLast->setEnabled(true);
         menuBarUi->action_findNext->setEnabled(true);
         menuBarUi->action_replaceAll->setEnabled(false);
         menuBarUi->action_replaceAndNext->setEnabled(false);
     }
     else {
+        setSearchWidgetActivate(true, WidgetToolsHeight::None);
         textEditSearchWidget->hide();
         menuBarUi->action_findLast->setEnabled(false);
         menuBarUi->action_findNext->setEnabled(false);
@@ -523,6 +532,7 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
     if (textEditSearchWidget->isHidden()) {
         textEditSearchWidget->setReplaceMode(true);
         textEditSearchWidget->show();
+        setSearchWidgetActivate(true, WidgetToolsHeight::Replace);
         menuBarUi->action_findLast->setEnabled(true);
         menuBarUi->action_findNext->setEnabled(true);
         menuBarUi->action_replaceAll->setEnabled(true);
@@ -530,9 +540,16 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
     }
     else {
         textEditSearchWidget->hide();
+        setSearchWidgetActivate(true, WidgetToolsHeight::None);
         menuBarUi->action_findLast->setEnabled(false);
         menuBarUi->action_findNext->setEnabled(false);
         menuBarUi->action_replaceAll->setEnabled(false);
         menuBarUi->action_replaceAndNext->setEnabled(false);
     }
+}
+
+void MarkdownEditorWidget::setSearchWidgetActivate(bool enabled, int height)
+{
+    ui->widget_searchWidget->setVisible(enabled);
+    ui->widget_tools->setFixedHeight(height);
 }
