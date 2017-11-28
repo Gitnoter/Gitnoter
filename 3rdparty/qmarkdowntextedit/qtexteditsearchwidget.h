@@ -16,6 +16,46 @@
 
 #include <QWidget>
 #include <QPlainTextEdit>
+#include <QMenu>
+
+class PopupMenu : public QMenu
+{
+Q_OBJECT
+public:
+    enum SearchMode {
+        PlainTextMode,
+        WholeWordsMode,
+        RegularExpressionMode
+    };
+
+    explicit PopupMenu(QWidget *parent = 0, PopupMenu::SearchMode mode = PopupMenu::PlainTextMode, bool matchCaseSensitive = false);
+
+    void setSearchMode(SearchMode mode);
+    SearchMode searchModel() { return mSearchMode; }
+    bool matchCaseSensitiveChecked();
+
+signals:
+    void actionTriggered(PopupMenu::SearchMode searchMode, bool matchCaseSensitive = false);
+
+private slots:
+    void onActionPlainTextTriggered(bool triggered);
+    void onActionWholeWordsTriggered(bool triggered);
+    void onActionRegularExpressionTriggered(bool triggered);
+    void onActionMatchCaseSensitiveTriggered(bool triggered);
+
+private:
+    void setupUi(QWidget *parent = 0);
+    void seActionChecked(QAction *action);
+
+private:
+    QAction *action_plainText;
+    QAction *action_wholeWords;
+    QAction *action_regularExpression;
+    QAction *action_matchCaseSensitive;
+
+    SearchMode mSearchMode;
+
+};
 
 namespace Ui {
 class QTextEditSearchWidget;
@@ -26,32 +66,22 @@ class QTextEditSearchWidget : public QWidget
     Q_OBJECT
 
 public:
-    enum SearchMode {
-        PlainTextMode,
-        WholeWordsMode,
-        RegularExpressionMode
-    };
-
     explicit QTextEditSearchWidget(QPlainTextEdit *parent = 0);
     bool doSearch(bool searchDown = true, bool allowRestartAtTop = true);
-    void setDarkMode(bool enabled);
     bool isReplace();
+    PopupMenu *popupMenu() { return mPopupMenu; }
     ~QTextEditSearchWidget();
 
 private:
     Ui::QTextEditSearchWidget *ui;
+    PopupMenu *mPopupMenu;
 
 protected:
     QPlainTextEdit *_textEdit;
-    bool _darkMode;
     bool eventFilter(QObject *obj, QEvent *event);
 
-signals:
-    void replaceModeToggled(bool clicked);
-    void closed();
-
 public slots:
-    void activate();
+    void activate(bool replace = false);
     void deactivate();
     void doSearchDown();
     void doSearchUp();
@@ -62,4 +92,5 @@ public slots:
 
 protected slots:
     void searchLineEditTextChanged(const QString &arg1);
+    void onActionTriggered(PopupMenu::SearchMode searchMode, bool matchCaseSensitive = false);
 };

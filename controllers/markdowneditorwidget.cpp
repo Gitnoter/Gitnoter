@@ -8,12 +8,6 @@
 #include <QMenu>
 #include <QDebug>
 
-enum WidgetToolsHeight {
-    None = 64,
-    Find = 92,
-    Replace = 118
-};
-
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
@@ -328,20 +322,18 @@ void MarkdownEditorWidget::setSplitterSizes()
 
 void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QPoint &pos)
 {
-//    QTextEdit().isUndoRedoEnabled();
-//    QTextEdit().textCursor().selection();
-//    QPoint globalPos = ui->markdownEditor->mapToGlobal(pos);
-//    QMenu *menu = ui->markdownEditor->createStandardContextMenu();
+    QPoint globalPos = ui->markdownEditor->mapToGlobal(pos);
+    QMenu *menu = ui->markdownEditor->createStandardContextMenu();
 
-//    menu->findChild<QAction *>("edit-undo")->setText(tr("撤销"));
-//    menu->findChild<QAction *>("edit-redo")->setText(tr("重做"));
-//    menu->findChild<QAction *>("edit-cut")->setText(tr("剪切"));
-//    menu->findChild<QAction *>("edit-copy")->setText(tr("拷贝"));
-//    menu->findChild<QAction *>("edit-paste")->setText(tr("粘贴"));
-//    menu->findChild<QAction *>("edit-delete")->setText(tr("删除"));
-//    menu->findChild<QAction *>("select-all")->setText(tr("全选"));
+    menu->findChild<QAction *>("edit-undo")->setText(tr("撤销"));
+    menu->findChild<QAction *>("edit-redo")->setText(tr("重做"));
+    menu->findChild<QAction *>("edit-cut")->setText(tr("剪切"));
+    menu->findChild<QAction *>("edit-copy")->setText(tr("拷贝"));
+    menu->findChild<QAction *>("edit-paste")->setText(tr("粘贴"));
+    menu->findChild<QAction *>("edit-delete")->setText(tr("删除"));
+    menu->findChild<QAction *>("select-all")->setText(tr("全选"));
 
-//    menu->exec(globalPos);
+    menu->exec(globalPos);
 }
 
 void MarkdownEditorWidget::setupUi()
@@ -349,8 +341,7 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
-    ui->markdownEditor->initSearchFrame(ui->widget_searchWidget, true);
-    setSearchWidgetActivate(false, WidgetToolsHeight::None);
+    ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
     setSplitterSizes();
 
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
@@ -390,8 +381,6 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
     connect(menuBarUi->action_replaceAndNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
     connect(menuBarUi->action_replaceAll, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
-    connect(ui->markdownEditor->searchWidget(), SIGNAL(replaceModeToggled(bool)), this, SLOT(searchWidgetShowReplaceToggled(bool)));
-    connect(ui->markdownEditor->searchWidget(), SIGNAL(closed()), this, SLOT(searchWidgetClosed()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -509,16 +498,13 @@ void MarkdownEditorWidget::showSearchFindWidget()
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
     if (textEditSearchWidget->isHidden() || textEditSearchWidget->isReplace()) {
-        textEditSearchWidget->setReplaceMode(false);
-        textEditSearchWidget->show();
-        setSearchWidgetActivate(true, WidgetToolsHeight::Find);
+        textEditSearchWidget->activate(false);
         menuBarUi->action_findLast->setEnabled(true);
         menuBarUi->action_findNext->setEnabled(true);
         menuBarUi->action_replaceAll->setEnabled(false);
         menuBarUi->action_replaceAndNext->setEnabled(false);
     }
     else {
-        setSearchWidgetActivate(true, WidgetToolsHeight::None);
         textEditSearchWidget->hide();
         menuBarUi->action_findLast->setEnabled(false);
         menuBarUi->action_findNext->setEnabled(false);
@@ -531,9 +517,7 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
     if (textEditSearchWidget->isHidden() || !textEditSearchWidget->isReplace()) {
-        textEditSearchWidget->setReplaceMode(true);
-        textEditSearchWidget->show();
-        setSearchWidgetActivate(true, WidgetToolsHeight::Replace);
+        textEditSearchWidget->activate(true);
         menuBarUi->action_findLast->setEnabled(true);
         menuBarUi->action_findNext->setEnabled(true);
         menuBarUi->action_replaceAll->setEnabled(true);
@@ -541,26 +525,9 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
     }
     else {
         textEditSearchWidget->hide();
-        setSearchWidgetActivate(true, WidgetToolsHeight::None);
         menuBarUi->action_findLast->setEnabled(false);
         menuBarUi->action_findNext->setEnabled(false);
         menuBarUi->action_replaceAll->setEnabled(false);
         menuBarUi->action_replaceAndNext->setEnabled(false);
     }
-}
-
-void MarkdownEditorWidget::setSearchWidgetActivate(bool enabled, int height)
-{
-    ui->widget_searchWidget->setVisible(enabled);
-    ui->widget_tools->setFixedHeight(height);
-}
-
-void MarkdownEditorWidget::searchWidgetClosed()
-{
-    setSearchWidgetActivate(true, WidgetToolsHeight::None);
-}
-
-void MarkdownEditorWidget::searchWidgetShowReplaceToggled(bool clicked)
-{
-    setSearchWidgetActivate(true, clicked ? WidgetToolsHeight::Replace : WidgetToolsHeight::Find);
 }

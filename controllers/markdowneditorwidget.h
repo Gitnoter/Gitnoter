@@ -55,8 +55,6 @@ public slots:
 
     void showSearchFindWidget();
     void showSearchReplaceWidget();
-    void searchWidgetClosed();
-    void searchWidgetShowReplaceToggled(bool clicked);
 
 private slots:
 
@@ -96,8 +94,6 @@ private:
     void setOpenNote();
 
     void setSplitterSizes();
-
-    void setSearchWidgetActivate(bool enabled, int height);
 
 public:
     MainWindow *mainWindow() { return mMainWindow; }

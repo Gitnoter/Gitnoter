@@ -17,6 +17,96 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QAction>
+
+
+PopupMenu::PopupMenu(QWidget *parent, PopupMenu::SearchMode mode, bool matchCaseSensitive) :
+        QMenu(parent)
+{
+    setupUi(parent);
+    setSearchMode(mode);
+    action_matchCaseSensitive->setChecked(matchCaseSensitive);
+}
+
+void PopupMenu::onActionPlainTextTriggered(bool triggered)
+{
+    seActionChecked(action_plainText);
+    mSearchMode = PopupMenu::PlainTextMode;
+    emit actionTriggered(mSearchMode, triggered);
+}
+
+void PopupMenu::onActionWholeWordsTriggered(bool triggered)
+{
+    seActionChecked(action_wholeWords);
+    mSearchMode = PopupMenu::WholeWordsMode;
+    emit actionTriggered(mSearchMode, triggered);
+}
+
+void PopupMenu::onActionRegularExpressionTriggered(bool triggered)
+{
+    seActionChecked(action_regularExpression);
+    mSearchMode = PopupMenu::RegularExpressionMode;
+    emit actionTriggered(mSearchMode, triggered);
+}
+
+void PopupMenu::onActionMatchCaseSensitiveTriggered(bool triggered)
+{
+    emit actionTriggered(mSearchMode, triggered);
+}
+
+void PopupMenu::seActionChecked(QAction *action)
+{
+    action_plainText->setChecked(false);
+    action_wholeWords->setChecked(false);
+    action_regularExpression->setChecked(false);
+
+    action->setChecked(true);
+}
+
+void PopupMenu::setSearchMode(PopupMenu::SearchMode mode)
+{
+    mSearchMode = mode;
+    switch (mode) {
+        case PopupMenu::PlainTextMode: seActionChecked(action_plainText);break;
+        case PopupMenu::WholeWordsMode: seActionChecked(action_wholeWords);break;
+        case PopupMenu::RegularExpressionMode: seActionChecked(action_regularExpression);break;
+    default:break;
+    }
+}
+
+bool PopupMenu::matchCaseSensitiveChecked()
+{
+    return action_matchCaseSensitive->isChecked();
+}
+
+void PopupMenu::setupUi(QWidget *parent)
+{
+    action_plainText = new QAction(tr("纯文本"), this);
+    action_wholeWords = new QAction(tr("全词匹配"), this);
+    action_regularExpression = new QAction(tr("正则匹配"), this);
+    action_matchCaseSensitive = new QAction(tr("是否区分大小写"), this);
+
+    action_plainText->setObjectName(QStringLiteral("action_plainText"));
+    action_wholeWords->setObjectName(QStringLiteral("action_wholeWords"));
+    action_regularExpression->setObjectName(QStringLiteral("action_regularExpression"));
+    action_matchCaseSensitive->setObjectName(QStringLiteral("action_matchCaseSensitive"));
+
+    action_plainText->setCheckable(true);
+    action_wholeWords->setCheckable(true);
+    action_regularExpression->setCheckable(true);
+    action_matchCaseSensitive->setCheckable(true);
+
+    addAction(action_plainText);
+    addAction(action_wholeWords);
+    addAction(action_regularExpression);
+    addSeparator();
+    addAction(action_matchCaseSensitive);
+
+    connect(action_plainText, SIGNAL(triggered(bool)), this, SLOT(onActionPlainTextTriggered(bool)));
+    connect(action_wholeWords, SIGNAL(triggered(bool)), this, SLOT(onActionWholeWordsTriggered(bool)));
+    connect(action_regularExpression, SIGNAL(triggered(bool)), this, SLOT(onActionRegularExpressionTriggered(bool)));
+    connect(action_matchCaseSensitive, SIGNAL(triggered(bool)), this, SLOT(onActionMatchCaseSensitiveTriggered(bool)));
+}
 
 QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
     QWidget(parent),
@@ -24,8 +114,12 @@ QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
 {
     ui->setupUi(this);
     _textEdit = parent;
-    _darkMode = false;
     hide();
+
+    QAction *searchAction = new QAction(QIcon(":/images/icon-search.png"), QString());
+    mPopupMenu = new PopupMenu(this);
+    searchAction->setMenu(mPopupMenu);
+    ui->searchLineEdit->addAction(searchAction, QLineEdit::LeadingPosition);
 
     QObject::connect(ui->closeButton, SIGNAL(clicked()),
                      this, SLOT(deactivate()));
@@ -41,6 +135,8 @@ QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
                      this, SLOT(doReplace()));
     QObject::connect(ui->replaceAllButton, SIGNAL(clicked()),
                      this, SLOT(doReplaceAll()));
+    QObject::connect(mPopupMenu, SIGNAL(actionTriggered(PopupMenu::SearchMode, bool)),
+                     this, SLOT(onActionTriggered(PopupMenu::SearchMode, bool)));
 
     installEventFilter(this);
     ui->searchLineEdit->installEventFilter(this);
@@ -63,8 +159,8 @@ QTextEditSearchWidget::~QTextEditSearchWidget() {
     delete ui;
 }
 
-void QTextEditSearchWidget::activate() {
-    setReplaceMode(false);
+void QTextEditSearchWidget::activate(bool replace) {
+    setReplaceMode(replace);
     show();
 
     // preset the selected text as search text if there is any and there is no
@@ -94,16 +190,12 @@ void QTextEditSearchWidget::activateReplace() {
 void QTextEditSearchWidget::deactivate() {
     hide();
     _textEdit->setFocus();
-
-    emit closed();
 }
 
 void QTextEditSearchWidget::setReplaceMode(bool enabled) {
-    ui->replaceLineEdit->setVisible(enabled);
+    ui->replaceFrame->setVisible(enabled);
     ui->buttonFrame->setVisible(enabled);
     ui->replaceToggleCheckBox->setChecked(enabled);
-
-    emit replaceModeToggled(enabled);
 }
 
 bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
@@ -127,10 +219,10 @@ bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
             return true;
         }
 
-        if ((obj == ui->replaceLineEdit) && (keyEvent->key() == Qt::Key_Tab)
-                && ui->replaceToggleCheckBox->isChecked()) {
-            ui->replaceLineEdit->setFocus();
-        }
+//        if ((obj == ui->replaceLineEdit) && (keyEvent->key() == Qt::Key_Tab)
+//                && ui->replaceToggleCheckBox->isChecked()) {
+//            ui->replaceLineEdit->setFocus();
+//        }
 
         return false;
     }
@@ -162,9 +254,8 @@ bool QTextEditSearchWidget::doReplace(bool forAll) {
         return false;
     }
 
-//    int searchMode = ui->modeComboBox->currentIndex();
-    int searchMode = 0;
-    if (searchMode == RegularExpressionMode) {
+    PopupMenu::SearchMode searchMode = mPopupMenu->searchModel();
+    if (searchMode == PopupMenu::RegularExpressionMode) {
         QString text = c.selectedText();
         text.replace(QRegExp(ui->searchLineEdit->text()),
                              ui->replaceLineEdit->text());
@@ -210,22 +301,21 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
         return false;
     }
 
-//    int searchMode = ui->modeComboBox->currentIndex();
-    int searchMode = 0;
+    PopupMenu::SearchMode searchMode = mPopupMenu->searchModel();
 
     QFlags<QTextDocument::FindFlag> options = searchDown ?
                                               QTextDocument::FindFlag(0)
                                               : QTextDocument::FindBackward;
-    if (searchMode == WholeWordsMode) {
+    if (searchMode == PopupMenu::WholeWordsMode) {
         options |= QTextDocument::FindWholeWords;
     }
 
-//    if (ui->matchCaseSensitiveButton->isChecked()) {
-//        options |= QTextDocument::FindCaseSensitively;
-//    }
+    if (mPopupMenu->matchCaseSensitiveChecked()) {
+        options |= QTextDocument::FindCaseSensitively;
+    }
 
     bool found;
-    if (searchMode == RegularExpressionMode) {
+    if (searchMode == PopupMenu::RegularExpressionMode) {
         found = _textEdit->find(QRegExp(text), options);
     } else {
         found = _textEdit->find(text, options);
@@ -250,23 +340,17 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
         _textEdit->layout()->setContentsMargins(margins);
     }
 
-    // add a background color according if we found the text or not
-    QString colorCode = found ? "#D5FAE2" : "#FAE9EB";
-
-    if (_darkMode) {
-        colorCode = found ? "#135a13" : "#8d2b36";
-    }
-
-    ui->searchLineEdit->setStyleSheet("* { background: " + colorCode + "; }");
-
     return found;
-}
-
-void QTextEditSearchWidget::setDarkMode(bool enabled) {
-    _darkMode = enabled;
 }
 
 bool QTextEditSearchWidget::isReplace()
 {
     return ui->replaceToggleCheckBox->isChecked();
 }
+
+void QTextEditSearchWidget::onActionTriggered(PopupMenu::SearchMode searchMode, bool matchCaseSensitive)
+{
+    doSearch(false);
+}
+
+

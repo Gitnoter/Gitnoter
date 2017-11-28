@@ -183,7 +183,7 @@ QPushButton#pushButton_table:hover {
    </property>
    <item>
     <widget class="QWidget" name="widget_background" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,9999">
       <property name="spacing">
        <number>8</number>
       </property>
@@ -204,13 +204,13 @@ QPushButton#pushButton_table:hover {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>64</height>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>118</height>
+          <height>16777215</height>
          </size>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
