@@ -35,7 +35,7 @@ QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
                      this, SLOT(doSearchDown()));
     QObject::connect(ui->searchUpButton, SIGNAL(clicked()),
                      this, SLOT(doSearchUp()));
-    QObject::connect(ui->replaceToggleButton, SIGNAL(toggled(bool)),
+    QObject::connect(ui->replaceToggleCheckBox, SIGNAL(toggled(bool)),
                      this, SLOT(setReplaceMode(bool)));
     QObject::connect(ui->replaceButton, SIGNAL(clicked()),
                      this, SLOT(doReplace()));
@@ -48,16 +48,14 @@ QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
 
 #ifdef Q_OS_MAC
     // set the spacing to 8 for OS X
-    layout()->setSpacing(8);
-    ui->buttonFrame->layout()->setSpacing(9);
+//    layout()->setSpacing(8);
+//    ui->buttonFrame->layout()->setSpacing(9);
 
     // set the margin to 0 for the top buttons for OS X
     QString buttonStyle = "QPushButton {margin: 0}";
     ui->closeButton->setStyleSheet(buttonStyle);
     ui->searchDownButton->setStyleSheet(buttonStyle);
     ui->searchUpButton->setStyleSheet(buttonStyle);
-    ui->replaceToggleButton->setStyleSheet(buttonStyle);
-    ui->matchCaseSensitiveButton->setStyleSheet(buttonStyle);
 #endif
 }
 
@@ -96,15 +94,16 @@ void QTextEditSearchWidget::activateReplace() {
 void QTextEditSearchWidget::deactivate() {
     hide();
     _textEdit->setFocus();
+
+    emit closed();
 }
 
 void QTextEditSearchWidget::setReplaceMode(bool enabled) {
-    ui->replaceToggleButton->setChecked(enabled);
-    ui->replaceLabel->setVisible(enabled);
     ui->replaceLineEdit->setVisible(enabled);
-    ui->modeLabel->setVisible(enabled);
     ui->buttonFrame->setVisible(enabled);
-    ui->matchCaseSensitiveButton->setVisible(enabled);
+    ui->replaceToggleCheckBox->setChecked(enabled);
+
+    emit replaceModeToggled(enabled);
 }
 
 bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
@@ -128,10 +127,10 @@ bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
             return true;
         }
 
-//        if ((obj == ui->replaceLineEdit) && (keyEvent->key() == Qt::Key_Tab)
-//                && ui->replaceToggleButton->isChecked()) {
-//            ui->replaceLineEdit->setFocus();
-//        }
+        if ((obj == ui->replaceLineEdit) && (keyEvent->key() == Qt::Key_Tab)
+                && ui->replaceToggleCheckBox->isChecked()) {
+            ui->replaceLineEdit->setFocus();
+        }
 
         return false;
     }
@@ -163,7 +162,8 @@ bool QTextEditSearchWidget::doReplace(bool forAll) {
         return false;
     }
 
-    int searchMode = ui->modeComboBox->currentIndex();
+//    int searchMode = ui->modeComboBox->currentIndex();
+    int searchMode = 0;
     if (searchMode == RegularExpressionMode) {
         QString text = c.selectedText();
         text.replace(QRegExp(ui->searchLineEdit->text()),
@@ -210,7 +210,8 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
         return false;
     }
 
-    int searchMode = ui->modeComboBox->currentIndex();
+//    int searchMode = ui->modeComboBox->currentIndex();
+    int searchMode = 0;
 
     QFlags<QTextDocument::FindFlag> options = searchDown ?
                                               QTextDocument::FindFlag(0)
@@ -219,9 +220,9 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
         options |= QTextDocument::FindWholeWords;
     }
 
-    if (ui->matchCaseSensitiveButton->isChecked()) {
-        options |= QTextDocument::FindCaseSensitively;
-    }
+//    if (ui->matchCaseSensitiveButton->isChecked()) {
+//        options |= QTextDocument::FindCaseSensitively;
+//    }
 
     bool found;
     if (searchMode == RegularExpressionMode) {
@@ -263,4 +264,9 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
 
 void QTextEditSearchWidget::setDarkMode(bool enabled) {
     _darkMode = enabled;
+}
+
+bool QTextEditSearchWidget::isReplace()
+{
+    return ui->replaceToggleCheckBox->isChecked();
 }

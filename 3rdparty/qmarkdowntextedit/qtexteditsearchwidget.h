@@ -35,6 +35,7 @@ public:
     explicit QTextEditSearchWidget(QPlainTextEdit *parent = 0);
     bool doSearch(bool searchDown = true, bool allowRestartAtTop = true);
     void setDarkMode(bool enabled);
+    bool isReplace();
     ~QTextEditSearchWidget();
 
 private:
@@ -44,6 +45,10 @@ protected:
     QPlainTextEdit *_textEdit;
     bool _darkMode;
     bool eventFilter(QObject *obj, QEvent *event);
+
+signals:
+    void replaceModeToggled(bool clicked);
+    void closed();
 
 public slots:
     void activate();

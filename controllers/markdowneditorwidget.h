@@ -52,8 +52,11 @@ public slots:
     void clearText();
     void pasteHtml();
     void webSearchText();
+
     void showSearchFindWidget();
     void showSearchReplaceWidget();
+    void searchWidgetClosed();
+    void searchWidgetShowReplaceToggled(bool clicked);
 
 private slots:
 

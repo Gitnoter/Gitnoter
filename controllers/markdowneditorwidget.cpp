@@ -365,7 +365,6 @@ void MarkdownEditorWidget::setupUi()
     connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBarUi->action_undo, SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBarUi->action_redo, SLOT(setEnabled(bool)));
 
-
     connect(menuBarUi->action_undo, SIGNAL(triggered()), ui->markdownEditor, SLOT(undo()));
     connect(menuBarUi->action_redo, SIGNAL(triggered()), ui->markdownEditor, SLOT(redo()));
 
@@ -391,6 +390,8 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
     connect(menuBarUi->action_replaceAndNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
     connect(menuBarUi->action_replaceAll, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
+    connect(ui->markdownEditor->searchWidget(), SIGNAL(replaceModeToggled(bool)), this, SLOT(searchWidgetShowReplaceToggled(bool)));
+    connect(ui->markdownEditor->searchWidget(), SIGNAL(closed()), this, SLOT(searchWidgetClosed()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -507,7 +508,7 @@ void MarkdownEditorWidget::showSearchFindWidget()
     QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
-    if (textEditSearchWidget->isHidden()) {
+    if (textEditSearchWidget->isHidden() || textEditSearchWidget->isReplace()) {
         textEditSearchWidget->setReplaceMode(false);
         textEditSearchWidget->show();
         setSearchWidgetActivate(true, WidgetToolsHeight::Find);
@@ -529,7 +530,7 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
     QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
-    if (textEditSearchWidget->isHidden()) {
+    if (textEditSearchWidget->isHidden() || !textEditSearchWidget->isReplace()) {
         textEditSearchWidget->setReplaceMode(true);
         textEditSearchWidget->show();
         setSearchWidgetActivate(true, WidgetToolsHeight::Replace);
@@ -552,4 +553,14 @@ void MarkdownEditorWidget::setSearchWidgetActivate(bool enabled, int height)
 {
     ui->widget_searchWidget->setVisible(enabled);
     ui->widget_tools->setFixedHeight(height);
+}
+
+void MarkdownEditorWidget::searchWidgetClosed()
+{
+    setSearchWidgetActivate(true, WidgetToolsHeight::None);
+}
+
+void MarkdownEditorWidget::searchWidgetShowReplaceToggled(bool clicked)
+{
+    setSearchWidgetActivate(true, clicked ? WidgetToolsHeight::Replace : WidgetToolsHeight::Find);
 }
