@@ -42,7 +42,7 @@ add_executable(${PROJECT_NAME}
         resources/resources.qrc
 
         controllers/mainwindow.h            controllers/mainwindow.cpp
-        controllers/categorylistwidget.h controllers/categorylistwidget.cpp
+        controllers/categorylistwidget.h    controllers/categorylistwidget.cpp
         controllers/loginwidget.h           controllers/loginwidget.cpp
         controllers/settingdialog.h         controllers/settingdialog.cpp
         controllers/aboutdialog.h           controllers/aboutdialog.cpp
@@ -56,15 +56,16 @@ add_executable(${PROJECT_NAME}
         controllers/notelistwidget.h        controllers/notelistwidget.cpp
         controllers/grouptreewidget.h       controllers/grouptreewidget.cpp
         controllers/menubar.h               controllers/menubar.cpp
+        controllers/navigationbarwidget.h   controllers/navigationbarwidget.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp
         models/groupmodel.h         models/groupmodel.cpp
         models/gitnoter.h
 
-        helps/globals.h         helps/globals.cpp
-        helps/tools.h           helps/tools.cpp
-        helps/gitmanager.h      helps/gitmanager.cpp
+        helps/globals.h             helps/globals.cpp
+        helps/tools.h               helps/tools.cpp
+        helps/gitmanager.h          helps/gitmanager.cpp
         helps/thememanager.h        helps/thememanager.cpp
         helps/notepreviewwidget.h   helps/notepreviewwidget.cpp
 

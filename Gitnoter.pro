@@ -49,6 +49,8 @@ SOURCES += \
     controllers/messagedialog.cpp \
     controllers/grouptreewidget.cpp \
     controllers/notelistwidget.cpp \
+    controllers/menubar.cpp \
+    controllers/navigationbarwidget.cpp \
     models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
@@ -56,8 +58,7 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp \
-    controllers/menubar.cpp
+    helps/notepreviewwidget.cpp
 
 HEADERS += \
         controllers/mainwindow.h  \
@@ -74,6 +75,8 @@ HEADERS += \
     controllers/messagedialog.h \
     controllers/grouptreewidget.h \
     controllers/notelistwidget.h \
+    controllers/menubar.h  \
+    controllers/navigationbarwidget.h \
     models/notemodel.h  \
     models/configmodel.h \
     models/groupmodel.h \
@@ -82,8 +85,7 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h \
-    controllers/menubar.h
+    helps/notepreviewwidget.h
 
 FORMS += \
     views/mainwindow.ui \
