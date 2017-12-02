@@ -60,6 +60,9 @@ public slots:
     void toLowercase();
     void toUppercaseAtFirst();
 
+    void showToolbar(bool clicked);
+    void showNavigationBar(bool clicked);
+
 
 private:
     void setupUi();

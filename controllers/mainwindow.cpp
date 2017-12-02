@@ -49,7 +49,11 @@ void MainWindow::setupUi()
     updateAutoLockTimer();
     updateAutoSyncRepoTimer();
 
+    showSidebar(Globals::configModel->getSidebarWidget());
+    showListBar(Globals::configModel->getListBarWidget());
+
     Ui::MenuBar *menuBarUi = mMenuBar->getUi();
+
     connect(menuBarUi->action_newNote, SIGNAL(triggered()), this, SLOT(appendNote()));
     connect(menuBarUi->action_newCategories, SIGNAL(triggered()), this, SLOT(appendGroup()));
     connect(menuBarUi->action_newTags, SIGNAL(triggered()), this, SLOT(appendGroup()));
@@ -57,6 +61,8 @@ void MainWindow::setupUi()
     connect(menuBarUi->action_preferences, SIGNAL(triggered()), this, SLOT(openSettingWidget()));
     connect(menuBarUi->action_deleteNote, SIGNAL(triggered()), this, SLOT(trashNote()));
     connect(menuBarUi->action_groupSearch, SIGNAL(triggered()), this, SLOT(setSearchFocus()));
+    connect(menuBarUi->action_sidebar, SIGNAL(triggered(bool)), this, SLOT(showSidebar(bool)));
+    connect(menuBarUi->action_listbar, SIGNAL(triggered(bool)), this, SLOT(showListBar(bool)));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -359,4 +365,22 @@ void MainWindow::lockWindow()
 //            }
 //            close();
 //            (new LockDialog())->show();
+}
+
+void MainWindow::showSidebar(bool clicked)
+{
+    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
+    menuBarUi->action_sidebar->setChecked(clicked);
+
+    ui->widget_sidebar->setVisible(clicked);
+    Globals::configModel->setSidebarWidget(clicked);
+}
+
+void MainWindow::showListBar(bool clicked)
+{
+    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
+    menuBarUi->action_listbar->setChecked(clicked);
+
+    ui->widget_listBar->setVisible(clicked);
+    Globals::configModel->setListBarWidget(clicked);
 }

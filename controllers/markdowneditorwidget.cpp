@@ -345,6 +345,9 @@ void MarkdownEditorWidget::setupUi()
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
     setSplitterSizes();
 
+    showToolbar(Globals::configModel->getToolbarWidget());
+    showNavigationBar(Globals::configModel->getNavigationBarWidget());
+
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
     connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
@@ -386,6 +389,9 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_toUppercase, SIGNAL(triggered()), this, SLOT(toUppercase()));
     connect(menuBarUi->action_toLowercase, SIGNAL(triggered()), this, SLOT(toLowercase()));
     connect(menuBarUi->action_toUppercaseAtFirst, SIGNAL(triggered()), this, SLOT(toUppercaseAtFirst()));
+
+    connect(menuBarUi->action_toolbar, SIGNAL(triggered(bool)), this, SLOT(showToolbar(bool)));
+    connect(menuBarUi->action_navigationBar, SIGNAL(triggered(bool)), this, SLOT(showNavigationBar(bool)));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -580,4 +586,22 @@ void MarkdownEditorWidget::toUppercaseAtFirst()
     textCursor.insertText(Tools::firstUpperCase(selectedText));
 
     ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::showToolbar(bool clicked)
+{
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+    menuBarUi->action_toolbar->setChecked(clicked);
+
+    ui->widget_tools->setVisible(clicked);
+    Globals::configModel->setToolbarWidget(clicked);
+}
+
+void MarkdownEditorWidget::showNavigationBar(bool clicked)
+{
+//    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+//    menuBarUi->action_navigationBar->setChecked(clicked);
+//
+//    ui->widget_tools->setVisible(clicked);
+//    Globals::configModel->setNavigationBarWidget(clicked);
 }

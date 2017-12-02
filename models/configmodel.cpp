@@ -26,6 +26,10 @@ ConfigModel::ConfigModel()
     mEditorFont = "editor/font";
     mEditorSplitterSizes = "editor/splitterSizes";
     mTheme = "window/theme";
+    mSidebarWidget = "window/sidebarWidget";
+    mListBarWidget = "window/listBarWidget";
+    mToolbarWidget = "window/toolbarWidget";
+    mNavigationBarWidget = "window/navigationBarWidget";
     mMainWindowSplitterSizes = "mainWindow/splitterSizes";
     mMainWindowRect = "mainWindow/rect";
     mMainWindowFullScreen = "mainWindow/fullScreen";
@@ -344,3 +348,44 @@ void ConfigModel::setMainWindowFullScreen(bool fullScreen)
 {
     settings->setValue(mMainWindowFullScreen, fullScreen);
 }
+
+bool ConfigModel::getSidebarWidget() const
+{
+    return settings->value(mSidebarWidget, true).toBool();
+}
+
+void ConfigModel::setSidebarWidget(bool b)
+{
+    settings->setValue(mSidebarWidget, b);
+}
+
+bool ConfigModel::getListBarWidget() const
+{
+    return settings->value(mListBarWidget, true).toBool();
+}
+
+void ConfigModel::setListBarWidget(bool b)
+{
+    settings->setValue(mListBarWidget, b);
+}
+
+bool ConfigModel::getToolbarWidget() const
+{
+    return settings->value(mToolbarWidget, true).toBool();
+}
+
+void ConfigModel::setToolbarWidget(bool b)
+{
+    settings->setValue(mToolbarWidget, b);
+}
+
+bool ConfigModel::getNavigationBarWidget() const
+{
+    return settings->value(mNavigationBarWidget, true).toBool();
+}
+
+void ConfigModel::setNavigationBarWidget(bool b)
+{
+    settings->setValue(mNavigationBarWidget, b);
+}
+

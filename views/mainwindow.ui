@@ -172,7 +172,7 @@ QWidget#widget_6{
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="widget_folderList" native="true">
+      <widget class="QWidget" name="widget_sidebar" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -554,7 +554,7 @@ QWidget#widget_6{
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="widget_noteList" native="true">
+      <widget class="QWidget" name="widget_listBar" native="true">
        <property name="minimumSize">
         <size>
          <width>200</width>

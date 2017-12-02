@@ -121,6 +121,18 @@ public:
 
     void setMainWindowFullScreen(bool fullScreen);
 
+    bool getSidebarWidget() const;
+    void setSidebarWidget(bool b);
+
+    bool getListBarWidget() const;
+    void setListBarWidget(bool b);
+
+    bool getToolbarWidget() const;
+    void setToolbarWidget(bool b);
+
+    bool getNavigationBarWidget() const;
+    void setNavigationBarWidget(bool b);
+
 private:
     template <typename T>
     QVariantList toVariantList(const QList<T> &list);
@@ -172,6 +184,11 @@ private:
     QString mMainWindowRect;
     QString mMainWindowFullScreen;
     QString mEditorSplitterSizes;
+
+    QString mSidebarWidget;
+    QString mListBarWidget;
+    QString mToolbarWidget;
+    QString mNavigationBarWidget;
 
 };
 

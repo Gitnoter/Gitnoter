@@ -66,6 +66,9 @@ public slots:
     void syncRepo();
     void lockWindow();
 
+    void showSidebar(bool clicked);
+    void showListBar(bool clicked);
+
 private:
     void setupUi();
 
