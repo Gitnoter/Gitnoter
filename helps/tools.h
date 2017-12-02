@@ -46,6 +46,8 @@ public:
 
     static QByteArray downloadUrlToData(QUrl url);
 
+    static QString firstUpperCase(QString text);
+
 };
 
 #endif // TOOLS_H

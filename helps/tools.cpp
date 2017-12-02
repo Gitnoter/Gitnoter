@@ -256,3 +256,18 @@ QByteArray Tools::downloadUrlToData(QUrl url) {
 
     return data;
 }
+
+QString Tools::firstUpperCase(QString text)
+{
+    QRegularExpression wordSplitter("(?<=[\\s\\v])");
+
+    QStringList words = text.toLower().split(wordSplitter);
+
+    for (QString & word : words) {
+        if (word.length() > 0) {
+            word = word.left(1).toUpper() + word.right(word.length() - 1);
+        }
+    }
+
+    return words.join("");
+}
