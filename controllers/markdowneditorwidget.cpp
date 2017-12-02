@@ -184,7 +184,7 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
-void MarkdownEditorWidget::markdownEditorSliderValueChanged(int value, bool force) {
+void MarkdownEditorWidget::onMarkdownEditorSliderValueChanged(int value, bool force) {
     // don't react if note text edit doesn't have the focus
     if (!ui->markdownEditor->hasFocus() && !force) {
         return;
@@ -201,7 +201,7 @@ void MarkdownEditorWidget::markdownEditorSliderValueChanged(int value, bool forc
     viewScrollBar->setSliderPosition(viewPosition);
 }
 
-void MarkdownEditorWidget::markdownPreviewSliderValueChanged(int value, bool force) {
+void MarkdownEditorWidget::onMarkdownPreviewSliderValueChanged(int value, bool force) {
     // don't react if note text view doesn't have the focus
     if (!ui->markdownPreview->hasFocus() && !force) {
         return;
@@ -314,11 +314,26 @@ void MarkdownEditorWidget::on_pushButton_markdownPeview_clicked()
 void MarkdownEditorWidget::setSplitterSizes()
 {
     QList<int> sizes = Globals::configModel->getEditorSplitterSizes();
+
     ui->splitter_editor->setSizes(sizes);
 
     bool b = sizes.indexOf(0) != -1;
-    ui->splitter_editor->setStyleSheet(b ? "QSplitter#splitter_editor::handle {image: none;}" : "");
+    ui->splitter_editor->setStyleSheet(b ? "QSplitter::handle {image: none;}" : "");
     ui->splitter_editor->handle(1)->setDisabled(b);
+}
+
+void MarkdownEditorWidget::setBackgroundSplitterSizes()
+{
+    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
+
+    ui->splitter_background->setSizes(sizes);
+
+    bool b = sizes[1] == ui->widget_navigationBar->minimumWidth();
+    ui->splitter_background->setStyleSheet(b ? "QSplitter::handle {image: none;}" : "");
+    ui->splitter_background->handle(1)->setDisabled(b);
+
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+    menuBarUi->action_navigationBar->setChecked(!b);
 }
 
 void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QPoint &pos)
@@ -340,18 +355,23 @@ void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QP
 void MarkdownEditorWidget::setupUi()
 {
     ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->navigationBar->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
     setSplitterSizes();
+    setBackgroundSplitterSizes();
 
     showToolbar(Globals::configModel->getToolbarWidget());
-    showNavigationBar(Globals::configModel->getNavigationBarWidget());
 
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
-    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownEditorSliderValueChanged(int)));
-    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(markdownPreviewSliderValueChanged(int)));
+    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(
+            onMarkdownEditorSliderValueChanged(int)));
+    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(
+            onMarkdownPreviewSliderValueChanged(int)));
+    connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
+    connect(ui->navigationBar, SIGNAL(positionClicked(int)), this, SLOT(onNavigationWidgetPositionClicked(int)));
 
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_cut, SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_copy, SLOT(setEnabled(bool)));
@@ -599,9 +619,48 @@ void MarkdownEditorWidget::showToolbar(bool clicked)
 
 void MarkdownEditorWidget::showNavigationBar(bool clicked)
 {
-//    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-//    menuBarUi->action_navigationBar->setChecked(clicked);
-//
-//    ui->widget_tools->setVisible(clicked);
-//    Globals::configModel->setNavigationBarWidget(clicked);
+    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+    menuBarUi->action_navigationBar->setChecked(clicked);
+
+    int split1 = clicked ? ui->splitter_background->width() - 280 : ui->splitter_background->width();
+    int split2 = clicked ? 240 : 20;
+    ui->splitter_background->setSizes({split1, split2});
+
+    on_splitter_background_splitterMoved();
+}
+
+void MarkdownEditorWidget::on_splitter_background_splitterMoved(int, int)
+{
+    Globals::configModel->setEditorBackgroundSplitterSizes(ui->splitter_background->sizes());
+    setBackgroundSplitterSizes();
+}
+
+void MarkdownEditorWidget::onNavigationBarChenged()
+{
+    ui->navigationBar->init(ui->markdownEditor->document());
+}
+
+void MarkdownEditorWidget::onNavigationWidgetPositionClicked(int position) {
+    ui->markdownEditor->setFocus();
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+
+    // if the current position of the cursor is smaller than the position
+    // where we want to jump to set the cursor to the end of the note to make
+    // sure it scrolls up, not down
+    // everything is visible that way
+    if (textCursor.position() < position) {
+        textCursor.movePosition(QTextCursor::End);
+        ui->markdownEditor->setTextCursor(textCursor);
+    }
+
+    textCursor.setPosition(position);
+
+    // select the text of the headline
+    textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+
+    ui->markdownEditor->setTextCursor(textCursor);
+
+    // update the preview-slider
+    onMarkdownEditorSliderValueChanged(ui->markdownEditor->verticalScrollBar()->value(), true);
 }

@@ -133,6 +133,9 @@ public:
     bool getNavigationBarWidget() const;
     void setNavigationBarWidget(bool b);
 
+    QList<int> getEditorBackgroundSplitterSizes();
+    void setEditorBackgroundSplitterSizes(const QList<int> &sizes);
+
 private:
     template <typename T>
     QVariantList toVariantList(const QList<T> &list);
@@ -184,6 +187,7 @@ private:
     QString mMainWindowRect;
     QString mMainWindowFullScreen;
     QString mEditorSplitterSizes;
+    QString mEditorBackgroundSplitterSizes;
 
     QString mSidebarWidget;
     QString mListBarWidget;

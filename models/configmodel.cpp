@@ -25,6 +25,7 @@ ConfigModel::ConfigModel()
     mUnlockPassword = "lock/unlockPassword";
     mEditorFont = "editor/font";
     mEditorSplitterSizes = "editor/splitterSizes";
+    mEditorBackgroundSplitterSizes = "editor/backgroundSplitterSizes";
     mTheme = "window/theme";
     mSidebarWidget = "window/sidebarWidget";
     mListBarWidget = "window/listBarWidget";
@@ -389,3 +390,12 @@ void ConfigModel::setNavigationBarWidget(bool b)
     settings->setValue(mNavigationBarWidget, b);
 }
 
+QList<int> ConfigModel::getEditorBackgroundSplitterSizes()
+{
+    return fromVariantList<int>(settings->value(mEditorBackgroundSplitterSizes, {0, 0}).toList());
+}
+
+void ConfigModel::setEditorBackgroundSplitterSizes(const QList<int> &sizes)
+{
+    settings->setValue(mEditorBackgroundSplitterSizes, toVariantList(sizes));
+}

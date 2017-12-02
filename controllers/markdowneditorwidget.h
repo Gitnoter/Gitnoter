@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QMenuBar>
 #include <QPrinter>
+#include <QSplitter>
 
 namespace Ui
 {
@@ -63,7 +64,6 @@ public slots:
     void showToolbar(bool clicked);
     void showNavigationBar(bool clicked);
 
-
 private:
     void setupUi();
 
@@ -75,21 +75,27 @@ private:
 
     void setSplitterSizes();
 
-private slots:
+    void setBackgroundSplitterSizes();
 
-    void on_splitter_editor_splitterMoved(int pos, int index);
+private slots:
 
     /**
      * Moves the note view scrollbar when the note edit scrollbar was moved
      */
-    void markdownEditorSliderValueChanged(int value, bool force = false);
+    void onMarkdownEditorSliderValueChanged(int value, bool force = false);
 
     /**
      * Moves the note edit scrollbar when the note view scrollbar was moved
      */
-    void markdownPreviewSliderValueChanged(int value, bool force = false);
+    void onMarkdownPreviewSliderValueChanged(int value, bool force = false);
 
     void onTagCellWidgetClicked(const QString tagName);
+
+    void onNavigationBarChenged();
+
+    void onNavigationWidgetPositionClicked(int position);
+
+    void on_splitter_editor_splitterMoved(int pos, int index);
 
     void on_lineEdit_tag_returnPressed();
 
@@ -102,6 +108,8 @@ private slots:
     void on_pushButton_markdownPeview_clicked();
 
     void on_markdownEditor_customContextMenuRequested(const QPoint &pos);
+
+    void on_splitter_background_splitterMoved(int pos = 0, int index = 0);
 
 public:
     MainWindow *mainWindow() { return mMainWindow; }
