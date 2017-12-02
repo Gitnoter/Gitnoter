@@ -12,7 +12,9 @@
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow),
-        mMenuBar(new MenuBar(this))
+        mMenuBar(new MenuBar(this)),
+        mAutoSyncRepoTimer(new QTimer(this)),
+        mAutoLockTimer(new QTimer(this))
 {
     ui->setupUi(this);
     init();
@@ -43,6 +45,9 @@ void MainWindow::setupUi()
     if (Globals::configModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
+
+    updateAutoLockTimer();
+    updateAutoSyncRepoTimer();
 
     Ui::MenuBar *menuBarUi = mMenuBar->getUi();
     connect(menuBarUi->action_newNote, SIGNAL(triggered()), this, SLOT(appendNote()));
@@ -303,4 +308,55 @@ void MainWindow::openSettingWidget()
 void MainWindow::setSearchFocus()
 {
     ui->lineEdit_noteSearch->setFocus();
+}
+
+void MainWindow::updateAutoSyncRepoTimer()
+{
+    qDebug() << "updateAutoSyncRepoTimer";
+    int autoSyncRepo = Globals::configModel->getAutoSyncRepoTime();
+    if (autoSyncRepo) {
+        connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
+        mAutoSyncRepoTimer->start(autoSyncRepo);
+    }
+    else if (mAutoSyncRepoTimer->isActive()){
+        mAutoSyncRepoTimer->stop();
+    }
+}
+
+void MainWindow::updateAutoLockTimer()
+{
+    int autoLockTime = Globals::configModel->getAutoLockTime();
+    if (autoLockTime) {
+        connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
+        mAutoLockTimer->start(autoLockTime);
+    }
+    else if (mAutoLockTimer->isActive()){
+        mAutoLockTimer->stop();
+    }
+}
+
+void MainWindow::syncRepo()
+{
+    qDebug() << "syncRepo" << __func__;
+    Gitnoter::RepoStatus status = Globals::configModel->getLocalRepoStatus();
+    if (Gitnoter::NoneRepo == status) {
+        return;
+    }
+
+//            Globals::gitManager->commitA();
+//            Globals::gitManager->pull();
+//            Globals::gitManager->commitA();
+//
+//            if (Gitnoter::RemoteRepo == status) {
+//                Globals::gitManager->push();
+//            }
+}
+void MainWindow::lockWindow()
+{
+    qDebug() << "lockWindow" << __func__;
+//            if (mAutoLockTimer->isActive()){
+//                mAutoLockTimer->stop();
+//            }
+//            close();
+//            (new LockDialog())->show();
 }

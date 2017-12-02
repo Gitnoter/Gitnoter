@@ -44,6 +44,9 @@ public:
     void updateView(Gitnoter::UpdateViewFlags flags = Gitnoter::GroupTreeWidget);
     void setNoteListTitle();
 
+    void updateAutoSyncRepoTimer();
+    void updateAutoLockTimer();
+
 public slots:
     void init();
 
@@ -59,6 +62,9 @@ public slots:
     void searchNote(const QString &text);
     void openSettingWidget();
     void setSearchFocus();
+
+    void syncRepo();
+    void lockWindow();
 
 private:
     void setupUi();
@@ -101,6 +107,8 @@ private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
 
+    QTimer *mAutoSyncRepoTimer;
+    QTimer *mAutoLockTimer;
 
 };
 
