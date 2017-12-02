@@ -50,21 +50,6 @@ void MenuBar::setGroupEnable()
     }
 }
 
-void MenuBar::on_action_toUppercase_triggered()
-{
-
-}
-
-void MenuBar::on_action_toLowercase_triggered()
-{
-
-}
-
-void MenuBar::on_action_toUppercaseAtFirst_triggered()
-{
-
-}
-
 void MenuBar::on_action_guide_triggered()
 {
 

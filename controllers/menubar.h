@@ -33,10 +33,15 @@ signals:
     void printAccepted(QPrinter *printer);
 
 private slots:
+    void onPrintAccepted();
+
+    void on_action_printPageSetting_triggered();
+    void on_action_print_triggered();
+
 //    void on_action_newCategories_triggered();
 //    void on_action_newTags_triggered();
 //    void on_action_saveNote_triggered();
-    void on_action_synchNote_triggered();
+    void on_action_synchNote_triggered();   //
 //    void on_action_reloadNotes_triggered();
 //    void on_action_findWithFolder_triggered();
     void on_action_importEvernote_triggered();
@@ -44,11 +49,9 @@ private slots:
     void on_action_exportMarkdownForPDF_triggered();
     void on_action_exportHtml_triggered();
     void on_action_exportMarkdown_triggered();
-    void on_action_printPageSetting_triggered();
-    void on_action_print_triggered();
-//    void on_action_preferences_triggered();
 
-    void onPrintAccepted();
+
+//    void on_action_preferences_triggered();
 //    void onPageSetupDialogAccepted();
 
 //    void on_action_undo_triggered();
@@ -72,9 +75,9 @@ private slots:
 //    void on_action_replaceAndNext_triggered();
 //    void on_action_replaceAll_triggered();
 
-    void on_action_toUppercase_triggered();
-    void on_action_toLowercase_triggered();
-    void on_action_toUppercaseAtFirst_triggered();
+//    void on_action_toUppercase_triggered();
+//    void on_action_toLowercase_triggered();
+//    void on_action_toUppercaseAtFirst_triggered();
 
     void on_action_title1_triggered();
     void on_action_title2_triggered();

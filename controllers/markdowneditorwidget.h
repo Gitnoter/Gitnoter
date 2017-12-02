@@ -56,6 +56,22 @@ public slots:
     void showSearchFindWidget();
     void showSearchReplaceWidget();
 
+    void toUppercase();
+    void toLowercase();
+    void toUppercaseAtFirst();
+
+
+private:
+    void setupUi();
+
+    bool eventFilter(QObject *object, QEvent *event);
+
+    void setTagList();  // save tagList to noteModel
+
+    void setOpenNote();
+
+    void setSplitterSizes();
+
 private slots:
 
     void on_splitter_editor_splitterMoved(int pos, int index);
@@ -83,17 +99,6 @@ private slots:
     void on_pushButton_markdownPeview_clicked();
 
     void on_markdownEditor_customContextMenuRequested(const QPoint &pos);
-
-private:
-    void setupUi();
-
-    bool eventFilter(QObject *object, QEvent *event);
-
-    void setTagList();  // save tagList to noteModel
-
-    void setOpenNote();
-
-    void setSplitterSizes();
 
 public:
     MainWindow *mainWindow() { return mMainWindow; }

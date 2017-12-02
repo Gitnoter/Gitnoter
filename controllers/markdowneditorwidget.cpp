@@ -3,6 +3,7 @@
 
 #include "markdowneditorwidget.h"
 #include "globals.h"
+#include "tools.h"
 
 #include <QScrollBar>
 #include <QMenu>
@@ -376,11 +377,15 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_webSearch, SIGNAL(triggered()), this, SLOT(webSearchText()));
 
     connect(menuBarUi->action_findText, SIGNAL(triggered()), this, SLOT(showSearchFindWidget()));
+    connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
     connect(menuBarUi->action_findNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchDown()));
     connect(menuBarUi->action_findLast, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchUp()));
-    connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
     connect(menuBarUi->action_replaceAndNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
     connect(menuBarUi->action_replaceAll, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
+
+    connect(menuBarUi->action_toUppercase, SIGNAL(triggered()), this, SLOT(toUppercase()));
+    connect(menuBarUi->action_toLowercase, SIGNAL(triggered()), this, SLOT(toLowercase()));
+    connect(menuBarUi->action_toUppercaseAtFirst, SIGNAL(triggered()), this, SLOT(toUppercaseAtFirst()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -530,4 +535,49 @@ void MarkdownEditorWidget::showSearchReplaceWidget()
         menuBarUi->action_replaceAll->setEnabled(false);
         menuBarUi->action_replaceAndNext->setEnabled(false);
     }
+}
+
+void MarkdownEditorWidget::toUppercase()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    QString selectedText = textCursor.selectedText();
+
+    if (selectedText.isEmpty()) {
+        return;
+    }
+
+    textCursor.removeSelectedText();
+    textCursor.insertText(selectedText.toUpper());
+
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::toLowercase()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    QString selectedText = textCursor.selectedText();
+
+    if (selectedText.isEmpty()) {
+        return;
+    }
+
+    textCursor.removeSelectedText();
+    textCursor.insertText(selectedText.toLower());
+
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::toUppercaseAtFirst()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    QString selectedText = textCursor.selectedText();
+
+    if (selectedText.isEmpty()) {
+        return;
+    }
+
+    textCursor.removeSelectedText();
+    textCursor.insertText(Tools::firstUpperCase(selectedText));
+
+    ui->markdownEditor->setTextCursor(textCursor);
 }
