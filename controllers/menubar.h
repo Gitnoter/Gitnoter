@@ -107,14 +107,14 @@ private slots:
 //    void on_action_listbar_triggered();
 //    void on_action_toolbar_triggered();
 //    void on_action_navigationBar_triggered();
-    void on_action_editMode_triggered();
-    void on_action_previewMode_triggered();
-    void on_action_editPreviewMode_triggered();
+//    void on_action_editMode_triggered();
+//    void on_action_previewMode_triggered();
+//    void on_action_editPreviewMode_triggered();
     void on_action_nightMode_triggered();
-    void on_action_addFontSize_triggered();
-    void on_action_subtractFontSize_triggered();
-    void on_action_resetFontSize_triggered();
-    void on_action_enterFullScreen_triggered();
+//    void on_action_addFontSize_triggered();
+//    void on_action_subtractFontSize_triggered();
+//    void on_action_resetFontSize_triggered();
+//    void on_action_enterFullScreen_triggered();
 
     void on_action_mixWindow_triggered();
     void on_action_resizeWindow_triggered();

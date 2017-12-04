@@ -251,42 +251,7 @@ void MenuBar::on_action_nowTime_triggered()
 
 }
 
-void MenuBar::on_action_editMode_triggered()
-{
-
-}
-
-void MenuBar::on_action_previewMode_triggered()
-{
-
-}
-
-void MenuBar::on_action_editPreviewMode_triggered()
-{
-
-}
-
 void MenuBar::on_action_nightMode_triggered()
-{
-
-}
-
-void MenuBar::on_action_addFontSize_triggered()
-{
-
-}
-
-void MenuBar::on_action_subtractFontSize_triggered()
-{
-
-}
-
-void MenuBar::on_action_resetFontSize_triggered()
-{
-
-}
-
-void MenuBar::on_action_enterFullScreen_triggered()
 {
 
 }

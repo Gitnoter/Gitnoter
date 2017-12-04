@@ -63,6 +63,9 @@ void MainWindow::setupUi()
     connect(menuBarUi->action_groupSearch, SIGNAL(triggered()), this, SLOT(setSearchFocus()));
     connect(menuBarUi->action_sidebar, SIGNAL(triggered(bool)), this, SLOT(showSidebar(bool)));
     connect(menuBarUi->action_listbar, SIGNAL(triggered(bool)), this, SLOT(showListBar(bool)));
+
+    connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
+    connect(menuBarUi->action_fullScreenEditMode, SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -383,4 +386,28 @@ void MainWindow::showListBar(bool clicked)
 
     ui->widget_listBar->setVisible(clicked);
     Globals::configModel->setListBarWidget(clicked);
+}
+
+void MainWindow::enterFullScreen()
+{
+    (isActiveWindow() && isFullScreen()) ? showNormal() : showFullScreen();
+}
+
+void MainWindow::fullScreenEditMode()
+{
+    if (isActiveWindow() && isFullScreen()) {
+        bool sidebar = Globals::configModel->getSidebarWidget();
+        bool listBar = Globals::configModel->getListBarWidget();
+
+        ui->widget_listBar->setVisible(sidebar);
+        ui->widget_sidebar->setVisible(listBar);
+
+        showNormal();
+    }
+    else {
+        ui->widget_listBar->setVisible(false);
+        ui->widget_sidebar->setVisible(false);
+
+        showFullScreen();
+    }
 }

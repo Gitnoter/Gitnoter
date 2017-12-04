@@ -26,6 +26,8 @@ const QString Globals::newNoteKeySequence = "Ctrl+N";
 const QString Globals::lockWindowKeySequence = "Ctrl+Shift+L";
 const QString Globals::cutWindowKeySequence = "Ctrl+Shift+X";
 
+const int Globals::editorFontSize = 14;
+
 //const QStringList Globals::searchEngines = {"https://www.baidu.com/s?wd=", "https://www.google.com/search?&q="};
 const QString Globals::searchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
                                                                           : "https://www.google.com/search?&q=";

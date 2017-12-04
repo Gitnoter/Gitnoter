@@ -150,10 +150,11 @@
     <addaction name="action_editMode"/>
     <addaction name="action_previewMode"/>
     <addaction name="action_editPreviewMode"/>
+    <addaction name="action_fullScreenEditMode"/>
     <addaction name="separator"/>
     <addaction name="action_nightMode"/>
     <addaction name="separator"/>
-    <addaction name="action_addFontSize"/>
+    <addaction name="action_plusFontSize"/>
     <addaction name="action_subtractFontSize"/>
     <addaction name="action_resetFontSize"/>
     <addaction name="separator"/>
@@ -774,6 +775,14 @@
     <string>Ctrl+R</string>
    </property>
   </action>
+  <action name="action_fullScreenEditMode">
+   <property name="text">
+    <string>全屏编辑模式</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+Shift+F</string>
+   </property>
+  </action>
   <action name="action_nightMode">
    <property name="checkable">
     <bool>true</bool>
@@ -785,7 +794,7 @@
     <string>Ctrl+Alt+L</string>
    </property>
   </action>
-  <action name="action_addFontSize">
+  <action name="action_plusFontSize">
    <property name="text">
     <string>增加字体大小</string>
    </property>

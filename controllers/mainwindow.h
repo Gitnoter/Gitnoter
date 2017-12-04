@@ -69,6 +69,9 @@ public slots:
     void showSidebar(bool clicked);
     void showListBar(bool clicked);
 
+    void enterFullScreen();
+    void fullScreenEditMode();
+
 private:
     void setupUi();
 

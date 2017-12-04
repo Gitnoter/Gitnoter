@@ -13,10 +13,12 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
-    mNoteModel(nullptr)
+    mNoteModel(nullptr),
+    mParent(parent)
 {
     ui->setupUi(this);
-    if (mMainWindow = qobject_cast<MainWindow *>(parent)) {
+    mMainWindow = reinterpret_cast<MainWindow *>(qobject_cast<MainWindow *>(parent));
+    if (mMainWindow) {
         init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
     }
 }
@@ -31,7 +33,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
     mMainWindow = mainWindow;
     mNoteModel = mMainWindow->noteListWidget()->getNoteModel(uuid);
     if (!mNoteModel) {
-        if (!parent()) {
+        if (!mParent) {
             close();
             return;
         }
@@ -416,6 +418,13 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_editMode, SIGNAL(triggered()), this, SLOT(editMode()));
     connect(menuBarUi->action_previewMode, SIGNAL(triggered()), this, SLOT(previewMode()));
     connect(menuBarUi->action_editPreviewMode, SIGNAL(triggered()), this, SLOT(editPreviewMode()));
+    connect(menuBarUi->action_fullScreenEditMode, SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
+
+    connect(menuBarUi->action_plusFontSize, SIGNAL(triggered()), this, SLOT(plusFontSize()));
+    connect(menuBarUi->action_subtractFontSize, SIGNAL(triggered()), this, SLOT(subtractFontSize()));
+    connect(menuBarUi->action_resetFontSize, SIGNAL(triggered()), this, SLOT(resetFontSize()));
+
+    connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -684,4 +693,46 @@ void MarkdownEditorWidget::previewMode()
 void MarkdownEditorWidget::editPreviewMode()
 {
     on_pushButton_splitterPreview_clicked();
+}
+
+void MarkdownEditorWidget::fullScreenEditMode()
+{
+    enterFullScreen();
+}
+
+void MarkdownEditorWidget::plusFontSize()
+{
+    QFont font = ui->markdownEditor->font();
+    font.setPointSize(font.pointSize() + 1);
+    ui->markdownEditor->setFont(font);
+
+    Globals::configModel->setEditorFont(font);
+}
+
+void MarkdownEditorWidget::subtractFontSize()
+{
+    QFont font = ui->markdownEditor->font();
+
+    if (font.pointSize() <= 0) {
+        return;
+    }
+
+    font.setPointSize(font.pointSize() - 1);
+
+    ui->markdownEditor->setFont(font);
+    Globals::configModel->setEditorFont(font);
+}
+
+void MarkdownEditorWidget::resetFontSize()
+{
+    QFont font = ui->markdownEditor->font();
+    font.setPointSize(Globals::editorFontSize);
+
+    ui->markdownEditor->setFont(font);
+    Globals::configModel->setEditorFont(font);
+}
+
+void MarkdownEditorWidget::enterFullScreen()
+{
+    (!mParent && isActiveWindow() && isFullScreen()) ? showNormal() : showFullScreen();
 }

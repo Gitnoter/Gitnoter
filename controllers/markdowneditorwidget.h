@@ -67,6 +67,13 @@ public slots:
     void editMode();
     void previewMode();
     void editPreviewMode();
+    void fullScreenEditMode();
+
+    void plusFontSize();
+    void subtractFontSize();
+    void resetFontSize();
+
+    void enterFullScreen();
 
 private:
     void setupUi();
@@ -122,6 +129,7 @@ public:
 
 private:
     Ui::MarkdownEditorWidget *ui;
+    QWidget *mParent;
     MainWindow *mMainWindow;
     CategoryListWidget *mCategoryListWidget;
 

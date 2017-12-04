@@ -34,6 +34,8 @@ public:
     static const QString lockWindowKeySequence;
     static const QString cutWindowKeySequence;
 
+    static const int editorFontSize;
+
 //    static const QStringList searchEngines;
     static const QString searchEngine;
 
