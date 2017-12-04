@@ -103,10 +103,10 @@ private slots:
     void on_action_cuttingLine_triggered();
     void on_action_nowTime_triggered();
 
-    void on_action_sidebar_triggered();
-    void on_action_listbar_triggered();
-    void on_action_toolbar_triggered();
-    void on_action_navigationBar_triggered();
+//    void on_action_sidebar_triggered();
+//    void on_action_listbar_triggered();
+//    void on_action_toolbar_triggered();
+//    void on_action_navigationBar_triggered();
     void on_action_editMode_triggered();
     void on_action_previewMode_triggered();
     void on_action_editPreviewMode_triggered();

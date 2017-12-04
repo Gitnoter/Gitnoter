@@ -251,26 +251,6 @@ void MenuBar::on_action_nowTime_triggered()
 
 }
 
-void MenuBar::on_action_sidebar_triggered()
-{
-
-}
-
-void MenuBar::on_action_listbar_triggered()
-{
-
-}
-
-void MenuBar::on_action_toolbar_triggered()
-{
-
-}
-
-void MenuBar::on_action_navigationBar_triggered()
-{
-
-}
-
 void MenuBar::on_action_editMode_triggered()
 {
 

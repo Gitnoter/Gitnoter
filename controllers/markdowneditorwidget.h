@@ -64,6 +64,10 @@ public slots:
     void showToolbar(bool clicked);
     void showNavigationBar(bool clicked);
 
+    void editMode();
+    void previewMode();
+    void editPreviewMode();
+
 private:
     void setupUi();
 

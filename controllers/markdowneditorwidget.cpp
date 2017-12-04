@@ -329,7 +329,7 @@ void MarkdownEditorWidget::setBackgroundSplitterSizes()
     ui->splitter_background->setSizes(sizes);
 
     bool b = sizes[1] == ui->widget_navigationBar->minimumWidth();
-    ui->splitter_background->setStyleSheet(b ? "QSplitter::handle {image: none;}" : "");
+    ui->splitter_background->setStyleSheet(b ? "QSplitter#splitter_background::handle {image: none;}" : "");
     ui->splitter_background->handle(1)->setDisabled(b);
 
     Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
@@ -412,6 +412,10 @@ void MarkdownEditorWidget::setupUi()
 
     connect(menuBarUi->action_toolbar, SIGNAL(triggered(bool)), this, SLOT(showToolbar(bool)));
     connect(menuBarUi->action_navigationBar, SIGNAL(triggered(bool)), this, SLOT(showNavigationBar(bool)));
+
+    connect(menuBarUi->action_editMode, SIGNAL(triggered()), this, SLOT(editMode()));
+    connect(menuBarUi->action_previewMode, SIGNAL(triggered()), this, SLOT(previewMode()));
+    connect(menuBarUi->action_editPreviewMode, SIGNAL(triggered()), this, SLOT(editPreviewMode()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -663,4 +667,21 @@ void MarkdownEditorWidget::onNavigationWidgetPositionClicked(int position) {
 
     // update the preview-slider
     onMarkdownEditorSliderValueChanged(ui->markdownEditor->verticalScrollBar()->value(), true);
+}
+
+void MarkdownEditorWidget::editMode()
+{
+    QList<int> sizes = {ui->splitter_editor->size().width(), 0};
+    Globals::configModel->setEditorSplitterSizes(sizes);
+    setSplitterSizes();
+}
+
+void MarkdownEditorWidget::previewMode()
+{
+    on_pushButton_markdownPeview_clicked();
+}
+
+void MarkdownEditorWidget::editPreviewMode()
+{
+    on_pushButton_splitterPreview_clicked();
 }

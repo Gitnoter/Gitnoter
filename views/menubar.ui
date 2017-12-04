@@ -751,9 +751,6 @@
    </property>
   </action>
   <action name="action_previewMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>预览模式</string>
    </property>
@@ -762,9 +759,6 @@
    </property>
   </action>
   <action name="action_editMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>编辑模式</string>
    </property>
@@ -773,11 +767,8 @@
    </property>
   </action>
   <action name="action_editPreviewMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
-    <string>编辑/预览模式</string>
+    <string>编辑|预览模式</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
