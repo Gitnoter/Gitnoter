@@ -1,6 +1,7 @@
 #include "configmodel.h"
 #include "globals.h"
 #include "tools.h"
+#include "markdowneditorwidget.h"
 
 #include <qtinyaes/qtinyaes.h>
 
@@ -17,8 +18,8 @@ ConfigModel::ConfigModel()
     mRepoPassword = "git/repoPassword";
     mRepoStatus = "git/repoStatus";
     mAutoSyncRepoTime = "git/autoSyncRepoTime";
-    mOpenNoteUuid = "editor/openNoteUuid";
-    mPopupNoteUuidList = "editor/popupNoteUuid";
+    mOpenMainWindowNoteUuid = "editor/openMainWindowNoteUuid";
+    mOpenWindowListNoteUuid = "editor/openWindowListNoteUuid";
     mSideSelectedType = "groupTree/selectedType";
     mSideSelectedName = "groupTree/selectedName";
     mAutoLockTime = "lock/autoLockTime";
@@ -99,9 +100,9 @@ void ConfigModel::setRepoPassword(const QString &repoPassword)
     settings->setValue(mRepoPassword, encrypt(repoPassword));
 }
 
-void ConfigModel::setOpenNoteUuid(const QString &openNoteUuid)
+void ConfigModel::setOpenMainWindowNoteUuid(const QString &openNoteUuid)
 {
-    settings->setValue(mOpenNoteUuid, openNoteUuid);
+    settings->setValue(mOpenMainWindowNoteUuid, openNoteUuid);
 }
 
 const QString ConfigModel::getVersion() const
@@ -129,9 +130,9 @@ const QString ConfigModel::getRepoPassword() const
     return decrypt(settings->value(mRepoPassword, "").toString());
 }
 
-const QString ConfigModel::getOpenNoteUuid() const
+const QString ConfigModel::openMainWindowNoteUuid() const
 {
-    return settings->value(mOpenNoteUuid, "").toString();
+    return settings->value(mOpenMainWindowNoteUuid, "").toString();
 }
 
 QString ConfigModel::getSideSelectedName() const
@@ -308,26 +309,41 @@ void ConfigModel::setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder n
     settings->setValue(mNoteSortType, noteSortType);
 }
 
-void ConfigModel::appendPopupNoteUuid(const QString &noteUuid)
+void ConfigModel::setOpenWindowListNoteUuid(QWidgetList widgetList)
 {
-    settings->setValue(mPopupNoteUuidList, noteUuid);
+    QStringList uuidList = {};
+    for (auto &&widget : widgetList) {
+        if (MarkdownEditorWidget *markdownEditorWidget
+                = reinterpret_cast<MarkdownEditorWidget *>(qobject_cast<MarkdownEditorWidget *>(widget))) {
+            uuidList.append(markdownEditorWidget->noteModel()->getUuid());
+        }
+    }
+
+    settings->setValue(mOpenWindowListNoteUuid, uuidList);
 }
 
-void ConfigModel::removePopupNoteUuid(const QString &noteUuid)
+void ConfigModel::appendOpenWindowListNoteUuid(const QString &noteUuid)
 {
-    QStringList uuidList = getPopupNoteUuidList();
+    QStringList uuidList = openWindowListNoteUuid();
+    uuidList.append(noteUuid);
+    settings->setValue(mOpenWindowListNoteUuid, uuidList);
+}
+
+void ConfigModel::removeOpenWindowListNoteUuid(const QString &noteUuid)
+{
+    QStringList uuidList = openWindowListNoteUuid();
     uuidList.removeOne(noteUuid);
-    settings->setValue(mPopupNoteUuidList, uuidList);
+    settings->setValue(mOpenWindowListNoteUuid, uuidList);
 }
 
-void ConfigModel::clearPopupNoteUuid()
+void ConfigModel::clearOpenWindowListNoteUuid()
 {
-    settings->setValue(mPopupNoteUuidList, {});
+    settings->setValue(mOpenWindowListNoteUuid, {});
 }
 
-QStringList ConfigModel::getPopupNoteUuidList() const
+QStringList ConfigModel::openWindowListNoteUuid() const
 {
-    return settings->value(mPopupNoteUuidList, {}).toStringList();
+    return settings->value(mOpenWindowListNoteUuid, {}).toStringList();
 }
 
 QList<int> ConfigModel::getEditorSplitterSizes()

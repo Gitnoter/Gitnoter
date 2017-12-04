@@ -75,16 +75,6 @@ void MenuBar::on_action_issue_triggered()
 
 }
 
-void MenuBar::on_action_prepose_triggered()
-{
-
-}
-
-void MenuBar::on_action_mixWindow_triggered()
-{
-
-}
-
 void MenuBar::on_action_about_triggered()
 {
 
@@ -252,46 +242,6 @@ void MenuBar::on_action_nowTime_triggered()
 }
 
 void MenuBar::on_action_nightMode_triggered()
-{
-
-}
-
-void MenuBar::on_action_resizeWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_newWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_newEditWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_showLastWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_showNextWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_closeWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_closeAllWindow_triggered()
-{
-
-}
-
-void MenuBar::on_action_lock_triggered()
 {
 
 }

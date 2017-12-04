@@ -148,16 +148,16 @@ void NoteListWidget::setListWidget()
 void NoteListWidget::setItemSelected()
 {
     clearSelection();
-    const QString uuid = Globals::configModel->getOpenNoteUuid();
+    const QString uuid = Globals::configModel->openMainWindowNoteUuid();
     if (has(uuid)) {
         getItem(uuid)->setSelected(true);
     }
     else if (mListWidgetItemList.length() > 0) {
         mListWidgetItemList[0]->setSelected(true);
-        Globals::configModel->setOpenNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
+        Globals::configModel->setOpenMainWindowNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
     }
     else {
-        Globals::configModel->setOpenNoteUuid("");
+        Globals::configModel->setOpenMainWindowNoteUuid("");
     }
 }
 

@@ -47,6 +47,12 @@ public:
     void updateAutoSyncRepoTimer();
     void updateAutoLockTimer();
 
+private:
+    void setupUi();
+
+    void changeEvent(QEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
+
 public slots:
     void init();
 
@@ -64,7 +70,6 @@ public slots:
     void setSearchFocus();
 
     void syncRepo();
-    void lockWindow();
 
     void showSidebar(bool clicked);
     void showListBar(bool clicked);
@@ -72,11 +77,20 @@ public slots:
     void enterFullScreen();
     void fullScreenEditMode();
 
-private:
-    void setupUi();
+    void newWindow(QListWidgetItem *listWidgetItem = nullptr);
+    void showLastWindow();
+    void showNextWindow();
+    void closeWindow();
+    void closeAllWindow();
+    void lockWindow();
+    void preposeWindow();
 
-    void changeEvent(QEvent *event) override;
-    void moveEvent(QMoveEvent *event) override;
+    void guide();
+    void historyChange();
+    void markdownLanguage();
+    void feedback();
+    void issue();
+    void about();
 
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
@@ -108,10 +122,12 @@ public:
     QStackedWidget *stackedWidget();
     QSplitter *splitter();
     MenuBar *menuBar();
+    QList<QWidget *> &windowList() { return mWindowList; }
 
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
+    QWidgetList mWindowList;
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;

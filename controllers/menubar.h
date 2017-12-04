@@ -116,16 +116,16 @@ private slots:
 //    void on_action_resetFontSize_triggered();
 //    void on_action_enterFullScreen_triggered();
 
-    void on_action_mixWindow_triggered();
-    void on_action_resizeWindow_triggered();
-    void on_action_newWindow_triggered();
-    void on_action_newEditWindow_triggered();
-    void on_action_showLastWindow_triggered();
-    void on_action_showNextWindow_triggered();
-    void on_action_closeWindow_triggered();
-    void on_action_closeAllWindow_triggered();
-    void on_action_lock_triggered();
-    void on_action_prepose_triggered();
+//    void on_action_mixWindow_triggered();
+//    void on_action_resizeWindow_triggered();
+//    void on_action_newWindow_triggered();
+//    void on_action_newEditWindow_triggered();
+//    void on_action_showLastWindow_triggered();
+//    void on_action_showNextWindow_triggered();
+//    void on_action_closeWindow_triggered();
+//    void on_action_closeAllWindow_triggered();
+//    void on_action_lock_triggered();
+//    void on_action_prepose_triggered();
 
     void on_action_guide_triggered();
     void on_action_history_triggered();

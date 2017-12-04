@@ -28,9 +28,13 @@ const QString Globals::cutWindowKeySequence = "Ctrl+Shift+X";
 
 const int Globals::editorFontSize = 14;
 
-//const QStringList Globals::searchEngines = {"https://www.baidu.com/s?wd=", "https://www.google.com/search?&q="};
 const QString Globals::searchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
                                                                           : "https://www.google.com/search?&q=";
+const QString Globals::guideUrl = "http://gitnoter.github.io/";
+const QString Globals::historyChangeUrl = "http://gitnoter.github.io/";
+const QString Globals::markdownLanguageUrl = "http://gitnoter.github.io/";
+const QString Globals::issueUrl = "https://github.com/Gitnoter/Gitnoter/issues";
+const QString Globals::emailToUser = "gitnoter@gmail.com";
 
 const QByteArray Globals::aesKey = "Q5tO3jUB0oe7FmWq";
 const QByteArray Globals::aesIv  = "RNNSR8XNbMTuOSGd";

@@ -8,6 +8,7 @@
 #include "tools.h"
 #include "globals.h"
 #include "groupmodel.h"
+#include "version.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -28,6 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
+    mWindowList.append(this);
     setMenuBar(mMenuBar->menuBar());
     ui->groupTreeWidget->expandAll();
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -39,7 +41,7 @@ void MainWindow::setupUi()
     connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionTriggered()));
 
     ui->splitter->setSizes(Globals::configModel->getMainWindowSplitterSizes());
-    ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->getOpenNoteUuid().isEmpty());
+    ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->openMainWindowNoteUuid().isEmpty());
 
     setGeometry(Globals::configModel->getMainWindowRect());
     if (Globals::configModel->getMainWindowFullScreen()) {
@@ -51,6 +53,8 @@ void MainWindow::setupUi()
 
     showSidebar(Globals::configModel->getSidebarWidget());
     showListBar(Globals::configModel->getListBarWidget());
+
+    connect(ui->noteListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(newWindow(QListWidgetItem *)));
 
     Ui::MenuBar *menuBarUi = mMenuBar->getUi();
 
@@ -66,13 +70,31 @@ void MainWindow::setupUi()
 
     connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
     connect(menuBarUi->action_fullScreenEditMode, SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
+
+    connect(menuBarUi->action_mixWindow, SIGNAL(triggered()), this, SLOT(showMinimized()));
+    connect(menuBarUi->action_resizeWindow, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    connect(menuBarUi->action_newWindow, SIGNAL(triggered()), this, SLOT(newWindow()));
+    connect(menuBarUi->action_showLastWindow, SIGNAL(triggered()), this, SLOT(showLastWindow()));
+    connect(menuBarUi->action_showNextWindow, SIGNAL(triggered()), this, SLOT(showNextWindow()));
+    connect(menuBarUi->action_closeWindow, SIGNAL(triggered()), this, SLOT(closeWindow()));
+    connect(menuBarUi->action_closeAllWindow, SIGNAL(triggered()), this, SLOT(closeAllWindow()));
+    connect(menuBarUi->action_lockWindow, SIGNAL(triggered()), this, SLOT(lockWindow()));
+    connect(menuBarUi->action_preposeWindow, SIGNAL(triggered()), this, SLOT(preposeWindow()));
+
+    connect(menuBarUi->action_guide, SIGNAL(triggered()), this, SLOT(guide()));
+    connect(menuBarUi->action_history, SIGNAL(triggered()), this, SLOT(historyChange()));
+    connect(menuBarUi->action_markdownLanguage, SIGNAL(triggered()), this, SLOT(markdownLanguage()));
+    connect(menuBarUi->action_feedback, SIGNAL(triggered()), this, SLOT(feedback()));
+    connect(menuBarUi->action_issue, SIGNAL(triggered()), this, SLOT(issue()));
+    connect(menuBarUi->action_about, SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
 {
     NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
-    if (noteModel->getUuid() != Globals::configModel->getOpenNoteUuid()) {
-        Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+    if (noteModel->getUuid() != Globals::configModel->openMainWindowNoteUuid()) {
+        Globals::configModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
         markdownEditorWidget()->init(noteModel, this);
     }
 }
@@ -85,13 +107,13 @@ void MainWindow::on_splitter_splitterMoved(int, int)
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
     if (Globals::configModel->getSideSelectedType() == Gitnoter::Trash) {
-        if (Globals::configModel->getOpenNoteUuid().isEmpty()) {
+        if (Globals::configModel->openMainWindowNoteUuid().isEmpty()) {
             return;
         }
 
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
-        NoteModel *noteModel = ui->noteListWidget->getNoteModel(Globals::configModel->getOpenNoteUuid());
+        NoteModel *noteModel = ui->noteListWidget->getNoteModel(Globals::configModel->openMainWindowNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
                                  ui->groupTreeWidget->topLevelItem(1)->text(0) :
                                  noteModel->getCategory();
@@ -112,7 +134,7 @@ void MainWindow::on_action_saveNote_triggered()
 void MainWindow::on_pushButton_noteSubtract_clicked()
 {
     if (Globals::configModel->getSideSelectedType() == Gitnoter::Trash) {
-        if (Globals::configModel->getOpenNoteUuid().isEmpty()) {
+        if (Globals::configModel->openMainWindowNoteUuid().isEmpty()) {
             return;
         }
 
@@ -161,7 +183,7 @@ void MainWindow::setNoteListTitle()
 
 void MainWindow::restoreNote()
 {
-    noteListWidget()->restore(Globals::configModel->getOpenNoteUuid());
+    noteListWidget()->restore(Globals::configModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
@@ -175,7 +197,7 @@ void MainWindow::appendNote()
     }
 
     NoteModel *noteModel = noteListWidget()->append(category);
-    Globals::configModel->setOpenNoteUuid(noteModel->getUuid());
+    Globals::configModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
     noteListWidget()->setListWidget();
     groupTreeWidget()->setItemSelected();
     markdownEditorWidget()->init(noteModel, this);
@@ -183,13 +205,13 @@ void MainWindow::appendNote()
 
 void MainWindow::removeNote()
 {
-    noteListWidget()->remove(Globals::configModel->getOpenNoteUuid());
+    noteListWidget()->remove(Globals::configModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::trashNote()
 {
-    noteListWidget()->trash(Globals::configModel->getOpenNoteUuid());
+    noteListWidget()->trash(Globals::configModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
@@ -278,7 +300,7 @@ void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)
     }
 
     if (flags.testFlag(Gitnoter::MarkdownEditorWidget)) {
-        markdownEditorWidget()->init(Globals::configModel->getOpenNoteUuid(), this);
+        markdownEditorWidget()->init(Globals::configModel->openMainWindowNoteUuid(), this);
     }
 
     if (flags.testFlag(Gitnoter::NoteListTitle)) {
@@ -410,4 +432,159 @@ void MainWindow::fullScreenEditMode()
 
         showFullScreen();
     }
+}
+
+void MainWindow::newWindow(QListWidgetItem *)
+{
+    const QString uuid = Globals::configModel->openMainWindowNoteUuid();
+    if (uuid.isEmpty()) {
+        return;
+    }
+
+    for (auto &&window : mWindowList) {
+        if (MarkdownEditorWidget *widget
+                = reinterpret_cast<MarkdownEditorWidget *>(qobject_cast<MarkdownEditorWidget *>(window))) {
+            if (widget->noteModel()->getUuid() == uuid) {
+                widget->raise();
+                window->activateWindow();
+                return;
+            }
+        }
+    }
+
+    MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget;
+    mWindowList.append(markdownEditorWidget);
+
+    markdownEditorWidget->init(uuid, this);
+    markdownEditorWidget->show();
+}
+
+void MainWindow::showLastWindow()
+{
+    if (mWindowList.length() < 2) {
+        return;
+    }
+
+    int nowActiveWindowIndex = -1;
+    for (int i = 0; i < mWindowList.length(); ++i) {
+        if (mWindowList[i]->isActiveWindow()) {
+            nowActiveWindowIndex = i;
+            break;
+        }
+    }
+
+    if (nowActiveWindowIndex < 1) {
+        return;
+    }
+
+    mWindowList[nowActiveWindowIndex - 1]->raise();
+    mWindowList[nowActiveWindowIndex - 1]->activateWindow();
+}
+
+void MainWindow::showNextWindow()
+{
+    if (mWindowList.length() < 2) {
+        return;
+    }
+
+    int nowActiveWindowIndex = -1;
+    for (int i = 0; i < mWindowList.length(); ++i) {
+        if (mWindowList[i]->isActiveWindow()) {
+            nowActiveWindowIndex = i;
+            break;
+        }
+    }
+
+    if (nowActiveWindowIndex == -1 || nowActiveWindowIndex == mWindowList.length() - 1) {
+        return;
+    }
+
+    mWindowList[nowActiveWindowIndex + 1]->raise();
+    mWindowList[nowActiveWindowIndex + 1]->activateWindow();
+}
+
+void MainWindow::closeWindow()
+{
+    for (auto &&widget : mWindowList) {
+        if (widget->isActiveWindow()) {
+            mWindowList.removeOne(widget);
+            widget->close();
+            break;
+        }
+    }
+
+    Globals::configModel->setOpenWindowListNoteUuid(mWindowList);
+}
+
+void MainWindow::closeAllWindow()
+{
+    for (auto &&widget : mWindowList) {
+        if (MarkdownEditorWidget *markdownEditorWidget
+                = reinterpret_cast<MarkdownEditorWidget *>(qobject_cast<MarkdownEditorWidget *>(widget))) {
+            markdownEditorWidget->close();
+            mWindowList.removeOne(widget);
+        }
+    }
+
+    raise();
+    activateWindow();
+
+    Globals::configModel->clearOpenWindowListNoteUuid();
+}
+
+void MainWindow::preposeWindow()
+{
+    if (mWindowList.length() < 2) {
+        return;
+    }
+
+    QWidget *nowActiveWindow = nullptr;
+    for (auto &&widget : mWindowList) {
+        if (widget->isActiveWindow()) {
+            nowActiveWindow = widget;
+            break;
+        }
+        else {
+            widget->raise();
+            widget->activateWindow();
+        }
+    }
+
+    if (nowActiveWindow) {
+        nowActiveWindow->raise();
+        nowActiveWindow->activateWindow();
+    }
+}
+
+void MainWindow::guide()
+{
+    QDesktopServices::openUrl(QUrl(Globals::guideUrl));
+}
+
+void MainWindow::historyChange()
+{
+    QDesktopServices::openUrl(QUrl(Globals::historyChangeUrl));
+}
+
+void MainWindow::markdownLanguage()
+{
+    QDesktopServices::openUrl(QUrl(Globals::markdownLanguageUrl));
+}
+
+void MainWindow::feedback()
+{
+    const QString body = "\n\n" + VER_FILEDESCRIPTION_STR + "\n" + QSysInfo::prettyProductName();
+    QDesktopServices::openUrl(
+            QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
+                    Globals::emailToUser, body), QUrl::TolerantMode));
+}
+
+void MainWindow::issue()
+{
+    QDesktopServices::openUrl(QUrl(Globals::issueUrl));
+}
+
+void MainWindow::about()
+{
+
 }

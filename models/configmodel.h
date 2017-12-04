@@ -25,7 +25,7 @@ public:
 
     void setRepoPassword(const QString &repoPassword);
 
-    void setOpenNoteUuid(const QString &openNoteUuid);
+    void setOpenMainWindowNoteUuid(const QString &openNoteUuid);
 
     const QString getVersion() const;
 
@@ -37,7 +37,7 @@ public:
 
     const QString getRepoPassword() const;
 
-    const QString getOpenNoteUuid() const;
+    const QString openMainWindowNoteUuid() const;
 
     QString getSideSelectedName() const;
 
@@ -105,13 +105,15 @@ public:
 
     void setNoteSort(Gitnoter::SortBasis noteSortBasis, Qt::SortOrder noteSortType);
 
-    void appendPopupNoteUuid(const QString &noteUuid);
+    void setOpenWindowListNoteUuid(QWidgetList widgetList);
 
-    void removePopupNoteUuid(const QString &noteUuid);
+    void appendOpenWindowListNoteUuid(const QString &noteUuid);
 
-    void clearPopupNoteUuid();
+    void removeOpenWindowListNoteUuid(const QString &noteUuid);
 
-    QStringList getPopupNoteUuidList() const;
+    void clearOpenWindowListNoteUuid();
+
+    QStringList openWindowListNoteUuid() const;
 
     QList<int> getEditorSplitterSizes();
 
@@ -156,8 +158,8 @@ private:
     QString mRepoEmail;
     QString mRepoUsername;
     QString mRepoPassword;
-    QString mOpenNoteUuid;
-    QString mPopupNoteUuidList;
+    QString mOpenMainWindowNoteUuid;
+    QString mOpenWindowListNoteUuid;
 
     QString mRepoStatus;
     // type: 1 - 第一层及

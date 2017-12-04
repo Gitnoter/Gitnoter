@@ -19,7 +19,7 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     ui->setupUi(this);
     mMainWindow = reinterpret_cast<MainWindow *>(qobject_cast<MainWindow *>(parent));
     if (mMainWindow) {
-        init(Globals::configModel->getOpenNoteUuid(), mMainWindow);
+        init(Globals::configModel->openMainWindowNoteUuid(), mMainWindow);
     }
 }
 
@@ -38,7 +38,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
             return;
         }
         mMainWindow->stackedWidget()->setCurrentIndex(1);
-        Globals::configModel->setOpenNoteUuid("");
+        Globals::configModel->setOpenMainWindowNoteUuid("");
     }
     else {
         setOpenNote();
@@ -425,6 +425,9 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBarUi->action_resetFontSize, SIGNAL(triggered()), this, SLOT(resetFontSize()));
 
     connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
+
+    connect(menuBarUi->action_mixWindow, SIGNAL(triggered()), this, SLOT(showMinimized()));
+    connect(menuBarUi->action_resizeWindow, SIGNAL(triggered()), this, SLOT(showMaximized()));
 }
 
 void MarkdownEditorWidget::saveNote()

@@ -168,16 +168,16 @@
     <addaction name="action_resizeWindow"/>
     <addaction name="separator"/>
     <addaction name="action_newWindow"/>
-    <addaction name="action_newEditWindow"/>
     <addaction name="separator"/>
-    <addaction name="action_showLastWindow"/>
     <addaction name="action_showNextWindow"/>
+    <addaction name="action_showLastWindow"/>
     <addaction name="separator"/>
     <addaction name="action_closeWindow"/>
     <addaction name="action_closeAllWindow"/>
-    <addaction name="action_lock"/>
     <addaction name="separator"/>
-    <addaction name="action_prepose"/>
+    <addaction name="action_lockWindow"/>
+    <addaction name="separator"/>
+    <addaction name="action_preposeWindow"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_help">
@@ -348,7 +348,7 @@
     <string>GitHub issues...</string>
    </property>
   </action>
-  <action name="action_prepose">
+  <action name="action_preposeWindow">
    <property name="text">
     <string>前置所有窗口</string>
    </property>
@@ -657,7 +657,7 @@
     <string>关闭当前窗口</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+W</string>
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="action_closeAllWindow">
@@ -665,7 +665,7 @@
     <string>关闭所有窗口</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+W</string>
+    <string>Ctrl+Shift+W</string>
    </property>
   </action>
   <action name="action_reloadNotes">
@@ -818,7 +818,7 @@
     <string>Ctrl+Alt+/</string>
    </property>
   </action>
-  <action name="action_lock">
+  <action name="action_lockWindow">
    <property name="text">
     <string>锁定窗口</string>
    </property>
@@ -839,7 +839,7 @@
     <string>显示上一个窗口</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+Num+Left</string>
+    <string>Ctrl+Alt+Left</string>
    </property>
   </action>
   <action name="action_showNextWindow">
@@ -847,7 +847,7 @@
     <string>显示下一个窗口</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+Num+Right</string>
+    <string>Ctrl+Alt+Right</string>
    </property>
   </action>
  </widget>

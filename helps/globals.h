@@ -36,8 +36,12 @@ public:
 
     static const int editorFontSize;
 
-//    static const QStringList searchEngines;
     static const QString searchEngine;
+    static const QString guideUrl;
+    static const QString historyChangeUrl;
+    static const QString markdownLanguageUrl;
+    static const QString issueUrl;
+    static const QString emailToUser;
 
     static const QByteArray aesKey;
     static const QByteArray aesIv;
