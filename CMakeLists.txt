@@ -39,6 +39,8 @@ qt5_wrap_ui(UIS_HDRS
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}
         main.cpp
+        gitnoter.h
+        version.h
         resources/resources.qrc
 
         controllers/mainwindow.h            controllers/mainwindow.cpp
@@ -61,7 +63,6 @@ add_executable(${PROJECT_NAME}
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp
         models/groupmodel.h         models/groupmodel.cpp
-        models/gitnoter.h
 
         helps/globals.h             helps/globals.cpp
         helps/tools.h               helps/tools.cpp
