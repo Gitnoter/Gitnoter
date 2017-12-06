@@ -124,12 +124,10 @@ public:
     QStackedWidget *stackedWidget();
     QSplitter *splitter();
     MenuBar *menuBar();
-    QWidgetList &windowList() { return mWindowList; }
 
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
-    QWidgetList mWindowList;
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;

@@ -24,7 +24,8 @@ public:
     ~MenuBar();
 
     void setGroupEnable();
-    void setWindowMenu(QWidget *widget = 0);
+    void addActionToWindowMenu(QWidget *widget = 0);
+    void removeActionToWindowMenu(QWidget *widget = 0);
 
 //    void initFormMarkdownEditorWidget();
 //    void initFormGroupTreeWidget();
@@ -135,10 +136,13 @@ public:
     QAction *getActionShowLastWindow() const;
     QAction *getActionShowNextWindow() const;
 
+    QActionGroup *windowMenuActionGroup() { return mWindowMenuActionGroup; }
+    QWidgetList windowMenuWidgetList();
+
 private:
     Ui::MenuBar *ui;
     QPrinter *mPrinter;
-    QActionGroup *mWindowActionGroup;
+    QActionGroup *mWindowMenuActionGroup;
 
 };
 

@@ -8,7 +8,7 @@
 MenuBar::MenuBar(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MenuBar),
-        mWindowActionGroup(new QActionGroup(this))
+        mWindowMenuActionGroup(new QActionGroup(this))
 {
     ui->setupUi(this);
     setupUi(parent);
@@ -21,7 +21,7 @@ MenuBar::~MenuBar()
 
 void MenuBar::setupUi(QWidget *parent)
 {
-    mWindowActionGroup->setExclusive(true);
+    mWindowMenuActionGroup->setExclusive(true);
     ui->action_preferences->setMenuRole(QAction::PreferencesRole);
     ui->action_about->setMenuRole(QAction::AboutRole);
 
@@ -51,30 +51,45 @@ void MenuBar::setGroupEnable()
     }
 }
 
-void MenuBar::setWindowMenu(QWidget *widget)
+void MenuBar::addActionToWindowMenu(QWidget *widget)
 {
-    if (MainWindow *mainWindow = reinterpret_cast<MainWindow *>(qobject_cast<MainWindow *>(parentWidget()))) {
-        for (auto &&action : mWindowActionGroup->actions()) {
+    for (auto &&action :mWindowMenuActionGroup->actions()) {
+        action->setChecked(false);
+    }
+
+    QAction *action = new QAction(widget->windowTitle(), this);
+    action->setCheckable(true);
+    action->setData(QVariant::fromValue(widget));
+    action->setChecked(true);
+    ui->menu_window->addAction(action);
+    mWindowMenuActionGroup->addAction(action);
+
+    connect(action, SIGNAL(triggered()), this, SLOT(onWindowActionTriggered()));
+
+    Globals::configModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
+}
+
+void MenuBar::removeActionToWindowMenu(QWidget *widget)
+{
+    for (auto &&action : mWindowMenuActionGroup->actions()) {
+        action->setChecked(false);
+
+        if (action->data().value<QWidget *>() == widget) {
             ui->menu_window->removeAction(action);
-        }
-
-        QWidgetList &windowList = mainWindow->windowList();
-        for (auto &&item : windowList) {
-            QAction *action = new QAction(item->windowTitle(), this);
-            action->setCheckable(true);
-            action->setData(QVariant::fromValue(item));
-            if (!widget && item->isActiveWindow()) {
-                action->setChecked(true);
-            }
-            else if (widget == item) {
-                action->setChecked(true);
-            }
-            ui->menu_window->addAction(action);
-            mWindowActionGroup->addAction(action);
-
-            connect(action, SIGNAL(triggered()), this, SLOT(onWindowActionTriggered()));
+            mWindowMenuActionGroup->removeAction(action);
         }
     }
+
+    if (mWindowMenuActionGroup->actions().length() > 0) {
+        QAction *action = mWindowMenuActionGroup->actions().at(0);
+        QWidget *window = action->data().value<QWidget *>();
+
+        action->setChecked(true);
+        window->raise();
+        window->activateWindow();
+    }
+
+    Globals::configModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
 }
 
 void MenuBar::on_action_printPageSetting_triggered()
@@ -99,7 +114,7 @@ void MenuBar::onPrintAccepted()
 
 void MenuBar::onWindowActionTriggered()
 {
-    QWidget *widget = mWindowActionGroup->checkedAction()->data().value<QWidget *>();
+    QWidget *widget = mWindowMenuActionGroup->checkedAction()->data().value<QWidget *>();
     widget->raise();
     widget->activateWindow();
 }
@@ -552,4 +567,13 @@ QAction *MenuBar::getActionShowLastWindow() const
 QAction *MenuBar::getActionShowNextWindow() const
 {
     return ui->action_showNextWindow;
+}
+
+QWidgetList MenuBar::windowMenuWidgetList()
+{
+    QWidgetList widgetList = {};
+    for (auto &&action :mWindowMenuActionGroup->actions()) {
+        widgetList.append(action->data().value<QWidget *>());
+    }
+    return widgetList;
 }

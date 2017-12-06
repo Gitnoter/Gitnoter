@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
-    mWindowList.append(this);
+    mMenuBar->addActionToWindowMenu(this);
     setMenuBar(mMenuBar->menuBar());
     ui->groupTreeWidget->expandAll();
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -439,7 +439,7 @@ void MainWindow::newWindow(QListWidgetItem *)
         return;
     }
 
-    for (auto &&window : mWindowList) {
+    for (auto &&window : mMenuBar->windowMenuWidgetList()) {
         if (MarkdownEditorWidget *widget
                 = reinterpret_cast<MarkdownEditorWidget *>(qobject_cast<MarkdownEditorWidget *>(window))) {
             if (widget->noteModel()->getUuid() == uuid) {
@@ -451,22 +451,22 @@ void MainWindow::newWindow(QListWidgetItem *)
     }
 
     MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget;
-    mWindowList.append(markdownEditorWidget);
     markdownEditorWidget->init(uuid, this);
     markdownEditorWidget->show();
 
-    mMenuBar->setWindowMenu(markdownEditorWidget);
+    mMenuBar->addActionToWindowMenu(markdownEditorWidget);
 }
 
 void MainWindow::showLastWindow()
 {
-    if (mWindowList.length() < 2) {
+    QWidgetList windowMenuWidgetList = mMenuBar->windowMenuWidgetList();
+    if (windowMenuWidgetList.length() < 2) {
         return;
     }
 
     int nowActiveWindowIndex = -1;
-    for (int i = 0; i < mWindowList.length(); ++i) {
-        if (mWindowList[i]->isActiveWindow()) {
+    for (int i = 0; i < windowMenuWidgetList.length(); ++i) {
+        if (windowMenuWidgetList[i]->isActiveWindow()) {
             nowActiveWindowIndex = i;
             break;
         }
@@ -476,77 +476,74 @@ void MainWindow::showLastWindow()
         return;
     }
 
-    mWindowList[nowActiveWindowIndex - 1]->raise();
-    mWindowList[nowActiveWindowIndex - 1]->activateWindow();
+    windowMenuWidgetList[nowActiveWindowIndex - 1]->raise();
+    windowMenuWidgetList[nowActiveWindowIndex - 1]->activateWindow();
 
-    mMenuBar->setWindowMenu();
+    mMenuBar->addActionToWindowMenu();
 }
 
 void MainWindow::showNextWindow()
 {
-    if (mWindowList.length() < 2) {
+    QWidgetList windowMenuWidgetList = mMenuBar->windowMenuWidgetList();
+
+    if (windowMenuWidgetList.length() < 2) {
         return;
     }
 
     int nowActiveWindowIndex = -1;
-    for (int i = 0; i < mWindowList.length(); ++i) {
-        if (mWindowList[i]->isActiveWindow()) {
+    for (int i = 0; i < windowMenuWidgetList.length(); ++i) {
+        if (windowMenuWidgetList[i]->isActiveWindow()) {
             nowActiveWindowIndex = i;
             break;
         }
     }
 
-    if (nowActiveWindowIndex == -1 || nowActiveWindowIndex == mWindowList.length() - 1) {
+    if (nowActiveWindowIndex == -1 || nowActiveWindowIndex == windowMenuWidgetList.length() - 1) {
         return;
     }
 
-    mWindowList[nowActiveWindowIndex + 1]->raise();
-    mWindowList[nowActiveWindowIndex + 1]->activateWindow();
+    windowMenuWidgetList[nowActiveWindowIndex + 1]->raise();
+    windowMenuWidgetList[nowActiveWindowIndex + 1]->activateWindow();
 
-    mMenuBar->setWindowMenu();
+    mMenuBar->addActionToWindowMenu();
 }
 
 void MainWindow::closeWindow()
 {
-    for (auto &&widget : mWindowList) {
+    QWidgetList windowMenuWidgetList = mMenuBar->windowMenuWidgetList();
+
+    for (auto &&widget : windowMenuWidgetList) {
         if (widget->isActiveWindow()) {
-            mWindowList.removeOne(widget);
+            mMenuBar->removeActionToWindowMenu(widget);
             widget->close();
             break;
         }
     }
-
-    Globals::configModel->setOpenWindowListNoteUuid(mWindowList);
-
-    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::closeAllWindow()
 {
-    for (auto &&widget : mWindowList) {
+    QWidgetList windowMenuWidgetList = mMenuBar->windowMenuWidgetList();
+
+    for (auto &&widget : windowMenuWidgetList) {
         if (MarkdownEditorWidget *markdownEditorWidget
                 = reinterpret_cast<MarkdownEditorWidget *>(qobject_cast<MarkdownEditorWidget *>(widget))) {
+            mMenuBar->removeActionToWindowMenu(markdownEditorWidget);
             markdownEditorWidget->close();
-            mWindowList.removeOne(widget);
         }
     }
-
-    raise();
-    activateWindow();
-
-    Globals::configModel->clearOpenWindowListNoteUuid();
-
-    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::preposeWindow()
 {
-    if (mWindowList.length() < 2) {
+    QWidgetList windowMenuWidgetList = mMenuBar->windowMenuWidgetList();
+
+    if (windowMenuWidgetList.length() < 2) {
         return;
     }
 
     QWidget *nowActiveWindow = nullptr;
-    for (auto &&widget : mWindowList) {
+    for (auto &&widget : windowMenuWidgetList) {
         if (widget->isActiveWindow()) {
             nowActiveWindow = widget;
             break;
