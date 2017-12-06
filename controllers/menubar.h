@@ -43,38 +43,6 @@ private slots:
     void on_action_printPageSetting_triggered();
     void on_action_print_triggered();
 
-    void on_action_importEvernote_triggered();
-    void on_action_exportHtmlForPDF_triggered();
-    void on_action_exportMarkdownForPDF_triggered();
-    void on_action_exportHtml_triggered();
-    void on_action_exportMarkdown_triggered();
-
-    void on_action_title1_triggered();
-    void on_action_title2_triggered();
-    void on_action_title3_triggered();
-    void on_action_title4_triggered();
-    void on_action_title5_triggered();
-    void on_action_strong_triggered();
-    void on_action_incline_triggered();
-    void on_action_strickout_triggered();
-    void on_action_underline_triggered();
-    void on_action_innerCodeBlock_triggered();
-    void on_action_codeBlock_triggered();
-    void on_action_annotation_triggered();
-    void on_action_moreAnnotation_triggered();
-    void on_action_link_triggered();
-    void on_action_linkImage_triggered();
-    void on_action_insertImage_triggered();
-    void on_action_accessory_triggered();
-    void on_action_table_triggered();
-    void on_action_orderedList_triggered();
-    void on_action_unorderedList_triggered();
-    void on_action_quoteBlock_triggered();
-    void on_action_cuttingLine_triggered();
-    void on_action_nowTime_triggered();
-
-    void on_action_nightMode_triggered();
-
 public:
     QAction *getActionNewNote() const;
     QAction *getActionNewCategories() const;
