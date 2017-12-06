@@ -7,7 +7,8 @@
 
 MenuBar::MenuBar(QWidget *parent) :
         QMainWindow(parent),
-        ui(new Ui::MenuBar)
+        ui(new Ui::MenuBar),
+        mWindowActionGroup(new QActionGroup(this))
 {
     ui->setupUi(this);
     setupUi(parent);
@@ -20,6 +21,7 @@ MenuBar::~MenuBar()
 
 void MenuBar::setupUi(QWidget *parent)
 {
+    mWindowActionGroup->setExclusive(true);
     ui->action_preferences->setMenuRole(QAction::PreferencesRole);
     ui->action_about->setMenuRole(QAction::AboutRole);
 
@@ -46,6 +48,32 @@ void MenuBar::setGroupEnable()
     else {
         ui->action_newTags->setEnabled(Gitnoter::Tag == type);
         ui->action_newCategories->setEnabled(false);
+    }
+}
+
+void MenuBar::setWindowMenu(QWidget *widget)
+{
+    if (MainWindow *mainWindow = reinterpret_cast<MainWindow *>(qobject_cast<MainWindow *>(parentWidget()))) {
+        for (auto &&action : mWindowActionGroup->actions()) {
+            ui->menu_window->removeAction(action);
+        }
+
+        QWidgetList &windowList = mainWindow->windowList();
+        for (auto &&item : windowList) {
+            QAction *action = new QAction(item->windowTitle(), this);
+            action->setCheckable(true);
+            action->setData(QVariant::fromValue(item));
+            if (!widget && item->isActiveWindow()) {
+                action->setChecked(true);
+            }
+            else if (widget == item) {
+                action->setChecked(true);
+            }
+            ui->menu_window->addAction(action);
+            mWindowActionGroup->addAction(action);
+
+            connect(action, SIGNAL(triggered()), this, SLOT(onWindowActionTriggered()));
+        }
     }
 }
 
@@ -212,6 +240,13 @@ void MenuBar::on_action_nightMode_triggered()
 void MenuBar::onPrintAccepted()
 {
     emit printAccepted(mPrinter);
+}
+
+void MenuBar::onWindowActionTriggered()
+{
+    QWidget *widget = mWindowActionGroup->checkedAction()->data().value<QWidget *>();
+    widget->raise();
+    widget->activateWindow();
 }
 
 QAction *MenuBar::getActionNewNote() const
