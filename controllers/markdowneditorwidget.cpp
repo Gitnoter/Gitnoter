@@ -44,6 +44,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
         setOpenNote();
     }
     setupUi();
+    setWindowTitle();
 }
 
 void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
@@ -51,6 +52,7 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
     mMainWindow = mainWindow;
     mNoteModel = noteModel;
     setOpenNote();
+    setWindowTitle();
 }
 
 void MarkdownEditorWidget::appendTag(const QString &tag)
@@ -101,11 +103,15 @@ void MarkdownEditorWidget::changeCategory(const QString &category)
     mNoteModel->saveNoteDataToLocal();
 
     mMainWindow->updateView(Gitnoter::GroupTreeWidget);
+
+    setWindowTitle();
 }
 
 void MarkdownEditorWidget::appendCategory(const QString &category)
 {
     mMainWindow->groupTreeWidget()->append(Gitnoter::Category, category);
+
+    setWindowTitle();
 }
 
 void MarkdownEditorWidget::modifyNote()
@@ -114,6 +120,8 @@ void MarkdownEditorWidget::modifyNote()
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
     mNoteModel->saveNoteToLocal();
     mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
+
+    setWindowTitle();
 }
 
 void MarkdownEditorWidget::on_pushButton_category_clicked()
@@ -730,4 +738,18 @@ void MarkdownEditorWidget::resetFontSize()
 void MarkdownEditorWidget::enterFullScreen()
 {
     (!mParent && isActiveWindow() && isFullScreen()) ? showNormal() : showFullScreen();
+}
+
+void MarkdownEditorWidget::setWindowTitle()
+{
+    QString windowTitle = mNoteModel->getTitle().isEmpty() ? tr("Untitled") : mNoteModel->getTitle();
+    windowTitle += " - ";
+    windowTitle += (mNoteModel->getCategory().isEmpty()
+                    ? mMainWindow->groupTreeWidget()->topLevelItem(1)->text(0) : mNoteModel->getCategory());
+
+    QWidget::setWindowTitle(windowTitle);
+
+    if (mMainWindow) {
+        mMainWindow->setWindowTitle(windowTitle);
+    }
 }

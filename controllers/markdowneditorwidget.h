@@ -35,6 +35,8 @@ public:
     void init(const QString &uuid, MainWindow *mainWindow = 0);
     void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
+    void setWindowTitle();
+
 public slots:
     void appendTag(const QString &tag);
     void removeTag(QString tagName = "");

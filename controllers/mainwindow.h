@@ -122,7 +122,7 @@ public:
     QStackedWidget *stackedWidget();
     QSplitter *splitter();
     MenuBar *menuBar();
-    QList<QWidget *> &windowList() { return mWindowList; }
+    QWidgetList &windowList() { return mWindowList; }
 
 private:
     Ui::MainWindow *ui;

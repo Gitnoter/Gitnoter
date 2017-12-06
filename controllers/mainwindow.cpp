@@ -177,6 +177,7 @@ void MainWindow::setNoteListTitle()
     GroupModel *groupModel = ui->groupTreeWidget->selectedGroupModel();
     if (groupModel) {
         ui->label_groupName->setText(tr("%1 (%2)").arg(groupModel->getName()).arg(groupModel->getCount()));
+        if (!groupModel->getCount()) setWindowTitle(groupModel->getName());
     }
 }
 
@@ -451,9 +452,10 @@ void MainWindow::newWindow(QListWidgetItem *)
 
     MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget;
     mWindowList.append(markdownEditorWidget);
-
     markdownEditorWidget->init(uuid, this);
     markdownEditorWidget->show();
+
+    mMenuBar->setWindowMenu(markdownEditorWidget);
 }
 
 void MainWindow::showLastWindow()
@@ -476,6 +478,8 @@ void MainWindow::showLastWindow()
 
     mWindowList[nowActiveWindowIndex - 1]->raise();
     mWindowList[nowActiveWindowIndex - 1]->activateWindow();
+
+    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::showNextWindow()
@@ -498,6 +502,8 @@ void MainWindow::showNextWindow()
 
     mWindowList[nowActiveWindowIndex + 1]->raise();
     mWindowList[nowActiveWindowIndex + 1]->activateWindow();
+
+    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::closeWindow()
@@ -511,6 +517,8 @@ void MainWindow::closeWindow()
     }
 
     Globals::configModel->setOpenWindowListNoteUuid(mWindowList);
+
+    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::closeAllWindow()
@@ -527,6 +535,8 @@ void MainWindow::closeAllWindow()
     activateWindow();
 
     Globals::configModel->clearOpenWindowListNoteUuid();
+
+    mMenuBar->setWindowMenu();
 }
 
 void MainWindow::preposeWindow()
