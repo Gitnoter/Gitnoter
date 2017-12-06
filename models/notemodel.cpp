@@ -595,6 +595,15 @@ void NoteModel::setUpdateDate(int updateDate)
 void NoteModel::setNoteText(QString body)
 {
     mNoteText = body;
+
+    QTextStream in(&body);
+    while (!in.atEnd()) {
+        QString lineText = in.readLine().trimmed();
+        if (!lineText.isEmpty()) {
+            mTitle = lineText.replace(QRegularExpression("^[# ]*"), "");
+            break;
+        }
+    }
 }
 
 void NoteModel::setUuid(QString uuid)
