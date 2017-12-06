@@ -595,3 +595,8 @@ void MainWindow::about()
 {
 
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    exit(0);
+}

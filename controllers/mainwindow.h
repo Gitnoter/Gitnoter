@@ -53,6 +53,8 @@ private:
     void changeEvent(QEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
 
+    void closeEvent(QCloseEvent *event) override;
+
 public slots:
     void init();
 

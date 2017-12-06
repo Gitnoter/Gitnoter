@@ -191,6 +191,10 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
     return QWidget::eventFilter(object, event);
 }
 
+void MarkdownEditorWidget::closeEvent(QCloseEvent *) {
+    mMainWindow->menuBar()->removeActionToWindowMenu(this);
+}
+
 void MarkdownEditorWidget::onMarkdownEditorSliderValueChanged(int value, bool force) {
     // don't react if note text edit doesn't have the focus
     if (!ui->markdownEditor->hasFocus() && !force) {

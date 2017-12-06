@@ -80,7 +80,9 @@ public slots:
 private:
     void setupUi();
 
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
+
+    void closeEvent(QCloseEvent *event) override;
 
     void setTagList();  // save tagList to noteModel
 
