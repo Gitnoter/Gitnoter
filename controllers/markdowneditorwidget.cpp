@@ -165,21 +165,18 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
 
         // set menuBar enabled
         if (event->type() == QEvent::FocusIn) {
-            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-            menuBarUi->action_selectAll->setEnabled(true);
-            menuBarUi->action_undo->setEnabled(ui->markdownEditor->document()->isUndoAvailable());
-            menuBarUi->action_redo->setEnabled(ui->markdownEditor->document()->isRedoAvailable());
+            mMainWindow->menuBar()->getActionSelectAll()->setEnabled(true);
+            mMainWindow->menuBar()->getActionUndo()->setEnabled(ui->markdownEditor->document()->isUndoAvailable());
+            mMainWindow->menuBar()->getActionRedo()->setEnabled(ui->markdownEditor->document()->isRedoAvailable());
 
             const QString selectedText = ui->markdownEditor->textCursor().selectedText();
-            menuBarUi->action_cut->setEnabled(!selectedText.isEmpty());
-            menuBarUi->action_copy->setEnabled(!selectedText.isEmpty());
-            menuBarUi->action_webSearch->setEnabled(!selectedText.isEmpty());
+            mMainWindow->menuBar()->getActionCut()->setEnabled(!selectedText.isEmpty());
+            mMainWindow->menuBar()->getActionCopy()->setEnabled(!selectedText.isEmpty());
+            mMainWindow->menuBar()->getActionWebSearch()->setEnabled(!selectedText.isEmpty());
         }
         else if (event->type() == QEvent::FocusOut) {
-            Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-            menuBarUi->action_undo->setEnabled(false);
-            menuBarUi->action_redo->setEnabled(false);
-            menuBarUi->action_redo->setEnabled(false);
+            mMainWindow->menuBar()->getActionUndo()->setEnabled(false);
+            mMainWindow->menuBar()->getActionRedo()->setEnabled(false);
         }
     }
 
@@ -334,8 +331,7 @@ void MarkdownEditorWidget::setBackgroundSplitterSizes()
     ui->splitter_background->setStyleSheet(b ? "QSplitter#splitter_background::handle {image: none;}" : "");
     ui->splitter_background->handle(1)->setDisabled(b);
 
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-    menuBarUi->action_navigationBar->setChecked(!b);
+    mMainWindow->menuBar()->getActionNavigationBar()->setChecked(!b);
 }
 
 void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QPoint &pos)
@@ -366,7 +362,7 @@ void MarkdownEditorWidget::setupUi()
 
     showToolbar(Globals::configModel->getToolbarWidget());
 
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
+    MenuBar *menuBar = mMainWindow->menuBar();
 
     connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(
             onMarkdownEditorSliderValueChanged(int)));
@@ -375,59 +371,59 @@ void MarkdownEditorWidget::setupUi()
     connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
     connect(ui->navigationBar, SIGNAL(positionClicked(int)), this, SLOT(onNavigationWidgetPositionClicked(int)));
 
-    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_cut, SLOT(setEnabled(bool)));
-    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_copy, SLOT(setEnabled(bool)));
-    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBarUi->action_webSearch, SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCut(), SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCopy(), SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionWebSearch(), SLOT(setEnabled(bool)));
 
-    connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBarUi->action_undo, SLOT(setEnabled(bool)));
-    connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBarUi->action_redo, SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBar->getActionUndo(), SLOT(setEnabled(bool)));
+    connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBar->getActionRedo(), SLOT(setEnabled(bool)));
 
-    connect(menuBarUi->action_undo, SIGNAL(triggered()), ui->markdownEditor, SLOT(undo()));
-    connect(menuBarUi->action_redo, SIGNAL(triggered()), ui->markdownEditor, SLOT(redo()));
+    connect(menuBar->getActionUndo(), SIGNAL(triggered()), ui->markdownEditor, SLOT(undo()));
+    connect(menuBar->getActionRedo(), SIGNAL(triggered()), ui->markdownEditor, SLOT(redo()));
 
-    connect(menuBarUi->action_cut, SIGNAL(triggered()), ui->markdownEditor, SLOT(cut()));
-    connect(menuBarUi->action_copy, SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
-    connect(menuBarUi->action_paste, SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
-    connect(menuBarUi->action_selectAll, SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
-    connect(menuBarUi->action_pasteHtml, SIGNAL(triggered()), this, SLOT(pasteHtml()));
-    connect(menuBarUi->action_deleteText, SIGNAL(triggered()), this, SLOT(removeSelectedText()));
-    connect(menuBarUi->action_clearText, SIGNAL(triggered()), this, SLOT(clearText()));
+    connect(menuBar->getActionCut(), SIGNAL(triggered()), ui->markdownEditor, SLOT(cut()));
+    connect(menuBar->getActionCopy(), SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
+    connect(menuBar->getActionPaste(), SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
+    connect(menuBar->getActionSelectAll(), SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
+    connect(menuBar->getActionPasteHtml(), SIGNAL(triggered()), this, SLOT(pasteHtml()));
+    connect(menuBar->getActionDeleteText(), SIGNAL(triggered()), this, SLOT(removeSelectedText()));
+    connect(menuBar->getActionClearText(), SIGNAL(triggered()), this, SLOT(clearText()));
 
     connect(mMainWindow->menuBar(), SIGNAL(printAccepted(QPrinter *)), this, SLOT(print(QPrinter *)));
 
-    connect(menuBarUi->action_saveNote, SIGNAL(triggered()), this, SLOT(saveNote()));
-    connect(menuBarUi->action_findWithFolder, SIGNAL(triggered()), this, SLOT(openPath()));
-    connect(menuBarUi->action_copyLine, SIGNAL(triggered()), this, SLOT(copyLine()));
-    connect(menuBarUi->action_deleteLine, SIGNAL(triggered()), this, SLOT(removeLine()));
-    connect(menuBarUi->action_webSearch, SIGNAL(triggered()), this, SLOT(webSearchText()));
+    connect(menuBar->getActionSaveNote(), SIGNAL(triggered()), this, SLOT(saveNote()));
+    connect(menuBar->getActionFindWithFolder(), SIGNAL(triggered()), this, SLOT(openPath()));
+    connect(menuBar->getActionCopyLine(), SIGNAL(triggered()), this, SLOT(copyLine()));
+    connect(menuBar->getActionDeleteLine(), SIGNAL(triggered()), this, SLOT(removeLine()));
+    connect(menuBar->getActionWebSearch(), SIGNAL(triggered()), this, SLOT(webSearchText()));
 
-    connect(menuBarUi->action_findText, SIGNAL(triggered()), this, SLOT(showSearchFindWidget()));
-    connect(menuBarUi->action_replaceText, SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
-    connect(menuBarUi->action_findNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchDown()));
-    connect(menuBarUi->action_findLast, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchUp()));
-    connect(menuBarUi->action_replaceAndNext, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
-    connect(menuBarUi->action_replaceAll, SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
+    connect(menuBar->getActionFindText(), SIGNAL(triggered()), this, SLOT(showSearchFindWidget()));
+    connect(menuBar->getActionReplaceText(), SIGNAL(triggered()), this, SLOT(showSearchReplaceWidget()));
+    connect(menuBar->getActionFindNext(), SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchDown()));
+    connect(menuBar->getActionFindLast(), SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doSearchUp()));
+    connect(menuBar->getActionReplaceAndNext(), SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplace()));
+    connect(menuBar->getActionReplaceAll(), SIGNAL(triggered()), ui->markdownEditor->searchWidget(), SLOT(doReplaceAll()));
 
-    connect(menuBarUi->action_toUppercase, SIGNAL(triggered()), this, SLOT(toUppercase()));
-    connect(menuBarUi->action_toLowercase, SIGNAL(triggered()), this, SLOT(toLowercase()));
-    connect(menuBarUi->action_toUppercaseAtFirst, SIGNAL(triggered()), this, SLOT(toUppercaseAtFirst()));
+    connect(menuBar->getActionToUppercase(), SIGNAL(triggered()), this, SLOT(toUppercase()));
+    connect(menuBar->getActionToLowercase(), SIGNAL(triggered()), this, SLOT(toLowercase()));
+    connect(menuBar->getActionToUppercaseAtFirst(), SIGNAL(triggered()), this, SLOT(toUppercaseAtFirst()));
 
-    connect(menuBarUi->action_toolbar, SIGNAL(triggered(bool)), this, SLOT(showToolbar(bool)));
-    connect(menuBarUi->action_navigationBar, SIGNAL(triggered(bool)), this, SLOT(showNavigationBar(bool)));
+    connect(menuBar->getActionToolbar(), SIGNAL(triggered(bool)), this, SLOT(showToolbar(bool)));
+    connect(menuBar->getActionNavigationBar(), SIGNAL(triggered(bool)), this, SLOT(showNavigationBar(bool)));
 
-    connect(menuBarUi->action_editMode, SIGNAL(triggered()), this, SLOT(editMode()));
-    connect(menuBarUi->action_previewMode, SIGNAL(triggered()), this, SLOT(previewMode()));
-    connect(menuBarUi->action_editPreviewMode, SIGNAL(triggered()), this, SLOT(editPreviewMode()));
-    connect(menuBarUi->action_fullScreenEditMode, SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
+    connect(menuBar->getActionEditMode(), SIGNAL(triggered()), this, SLOT(editMode()));
+    connect(menuBar->getActionPreviewMode(), SIGNAL(triggered()), this, SLOT(previewMode()));
+    connect(menuBar->getActionEditPreviewMode(), SIGNAL(triggered()), this, SLOT(editPreviewMode()));
+    connect(menuBar->getActionFullScreenEditMode(), SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
 
-    connect(menuBarUi->action_plusFontSize, SIGNAL(triggered()), this, SLOT(plusFontSize()));
-    connect(menuBarUi->action_subtractFontSize, SIGNAL(triggered()), this, SLOT(subtractFontSize()));
-    connect(menuBarUi->action_resetFontSize, SIGNAL(triggered()), this, SLOT(resetFontSize()));
+    connect(menuBar->getActionPlusFontSize(), SIGNAL(triggered()), this, SLOT(plusFontSize()));
+    connect(menuBar->getActionSubtractFontSize(), SIGNAL(triggered()), this, SLOT(subtractFontSize()));
+    connect(menuBar->getActionResetFontSize(), SIGNAL(triggered()), this, SLOT(resetFontSize()));
 
-    connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
+    connect(menuBar->getActionEnterFullScreen(), SIGNAL(triggered()), this, SLOT(enterFullScreen()));
 
-    connect(menuBarUi->action_mixWindow, SIGNAL(triggered()), this, SLOT(showMinimized()));
-    connect(menuBarUi->action_resizeWindow, SIGNAL(triggered()), this, SLOT(showMaximized()));
+    connect(menuBar->getActionMixWindow(), SIGNAL(triggered()), this, SLOT(showMinimized()));
+    connect(menuBar->getActionResizeWindow(), SIGNAL(triggered()), this, SLOT(showMaximized()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -542,40 +538,38 @@ void MarkdownEditorWidget::webSearchText()
 void MarkdownEditorWidget::showSearchFindWidget()
 {
     QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
     if (textEditSearchWidget->isHidden() || textEditSearchWidget->isReplace()) {
         textEditSearchWidget->activate(false);
-        menuBarUi->action_findLast->setEnabled(true);
-        menuBarUi->action_findNext->setEnabled(true);
-        menuBarUi->action_replaceAll->setEnabled(false);
-        menuBarUi->action_replaceAndNext->setEnabled(false);
+        mMainWindow->menuBar()->getActionFindLast()->setEnabled(true);
+        mMainWindow->menuBar()->getActionFindNext()->setEnabled(true);
+        mMainWindow->menuBar()->getActionReplaceAll()->setEnabled(false);
+        mMainWindow->menuBar()->getActionReplaceAndNext()->setEnabled(false);
     }
     else {
         textEditSearchWidget->hide();
-        menuBarUi->action_findLast->setEnabled(false);
-        menuBarUi->action_findNext->setEnabled(false);
+        mMainWindow->menuBar()->getActionFindLast()->setEnabled(false);
+        mMainWindow->menuBar()->getActionFindNext()->setEnabled(false);
     }
 }
 
 void MarkdownEditorWidget::showSearchReplaceWidget()
 {
     QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
 
     if (textEditSearchWidget->isHidden() || !textEditSearchWidget->isReplace()) {
         textEditSearchWidget->activate(true);
-        menuBarUi->action_findLast->setEnabled(true);
-        menuBarUi->action_findNext->setEnabled(true);
-        menuBarUi->action_replaceAll->setEnabled(true);
-        menuBarUi->action_replaceAndNext->setEnabled(true);
+        mMainWindow->menuBar()->getActionFindLast()->setEnabled(true);
+        mMainWindow->menuBar()->getActionFindNext()->setEnabled(true);
+        mMainWindow->menuBar()->getActionReplaceAll()->setEnabled(true);
+        mMainWindow->menuBar()->getActionReplaceAndNext()->setEnabled(true);
     }
     else {
         textEditSearchWidget->hide();
-        menuBarUi->action_findLast->setEnabled(false);
-        menuBarUi->action_findNext->setEnabled(false);
-        menuBarUi->action_replaceAll->setEnabled(false);
-        menuBarUi->action_replaceAndNext->setEnabled(false);
+        mMainWindow->menuBar()->getActionFindLast()->setEnabled(false);
+        mMainWindow->menuBar()->getActionFindNext()->setEnabled(false);
+        mMainWindow->menuBar()->getActionReplaceAll()->setEnabled(false);
+        mMainWindow->menuBar()->getActionReplaceAndNext()->setEnabled(false);
     }
 }
 
@@ -626,8 +620,7 @@ void MarkdownEditorWidget::toUppercaseAtFirst()
 
 void MarkdownEditorWidget::showToolbar(bool clicked)
 {
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-    menuBarUi->action_toolbar->setChecked(clicked);
+    mMainWindow->menuBar()->getActionToolbar()->setChecked(clicked);
 
     ui->widget_tools->setVisible(clicked);
     Globals::configModel->setToolbarWidget(clicked);
@@ -635,8 +628,7 @@ void MarkdownEditorWidget::showToolbar(bool clicked)
 
 void MarkdownEditorWidget::showNavigationBar(bool clicked)
 {
-    Ui::MenuBar *menuBarUi = mMainWindow->menuBar()->getUi();
-    menuBarUi->action_navigationBar->setChecked(clicked);
+    mMainWindow->menuBar()->getActionNavigationBar()->setChecked(clicked);
 
     int split1 = clicked ? ui->splitter_background->width() - 280 : ui->splitter_background->width();
     int split2 = clicked ? 240 : 20;

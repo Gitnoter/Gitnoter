@@ -56,38 +56,37 @@ void MainWindow::setupUi()
 
     connect(ui->noteListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(newWindow(QListWidgetItem *)));
 
-    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
+    connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(appendNote()));
+    connect(mMenuBar->getActionNewCategories(), SIGNAL(triggered()), this, SLOT(appendGroup()));
+    connect(mMenuBar->getActionNewTags(), SIGNAL(triggered()), this, SLOT(appendGroup()));
+    connect(mMenuBar->getActionReloadNotes(), SIGNAL(triggered()), this, SLOT(init()));
+    connect(mMenuBar->getActionPreferences(), SIGNAL(triggered()), this, SLOT(openSettingWidget()));
+    connect(mMenuBar->getActionDeleteNote(), SIGNAL(triggered()), this, SLOT(trashNote()));
+    connect(mMenuBar->getActionGroupSearch(), SIGNAL(triggered()), this, SLOT(setSearchFocus()));
+    connect(mMenuBar->getActionSidebar(), SIGNAL(triggered(bool)), this, SLOT(showSidebar(bool)));
+    connect(mMenuBar->getActionListbar(), SIGNAL(triggered(bool)), this, SLOT(showListBar(bool)));
+    connect(mMenuBar->getActionSynchNote(), SIGNAL(triggered()), this, SLOT(syncRepo()));
 
-    connect(menuBarUi->action_newNote, SIGNAL(triggered()), this, SLOT(appendNote()));
-    connect(menuBarUi->action_newCategories, SIGNAL(triggered()), this, SLOT(appendGroup()));
-    connect(menuBarUi->action_newTags, SIGNAL(triggered()), this, SLOT(appendGroup()));
-    connect(menuBarUi->action_reloadNotes, SIGNAL(triggered()), this, SLOT(init()));
-    connect(menuBarUi->action_preferences, SIGNAL(triggered()), this, SLOT(openSettingWidget()));
-    connect(menuBarUi->action_deleteNote, SIGNAL(triggered()), this, SLOT(trashNote()));
-    connect(menuBarUi->action_groupSearch, SIGNAL(triggered()), this, SLOT(setSearchFocus()));
-    connect(menuBarUi->action_sidebar, SIGNAL(triggered(bool)), this, SLOT(showSidebar(bool)));
-    connect(menuBarUi->action_listbar, SIGNAL(triggered(bool)), this, SLOT(showListBar(bool)));
+    connect(mMenuBar->getActionEnterFullScreen(), SIGNAL(triggered()), this, SLOT(enterFullScreen()));
+    connect(mMenuBar->getActionFullScreenEditMode(), SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
 
-    connect(menuBarUi->action_enterFullScreen, SIGNAL(triggered()), this, SLOT(enterFullScreen()));
-    connect(menuBarUi->action_fullScreenEditMode, SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
+    connect(mMenuBar->getActionMixWindow(), SIGNAL(triggered()), this, SLOT(showMinimized()));
+    connect(mMenuBar->getActionResizeWindow(), SIGNAL(triggered()), this, SLOT(showMaximized()));
 
-    connect(menuBarUi->action_mixWindow, SIGNAL(triggered()), this, SLOT(showMinimized()));
-    connect(menuBarUi->action_resizeWindow, SIGNAL(triggered()), this, SLOT(showMaximized()));
+    connect(mMenuBar->getActionNewWindow(), SIGNAL(triggered()), this, SLOT(newWindow()));
+    connect(mMenuBar->getActionShowLastWindow(), SIGNAL(triggered()), this, SLOT(showLastWindow()));
+    connect(mMenuBar->getActionShowNextWindow(), SIGNAL(triggered()), this, SLOT(showNextWindow()));
+    connect(mMenuBar->getActionCloseWindow(), SIGNAL(triggered()), this, SLOT(closeWindow()));
+    connect(mMenuBar->getActionCloseAllWindow(), SIGNAL(triggered()), this, SLOT(closeAllWindow()));
+    connect(mMenuBar->getActionLockWindow(), SIGNAL(triggered()), this, SLOT(lockWindow()));
+    connect(mMenuBar->getActionPreposeWindow(), SIGNAL(triggered()), this, SLOT(preposeWindow()));
 
-    connect(menuBarUi->action_newWindow, SIGNAL(triggered()), this, SLOT(newWindow()));
-    connect(menuBarUi->action_showLastWindow, SIGNAL(triggered()), this, SLOT(showLastWindow()));
-    connect(menuBarUi->action_showNextWindow, SIGNAL(triggered()), this, SLOT(showNextWindow()));
-    connect(menuBarUi->action_closeWindow, SIGNAL(triggered()), this, SLOT(closeWindow()));
-    connect(menuBarUi->action_closeAllWindow, SIGNAL(triggered()), this, SLOT(closeAllWindow()));
-    connect(menuBarUi->action_lockWindow, SIGNAL(triggered()), this, SLOT(lockWindow()));
-    connect(menuBarUi->action_preposeWindow, SIGNAL(triggered()), this, SLOT(preposeWindow()));
-
-    connect(menuBarUi->action_guide, SIGNAL(triggered()), this, SLOT(guide()));
-    connect(menuBarUi->action_history, SIGNAL(triggered()), this, SLOT(historyChange()));
-    connect(menuBarUi->action_markdownLanguage, SIGNAL(triggered()), this, SLOT(markdownLanguage()));
-    connect(menuBarUi->action_feedback, SIGNAL(triggered()), this, SLOT(feedback()));
-    connect(menuBarUi->action_issue, SIGNAL(triggered()), this, SLOT(issue()));
-    connect(menuBarUi->action_about, SIGNAL(triggered()), this, SLOT(about()));
+    connect(mMenuBar->getActionGuide(), SIGNAL(triggered()), this, SLOT(guide()));
+    connect(mMenuBar->getActionHistory(), SIGNAL(triggered()), this, SLOT(historyChange()));
+    connect(mMenuBar->getActionMarkdownLanguage(), SIGNAL(triggered()), this, SLOT(markdownLanguage()));
+    connect(mMenuBar->getActionFeedback(), SIGNAL(triggered()), this, SLOT(feedback()));
+    connect(mMenuBar->getActionIssue(), SIGNAL(triggered()), this, SLOT(issue()));
+    connect(mMenuBar->getActionAbout(), SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -394,8 +393,7 @@ void MainWindow::lockWindow()
 
 void MainWindow::showSidebar(bool clicked)
 {
-    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
-    menuBarUi->action_sidebar->setChecked(clicked);
+    mMenuBar->getActionSidebar()->setChecked(clicked);
 
     ui->widget_sidebar->setVisible(clicked);
     Globals::configModel->setSidebarWidget(clicked);
@@ -403,8 +401,7 @@ void MainWindow::showSidebar(bool clicked)
 
 void MainWindow::showListBar(bool clicked)
 {
-    Ui::MenuBar *menuBarUi = mMenuBar->getUi();
-    menuBarUi->action_listbar->setChecked(clicked);
+    mMenuBar->getActionListbar()->setChecked(clicked);
 
     ui->widget_listBar->setVisible(clicked);
     Globals::configModel->setListBarWidget(clicked);
