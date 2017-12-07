@@ -27,6 +27,7 @@ ConfigModel::ConfigModel()
     mEditorFont = "editor/font";
     mEditorSplitterSizes = "editor/splitterSizes";
     mEditorBackgroundSplitterSizes = "editor/backgroundSplitterSizes";
+    mEditorWindowRect = "editorWindow/rect";
     mTheme = "window/theme";
     mSidebarWidget = "window/sidebarWidget";
     mListBarWidget = "window/listBarWidget";
@@ -281,6 +282,16 @@ QRect ConfigModel::getMainWindowRect()
 void ConfigModel::setMainWindowRect(const QRect &rect)
 {
     settings->setValue(mMainWindowRect, rect);
+}
+
+QRect ConfigModel::getEditorWindowRect()
+{
+    return settings->value(mEditorWindowRect, QRect()).toRect();
+}
+
+void ConfigModel::setEditorWindowRect(const QRect &rect)
+{
+    settings->setValue(mEditorWindowRect, rect);
 }
 
 Gitnoter::SortBasis ConfigModel::getNoteSortBasis() const

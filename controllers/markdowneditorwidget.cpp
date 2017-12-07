@@ -13,14 +13,9 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
-    mNoteModel(nullptr),
-    mParent(parent)
+    mNoteModel(nullptr)
 {
     ui->setupUi(this);
-    mMainWindow = reinterpret_cast<MainWindow *>(qobject_cast<MainWindow *>(parent));
-    if (mMainWindow) {
-        init(Globals::configModel->openMainWindowNoteUuid(), mMainWindow);
-    }
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
@@ -33,7 +28,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
     mMainWindow = mainWindow;
     mNoteModel = mMainWindow->noteListWidget()->getNoteModel(uuid);
     if (!mNoteModel) {
-        if (!mParent) {
+        if (!parent()) {
             close();
             return;
         }
@@ -43,6 +38,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
     else {
         setOpenNote();
     }
+
     setupUi();
     setWindowTitle();
 }
@@ -52,6 +48,7 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
     mMainWindow = mainWindow;
     mNoteModel = noteModel;
     setOpenNote();
+    setupUi();
     setWindowTitle();
 }
 
@@ -339,10 +336,9 @@ void MarkdownEditorWidget::setBackgroundSplitterSizes()
 
     ui->splitter_background->setSizes(sizes);
 
-    bool b = sizes[1] == ui->widget_navigationBar->minimumWidth();
+    bool b = sizes.length() == 0 || sizes[1] == ui->widget_navigationBar->minimumWidth();
     ui->splitter_background->setStyleSheet(b ? "QSplitter#splitter_background::handle {image: none;}" : "");
     ui->splitter_background->handle(1)->setDisabled(b);
-
     mMainWindow->menuBar()->getActionNavigationBar()->setChecked(!b);
 }
 
@@ -369,6 +365,7 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
+    if (!parent()) { setGeometry(Globals::configModel->getEditorWindowRect()); }
     setSplitterSizes();
     setBackgroundSplitterSizes();
 
@@ -741,7 +738,7 @@ void MarkdownEditorWidget::resetFontSize()
 
 void MarkdownEditorWidget::enterFullScreen()
 {
-    (!mParent && isActiveWindow() && isFullScreen()) ? showNormal() : showFullScreen();
+    (!parent() && isActiveWindow() && isFullScreen()) ? showNormal() : showFullScreen();
 }
 
 void MarkdownEditorWidget::setWindowTitle()
@@ -755,5 +752,27 @@ void MarkdownEditorWidget::setWindowTitle()
 
     if (mMainWindow) {
         mMainWindow->setWindowTitle(windowTitle);
+    }
+}
+
+void MarkdownEditorWidget::moveEvent(QMoveEvent *event)
+{
+    QWidget::moveEvent(event);
+    if (!parent()) {
+        Globals::configModel->setEditorWindowRect(geometry());
+    }
+}
+
+void MarkdownEditorWidget::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+
+    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
+    int size1 = sizes.length() == 0 ? 20 : sizes[1];
+    int size0 = ui->splitter_background->width() - size1;
+    ui->splitter_background->setSizes({size0, size1});
+
+    if (!parent()) {
+        Globals::configModel->setEditorWindowRect(geometry());
     }
 }

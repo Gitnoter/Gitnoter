@@ -35,6 +35,7 @@ void MainWindow::setupUi()
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
+    ui->markdownEditorWidget->setParent(ui->stackWidget_editor);
 
     NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
@@ -322,7 +323,19 @@ void MainWindow::changeEvent(QEvent *event)
 
 void MainWindow::moveEvent(QMoveEvent *event)
 {
-    QMainWindow::moveEvent(event);
+    QWidget::moveEvent(event);
+    Globals::configModel->setMainWindowRect(geometry());
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+
+//    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
+//    int size1 = sizes.length() == 0 ? 20 : sizes[1];
+//    int size0 = ui->splitter_background->width() - size1;
+//    ui->splitter_background->setSizes({size0, size1});
+
     Globals::configModel->setMainWindowRect(geometry());
 }
 

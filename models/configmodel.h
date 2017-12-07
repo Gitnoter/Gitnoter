@@ -138,6 +138,9 @@ public:
     QList<int> getEditorBackgroundSplitterSizes();
     void setEditorBackgroundSplitterSizes(const QList<int> &sizes);
 
+    QRect getEditorWindowRect();
+    void setEditorWindowRect(const QRect &rect);
+
 private:
     template <typename T>
     QVariantList toVariantList(const QList<T> &list);
@@ -190,6 +193,8 @@ private:
     QString mMainWindowFullScreen;
     QString mEditorSplitterSizes;
     QString mEditorBackgroundSplitterSizes;
+
+    QString mEditorWindowRect;
 
     QString mSidebarWidget;
     QString mListBarWidget;

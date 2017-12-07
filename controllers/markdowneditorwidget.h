@@ -81,15 +81,13 @@ private:
     void setupUi();
 
     bool eventFilter(QObject *object, QEvent *event) override;
-
     void closeEvent(QCloseEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
     void setTagList();  // save tagList to noteModel
-
     void setOpenNote();
-
     void setSplitterSizes();
-
     void setBackgroundSplitterSizes();
 
 private slots:
@@ -133,7 +131,6 @@ public:
 
 private:
     Ui::MarkdownEditorWidget *ui;
-    QWidget *mParent;
     MainWindow *mMainWindow;
     CategoryListWidget *mCategoryListWidget;
 
