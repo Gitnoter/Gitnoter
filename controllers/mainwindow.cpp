@@ -1,5 +1,4 @@
 #include "ui_mainwindow.h"
-#include "ui_menubar.h"
 
 #include "mainwindow.h"
 #include "notelistsortpopupmenu.h"
@@ -9,6 +8,7 @@
 #include "globals.h"
 #include "groupmodel.h"
 #include "version.h"
+#include "importnotedialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
@@ -67,6 +67,7 @@ void MainWindow::setupUi()
     connect(mMenuBar->getActionSidebar(), SIGNAL(triggered(bool)), this, SLOT(showSidebar(bool)));
     connect(mMenuBar->getActionListbar(), SIGNAL(triggered(bool)), this, SLOT(showListBar(bool)));
     connect(mMenuBar->getActionSynchNote(), SIGNAL(triggered()), this, SLOT(syncRepo()));
+    connect(mMenuBar->getActionImportEvernote(), SIGNAL(triggered()), this, SLOT(importEvernote()));
 
     connect(mMenuBar->getActionEnterFullScreen(), SIGNAL(triggered()), this, SLOT(enterFullScreen()));
     connect(mMenuBar->getActionFullScreenEditMode(), SIGNAL(triggered()), this, SLOT(fullScreenEditMode()));
@@ -603,4 +604,9 @@ void MainWindow::about()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     exit(0);
+}
+
+void MainWindow::importEvernote()
+{
+    (new ImportNoteDialog(this))->init();
 }

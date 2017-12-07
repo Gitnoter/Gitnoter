@@ -1020,7 +1020,7 @@ QTreeWidget#navigationBar::branch:open:has-children:has-siblings  {
   <customwidget>
    <class>NotePreviewWidget</class>
    <extends>QTextBrowser</extends>
-   <header location="global">widgets/notepreviewwidget.h</header>
+   <header location="global">notepreviewwidget.h</header>
   </customwidget>
   <customwidget>
    <class>QMarkdownTextEdit</class>

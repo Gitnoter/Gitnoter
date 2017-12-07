@@ -4,7 +4,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets Network PrintSupport REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets Network PrintSupport Xml XmlPatterns REQUIRED)
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/hoedown HOEDOWN)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include LIBGIT2)
@@ -34,7 +34,8 @@ qt5_wrap_ui(UIS_HDRS
         views/markdowneditorwidget.ui
         views/tagcellwidget.ui
         views/messagedialog.ui
-        views/menubar.ui)
+        views/menubar.ui
+        views/importnotedialog.ui)
 
 add_executable(${PROJECT_NAME}
         ${UIS_HDRS}
@@ -59,6 +60,7 @@ add_executable(${PROJECT_NAME}
         controllers/grouptreewidget.h       controllers/grouptreewidget.cpp
         controllers/menubar.h               controllers/menubar.cpp
         controllers/navigationbarwidget.h   controllers/navigationbarwidget.cpp
+        controllers/importnotedialog.h      controllers/importnotedialog.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp
@@ -72,4 +74,4 @@ add_executable(${PROJECT_NAME}
 
         ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport git2)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml Qt5::XmlPatterns git2)

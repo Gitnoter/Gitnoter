@@ -73,6 +73,7 @@ public slots:
     void setSearchFocus();
 
     void syncRepo();
+    void importEvernote();
 
     void showSidebar(bool clicked);
     void showListBar(bool clicked);

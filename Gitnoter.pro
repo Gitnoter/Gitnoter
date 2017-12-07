@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network printsupport
+QT       += core gui network printsupport xml xmlpatterns
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -53,6 +53,7 @@ SOURCES += \
     controllers/notelistwidget.cpp \
     controllers/menubar.cpp \
     controllers/navigationbarwidget.cpp \
+    controllers/importnotedialog.cpp \
     models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
@@ -79,6 +80,7 @@ HEADERS += \
     controllers/notelistwidget.h \
     controllers/menubar.h  \
     controllers/navigationbarwidget.h \
+    controllers/importnotedialog.h \
     models/notemodel.h  \
     models/configmodel.h \
     models/groupmodel.h \
@@ -101,7 +103,8 @@ FORMS += \
     views/markdowneditorwidget.ui \
     views/tagcellwidget.ui \
     views/messagedialog.ui \
-    views/menubar.ui
+    views/menubar.ui \
+    views/importnotedialog.ui
 
 RESOURCES += \
     resources/resources.qrc
