@@ -64,7 +64,7 @@ void MenuBar::addActionToWindowMenu(QWidget *widget)
     ui->menu_window->addAction(action);
     mWindowMenuActionGroup->addAction(action);
 
-    connect(action, SIGNAL(triggered()), this, SLOT(onWindowActionTriggered()));
+    connect(action, SIGNAL(triggered()), this, SLOT(onWindowMenuActionTriggered()));
 
     gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
 }
@@ -112,7 +112,7 @@ void MenuBar::onPrintAccepted()
     emit printAccepted(mPrinter);
 }
 
-void MenuBar::onWindowActionTriggered()
+void MenuBar::onWindowMenuActionTriggered()
 {
     QWidget *widget = mWindowMenuActionGroup->checkedAction()->data().value<QWidget *>();
     widget->raise();

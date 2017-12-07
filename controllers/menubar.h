@@ -39,7 +39,7 @@ signals:
 
 private slots:
     void onPrintAccepted();
-    void onWindowActionTriggered();
+    void onWindowMenuActionTriggered();
 
     void on_action_printPageSetting_triggered();
     void on_action_print_triggered();
