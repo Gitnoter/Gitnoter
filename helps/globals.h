@@ -8,48 +8,40 @@
 
 #include <QObject>
 
-class Globals : public QObject
-{
-Q_OBJECT
+extern const QString gPackageName;
+extern const QString gDateFormat;
+extern const QString gTagSplit;
+extern const int gSevenDays;
 
-public:
-    static const QString packageName;
-    static const QString version;
-    static const QString dateFormat;
-    static const QString tagSplit;
-    static const int sevenDays;
+extern const QString gAppDataLocation;
+extern const QString gAppDataPath;
+extern const QString appConfigPath;
+extern const QString gRepoPath;
+extern const QString gRepoNoteTextPath;
+extern const QString gNoteTextFileName;
+extern const QString gNoteDataFileName;
+extern const QString gRepoNoteDataPath;
+extern const QString gRepoCategoryListPath;
+extern const QString gRepoTagListPath;
 
-    static const QString appDataLocation;
-    static const QString appDataPath;
-    static const QString appConfigPath;
-    static const QString repoPath;
-    static const QString repoNoteTextPath;
-    static const QString noteTextFileName;
-    static const QString noteDataFileName;
-    static const QString repoNoteDataPath;
-    static const QString repoCategoryListPath;
-    static const QString repoTagListPath;
+extern const QString gNewNoteKeySequence;
+extern const QString gLockWindowKeySequence;
+extern const QString gCutWindowKeySequence;
 
-    static const QString newNoteKeySequence;
-    static const QString lockWindowKeySequence;
-    static const QString cutWindowKeySequence;
+extern const int gEditorFontSize;
 
-    static const int editorFontSize;
+extern const QString gSearchEngine;
+extern const QString gGuideUrl;
+extern const QString gHistoryChangeUrl;
+extern const QString gMarkdownLanguageUrl;
+extern const QString gIssueUrl;
+extern const QString gEmailToUser;
 
-    static const QString searchEngine;
-    static const QString guideUrl;
-    static const QString historyChangeUrl;
-    static const QString markdownLanguageUrl;
-    static const QString issueUrl;
-    static const QString emailToUser;
+extern const QByteArray gAesKey;
+extern const QByteArray gAesIv;
 
-    static const QByteArray aesKey;
-    static const QByteArray aesIv;
-
-    static ConfigModel *configModel;
-    static GitManager *gitManager;
-    static ThemeManager *themeManager;
-
-};
+extern ConfigModel *gConfigModel;
+extern GitManager *gGitManager;
+extern ThemeManager *gThemeManager;
 
 #endif // GLOBALS_H

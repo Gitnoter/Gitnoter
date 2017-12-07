@@ -33,7 +33,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
             return;
         }
         mMainWindow->stackedWidget()->setCurrentIndex(1);
-        Globals::configModel->setOpenMainWindowNoteUuid("");
+        gConfigModel->setOpenMainWindowNoteUuid("");
     }
     else {
         setOpenNote();
@@ -84,8 +84,8 @@ void MarkdownEditorWidget::removeTag(QString tagName)
 
     setTagList();
 
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    const QString name = Globals::configModel->getSideSelectedName();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
+    const QString name = gConfigModel->getSideSelectedName();
     if (Gitnoter::Tag == type && name == tagName) {
         mMainWindow->updateView(Gitnoter::NoteListWidget);
     }
@@ -131,7 +131,7 @@ void MarkdownEditorWidget::on_pushButton_category_clicked()
 
 void MarkdownEditorWidget::on_splitter_editor_splitterMoved(int, int)
 {
-    Globals::configModel->setEditorSplitterSizes(ui->splitter_editor->sizes());
+    gConfigModel->setEditorSplitterSizes(ui->splitter_editor->sizes());
     setSplitterSizes();
 }
 
@@ -308,20 +308,20 @@ void MarkdownEditorWidget::on_pushButton_splitterPreview_clicked()
 {
     int width = ui->splitter_editor->size().width() / 2;
     QList<int> sizes = {width, width};
-    Globals::configModel->setEditorSplitterSizes(sizes);
+    gConfigModel->setEditorSplitterSizes(sizes);
     setSplitterSizes();
 }
 
 void MarkdownEditorWidget::on_pushButton_markdownPeview_clicked()
 {
     QList<int> sizes = {0, ui->splitter_editor->size().width()};
-    Globals::configModel->setEditorSplitterSizes(sizes);
+    gConfigModel->setEditorSplitterSizes(sizes);
     setSplitterSizes();
 }
 
 void MarkdownEditorWidget::setSplitterSizes()
 {
-    QList<int> sizes = Globals::configModel->getEditorSplitterSizes();
+    QList<int> sizes = gConfigModel->getEditorSplitterSizes();
 
     ui->splitter_editor->setSizes(sizes);
 
@@ -332,7 +332,7 @@ void MarkdownEditorWidget::setSplitterSizes()
 
 void MarkdownEditorWidget::setBackgroundSplitterSizes()
 {
-    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
+    QList<int> sizes = gConfigModel->getEditorBackgroundSplitterSizes();
 
     ui->splitter_background->setSizes(sizes);
 
@@ -365,11 +365,11 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
-    if (!parent()) { setGeometry(Globals::configModel->getEditorWindowRect()); }
+    if (!parent()) { setGeometry(gConfigModel->getEditorWindowRect()); }
     setSplitterSizes();
     setBackgroundSplitterSizes();
 
-    showToolbar(Globals::configModel->getToolbarWidget());
+    showToolbar(gConfigModel->getToolbarWidget());
 
     MenuBar *menuBar = mMainWindow->menuBar();
 
@@ -541,7 +541,7 @@ void MarkdownEditorWidget::webSearchText()
     const QString selectedText = ui->markdownEditor->textCursor().selectedText().trimmed();
     if (selectedText.isEmpty()) { return; }
 
-    QDesktopServices::openUrl(QUrl(Globals::searchEngine + selectedText));
+    QDesktopServices::openUrl(QUrl(gSearchEngine + selectedText));
 }
 
 void MarkdownEditorWidget::showSearchFindWidget()
@@ -632,7 +632,7 @@ void MarkdownEditorWidget::showToolbar(bool clicked)
     mMainWindow->menuBar()->getActionToolbar()->setChecked(clicked);
 
     ui->widget_tools->setVisible(clicked);
-    Globals::configModel->setToolbarWidget(clicked);
+    gConfigModel->setToolbarWidget(clicked);
 }
 
 void MarkdownEditorWidget::showNavigationBar(bool clicked)
@@ -648,7 +648,7 @@ void MarkdownEditorWidget::showNavigationBar(bool clicked)
 
 void MarkdownEditorWidget::on_splitter_background_splitterMoved(int, int)
 {
-    Globals::configModel->setEditorBackgroundSplitterSizes(ui->splitter_background->sizes());
+    gConfigModel->setEditorBackgroundSplitterSizes(ui->splitter_background->sizes());
     setBackgroundSplitterSizes();
 }
 
@@ -685,7 +685,7 @@ void MarkdownEditorWidget::onNavigationWidgetPositionClicked(int position) {
 void MarkdownEditorWidget::editMode()
 {
     QList<int> sizes = {ui->splitter_editor->size().width(), 0};
-    Globals::configModel->setEditorSplitterSizes(sizes);
+    gConfigModel->setEditorSplitterSizes(sizes);
     setSplitterSizes();
 }
 
@@ -710,7 +710,7 @@ void MarkdownEditorWidget::plusFontSize()
     font.setPointSize(font.pointSize() + 1);
     ui->markdownEditor->setFont(font);
 
-    Globals::configModel->setEditorFont(font);
+    gConfigModel->setEditorFont(font);
 }
 
 void MarkdownEditorWidget::subtractFontSize()
@@ -724,16 +724,16 @@ void MarkdownEditorWidget::subtractFontSize()
     font.setPointSize(font.pointSize() - 1);
 
     ui->markdownEditor->setFont(font);
-    Globals::configModel->setEditorFont(font);
+    gConfigModel->setEditorFont(font);
 }
 
 void MarkdownEditorWidget::resetFontSize()
 {
     QFont font = ui->markdownEditor->font();
-    font.setPointSize(Globals::editorFontSize);
+    font.setPointSize(gEditorFontSize);
 
     ui->markdownEditor->setFont(font);
-    Globals::configModel->setEditorFont(font);
+    gConfigModel->setEditorFont(font);
 }
 
 void MarkdownEditorWidget::enterFullScreen()
@@ -759,7 +759,7 @@ void MarkdownEditorWidget::moveEvent(QMoveEvent *event)
 {
     QWidget::moveEvent(event);
     if (!parent()) {
-        Globals::configModel->setEditorWindowRect(geometry());
+        gConfigModel->setEditorWindowRect(geometry());
     }
 }
 
@@ -767,12 +767,12 @@ void MarkdownEditorWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
-    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
+    QList<int> sizes = gConfigModel->getEditorBackgroundSplitterSizes();
     int size1 = sizes.length() == 0 ? 20 : sizes[1];
     int size0 = ui->splitter_background->width() - size1;
     ui->splitter_background->setSizes({size0, size1});
 
     if (!parent()) {
-        Globals::configModel->setEditorWindowRect(geometry());
+        gConfigModel->setEditorWindowRect(geometry());
     }
 }

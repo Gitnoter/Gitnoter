@@ -42,19 +42,19 @@ ConfigModel::ConfigModel()
 
 void ConfigModel::init()
 {
-    Tools::createMkDir(Globals::appDataPath);
-    settings = new QSettings(Globals::appConfigPath, QSettings::NativeFormat);
+    Tools::createMkDir(gAppDataPath);
+    settings = new QSettings(appConfigPath, QSettings::NativeFormat);
 }
 
 QString ConfigModel::encrypt(const QString &string)
 {
-    QTinyAes aes(QTinyAes::CBC, Globals::aesKey, Globals::aesIv);
+    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
     return aes.encrypt(string.toUtf8()).toBase64();
 }
 
 const QString &ConfigModel::decrypt(const QString &string) const
 {
-    QTinyAes aes(QTinyAes::CBC, Globals::aesKey, Globals::aesIv);
+    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
     return aes.decrypt(QByteArray::fromBase64(string.toUtf8()));
 }
 
@@ -108,7 +108,7 @@ void ConfigModel::setOpenMainWindowNoteUuid(const QString &openNoteUuid)
 
 const QString ConfigModel::getVersion() const
 {
-    return settings->value(mVersion, Globals::version).toString();
+    return settings->value(mVersion).toString();
 }
 
 const QString ConfigModel::getRepoDir() const
@@ -223,7 +223,7 @@ void ConfigModel::setEditorFont(const QFont &font)
 
 const QString ConfigModel::getNewNoteKeySequence() const
 {
-    return settings->value(mNewNoteKeySequence, Globals::newNoteKeySequence).toString();
+    return settings->value(mNewNoteKeySequence, gNewNoteKeySequence).toString();
 }
 
 void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
@@ -233,7 +233,7 @@ void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
 
 const QString ConfigModel::getLockWindowKeySequence() const
 {
-    return settings->value(mLockWindowKeySequence, Globals::lockWindowKeySequence).toString();
+    return settings->value(mLockWindowKeySequence, gLockWindowKeySequence).toString();
 }
 
 void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
@@ -244,7 +244,7 @@ void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
 
 const QString ConfigModel::getCutWindowKeySequence() const
 {
-    return settings->value(mCutWindowKeySequence, Globals::cutWindowKeySequence).toString();
+    return settings->value(mCutWindowKeySequence, gCutWindowKeySequence).toString();
 }
 
 void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)

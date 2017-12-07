@@ -18,15 +18,15 @@ NoteListWidget::~NoteListWidget()
 void NoteListWidget::init(MainWindow *mainWindow)
 {
     mMainWindow = mainWindow;
-    QDir dir(Globals::repoNoteTextPath);
+    QDir dir(gRepoNoteTextPath);
     for (auto &&mfi : dir.entryInfoList()) {
         if (mfi.fileName() == "." || mfi.fileName() == "..") {
             continue;
         }
         if (mfi.isDir()) {
             QDir dir2(mfi.absoluteFilePath());
-            NoteModel *noteModel = new NoteModel(dir2.filePath(Globals::noteTextFileName),
-                                                 dir2.filePath(Globals::noteDataFileName));
+            NoteModel *noteModel = new NoteModel(dir2.filePath(gNoteTextFileName),
+                                                 dir2.filePath(gNoteDataFileName));
             mListWidgetItemList.append(append(noteModel));
         }
     }
@@ -54,12 +54,12 @@ NoteModel *NoteListWidget::append(const QString &category)
     append(noteModel);
 
     if (category.isEmpty()) {
-        Globals::configModel->setSideSelected(
+        gConfigModel->setSideSelected(
                 Gitnoter::Unclassified,
                 mMainWindow->groupTreeWidget()->getGroupModel(Gitnoter::Unclassified)->getName());
     }
     else {
-        Globals::configModel->setSideSelected(Gitnoter::Category, category);
+        gConfigModel->setSideSelected(Gitnoter::Category, category);
     }
 
     mMainWindow->groupTreeWidget()->add(Gitnoter::All);
@@ -127,8 +127,8 @@ void NoteListWidget::restore(const QString &uuid)
 
 void NoteListWidget::setListWidget()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    const QString name = Globals::configModel->getSideSelectedName();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
+    const QString name = gConfigModel->getSideSelectedName();
     mListWidgetItemList = getListWidgetItemList(type, name);
 
     for (int i = 0; i < count(); ++i) {
@@ -140,7 +140,7 @@ void NoteListWidget::setListWidget()
     }
 
     // TODO: fix layout bug
-    mMainWindow->splitter()->setSizes(Globals::configModel->getMainWindowSplitterSizes());
+    mMainWindow->splitter()->setSizes(gConfigModel->getMainWindowSplitterSizes());
 
     setItemSelected();
 }
@@ -148,16 +148,16 @@ void NoteListWidget::setListWidget()
 void NoteListWidget::setItemSelected()
 {
     clearSelection();
-    const QString uuid = Globals::configModel->openMainWindowNoteUuid();
+    const QString uuid = gConfigModel->openMainWindowNoteUuid();
     if (has(uuid)) {
         getItem(uuid)->setSelected(true);
     }
     else if (mListWidgetItemList.length() > 0) {
         mListWidgetItemList[0]->setSelected(true);
-        Globals::configModel->setOpenMainWindowNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
+        gConfigModel->setOpenMainWindowNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
     }
     else {
-        Globals::configModel->setOpenMainWindowNoteUuid("");
+        gConfigModel->setOpenMainWindowNoteUuid("");
     }
 }
 
@@ -194,7 +194,7 @@ QList<QListWidgetItem *> NoteListWidget::getListWidgetItemList(Gitnoter::GroupTy
             }
         }
         else if ((type == Gitnoter::All) ||
-                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - Globals::sevenDays)) ||
+                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) ||
                  (type == Gitnoter::Unclassified && noteModel->getCategory().isEmpty()) ||
                  (type == Gitnoter::Category && name == noteModel->getCategory()) ||
                  (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {
@@ -260,8 +260,8 @@ void NoteListWidget::search(const QString &text)
 
 void NoteListWidget::sort()
 {
-    Qt::SortOrder type = Globals::configModel->getNoteSortType();
-    Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
+    Qt::SortOrder type = gConfigModel->getNoteSortType();
+    Gitnoter::SortBasis basis = gConfigModel->getNoteSortBasis();
 
     for (int i = 0; i < count(); ++i) {
         QListWidgetItem *listWidgetItem = item(i);

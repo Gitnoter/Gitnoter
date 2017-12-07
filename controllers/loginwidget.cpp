@@ -46,13 +46,13 @@ void LoginWidget::on_lineEdit_password_textChanged(const QString &)
 void LoginWidget::on_pushButton_enter_clicked()
 {
     if (changeEnterButtonStatus()) {
-        Globals::configModel->setRepoUrl(ui->lineEdit_repoUrl->displayText());
-        Globals::configModel->setRepoUsername(ui->lineEdit_username->displayText());
-        Globals::configModel->setRepoPassword(ui->lineEdit_password->text());
+        gConfigModel->setRepoUrl(ui->lineEdit_repoUrl->displayText());
+        gConfigModel->setRepoUsername(ui->lineEdit_username->displayText());
+        gConfigModel->setRepoPassword(ui->lineEdit_password->text());
 
         int result = initGitManager();
         if (!result) {
-            Globals::configModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
+            gConfigModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
             openMainWindow();
         }
         else {
@@ -79,8 +79,8 @@ bool LoginWidget::changeEnterButtonStatus()
 
 void LoginWidget::openMainWindow()
 {
-    Tools::createMkDir(Globals::repoNoteTextPath);
-    Tools::createMkDir(Globals::repoNoteDataPath);
+    Tools::createMkDir(gRepoNoteTextPath);
+    Tools::createMkDir(gRepoNoteDataPath);
 
     close();
     (new MainWindow)->show();
@@ -90,7 +90,7 @@ void LoginWidget::on_pushButton_initLocal_clicked()
 {
     int result = initGitManager();
     if (!result) {
-        Globals::configModel->setLocalRepoStatus(Gitnoter::LocalRepo);
+        gConfigModel->setLocalRepoStatus(Gitnoter::LocalRepo);
         openMainWindow();
     }
     else {
@@ -100,17 +100,17 @@ void LoginWidget::on_pushButton_initLocal_clicked()
 
 int LoginWidget::initGitManager()
 {
-    if (QDir(Globals::repoPath).exists()) {
-        return Globals::gitManager->open(Globals::repoPath.toUtf8().constData());
+    if (QDir(gRepoPath).exists()) {
+        return gGitManager->open(gRepoPath.toUtf8().constData());
     }
 
-    if (!Globals::configModel->getRepoUsername().isEmpty()
-        && !Globals::configModel->getRepoPassword().isEmpty()
-        && !Globals::configModel->getRepoUrl().isEmpty()) {
-        Globals::gitManager->setUserPass(Globals::configModel->getRepoUsername().toUtf8().constData(),
-                                        Globals::configModel->getRepoPassword().toUtf8().constData());
-        return Globals::gitManager->clone(Globals::configModel->getRepoUrl().toUtf8().constData(), Globals::repoPath.toUtf8().constData());
+    if (!gConfigModel->getRepoUsername().isEmpty()
+        && !gConfigModel->getRepoPassword().isEmpty()
+        && !gConfigModel->getRepoUrl().isEmpty()) {
+        gGitManager->setUserPass(gConfigModel->getRepoUsername().toUtf8().constData(),
+                                        gConfigModel->getRepoPassword().toUtf8().constData());
+        return gGitManager->clone(gConfigModel->getRepoUrl().toUtf8().constData(), gRepoPath.toUtf8().constData());
     }
 
-    return Globals::gitManager->initLocalRepo(Globals::repoPath.toUtf8().constData(), true);
+    return gGitManager->initLocalRepo(gRepoPath.toUtf8().constData(), true);
 }

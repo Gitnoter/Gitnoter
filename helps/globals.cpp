@@ -3,43 +3,41 @@
 
 #include <QStandardPaths>
 
-const QString Globals::packageName = "com.huyaohui.gitnoter";
-const QString Globals::version = "1.0.0";
-const QString Globals::dateFormat = "yyyy/MM/dd hh:mm";
-const QString Globals::tagSplit = ", ";
-const int Globals::sevenDays = 7 * 24 * 60 * 60;
+const QString gPackageName = "com.huyaohui.gitnoter";
+const QString gDateFormat = "yyyy/MM/dd hh:mm";
+const QString gTagSplit = ", ";
+const int gSevenDays = 7 * 24 * 60 * 60;
 
-const QString Globals::appDataLocation = QDir(
-        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(
-        packageName);
-const QString Globals::appDataPath = QDir(appDataLocation).filePath("data/");
-const QString Globals::appConfigPath = QDir(appDataPath).filePath("appconfig.json");
-const QString Globals::repoPath = QDir(appDataLocation).filePath("user/user.git");
-const QString Globals::repoNoteTextPath = QDir(repoPath).filePath("notes/");
-const QString Globals::noteTextFileName = "markdown.md";
-const QString Globals::noteDataFileName = "data.json";
-const QString Globals::repoNoteDataPath = QDir(repoPath).filePath("data");
-const QString Globals::repoCategoryListPath = QDir(repoNoteDataPath).filePath("categories.list");
-const QString Globals::repoTagListPath = QDir(repoNoteDataPath).filePath("tags.list");
+const QString gAppDataLocation = QDir(
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(gPackageName);
+const QString gAppDataPath = QDir(gAppDataLocation).filePath("data/");
+const QString appConfigPath = QDir(gAppDataPath).filePath("appconfig.json");
+const QString gRepoPath = QDir(gAppDataLocation).filePath("user/user.git");
+const QString gRepoNoteTextPath = QDir(gRepoPath).filePath("notes/");
+const QString gNoteTextFileName = "markdown.md";
+const QString gNoteDataFileName = "data.json";
+const QString gRepoNoteDataPath = QDir(gRepoPath).filePath("data");
+const QString gRepoCategoryListPath = QDir(gRepoNoteDataPath).filePath("categories.list");
+const QString gRepoTagListPath = QDir(gRepoNoteDataPath).filePath("tags.list");
 
-const QString Globals::newNoteKeySequence = "Ctrl+N";
-const QString Globals::lockWindowKeySequence = "Ctrl+Shift+L";
-const QString Globals::cutWindowKeySequence = "Ctrl+Shift+X";
+const QString gNewNoteKeySequence = "Ctrl+N";
+const QString gLockWindowKeySequence = "Ctrl+Shift+L";
+const QString gCutWindowKeySequence = "Ctrl+Shift+X";
 
-const int Globals::editorFontSize = 14;
+const int gEditorFontSize = 14;
 
-const QString Globals::searchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
+const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
                                                                           : "https://www.google.com/search?&q=";
-const QString Globals::guideUrl = "http://gitnoter.github.io/";
-const QString Globals::historyChangeUrl = "http://gitnoter.github.io/";
-const QString Globals::markdownLanguageUrl = "http://gitnoter.github.io/";
-const QString Globals::issueUrl = "https://github.com/Gitnoter/Gitnoter/issues";
-const QString Globals::emailToUser = "gitnoter@gmail.com";
+const QString gGuideUrl = "http://gitnoter.github.io/";
+const QString gHistoryChangeUrl = "http://gitnoter.github.io/";
+const QString gMarkdownLanguageUrl = "http://gitnoter.github.io/";
+const QString gIssueUrl = "https://github.com/Gitnoter/Gitnoter/issues";
+const QString gEmailToUser = "gitnoter@gmail.com";
 
-const QByteArray Globals::aesKey = "Q5tO3jUB0oe7FmWq";
-const QByteArray Globals::aesIv  = "RNNSR8XNbMTuOSGd";
+const QByteArray gAesKey = "Q5tO3jUB0oe7FmWq";
+const QByteArray gAesIv  = "RNNSR8XNbMTuOSGd";
 
-ConfigModel *Globals::configModel = new ConfigModel();
-GitManager *Globals::gitManager = new GitManager();
-ThemeManager *Globals::themeManager = new ThemeManager();
+ConfigModel *gConfigModel = new ConfigModel();
+GitManager *gGitManager = new GitManager();
+ThemeManager *gThemeManager = new ThemeManager();
 

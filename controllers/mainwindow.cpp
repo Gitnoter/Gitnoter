@@ -41,19 +41,19 @@ void MainWindow::setupUi()
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
     connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionTriggered()));
 
-    ui->splitter->setSizes(Globals::configModel->getMainWindowSplitterSizes());
-    ui->stackWidget_editor->setCurrentIndex((int) Globals::configModel->openMainWindowNoteUuid().isEmpty());
+    ui->splitter->setSizes(gConfigModel->getMainWindowSplitterSizes());
+    ui->stackWidget_editor->setCurrentIndex((int) gConfigModel->openMainWindowNoteUuid().isEmpty());
 
-    setGeometry(Globals::configModel->getMainWindowRect());
-    if (Globals::configModel->getMainWindowFullScreen()) {
+    setGeometry(gConfigModel->getMainWindowRect());
+    if (gConfigModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
 
     updateAutoLockTimer();
     updateAutoSyncRepoTimer();
 
-    showSidebar(Globals::configModel->getSidebarWidget());
-    showListBar(Globals::configModel->getListBarWidget());
+    showSidebar(gConfigModel->getSidebarWidget());
+    showListBar(gConfigModel->getListBarWidget());
 
     connect(ui->noteListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(newWindow(QListWidgetItem *)));
 
@@ -93,27 +93,27 @@ void MainWindow::setupUi()
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
 {
     NoteModel *noteModel = item->data(Qt::UserRole).value<NoteModel *>();
-    if (noteModel->getUuid() != Globals::configModel->openMainWindowNoteUuid()) {
-        Globals::configModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
+    if (noteModel->getUuid() != gConfigModel->openMainWindowNoteUuid()) {
+        gConfigModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
         markdownEditorWidget()->init(noteModel, this);
     }
 }
 
 void MainWindow::on_splitter_splitterMoved(int, int)
 {
-    Globals::configModel->setMainWindowSplitterSizes(ui->splitter->sizes());
+    gConfigModel->setMainWindowSplitterSizes(ui->splitter->sizes());
 }
 
 void MainWindow::on_pushButton_noteAdd_clicked()
 {
-    if (Globals::configModel->getSideSelectedType() == Gitnoter::Trash) {
-        if (Globals::configModel->openMainWindowNoteUuid().isEmpty()) {
+    if (gConfigModel->getSideSelectedType() == Gitnoter::Trash) {
+        if (gConfigModel->openMainWindowNoteUuid().isEmpty()) {
             return;
         }
 
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
-        NoteModel *noteModel = ui->noteListWidget->getNoteModel(Globals::configModel->openMainWindowNoteUuid());
+        NoteModel *noteModel = ui->noteListWidget->getNoteModel(gConfigModel->openMainWindowNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
                                  ui->groupTreeWidget->topLevelItem(1)->text(0) :
                                  noteModel->getCategory();
@@ -133,8 +133,8 @@ void MainWindow::on_action_saveNote_triggered()
 
 void MainWindow::on_pushButton_noteSubtract_clicked()
 {
-    if (Globals::configModel->getSideSelectedType() == Gitnoter::Trash) {
-        if (Globals::configModel->openMainWindowNoteUuid().isEmpty()) {
+    if (gConfigModel->getSideSelectedType() == Gitnoter::Trash) {
+        if (gConfigModel->openMainWindowNoteUuid().isEmpty()) {
             return;
         }
 
@@ -154,7 +154,7 @@ void MainWindow::on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int colum
     }
 
     ui->lineEdit_noteSearch->clear();
-    Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(item));
+    gConfigModel->setSideSelected(groupTreeWidget()->getGroupModel(item));
     updateView(Gitnoter::NoteListWidget);
 }
 
@@ -165,7 +165,7 @@ void MainWindow::on_pushButton_add_clicked()
 
 void MainWindow::on_pushButton_subtract_clicked()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
     if (Gitnoter::Category <= type) {
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeGroup()));
@@ -184,21 +184,21 @@ void MainWindow::setNoteListTitle()
 
 void MainWindow::restoreNote()
 {
-    noteListWidget()->restore(Globals::configModel->openMainWindowNoteUuid());
+    noteListWidget()->restore(gConfigModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::appendNote()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    QString category = Globals::configModel->getSideSelectedName();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
+    QString category = gConfigModel->getSideSelectedName();
 
     if (Gitnoter::Category != type) {
         category = "";
     }
 
     NoteModel *noteModel = noteListWidget()->append(category);
-    Globals::configModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
+    gConfigModel->setOpenMainWindowNoteUuid(noteModel->getUuid());
     noteListWidget()->setListWidget();
     groupTreeWidget()->setItemSelected();
     markdownEditorWidget()->init(noteModel, this);
@@ -206,13 +206,13 @@ void MainWindow::appendNote()
 
 void MainWindow::removeNote()
 {
-    noteListWidget()->remove(Globals::configModel->openMainWindowNoteUuid());
+    noteListWidget()->remove(gConfigModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
 void MainWindow::trashNote()
 {
-    noteListWidget()->trash(Globals::configModel->openMainWindowNoteUuid());
+    noteListWidget()->trash(gConfigModel->openMainWindowNoteUuid());
     updateView(Gitnoter::NoteListWidget);
 }
 
@@ -240,11 +240,11 @@ void MainWindow::init()
 
 void MainWindow::removeGroup()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
-    const QString name = Globals::configModel->getSideSelectedName();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
+    const QString name = gConfigModel->getSideSelectedName();
 
     if (Gitnoter::Category <= type) {
-        Globals::configModel->setSideSelected(groupTreeWidget()->getGroupModel(Gitnoter::All));
+        gConfigModel->setSideSelected(groupTreeWidget()->getGroupModel(Gitnoter::All));
         ui->groupTreeWidget->remove(type, name);
         updateView(Gitnoter::NoteListWidget);
     }
@@ -252,13 +252,13 @@ void MainWindow::removeGroup()
 
 void MainWindow::appendGroup()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
     QString name = "";
     for (int i = 0; i < 100; ++i) {
         name = ((Gitnoter::Tag == type) ? tr("新建标签%1") : tr("新建笔记本%1")).arg(i == 0 ? "" : QString::number(i));
         if (groupTreeWidget()->append(type, name)) {
             groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(type, name));
-            Globals::configModel->setSideSelected(type, name);
+            gConfigModel->setSideSelected(type, name);
             updateView(Gitnoter::GroupTreeWidget);
             break;
         }
@@ -301,7 +301,7 @@ void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)
     }
 
     if (flags.testFlag(Gitnoter::MarkdownEditorWidget)) {
-        markdownEditorWidget()->init(Globals::configModel->openMainWindowNoteUuid(), this);
+        markdownEditorWidget()->init(gConfigModel->openMainWindowNoteUuid(), this);
     }
 
     if (flags.testFlag(Gitnoter::NoteListTitle)) {
@@ -313,10 +313,10 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange || event->type() == QEvent::ActivationChange) {
         if (windowState().testFlag(Qt::WindowFullScreen)) {
-            Globals::configModel->setMainWindowFullScreen(true);
+            gConfigModel->setMainWindowFullScreen(true);
         }
         else if ((windowState() == Qt::WindowNoState || windowState() == Qt::WindowMaximized) && !isFullScreen()) {
-            Globals::configModel->setMainWindowFullScreen(false);
+            gConfigModel->setMainWindowFullScreen(false);
         }
     }
 }
@@ -324,19 +324,13 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::moveEvent(QMoveEvent *event)
 {
     QWidget::moveEvent(event);
-    Globals::configModel->setMainWindowRect(geometry());
+    gConfigModel->setMainWindowRect(geometry());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-
-//    QList<int> sizes = Globals::configModel->getEditorBackgroundSplitterSizes();
-//    int size1 = sizes.length() == 0 ? 20 : sizes[1];
-//    int size0 = ui->splitter_background->width() - size1;
-//    ui->splitter_background->setSizes({size0, size1});
-
-    Globals::configModel->setMainWindowRect(geometry());
+    gConfigModel->setMainWindowRect(geometry());
 }
 
 MenuBar *MainWindow::menuBar()
@@ -357,7 +351,7 @@ void MainWindow::setSearchFocus()
 void MainWindow::updateAutoSyncRepoTimer()
 {
     qDebug() << "updateAutoSyncRepoTimer";
-    int autoSyncRepo = Globals::configModel->getAutoSyncRepoTime();
+    int autoSyncRepo = gConfigModel->getAutoSyncRepoTime();
     if (autoSyncRepo) {
         connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
         mAutoSyncRepoTimer->start(autoSyncRepo);
@@ -369,7 +363,7 @@ void MainWindow::updateAutoSyncRepoTimer()
 
 void MainWindow::updateAutoLockTimer()
 {
-    int autoLockTime = Globals::configModel->getAutoLockTime();
+    int autoLockTime = gConfigModel->getAutoLockTime();
     if (autoLockTime) {
         connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
         mAutoLockTimer->start(autoLockTime);
@@ -382,17 +376,17 @@ void MainWindow::updateAutoLockTimer()
 void MainWindow::syncRepo()
 {
     qDebug() << "syncRepo" << __func__;
-    Gitnoter::RepoStatus status = Globals::configModel->getLocalRepoStatus();
+    Gitnoter::RepoStatus status = gConfigModel->getLocalRepoStatus();
     if (Gitnoter::NoneRepo == status) {
         return;
     }
 
-//            Globals::gitManager->commitA();
-//            Globals::gitManager->pull();
-//            Globals::gitManager->commitA();
+//            gitManager->commitA();
+//            gitManager->pull();
+//            gitManager->commitA();
 //
 //            if (Gitnoter::RemoteRepo == status) {
-//                Globals::gitManager->push();
+//                gitManager->push();
 //            }
 }
 void MainWindow::lockWindow()
@@ -410,7 +404,7 @@ void MainWindow::showSidebar(bool clicked)
     mMenuBar->getActionSidebar()->setChecked(clicked);
 
     ui->widget_sidebar->setVisible(clicked);
-    Globals::configModel->setSidebarWidget(clicked);
+    gConfigModel->setSidebarWidget(clicked);
 }
 
 void MainWindow::showListBar(bool clicked)
@@ -418,7 +412,7 @@ void MainWindow::showListBar(bool clicked)
     mMenuBar->getActionListbar()->setChecked(clicked);
 
     ui->widget_listBar->setVisible(clicked);
-    Globals::configModel->setListBarWidget(clicked);
+    gConfigModel->setListBarWidget(clicked);
 }
 
 void MainWindow::enterFullScreen()
@@ -429,8 +423,8 @@ void MainWindow::enterFullScreen()
 void MainWindow::fullScreenEditMode()
 {
     if (isActiveWindow() && isFullScreen()) {
-        bool sidebar = Globals::configModel->getSidebarWidget();
-        bool listBar = Globals::configModel->getListBarWidget();
+        bool sidebar = gConfigModel->getSidebarWidget();
+        bool listBar = gConfigModel->getListBarWidget();
 
         ui->widget_listBar->setVisible(sidebar);
         ui->widget_sidebar->setVisible(listBar);
@@ -447,7 +441,7 @@ void MainWindow::fullScreenEditMode()
 
 void MainWindow::newWindow(QListWidgetItem *)
 {
-    const QString uuid = Globals::configModel->openMainWindowNoteUuid();
+    const QString uuid = gConfigModel->openMainWindowNoteUuid();
     if (uuid.isEmpty()) {
         return;
     }
@@ -575,17 +569,17 @@ void MainWindow::preposeWindow()
 
 void MainWindow::guide()
 {
-    QDesktopServices::openUrl(QUrl(Globals::guideUrl));
+    QDesktopServices::openUrl(QUrl(gGuideUrl));
 }
 
 void MainWindow::historyChange()
 {
-    QDesktopServices::openUrl(QUrl(Globals::historyChangeUrl));
+    QDesktopServices::openUrl(QUrl(gHistoryChangeUrl));
 }
 
 void MainWindow::markdownLanguage()
 {
-    QDesktopServices::openUrl(QUrl(Globals::markdownLanguageUrl));
+    QDesktopServices::openUrl(QUrl(gMarkdownLanguageUrl));
 }
 
 void MainWindow::feedback()
@@ -593,12 +587,12 @@ void MainWindow::feedback()
     const QString body = "\n\n" + VER_FILEDESCRIPTION_STR + "\n" + QSysInfo::prettyProductName();
     QDesktopServices::openUrl(
             QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
-                    Globals::emailToUser, body), QUrl::TolerantMode));
+                    gEmailToUser, body), QUrl::TolerantMode));
 }
 
 void MainWindow::issue()
 {
-    QDesktopServices::openUrl(QUrl(Globals::issueUrl));
+    QDesktopServices::openUrl(QUrl(gIssueUrl));
 }
 
 void MainWindow::about()

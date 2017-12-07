@@ -40,7 +40,7 @@ void MenuBar::setupUi(QWidget *parent)
 
 void MenuBar::setGroupEnable()
 {
-    Gitnoter::GroupType type = Globals::configModel->getSideSelectedType();
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
     if (Gitnoter::Category == type) {
         ui->action_newTags->setEnabled(false);
         ui->action_newCategories->setEnabled(true);
@@ -66,7 +66,7 @@ void MenuBar::addActionToWindowMenu(QWidget *widget)
 
     connect(action, SIGNAL(triggered()), this, SLOT(onWindowActionTriggered()));
 
-    Globals::configModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
+    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
 }
 
 void MenuBar::removeActionToWindowMenu(QWidget *widget)
@@ -89,7 +89,7 @@ void MenuBar::removeActionToWindowMenu(QWidget *widget)
         window->activateWindow();
     }
 
-    Globals::configModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
+    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
 }
 
 void MenuBar::on_action_printPageSetting_triggered()

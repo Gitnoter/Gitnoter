@@ -31,7 +31,7 @@ QString NoteModel::getNoteDir()
         setUuid();
     }
 
-    return QDir(Globals::repoNoteTextPath).filePath(getUuid());
+    return QDir(gRepoNoteTextPath).filePath(getUuid());
 }
 
 
@@ -486,9 +486,9 @@ QString NoteModel::getStringFormTagList() const
 {
     QString tagsString = "";
     for (auto &&item : tagList) {
-        tagsString += item + Globals::tagSplit;
+        tagsString += item + gTagSplit;
     }
-    tagsString.chop(Globals::tagSplit.length());
+    tagsString.chop(gTagSplit.length());
 
     return tagsString;
 }
@@ -545,8 +545,8 @@ void NoteModel::saveNoteToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText().toUtf8());
-    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData().toUtf8());
+    Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
+    Tools::writerFile(QDir(path).filePath(gNoteDataFileName), getNoteData().toUtf8());
 }
 
 void NoteModel::saveNoteTextToLocal()
@@ -554,7 +554,7 @@ void NoteModel::saveNoteTextToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteTextFileName), getNoteText().toUtf8());
+    Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
 }
 
 void NoteModel::saveNoteDataToLocal()
@@ -562,7 +562,7 @@ void NoteModel::saveNoteDataToLocal()
     setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(Globals::noteDataFileName), getNoteData().toUtf8());
+    Tools::writerFile(QDir(path).filePath(gNoteDataFileName), getNoteData().toUtf8());
 }
 
 QString NoteModel::getUuid()

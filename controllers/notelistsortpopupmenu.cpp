@@ -37,8 +37,8 @@ NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* p
     connect(action_asc, SIGNAL(triggered(bool)), this, SLOT(onActionAscTriggered(bool)));
     connect(action_desc, SIGNAL(triggered(bool)), this, SLOT(onActionDescTriggered(bool)));
 
-    Gitnoter::SortBasis basis = Globals::configModel->getNoteSortBasis();
-    Qt::SortOrder type = Globals::configModel->getNoteSortType();
+    Gitnoter::SortBasis basis = gConfigModel->getNoteSortBasis();
+    Qt::SortOrder type = gConfigModel->getNoteSortType();
     action_title->setChecked(Gitnoter::Title == basis);
     action_createDate->setChecked(Gitnoter::CreateDate == basis);
     action_updateDate->setChecked(Gitnoter::UpdateDate == basis);
@@ -57,7 +57,7 @@ void NoteListSortPopupMenu::showEvent(QShowEvent* event)
 void NoteListSortPopupMenu::onActionTitleTriggered(bool triggered)
 {
     setBasisActionChecked(action_title);
-    Globals::configModel->setNoteSortBasis(Gitnoter::Title);
+    gConfigModel->setNoteSortBasis(Gitnoter::Title);
     setPushButtonText(Gitnoter::Title);
     emit actionTriggered();
 }
@@ -65,7 +65,7 @@ void NoteListSortPopupMenu::onActionTitleTriggered(bool triggered)
 void NoteListSortPopupMenu::onActionCreateDateTriggered(bool triggered)
 {
     setBasisActionChecked(action_createDate);
-    Globals::configModel->setNoteSortBasis(Gitnoter::CreateDate);
+    gConfigModel->setNoteSortBasis(Gitnoter::CreateDate);
     setPushButtonText(Gitnoter::CreateDate);
     emit actionTriggered();
 }
@@ -73,7 +73,7 @@ void NoteListSortPopupMenu::onActionCreateDateTriggered(bool triggered)
 void NoteListSortPopupMenu::onActionUpdateDateTriggered(bool triggered)
 {
     setBasisActionChecked(action_updateDate);
-    Globals::configModel->setNoteSortBasis(Gitnoter::UpdateDate);
+    gConfigModel->setNoteSortBasis(Gitnoter::UpdateDate);
     setPushButtonText(Gitnoter::UpdateDate);
     emit actionTriggered();
 }
@@ -81,14 +81,14 @@ void NoteListSortPopupMenu::onActionUpdateDateTriggered(bool triggered)
 void NoteListSortPopupMenu::onActionAscTriggered(bool triggered)
 {
     setTypeActionChecked(action_asc);
-    Globals::configModel->setNoteSortType(Qt::AscendingOrder);
+    gConfigModel->setNoteSortType(Qt::AscendingOrder);
     emit actionTriggered();
 }
 
 void NoteListSortPopupMenu::onActionDescTriggered(bool triggered)
 {
     setTypeActionChecked(action_desc);
-    Globals::configModel->setNoteSortType(Qt::DescendingOrder);
+    gConfigModel->setNoteSortType(Qt::DescendingOrder);
     emit actionTriggered();
 }
 

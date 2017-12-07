@@ -41,12 +41,12 @@ QString Tools::getShortUuid()
 
 int Tools::timestampFromDateTime(const QString dateTime)
 {
-    return QDateTime::fromString(dateTime, Globals::dateFormat).toTime_t();
+    return QDateTime::fromString(dateTime, gDateFormat).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(Globals::dateFormat);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(gDateFormat);
 }
 
 QString Tools::readerFile(QString path)
