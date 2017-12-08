@@ -700,7 +700,7 @@
   </action>
   <action name="action_exportMarkdown">
    <property name="text">
-    <string>导出 Markdown 笔记...</string>
+    <string>导出 Markdown 文件...</string>
    </property>
   </action>
   <action name="action_printPageSetting">

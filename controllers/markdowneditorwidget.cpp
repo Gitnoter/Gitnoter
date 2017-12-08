@@ -6,8 +6,7 @@
 #include "tools.h"
 
 #include <QScrollBar>
-#include <QMenu>
-#include <QDebug>
+#include <QFileDialog>
 
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
@@ -386,6 +385,11 @@ void MarkdownEditorWidget::setupUi()
 
     connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBar->getActionUndo(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBar->getActionRedo(), SLOT(setEnabled(bool)));
+
+    connect(menuBar->getActionExportHtmlForPDF(), SIGNAL(triggered()), this, SLOT(exportHtmlForPDF()));
+    connect(menuBar->getActionExportMarkdownForPDF(), SIGNAL(triggered()), this, SLOT(exportMarkdownForPDF()));
+    connect(menuBar->getActionExportHtml(), SIGNAL(triggered()), this, SLOT(exportHtml()));
+    connect(menuBar->getActionExportMarkdown(), SIGNAL(triggered()), this, SLOT(exportMarkdown()));
 
     connect(menuBar->getActionUndo(), SIGNAL(triggered()), ui->markdownEditor, SLOT(undo()));
     connect(menuBar->getActionRedo(), SIGNAL(triggered()), ui->markdownEditor, SLOT(redo()));
@@ -776,4 +780,87 @@ void MarkdownEditorWidget::resizeEvent(QResizeEvent *event)
     if (!parent()) {
         gConfigModel->setEditorWindowRect(geometry());
     }
+}
+
+void MarkdownEditorWidget::exportHtmlForPDF()
+{
+    const QString fileName = getExportFileName(tr("导出 HTML 为 PDF"), "PDF", "pdf");
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+
+    ui->markdownPreview->document()->print(printer);
+}
+
+void MarkdownEditorWidget::exportMarkdownForPDF()
+{
+    const QString fileName = getExportFileName(tr("导出 Markdown 为 PDF"), "PDF", "pdf");
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+
+    ui->markdownEditor->document()->print(printer);
+}
+
+void MarkdownEditorWidget::exportHtml()
+{
+    const QString fileName = getExportFileName(tr("导出 HTML 文本"), "HTML", "html");
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    Tools::writerFile(fileName, mNoteModel->getMarkdownHtml().toUtf8());
+}
+
+void MarkdownEditorWidget::exportMarkdown()
+{
+    const QString fileName = getExportFileName(tr("导出 Markdown 文件"), "Markdown", "md");
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    Tools::writerFile(fileName, mNoteModel->getNoteText().toUtf8());
+}
+
+QString MarkdownEditorWidget::getExportFileName(
+        const QString &windowTitle, const QString &fileType, const QString &suffix)
+{
+    QFileDialog *dialog = new QFileDialog();
+    dialog->setFileMode(QFileDialog::AnyFile);
+    dialog->setAcceptMode(QFileDialog::AcceptSave);
+    dialog->setNameFilter(fileType + tr(" files") + " (*." + suffix + ")");
+    dialog->setWindowTitle(windowTitle);
+    dialog->selectFile(mNoteModel->getTitle() + "." + suffix);
+
+    if (dialog->exec() != QDialog::Accepted) {
+        return "";
+    }
+
+    if (!dialog->selectedFiles().length()) {
+        return "";
+    }
+
+    QString fileName = dialog->selectedFiles().at(0);
+
+    if (fileName.isEmpty()) {
+        return "";
+    }
+
+    if (QFileInfo(fileName).suffix().isEmpty()) {
+        fileName.append("." + suffix);
+    }
+
+    return fileName;
 }

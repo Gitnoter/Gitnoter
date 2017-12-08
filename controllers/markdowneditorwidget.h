@@ -44,6 +44,11 @@ public slots:
     void changeCategory(const QString &category);
     void appendCategory(const QString &category);
 
+    void exportHtmlForPDF();
+    void exportMarkdownForPDF();
+    void exportHtml();
+    void exportMarkdown();
+
     void modifyNote();
     void saveNote();
 
@@ -89,6 +94,8 @@ private:
     void setOpenNote();
     void setSplitterSizes();
     void setBackgroundSplitterSizes();
+
+    QString getExportFileName(const QString &windowTitle, const QString &fileType, const QString &suffix);
 
 private slots:
 
