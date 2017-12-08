@@ -13,6 +13,8 @@ int main(int argc, char *argv[])
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setStyleSheet(Tools::readerFile(":/theme/default.qss"));
 
+    QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+
     if (gConfigModel->getLocalRepoStatus() > Gitnoter::NoneRepo) {
         MainWindow *w = new MainWindow;
         w->show();
