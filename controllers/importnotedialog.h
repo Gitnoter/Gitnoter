@@ -8,7 +8,7 @@
 #include <QXmlResultItems>
 
 namespace Ui {
-class ImportProgressDialog;
+class ImportNoteDialog;
 }
 
 class ImportNoteDialog : public QDialog
@@ -28,6 +28,7 @@ public:
     void init();
 
 private:
+    void initProgressBar(QString data);
     void importNotes(QString data);
 
     QString importImages(NoteModel *noteModel, QString content, QXmlQuery query);
@@ -39,7 +40,7 @@ private:
     QString decodeHtmlEntities(QString text);
 
 private:
-    Ui::ImportProgressDialog *ui;
+    Ui::ImportNoteDialog *ui;
 
 };
 

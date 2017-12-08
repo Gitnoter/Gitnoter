@@ -1,18 +1,17 @@
-#include "ui_importprogressdialog.h"
+#include "ui_importnotedialog.h"
 
 #include "importnotedialog.h"
 #include "tools.h"
+#include "mainwindow.h"
 
 #include <QFileDialog>
-#include <QDebug>
-#include <QCryptographicHash>
-#include <QTemporaryFile>
 
 ImportNoteDialog::ImportNoteDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ImportProgressDialog)
+    ui(new Ui::ImportNoteDialog)
 {
     ui->setupUi(this);
+    ui->progressBar->setValue(0);
 }
 
 ImportNoteDialog::~ImportNoteDialog()
@@ -31,12 +30,38 @@ void ImportNoteDialog::init()
 
     connect(dialog, &QFileDialog::fileSelected, [&](const QString &fileName) {
         if (fileName.isEmpty()) { return; }
+        ui->buttonBox->setEnabled(false);
+        open();
+        QString data = Tools::readerFile(fileName);
         QCoreApplication::processEvents();
-        importNotes(Tools::readerFile(fileName));
+        initProgressBar(data);
+        QCoreApplication::processEvents();
+        importNotes(data);
     });
 
     qDebug() << __func__;
 }
+
+void ImportNoteDialog::initProgressBar(QString data)
+{
+    QXmlQuery query;
+    query.setFocus(data);
+    query.setQuery("en-export/note");
+    int count = 0;
+
+    QXmlResultItems result;
+    if (query.isValid()) {
+        query.evaluateTo(&result);
+
+        while (!result.next().isNull()) {
+            count++;
+        }
+    }
+
+    ui->progressBar->setValue(0);
+    ui->progressBar->setMaximum(count);
+}
+
 
 void ImportNoteDialog::importNotes(QString data)
 {
@@ -107,13 +132,17 @@ void ImportNoteDialog::importNotes(QString data)
             const QString noteText = "# " + title + "\n\n" + content;
 
             noteModel->setNoteText(noteText);
-            qDebug() << createDate << "  " << updateDate;
             noteModel->setCreateDate(Tools::timestampFromDateTime(createDate, "yyyyMMddThhmmssZ"));
             noteModel->setUpdateDate(Tools::timestampFromDateTime(updateDate, "yyyyMMddThhmmssZ"));
             noteModel->saveNoteToLocal();
 
             ui->progressBar->setValue(ui->progressBar->value() + 1);
             QCoreApplication::processEvents();
+
+            if (ui->progressBar->value() == ui->progressBar->maximum()) {
+                ui->buttonBox->setEnabled(true);
+                ((MainWindow *) parent())->init();
+            }
         }
 
         if (result.hasError()) {
