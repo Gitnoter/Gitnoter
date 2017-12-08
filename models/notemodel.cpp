@@ -379,6 +379,12 @@ QString NoteModel::downloadUrlToMedia(QString url, NoteModel *noteModel, bool re
            ? savePath : "![" + name + "](" + "gnr://" + noteModel->getShortUuid() + "/" + saveName + "." + suffix + ")";
 }
 
+QString NoteModel::byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly)
+{
+
+    return QString();
+}
+
 QString NoteModel::encodeCssFont(const QFont& refFont) {
 //-----------------------------------------------------------------------
 // This function assembles a CSS Font specification string from
@@ -542,7 +548,6 @@ void NoteModel::clear()
 
 void NoteModel::saveNoteToLocal()
 {
-    setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
     Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
@@ -551,7 +556,6 @@ void NoteModel::saveNoteToLocal()
 
 void NoteModel::saveNoteTextToLocal()
 {
-    setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
     Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
@@ -559,7 +563,6 @@ void NoteModel::saveNoteTextToLocal()
 
 void NoteModel::saveNoteDataToLocal()
 {
-    setUpdateDate(0);
     QString path = getNoteDir();
     Tools::createMkDir(path);
     Tools::writerFile(QDir(path).filePath(gNoteDataFileName), getNoteData().toUtf8());

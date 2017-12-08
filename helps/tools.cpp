@@ -39,9 +39,9 @@ QString Tools::getShortUuid()
     return (QUuid::createUuid()).toString().mid(1, 8);
 }
 
-int Tools::timestampFromDateTime(const QString dateTime)
+int Tools::timestampFromDateTime(const QString dateTime, const QString &format)
 {
-    return QDateTime::fromString(dateTime, gDateFormat).toTime_t();
+    return QDateTime::fromString(dateTime, format.isEmpty() ? gDateFormat : format).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)

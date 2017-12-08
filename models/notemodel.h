@@ -91,6 +91,8 @@ public:
 
     static QString downloadUrlToMedia(QString url, NoteModel *noteModel, bool returnUrlOnly = false);
 
+    static QString byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly = false);
+
 private:
     QString mUuid;
     int mCreateDate;

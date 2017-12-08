@@ -743,6 +743,7 @@ void MarkdownEditorWidget::enterFullScreen()
 
 void MarkdownEditorWidget::setWindowTitle()
 {
+    if (!mNoteModel) { return; }
     QString windowTitle = mNoteModel->getTitle().isEmpty() ? tr("Untitled") : mNoteModel->getTitle();
     windowTitle += " - ";
     windowTitle += (mNoteModel->getCategory().isEmpty()

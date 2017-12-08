@@ -28,7 +28,7 @@ public:
 
     static bool createMkDir(const QString &path);
 
-    static int timestampFromDateTime(QString dateTime);
+    static int timestampFromDateTime(QString dateTime, const QString &format = "");
 
     static QString timestampToDateTime(int timestamp);
 

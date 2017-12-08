@@ -1,6 +1,8 @@
 #ifndef IMPORTNOTEDIALOG_H
 #define IMPORTNOTEDIALOG_H
 
+#include "notemodel.h"
+
 #include <QDialog>
 #include <QXmlQuery>
 #include <QXmlResultItems>
@@ -28,39 +30,16 @@ public:
 private:
     void importNotes(QString data);
 
-    /**
-     * Imports and embeds images from an Evernote note
-     *
-     * @param content
-     */
-    QString importImages(QString content, QXmlQuery query);
+    QString importImages(NoteModel *noteModel, QString content, QXmlQuery query);
+    QString importAttachments(NoteModel *noteModel, QString content, QXmlQuery query);
 
-    /**
-     * Imports and embeds attachments from an Evernote note
-     *
-     * @param content
-     */
-    QString importAttachments(QString content, QXmlQuery query);
+    QString getMarkdownForMediaFileData(NoteModel *noteModel, MediaFileData &mediaFileData);
+    QString getMarkdownForAttachmentFileData(NoteModel *noteModel, MediaFileData &mediaFileData);
 
-    /**
-     * Returns the markdown code for an image file data entry
-     *
-     * @param mediaFileData
-     * @return
-     */
-    QString getMarkdownForMediaFileData(MediaFileData &mediaFileData);
-
-    /**
-     * Returns the markdown code for an attachment file data entry
-     *
-     * @param mediaFileData
-     * @return
-     */
-    QString getMarkdownForAttachmentFileData(MediaFileData &mediaFileData);
+    QString decodeHtmlEntities(QString text);
 
 private:
     Ui::ImportProgressDialog *ui;
-    QString importFile;
 
 };
 
