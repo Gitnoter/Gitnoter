@@ -29,6 +29,7 @@ extern const QString gLockWindowKeySequence;
 extern const QString gCutWindowKeySequence;
 
 extern const int gEditorFontSize;
+extern const QString gFilePrefix;
 
 extern const QString gSearchEngine;
 extern const QString gGuideUrl;

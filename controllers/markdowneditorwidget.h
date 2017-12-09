@@ -37,6 +37,21 @@ public:
 
     void setWindowTitle();
 
+private:
+    void setupUi();
+
+    bool eventFilter(QObject *object, QEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
+    void setTagList();  // save tagList to noteModel
+    void setOpenNote();
+    void setSplitterSizes();
+    void setBackgroundSplitterSizes();
+
+    QString getExportFileName(const QString &windowTitle, const QString &fileType, const QString &suffix);
+
 public slots:
     void appendTag(const QString &tag);
     void removeTag(QString tagName = "");
@@ -82,21 +97,6 @@ public slots:
     void resetFontSize();
 
     void enterFullScreen();
-
-private:
-    void setupUi();
-
-    bool eventFilter(QObject *object, QEvent *event) override;
-    void closeEvent(QCloseEvent *event) override;
-    void moveEvent(QMoveEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
-
-    void setTagList();  // save tagList to noteModel
-    void setOpenNote();
-    void setSplitterSizes();
-    void setBackgroundSplitterSizes();
-
-    QString getExportFileName(const QString &windowTitle, const QString &fileType, const QString &suffix);
 
 private slots:
 

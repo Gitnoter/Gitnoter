@@ -63,8 +63,7 @@ public:
 
     NoteModel(const QString textPath, const QString dataPath);
 
-    QString getMarkdownHtml(int maxImageWidth = 980, bool forExport = false,
-                            bool decrypt = true, bool base64Images = false);
+    QString getMarkdownHtml();
 
     QString getStringFormTagList() const;
 

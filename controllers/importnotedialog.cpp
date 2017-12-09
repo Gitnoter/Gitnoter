@@ -3,6 +3,7 @@
 #include "importnotedialog.h"
 #include "tools.h"
 #include "mainwindow.h"
+#include "globals.h"
 
 #include <QFileDialog>
 
@@ -442,8 +443,7 @@ QString ImportNoteDialog::getMarkdownForMediaFileData(NoteModel *noteModel, Medi
     const QString savePath = noteModel->getNoteDir() + QDir::separator() + saveName + "." + mediaFileData.suffix;
     Tools::writerFile(savePath, QByteArray::fromBase64(mediaFileData.data.toLatin1()));
 
-    return "![" + saveName + "]("
-           + "gnr://" + noteModel->getShortUuid() + "/" + saveName + "." + mediaFileData.suffix + ")";
+    return "![" + saveName + "](" + gFilePrefix + saveName + "." + mediaFileData.suffix + ")";
 }
 
 QString ImportNoteDialog::getMarkdownForAttachmentFileData(NoteModel *noteModel, MediaFileData &mediaFileData)
@@ -452,8 +452,7 @@ QString ImportNoteDialog::getMarkdownForAttachmentFileData(NoteModel *noteModel,
     const QString savePath = noteModel->getNoteDir() + QDir::separator() + saveName + "." + mediaFileData.suffix;
     Tools::writerFile(savePath, QByteArray::fromBase64(mediaFileData.data.toLatin1()));
 
-    return "[" + mediaFileData.fileName + "]("
-           + "gnr://" + noteModel->getShortUuid() + "/" + saveName + "." + mediaFileData.suffix + ")";
+    return "[" + mediaFileData.fileName + "](" + gFilePrefix + saveName + "." + mediaFileData.suffix + ")";
 }
 
 QString ImportNoteDialog::decodeHtmlEntities(QString text)

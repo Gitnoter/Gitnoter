@@ -35,11 +35,10 @@ QString NoteModel::getNoteDir()
 }
 
 
-QString NoteModel::getMarkdownHtml(int maxImageWidth, bool forExport, bool decrypt, bool base64Images)
+QString NoteModel::getMarkdownHtml()
 {
     // get the decrypted note text (or the normal note text if there isn't any)
-    hoedown_renderer *renderer =
-            hoedown_html_renderer_new(HOEDOWN_HTML_USE_XHTML, 32);
+    hoedown_renderer *renderer = hoedown_html_renderer_new(HOEDOWN_HTML_USE_XHTML, 32);
 
     // we want to show quotes in the html, so we don't translate them into
     // `<q>` tags
@@ -49,6 +48,7 @@ QString NoteModel::getMarkdownHtml(int maxImageWidth, bool forExport, bool decry
                                    HOEDOWN_EXT_MATH_EXPLICIT) & ~HOEDOWN_EXT_QUOTE);
     hoedown_document *document = hoedown_document_new(renderer, extensions, 32);
 
+    QString noteText = getNoteText();
     QString windowsSlash = "";
 
 #ifdef Q_OS_WIN32
@@ -58,211 +58,45 @@ QString NoteModel::getMarkdownHtml(int maxImageWidth, bool forExport, bool decry
 
     // parse for relative file urls and make them absolute
     // (for example to show images under the note path)
-//    str.replace(
-//            QRegularExpression("([\\(<])file:\\/\\/([^\\/].+?)([\\)>])"),
-//            "\\1file://" + windowsSlash + QRegularExpression::escape(notesPath)
-//            + "/\\2\\3");
+    noteText.replace(QRegularExpression(
+            "([\\(<])" + gFilePrefix + "([^\\/].+?)([\\)>])"), "\\1file://" + windowsSlash + getNoteDir() + "/\\2\\3");
 
-    QRegularExpressionMatchIterator i;
-
-    // try to replace file links like <my-note.md> to note links
-    // this is a "has not '\w+:\/\/' in it" regular expression
-    // see: http://stackoverflow.com/questions/406230/regular-expression-to-match-line-that-doesnt-contain-a-word
-    // TODO: maybe we could do that per QTextBlock to check if it's done in comment block?
-    // Important: The `\n` is needed to not crash under Windows if there is just
-    //            an opening `<` and a lot of other text after it
-//    i = QRegularExpression("<(((?!\\w+:\\/\\/)[^<>\n])+)>").globalMatch(str);
-
-//    while (i.hasNext()) {
-//        QRegularExpressionMatch match = i.next();
-//        QString fileLink = match.captured(1);
-//        QString noteUrl = Note::getNoteURLFromFileName(fileLink);
-//        qDebug() << fileLink << " fileLink " << noteUrl;
-
-//        // try to load the note to check if it really exists
-//        Note note = Note::fetchByFileName(fileLink);
-
-//        if (!noteUrl.isEmpty() && note.exists()) {
-//            str.replace(match.captured(0),
-//                        "[" + fileLink + "](" + noteUrl + ")");
-//        }
-//    }
-
-//    // try to replace file links like [my note](my-note.md) to note links
-//    // we are using `{1,500}` instead of `+` because there were crashes with
-//    // regular expressions running wild
-//    i = QRegularExpression(
-//            "\\[(.+?)\\]\\((((?!\\w+:\\/\\/)[^<>]){1,500}?)\\)")
-//            .globalMatch(str);
-
-//    while (i.hasNext()) {
-//        QRegularExpressionMatch match = i.next();
-//        QString fileText = match.captured(1);
-//        QString fileLink = match.captured(2);
-//        QString noteUrl = Note::getNoteURLFromFileName(fileLink);
-
-//        // try to load the note to check if it really exists
-//        Note note = Note::fetchByFileName(fileLink);
-
-//        if (!noteUrl.isEmpty() && note.exists()) {
-//            str.replace(match.captured(0),
-//                        "[" + fileText + "](" + noteUrl + ")");
-//        }
-//    }
-
-    unsigned char *sequence = (unsigned char *) qstrdup(
-            mNoteText.toUtf8().constData());
-    qint64 length = strlen((char *) sequence);
+    unsigned char *sequence = (unsigned char *) qstrdup(noteText.toUtf8().constData());
+    qint64 length = static_cast<qint64>(strlen((char *) sequence));
 
     // return an empty string if the note is empty
     if (length == 0) {
         return "";
     }
 
-    hoedown_buffer *html = hoedown_buffer_new(length);
+    hoedown_buffer *html = hoedown_buffer_new(static_cast<size_t>(length));
 
     // render markdown html
-    hoedown_document_render(document, html, sequence, length);
+    hoedown_document_render(document, html, sequence, static_cast<size_t>(length));
 
     // get markdown html
-    QString result = QString::fromUtf8((char *) html->data, html->size);
-
-//    qDebug() << __func__ << " - 'result': " << result;
-
+    QString result = QString::fromUtf8((char *) html->data, static_cast<int>(html->size));
+    
     /* Cleanup */
     free(sequence);
     hoedown_buffer_free(html);
-
     hoedown_document_free(document);
     hoedown_html_renderer_free(renderer);
 
-//    QSettings(settings);
-//    QString fontString = settings.value("MainWindow/noteTextView.code.font")
-//            .toString();
-    QString fontString = "";
-
     // set the stylesheet for the <code> blocks
-    QString codeStyleSheet = "";
-    if (fontString != "") {
-        // set the note text view font
-        QFont font;
-        font.fromString(fontString);
-
-        // add the font for the code block
-        codeStyleSheet = QString(
-                "pre, code { %1; }").arg(encodeCssFont(font));
-    }
-
-//    bool darkModeColors = settings.value("darkModeColors").toBool();
-    bool darkModeColors = false;
-
-    QString codeBackgroundColor = darkModeColors ? "#444444" : "#f1f1f1";
-
     // do some more code formatting
-    codeStyleSheet += QString(
-            "pre, code { padding: 16px; overflow: auto;"
-                    " line-height: 1.45em; background-color: %1;"
-                    " border-radius: 3px; }").arg(codeBackgroundColor);
+    QString codeStyleSheet =
+            "pre,code{padding: 16px;overflow: auto;line-height: 1.45em;background-color: #f1f1f1;border-radius: 3px;}";
 
-    // remove double code blocks
-    result.replace("<pre><code>", "<pre>")
-            .replace("</code></pre>", "</pre>");
+    result.replace("<pre><code>", "<pre>").replace("</code></pre>", "</pre>");  // remove double code blocks
+    result.replace(QRegularExpression("<del>([^<]+)<\\/del>"), "<s>\\1</s>");   // correct the strikeout tag
 
-    // correct the strikeout tag
-    result.replace(QRegularExpression("<del>([^<]+)<\\/del>"), "<s>\\1</s>");
-//    bool rtl = settings.value("MainWindow/noteTextView.rtl").toBool();
-    bool rtl = false;
-    QString rtlStyle = rtl ? "body {text-align: right; direction: rtl;}" : "";
-
-    if (forExport) {
-        // get defined body font from settings
-//        QString bodyFontString = settings.value("MainWindow/noteTextView.font")
-//                .toString();
-        QString bodyFontString = "";
-
-        // create export stylesheet
-        QString exportStyleSheet = "";
-        if (bodyFontString != "") {
-            QFont bodyFont;
-            bodyFont.fromString(bodyFontString);
-
-            exportStyleSheet = QString(
-                    "body { %1; }").arg(encodeCssFont(bodyFont));
-        }
-
-        result = QString("<html><head><meta charset=\"utf-8\"/><style>"
-                                 "h1 { margin: 5px 0 20px 0; }"
-                                 "h2, h3 { margin: 10px 0 15px 0; }"
-                                 "img { max-width: 100%; }"
-                                 "a { color: #FF9137; text-decoration: none; } %1 %2 %4"
-                                 "</style></head><body>%3</body></html>")
-                .arg(codeStyleSheet, exportStyleSheet, result, rtlStyle);
-    } else {
-        // for preview
-        result = QString("<html><head><style>"
-                                 "h1 { margin: 5px 0 20px 0; }"
-                                 "h2, h3 { margin: 10px 0 15px 0; }"
-                                 "a { color: #FF9137; text-decoration: none; } %1 %3"
-                                 "</style></head><body>%2</body></html>")
-                .arg(codeStyleSheet, result, rtlStyle);
-    }
-
-    // check if width of embedded local images is too high
-    QRegularExpression re("<img src=\"(file:\\/\\/[^\"]+)\"");
-    i = re.globalMatch(result);
-
-    while (i.hasNext()) {
-        QRegularExpressionMatch match = i.next();
-        QString fileUrl = match.captured(1);
-        QString fileName = QUrl(fileUrl).toLocalFile();
-        QImage image(fileName);
-
-        if (forExport) {
-            result.replace(
-                    QRegularExpression("<img src=\"file:\\/\\/" +
-                                       QRegularExpression::escape(windowsSlash +
-                                                                  fileName) +
-                                       "\""),
-                    QString("<img src=\"file://%2\"").arg(windowsSlash +
-                                                          fileName));
-        } else {
-            // for preview
-            // cap the image width at 980px or the note text view width
-            if (image.width() > maxImageWidth) {
-                result.replace(
-                        QRegularExpression("<img src=\"file:\\/\\/" +
-                                           QRegularExpression::escape
-                                                   (windowsSlash + fileName) +
-                                           "\""),
-                        QString("<img width=\"%1\" src=\"file://%2\"").arg(
-                                QString::number(maxImageWidth), windowsSlash +
-                                                                fileName));
-            }
-        }
-
-        // encode the image base64
-        if (base64Images) {
-            QFile file(fileName);
-
-            if (!file.open(QIODevice::ReadOnly)) {
-                qWarning() << QObject::tr("Could not read image file: %1")
-                        .arg(fileName);
-
-                continue;
-            }
-
-            QMimeDatabase db;
-            QMimeType type = db.mimeTypeForFile(file.fileName());
-            QByteArray ba = file.readAll();
-
-            result.replace(
-                    QRegularExpression(
-                            "<img(.+?)src=\"" + QRegularExpression::escape(
-                                    fileUrl) + "\""),
-                    QString("<img\\1src=\"data:%1;base64,%2\"").arg(
-                            type.name(), QString(ba.toBase64())));
-        }
-    }
+    result = QString("<html><head><meta charset=\"utf-8\"/><style>"
+                             "h1 { margin: 5px 0 20px 0;}"
+                             "h2, h3 { margin: 10px 0 15px 0;}"
+                             "img { width: 100%; }"
+                             "a { color: #FF9137; text-decoration: none;} %1"
+                             "</style></head><body>%2</body></html>").arg(codeStyleSheet, result);
 
     return result;
 }
@@ -376,7 +210,7 @@ QString NoteModel::downloadUrlToMedia(QString url, NoteModel *noteModel, bool re
     Tools::writerFile(savePath, imageData);
 
     return returnUrlOnly
-           ? savePath : "![" + name + "](" + "gnr://" + noteModel->getShortUuid() + "/" + saveName + "." + suffix + ")";
+           ? savePath : "![" + name + "](" + gFilePrefix + saveName + "." + suffix + ")";
 }
 
 QString NoteModel::byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly)

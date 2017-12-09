@@ -25,9 +25,10 @@ const QString gLockWindowKeySequence = "Ctrl+Shift+L";
 const QString gCutWindowKeySequence = "Ctrl+Shift+X";
 
 const int gEditorFontSize = 14;
+const QString gFilePrefix = "gnr://";
 
 const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
-                                                                          : "https://www.google.com/search?&q=";
+                                                                  : "https://www.google.com/search?&q=";
 const QString gGuideUrl = "http://gitnoter.github.io/";
 const QString gHistoryChangeUrl = "http://gitnoter.github.io/";
 const QString gMarkdownLanguageUrl = "http://gitnoter.github.io/";

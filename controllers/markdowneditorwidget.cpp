@@ -7,6 +7,7 @@
 
 #include <QScrollBar>
 #include <QFileDialog>
+#include <QDebug>
 
 MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
