@@ -8,7 +8,8 @@
 MenuBar::MenuBar(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MenuBar),
-        mWindowMenuActionGroup(new QActionGroup(this))
+        mWindowMenuActionGroup(new QActionGroup(this)),
+        mPrinter(new QPrinter())
 {
     ui->setupUi(this);
     setupUi(parent);
@@ -94,22 +95,30 @@ void MenuBar::removeActionToWindowMenu(QWidget *widget)
 
 void MenuBar::on_action_printPageSetting_triggered()
 {
-    mPrinter = new QPrinter();
-    QPrintDialog *dialog = new QPrintDialog(mPrinter, parentWidget());
-    dialog->open(this, SLOT(onPrintAccepted()));
-}
-
-void MenuBar::on_action_print_triggered()
-{
-    mPrinter = new QPrinter();
     QPageSetupDialog *dialog = new QPageSetupDialog(mPrinter, parentWidget());
-    dialog->open(this, SLOT(onPrintAccepted()));
+    dialog->open();
 }
 
-
-void MenuBar::onPrintAccepted()
+void MenuBar::on_action_printEdit_triggered()
 {
-    emit printAccepted(mPrinter);
+    QPrintDialog *dialog = new QPrintDialog(mPrinter, parentWidget());
+    dialog->open(this, SLOT(onPrintEditAccepted()));
+}
+
+void MenuBar::on_action_printPreview_triggered()
+{
+    QPrintDialog *dialog = new QPrintDialog(mPrinter, parentWidget());
+    dialog->open(this, SLOT(onPrintPreviewAccepted()));
+}
+
+void MenuBar::onPrintEditAccepted()
+{
+    emit printEditAccepted(mPrinter);
+}
+
+void MenuBar::onPrintPreviewAccepted()
+{
+    emit printPreviewAccepted(mPrinter);
 }
 
 void MenuBar::onWindowMenuActionTriggered()
@@ -484,9 +493,14 @@ QAction *MenuBar::getActionPrintPageSetting() const
     return ui->action_printPageSetting;
 }
 
-QAction *MenuBar::getActionPrint() const
+QAction *MenuBar::getActionPrintEdit() const
 {
-    return ui->action_print;
+    return ui->action_printEdit;
+}
+
+QAction *MenuBar::getActionPrintPreview() const
+{
+    return ui->action_printPreview;
 }
 
 QAction *MenuBar::getActionSidebar() const

@@ -53,7 +53,8 @@ public slots:
     void saveNote();
 
     void openPath();
-    void print(QPrinter *printer);
+    void printEdit(QPrinter *printer);
+    void printPreview(QPrinter *printer);
     void copyLine();
     void removeLine();
     void removeSelectedText();

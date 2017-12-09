@@ -402,7 +402,8 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBar->getActionDeleteText(), SIGNAL(triggered()), this, SLOT(removeSelectedText()));
     connect(menuBar->getActionClearText(), SIGNAL(triggered()), this, SLOT(clearText()));
 
-    connect(mMainWindow->menuBar(), SIGNAL(printAccepted(QPrinter *)), this, SLOT(print(QPrinter *)));
+    connect(menuBar, SIGNAL(printEditAccepted(QPrinter *)), this, SLOT(printEdit(QPrinter * )));
+    connect(menuBar, SIGNAL(printPreviewAccepted(QPrinter *)), this, SLOT(printPreview(QPrinter * )));
 
     connect(menuBar->getActionSaveNote(), SIGNAL(triggered()), this, SLOT(saveNote()));
     connect(menuBar->getActionFindWithFolder(), SIGNAL(triggered()), this, SLOT(openPath()));
@@ -453,9 +454,14 @@ void MarkdownEditorWidget::openPath()
     QDesktopServices::openUrl(QUrl::fromLocalFile(mNoteModel->getNoteDir()));
 }
 
-void MarkdownEditorWidget::print(QPrinter *printer)
+void MarkdownEditorWidget::printEdit(QPrinter *printer)
 {
+    ui->markdownEditor->document()->print(printer);
+}
 
+void MarkdownEditorWidget::printPreview(QPrinter *printer)
+{
+    ui->markdownPreview->document()->print(printer);
 }
 
 void MarkdownEditorWidget::copyLine()

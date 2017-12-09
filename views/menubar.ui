@@ -55,7 +55,8 @@
     <addaction name="action_exportMarkdown"/>
     <addaction name="separator"/>
     <addaction name="action_printPageSetting"/>
-    <addaction name="action_print"/>
+    <addaction name="action_printEdit"/>
+    <addaction name="action_printPreview"/>
     <addaction name="separator"/>
     <addaction name="action_preferences"/>
    </widget>
@@ -711,12 +712,20 @@
     <string>Ctrl+Shift+P</string>
    </property>
   </action>
-  <action name="action_print">
+  <action name="action_printEdit">
    <property name="text">
-    <string>打印...</string>
+    <string>打印编辑内容...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+P</string>
+   </property>
+  </action>
+  <action name="action_printPreview">
+   <property name="text">
+    <string>打印预览内容...</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+P</string>
    </property>
   </action>
   <action name="action_sidebar">

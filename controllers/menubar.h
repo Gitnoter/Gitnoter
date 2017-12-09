@@ -35,14 +35,17 @@ private:
     void setupUi(QWidget *parent);
 
 signals:
-    void printAccepted(QPrinter *printer);
+    void printEditAccepted(QPrinter *printer);
+    void printPreviewAccepted(QPrinter *printer);
 
 private slots:
-    void onPrintAccepted();
+    void onPrintEditAccepted();
+    void onPrintPreviewAccepted();
     void onWindowMenuActionTriggered();
 
     void on_action_printPageSetting_triggered();
-    void on_action_print_triggered();
+    void on_action_printEdit_triggered();
+    void on_action_printPreview_triggered();
 
 public:
     QAction *getActionNewNote() const;
@@ -118,7 +121,8 @@ public:
     QAction *getActionExportHtml() const;
     QAction *getActionExportMarkdown() const;
     QAction *getActionPrintPageSetting() const;
-    QAction *getActionPrint() const;
+    QAction *getActionPrintEdit() const;
+    QAction *getActionPrintPreview() const;
     QAction *getActionSidebar() const;
     QAction *getActionListbar() const;
     QAction *getActionToolbar() const;
