@@ -439,6 +439,30 @@ void MarkdownEditorWidget::setupUi()
 
     connect(menuBar->getActionMixWindow(), SIGNAL(triggered()), this, SLOT(showMinimized()));
     connect(menuBar->getActionResizeWindow(), SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    connect(menuBar->getActionTitle1(), SIGNAL(triggered()), this, SLOT(title1()));
+    connect(menuBar->getActionTitle2(), SIGNAL(triggered()), this, SLOT(title2()));
+    connect(menuBar->getActionTitle3(), SIGNAL(triggered()), this, SLOT(title3()));
+    connect(menuBar->getActionTitle4(), SIGNAL(triggered()), this, SLOT(Title4()));
+    connect(menuBar->getActionTitle5(), SIGNAL(triggered()), this, SLOT(title5()));
+    connect(menuBar->getActionStrong(), SIGNAL(triggered()), this, SLOT(strong()));
+    connect(menuBar->getActionItalic(), SIGNAL(triggered()), this, SLOT(italic()));
+    connect(menuBar->getActionStrickout(), SIGNAL(triggered()), this, SLOT(strickout()));
+    connect(menuBar->getActionUnderline(), SIGNAL(triggered()), this, SLOT(underline()));
+    connect(menuBar->getActionTable(), SIGNAL(triggered()), this, SLOT(table()));
+    connect(menuBar->getActionOrderedList(), SIGNAL(triggered()), this, SLOT(orderedList()));
+    connect(menuBar->getActionUnorderedList(), SIGNAL(triggered()), this, SLOT(unorderedList()));
+    connect(menuBar->getActionLink(), SIGNAL(triggered()), this, SLOT(link()));
+    connect(menuBar->getActionLinkImage(), SIGNAL(triggered()), this, SLOT(linkImage()));
+    connect(menuBar->getActionInsertImage(), SIGNAL(triggered()), this, SLOT(insertImage()));
+    connect(menuBar->getActionAccessory(), SIGNAL(triggered()), this, SLOT(accessory()));
+    connect(menuBar->getActionQuoteBlock(), SIGNAL(triggered()), this, SLOT(quoteBlock()));
+    connect(menuBar->getActionCuttingLine(), SIGNAL(triggered()), this, SLOT(cuttingLine()));
+    connect(menuBar->getActionNowTime(), SIGNAL(triggered()), this, SLOT(nowTime()));
+    connect(menuBar->getActionInnerCodeBlock(), SIGNAL(triggered()), this, SLOT(innerCodeBlock()));
+    connect(menuBar->getActionCodeBlock(), SIGNAL(triggered()), this, SLOT(codeBlock()));
+    connect(menuBar->getActionAnnotation(), SIGNAL(triggered()), this, SLOT(annotation()));
+    connect(menuBar->getActionMoreAnnotation(), SIGNAL(triggered()), this, SLOT(moreAnnotation()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -557,7 +581,7 @@ void MarkdownEditorWidget::webSearchText()
 
 void MarkdownEditorWidget::showSearchFindWidget()
 {
-    QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
+    QPlainTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
 
     if (textEditSearchWidget->isHidden() || textEditSearchWidget->isReplace()) {
         textEditSearchWidget->activate(false);
@@ -575,7 +599,7 @@ void MarkdownEditorWidget::showSearchFindWidget()
 
 void MarkdownEditorWidget::showSearchReplaceWidget()
 {
-    QTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
+    QPlainTextEditSearchWidget *textEditSearchWidget = ui->markdownEditor->searchWidget();
 
     if (textEditSearchWidget->isHidden() || !textEditSearchWidget->isReplace()) {
         textEditSearchWidget->activate(true);
@@ -870,4 +894,217 @@ QString MarkdownEditorWidget::getExportFileName(
     }
 
     return fileName;
+}
+
+void MarkdownEditorWidget::title1()
+{
+    if (ui->stackedWidget->currentIndex() != 0) { return; }
+
+    setLineTextTitleSign("#");
+}
+
+void MarkdownEditorWidget::title2()
+{
+    if (ui->stackedWidget->currentIndex() != 0) { return; }
+
+    setLineTextTitleSign("##");
+}
+
+void MarkdownEditorWidget::title3()
+{
+    if (ui->stackedWidget->currentIndex() != 0) { return; }
+
+    setLineTextTitleSign("###");
+}
+
+void MarkdownEditorWidget::Title4()
+{
+    if (ui->stackedWidget->currentIndex() != 0) { return; }
+
+    setLineTextTitleSign("####");
+}
+
+void MarkdownEditorWidget::title5()
+{
+    if (ui->stackedWidget->currentIndex() != 0) { return; }
+
+    setLineTextTitleSign("#####");
+}
+
+void MarkdownEditorWidget::strong()
+{
+    applyFormatter("**", "**");
+}
+
+void MarkdownEditorWidget::italic()
+{
+    applyFormatter("*", "*");
+}
+
+void MarkdownEditorWidget::strickout()
+{
+    applyFormatter("~~", "~~");
+}
+
+void MarkdownEditorWidget::underline()
+{
+    applyFormatter("_", "_");
+}
+
+void MarkdownEditorWidget::table()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+    textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor);
+    textCursor.insertText(QString(text.isEmpty() ? "" : "\n") + "|  |  |  |\n|---|---|---|\n|  |  |  |\n|  |  |  |\n");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::orderedList()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+    textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor);
+    textCursor.insertText(QString(text.isEmpty() ? "" : "\n") + "1. ");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::unorderedList()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+    textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor);
+    textCursor.insertText(QString(text.isEmpty() ? "" : "\n") + "* ");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::link()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("[]()");
+    textCursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::linkImage()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("![]()");
+    textCursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::insertImage()
+{
+
+}
+
+void MarkdownEditorWidget::accessory()
+{
+
+}
+
+void MarkdownEditorWidget::quoteBlock()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.movePosition(QTextCursor::StartOfLine);
+    textCursor.insertText("> ");
+    textCursor.movePosition(QTextCursor::EndOfLine);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::cuttingLine()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.movePosition(QTextCursor::EndOfLine);
+    textCursor.insertText("\n---\n");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::nowTime()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText(Tools::timestampToDateTime(static_cast<int>(QDateTime::currentSecsSinceEpoch())));
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::innerCodeBlock()
+{
+    applyFormatter("`", "`");
+}
+
+void MarkdownEditorWidget::codeBlock()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("```\n```");
+    textCursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::annotation()
+{
+    applyFormatter("<!-- ", " -->");
+}
+
+void MarkdownEditorWidget::moreAnnotation()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("<!-- more -->");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::setLineTextTitleSign(const QString &titleSign)
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+    text = titleSign + " " + text.replace(QRegularExpression("^[#]*[ ]*"), "");
+    textCursor.insertText(text);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+bool MarkdownEditorWidget::undoFormatting(const QString &formatterStart, const QString &formatterEnd)
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    QString selectedText = textCursor.selectedText();
+    int selectionStart = textCursor.selectionStart();
+    int selectionEnd = textCursor.selectionEnd();
+
+    textCursor.setPosition(selectionStart - formatterStart.length());
+    textCursor.setPosition(selectionEnd + formatterEnd.length(), QTextCursor::KeepAnchor);
+    QString selectedTextWithFormatter = textCursor.selectedText();
+
+    // if the formatter characters were found we remove them
+    if (selectedTextWithFormatter.startsWith(formatterStart) &&
+        selectedTextWithFormatter.endsWith(formatterEnd)) {
+        textCursor.insertText(selectedText);
+        return true;
+    }
+
+    return false;
+}
+
+void MarkdownEditorWidget::applyFormatter(const QString &formatterStart, const QString &formatterEnd)
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    QString selectedText = textCursor.selectedText();
+
+    // first try to undo an existing formatting
+    if (undoFormatting(formatterStart, formatterEnd)) {
+        return;
+    }
+
+    if (selectedText.isEmpty()) {
+        textCursor.insertText(formatterStart + formatterEnd);
+        textCursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, formatterStart.length());
+        ui->markdownEditor->setTextCursor(textCursor);
+    } else {
+        QRegularExpressionMatch match = QRegularExpression(R"(^(\s*)(.+?)(\s*)$)").match(selectedText);
+        if (match.hasMatch()) {
+            textCursor.insertText(match.captured(1) + formatterStart + match.captured(2) + formatterEnd + match.captured(3));
+        }
+    }
 }

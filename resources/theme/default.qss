@@ -2,11 +2,11 @@
 
 
 /* QTextEditSearchWidget */
-QWidget#QTextEditSearchWidget {
+QWidget#QPlainTextEditSearchWidget {
     background-color: #ffffff;
 }
 
-QWidget#QTextEditSearchWidget > #widget_background {
+QWidget#QPlainTextEditSearchWidget > #widget_background {
     border-top: 0.5px solid rgb(191, 191, 191);
 }
 

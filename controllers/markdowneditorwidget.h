@@ -52,6 +52,10 @@ private:
 
     QString getExportFileName(const QString &windowTitle, const QString &fileType, const QString &suffix);
 
+    void setLineTextTitleSign(const QString &titleSign);
+    bool undoFormatting(const QString &formatterStart, const QString &formatterEnd);
+    void applyFormatter(const QString &formatterStart, const QString &formatterEnd);
+
 public slots:
     void appendTag(const QString &tag);
     void removeTag(QString tagName = "");
@@ -97,6 +101,30 @@ public slots:
     void resetFontSize();
 
     void enterFullScreen();
+
+    void title1();
+    void title2();
+    void title3();
+    void Title4();
+    void title5();
+    void strong();
+    void italic();
+    void strickout();
+    void underline();
+    void table();
+    void orderedList();
+    void unorderedList();
+    void link();
+    void linkImage();
+    void insertImage();
+    void accessory();
+    void quoteBlock();
+    void cuttingLine();
+    void nowTime();
+    void innerCodeBlock();
+    void codeBlock();
+    void annotation();
+    void moreAnnotation();
 
 private slots:
 
