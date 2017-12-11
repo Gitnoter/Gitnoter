@@ -76,7 +76,7 @@ QString NoteModel::getMarkdownHtml()
 
     // get markdown html
     QString result = QString::fromUtf8((char *) html->data, static_cast<int>(html->size));
-    
+
     /* Cleanup */
     free(sequence);
     hoedown_buffer_free(html);
@@ -437,7 +437,7 @@ void NoteModel::setNoteText(QString body)
     while (!in.atEnd()) {
         QString lineText = in.readLine().trimmed();
         if (!lineText.isEmpty()) {
-            mTitle = lineText.replace(QRegularExpression("^[# ]*"), "");
+            mTitle = lineText.replace(QRegularExpression("^[#]*[ ]*"), "");
             break;
         }
     }
