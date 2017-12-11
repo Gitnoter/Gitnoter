@@ -117,7 +117,7 @@
     <addaction name="action_title5"/>
     <addaction name="separator"/>
     <addaction name="action_strong"/>
-    <addaction name="action_incline"/>
+    <addaction name="action_italic"/>
     <addaction name="action_strickout"/>
     <addaction name="action_underline"/>
     <addaction name="separator"/>
@@ -509,7 +509,7 @@
     <string>Ctrl+B</string>
    </property>
   </action>
-  <action name="action_incline">
+  <action name="action_italic">
    <property name="text">
     <string>斜体</string>
    </property>
