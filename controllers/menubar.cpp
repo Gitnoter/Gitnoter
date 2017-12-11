@@ -353,9 +353,9 @@ QAction *MenuBar::getActionStrong() const
     return ui->action_strong;
 }
 
-QAction *MenuBar::getActionIncline() const
+QAction *MenuBar::getActionItalic() const
 {
-    return ui->action_incline;
+    return ui->action_italic;
 }
 
 QAction *MenuBar::getActionStrickout() const

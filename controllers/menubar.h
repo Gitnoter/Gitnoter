@@ -93,7 +93,7 @@ public:
     QAction *getActionTitle4() const;
     QAction *getActionTitle5() const;
     QAction *getActionStrong() const;
-    QAction *getActionIncline() const;
+    QAction *getActionItalic() const;
     QAction *getActionStrickout() const;
     QAction *getActionUnderline() const;
     QAction *getActionTable() const;
