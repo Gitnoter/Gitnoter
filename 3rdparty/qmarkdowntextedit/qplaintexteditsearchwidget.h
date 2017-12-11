@@ -58,22 +58,22 @@ private:
 };
 
 namespace Ui {
-class QTextEditSearchWidget;
+class QPlainTextEditSearchWidget;
 }
 
-class QTextEditSearchWidget : public QWidget
+class QPlainTextEditSearchWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit QTextEditSearchWidget(QPlainTextEdit *parent = 0);
+    explicit QPlainTextEditSearchWidget(QPlainTextEdit *parent = 0);
     bool doSearch(bool searchDown = true, bool allowRestartAtTop = true);
     bool isReplace();
     PopupMenu *popupMenu() { return mPopupMenu; }
-    ~QTextEditSearchWidget();
+    ~QPlainTextEditSearchWidget();
 
 private:
-    Ui::QTextEditSearchWidget *ui;
+    Ui::QPlainTextEditSearchWidget *ui;
     PopupMenu *mPopupMenu;
 
 protected:

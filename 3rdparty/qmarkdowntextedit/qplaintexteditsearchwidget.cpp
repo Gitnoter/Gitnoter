@@ -12,8 +12,8 @@
  *
  */
 
-#include "qtexteditsearchwidget.h"
-#include "ui_qtexteditsearchwidget.h"
+#include "qplaintexteditsearchwidget.h"
+#include "ui_qplaintexteditsearchwidget.h"
 #include <QEvent>
 #include <QKeyEvent>
 #include <QDebug>
@@ -108,9 +108,9 @@ void PopupMenu::setupUi(QWidget *parent)
     connect(action_matchCaseSensitive, SIGNAL(triggered(bool)), this, SLOT(onActionMatchCaseSensitiveTriggered(bool)));
 }
 
-QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
+QPlainTextEditSearchWidget::QPlainTextEditSearchWidget(QPlainTextEdit *parent) :
     QWidget(parent),
-    ui(new Ui::QTextEditSearchWidget)
+    ui(new Ui::QPlainTextEditSearchWidget)
 {
     ui->setupUi(this);
     _textEdit = parent;
@@ -155,11 +155,11 @@ QTextEditSearchWidget::QTextEditSearchWidget(QPlainTextEdit *parent) :
 #endif
 }
 
-QTextEditSearchWidget::~QTextEditSearchWidget() {
+QPlainTextEditSearchWidget::~QPlainTextEditSearchWidget() {
     delete ui;
 }
 
-void QTextEditSearchWidget::activate(bool replace) {
+void QPlainTextEditSearchWidget::activate(bool replace) {
     setReplaceMode(replace);
     show();
 
@@ -175,7 +175,7 @@ void QTextEditSearchWidget::activate(bool replace) {
     doSearchDown();
 }
 
-void QTextEditSearchWidget::activateReplace() {
+void QPlainTextEditSearchWidget::activateReplace() {
     // replacing is prohibited if the text edit is readonly
     if (_textEdit->isReadOnly()) {
         return;
@@ -187,18 +187,18 @@ void QTextEditSearchWidget::activateReplace() {
     setReplaceMode(true);
 }
 
-void QTextEditSearchWidget::deactivate() {
+void QPlainTextEditSearchWidget::deactivate() {
     hide();
     _textEdit->setFocus();
 }
 
-void QTextEditSearchWidget::setReplaceMode(bool enabled) {
+void QPlainTextEditSearchWidget::setReplaceMode(bool enabled) {
     ui->replaceFrame->setVisible(enabled);
     ui->buttonFrame->setVisible(enabled);
     ui->replaceToggleCheckBox->setChecked(enabled);
 }
 
-bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
+bool QPlainTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
@@ -230,20 +230,20 @@ bool QTextEditSearchWidget::eventFilter(QObject *obj, QEvent *event) {
     return QWidget::eventFilter(obj, event);
 }
 
-void QTextEditSearchWidget::searchLineEditTextChanged(const QString &arg1) {
+void QPlainTextEditSearchWidget::searchLineEditTextChanged(const QString &arg1) {
     Q_UNUSED(arg1);
     doSearchDown();
 }
 
-void QTextEditSearchWidget::doSearchUp() {
+void QPlainTextEditSearchWidget::doSearchUp() {
     doSearch(false);
 }
 
-void QTextEditSearchWidget::doSearchDown() {
+void QPlainTextEditSearchWidget::doSearchDown() {
     doSearch(true);
 }
 
-bool QTextEditSearchWidget::doReplace(bool forAll) {
+bool QPlainTextEditSearchWidget::doReplace(bool forAll) {
     if (_textEdit->isReadOnly()) {
         return false;
     }
@@ -277,7 +277,7 @@ bool QTextEditSearchWidget::doReplace(bool forAll) {
     return true;
 }
 
-void QTextEditSearchWidget::doReplaceAll() {
+void QPlainTextEditSearchWidget::doReplaceAll() {
     if (_textEdit->isReadOnly()) {
         return;
     }
@@ -293,7 +293,7 @@ void QTextEditSearchWidget::doReplaceAll() {
  * @brief Searches for text in the text edit
  * @returns true if found
  */
-bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
+bool QPlainTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
     QString text = ui->searchLineEdit->text();
 
     if (text == "") {
@@ -343,12 +343,12 @@ bool QTextEditSearchWidget::doSearch(bool searchDown, bool allowRestartAtTop) {
     return found;
 }
 
-bool QTextEditSearchWidget::isReplace()
+bool QPlainTextEditSearchWidget::isReplace()
 {
     return ui->replaceToggleCheckBox->isChecked();
 }
 
-void QTextEditSearchWidget::onActionTriggered(PopupMenu::SearchMode searchMode, bool matchCaseSensitive)
+void QPlainTextEditSearchWidget::onActionTriggered(PopupMenu::SearchMode searchMode, bool matchCaseSensitive)
 {
     doSearch(false);
 }
