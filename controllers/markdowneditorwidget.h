@@ -111,6 +111,7 @@ public slots:
     void title3();
     void Title4();
     void title5();
+    void headerSize();
     void strong();
     void italic();
     void strickout();

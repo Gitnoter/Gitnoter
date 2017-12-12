@@ -465,6 +465,19 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBar->getActionCodeBlock(), SIGNAL(triggered()), this, SLOT(codeBlock()));
     connect(menuBar->getActionAnnotation(), SIGNAL(triggered()), this, SLOT(annotation()));
     connect(menuBar->getActionMoreAnnotation(), SIGNAL(triggered()), this, SLOT(moreAnnotation()));
+
+    connect(ui->pushButton_bold, SIGNAL(clicked()), this, SLOT(strong()));
+    connect(ui->pushButton_headerSize, SIGNAL(clicked()), this, SLOT(headerSize()));
+    connect(ui->pushButton_italic, SIGNAL(clicked()), this, SLOT(italic()));
+    connect(ui->pushButton_strickout, SIGNAL(clicked()), this, SLOT(strickout()));
+    connect(ui->pushButton_image, SIGNAL(clicked()), this, SLOT(linkImage()));
+    connect(ui->pushButton_link, SIGNAL(clicked()), this, SLOT(link()));
+    connect(ui->pushButton_quote, SIGNAL(clicked()), this, SLOT(quoteBlock()));
+    connect(ui->pushButton_code, SIGNAL(clicked()), this, SLOT(codeBlock()));
+    connect(ui->pushButton_ordered, SIGNAL(clicked()), this, SLOT(orderedList()));
+    connect(ui->pushButton_unordered, SIGNAL(clicked()), this, SLOT(unorderedList()));
+    connect(ui->pushButton_taskList, SIGNAL(clicked()), this, SLOT(todoList()));
+    connect(ui->pushButton_table, SIGNAL(clicked()), this, SLOT(table()));
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -1181,4 +1194,26 @@ void MarkdownEditorWidget::on_markdownPreview_anchorClicked(const QUrl &arg1)
     else {
         ui->markdownEditor->openUrl(arg1.toString());
     }
+}
+
+void MarkdownEditorWidget::headerSize()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+
+    QRegularExpression rx("^#+");
+    QRegularExpressionMatch rm = rx.match(text);
+    if (rm.capturedTexts().length()) {
+        if (rm.capturedTexts().at(0).length() >= 5) {
+            text = text.replace(QRegularExpression("^[#]*"), "");
+        }
+        text = "#" + text;
+    }
+    else {
+        text = "# " + text;
+    }
+
+    textCursor.insertText(text);
+    ui->markdownEditor->setTextCursor(textCursor);
 }
