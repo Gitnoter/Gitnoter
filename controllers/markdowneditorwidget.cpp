@@ -364,7 +364,7 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
-    ui->markdownEditor->setIgnoredClickUrlSchemata({gFilePrefix});
+    ui->markdownEditor->setIgnoredClickUrlSchemata({gFileScheme});
     if (!parent()) { setGeometry(gConfigModel->getEditorWindowRect()); }
     setSplitterSizes();
     setBackgroundSplitterSizes();
@@ -1027,7 +1027,7 @@ void MarkdownEditorWidget::insertImage()
     QFile::copy(filePath, newFilePath);
 
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("![" + fileInfo.baseName() + "](" + gFilePrefix + fileInfo.fileName() + ")");
+    textCursor.insertText("![" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 
@@ -1050,7 +1050,7 @@ void MarkdownEditorWidget::accessory()
     QFile::copy(filePath, newFilePath);
 
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("[" + fileInfo.baseName() + "](" + gFilePrefix + fileInfo.fileName() + ")");
+    textCursor.insertText("[" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 

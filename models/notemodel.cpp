@@ -59,7 +59,7 @@ QString NoteModel::getMarkdownHtml()
     // parse for relative file urls and make them absolute
     // (for example to show images under the note path)
     noteText.replace(QRegularExpression(
-            "([\\(<])" + gFilePrefix + "([^\\/].+?)([\\)>])"), "\\1file://" + windowsSlash + getNoteDir() + "/\\2\\3");
+            "([\\(<])" + gFileScheme + "://" + "([^\\/].+?)([\\)>])"), "\\1file://" + windowsSlash + getNoteDir() + "/\\2\\3");
 
     unsigned char *sequence = (unsigned char *) qstrdup(noteText.toUtf8().constData());
     qint64 length = static_cast<qint64>(strlen((char *) sequence));
@@ -210,7 +210,7 @@ QString NoteModel::downloadUrlToMedia(QString url, NoteModel *noteModel, bool re
     Tools::writerFile(savePath, imageData);
 
     return returnUrlOnly
-           ? savePath : "![" + name + "](" + gFilePrefix + saveName + "." + suffix + ")";
+           ? savePath : "![" + name + "](" + gFileScheme + "://" + saveName + "." + suffix + ")";
 }
 
 QString NoteModel::byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly)
@@ -519,5 +519,5 @@ QString NoteModel::getShortUuid() const
 }
 
 QString NoteModel::getFilePath(QString noteFilePath) {
-    return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(gFilePrefix, ""));
+    return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(gFileScheme + "://", ""));
 }

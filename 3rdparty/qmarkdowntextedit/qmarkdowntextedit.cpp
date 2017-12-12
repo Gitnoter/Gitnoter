@@ -550,16 +550,15 @@ bool QMarkdownTextEdit::openLinkAtCursorPosition() {
     qDebug() << __func__ << " - 'emit urlClicked( urlString )': "
              << urlString;
 
-    emit urlClicked(urlString);
+    if (_ignoredClickUrlSchemata.contains(url.scheme())) {
+        emit urlClicked(urlString);
+        return false;
+    }
 
     if ((url.isValid() && isValidUrl(urlString)) || isRelativeFileUrl) {
         // ignore some schemata
-        if (!(_ignoredClickUrlSchemata.contains(url.scheme()) ||
-                isRelativeFileUrl)) {
-            // open the url
-            openUrl(urlString);
-        }
-
+        // open the url
+        openUrl(urlString);
         return true;
     }
 
