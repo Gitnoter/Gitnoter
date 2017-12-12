@@ -134,6 +134,7 @@
     <addaction name="action_table"/>
     <addaction name="action_orderedList"/>
     <addaction name="action_unorderedList"/>
+    <addaction name="action_taskList"/>
     <addaction name="separator"/>
     <addaction name="action_quoteBlock"/>
     <addaction name="action_cuttingLine"/>
@@ -555,6 +556,14 @@
    </property>
    <property name="shortcut">
     <string>Meta+Shift+U</string>
+   </property>
+  </action>
+  <action name="action_taskList">
+   <property name="text">
+    <string>待办列表</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Shift+D</string>
    </property>
   </action>
   <action name="action_link">

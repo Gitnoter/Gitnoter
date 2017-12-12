@@ -453,6 +453,7 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBar->getActionTable(), SIGNAL(triggered()), this, SLOT(table()));
     connect(menuBar->getActionOrderedList(), SIGNAL(triggered()), this, SLOT(orderedList()));
     connect(menuBar->getActionUnorderedList(), SIGNAL(triggered()), this, SLOT(unorderedList()));
+    connect(menuBar->getActionTaskList(), SIGNAL(triggered()), this, SLOT(todoList()));
     connect(menuBar->getActionLink(), SIGNAL(triggered()), this, SLOT(link()));
     connect(menuBar->getActionLinkImage(), SIGNAL(triggered()), this, SLOT(linkImage()));
     connect(menuBar->getActionInsertImage(), SIGNAL(triggered()), this, SLOT(insertImage()));
@@ -989,6 +990,16 @@ void MarkdownEditorWidget::unorderedList()
     QString text = textCursor.selectedText();
     textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor);
     textCursor.insertText(QString(text.isEmpty() ? "" : "\n") + "* ");
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::todoList()
+{
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.select(QTextCursor::LineUnderCursor);
+    QString text = textCursor.selectedText();
+    textCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::MoveAnchor);
+    textCursor.insertText(QString(text.isEmpty() ? "" : "\n") + "- [x] ");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 

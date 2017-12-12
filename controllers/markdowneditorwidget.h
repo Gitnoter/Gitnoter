@@ -118,6 +118,7 @@ public slots:
     void table();
     void orderedList();
     void unorderedList();
+    void todoList();
     void link();
     void linkImage();
     void insertImage();

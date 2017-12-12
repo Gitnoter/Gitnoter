@@ -99,6 +99,7 @@ public:
     QAction *getActionTable() const;
     QAction *getActionOrderedList() const;
     QAction *getActionUnorderedList() const;
+    QAction *getActionTaskList() const;
     QAction *getActionLink() const;
     QAction *getActionLinkImage() const;
     QAction *getActionInsertImage() const;

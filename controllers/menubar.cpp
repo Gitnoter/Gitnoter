@@ -591,3 +591,8 @@ QWidgetList MenuBar::windowMenuWidgetList()
     }
     return widgetList;
 }
+
+QAction *MenuBar::getActionTaskList() const
+{
+    return ui->action_taskList;
+}
