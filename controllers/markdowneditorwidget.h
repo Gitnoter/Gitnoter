@@ -166,6 +166,8 @@ private slots:
 
     void onOpenLocalUrl(QString urlString);
 
+    void on_markdownPreview_anchorClicked(const QUrl &arg1);
+
 public:
     MainWindow *mainWindow() { return mMainWindow; }
 

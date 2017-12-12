@@ -855,6 +855,12 @@ QPushButton#pushButton_table:hover {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+          <property name="openLinks">
+           <bool>false</bool>
+          </property>
          </widget>
         </widget>
        </item>

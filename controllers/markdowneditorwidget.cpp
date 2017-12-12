@@ -1157,7 +1157,17 @@ void MarkdownEditorWidget::applyFormatter(const QString &formatterStart, const Q
 }
 
 void MarkdownEditorWidget::onOpenLocalUrl(QString urlString) {
-    QString path = mNoteModel->getFilePath(urlString);
-    qDebug() << path;
-    QDesktopServices::openUrl(QUrl(path));
+    ui->markdownEditor->openUrl(mNoteModel->getFilePath(urlString));
+}
+
+void MarkdownEditorWidget::on_markdownPreview_anchorClicked(const QUrl &arg1)
+{
+    qDebug() << __func__ << " - 'url': " << arg1;
+
+    if (arg1.scheme() == gFileScheme) {
+        onOpenLocalUrl(arg1.toString());
+    }
+    else {
+        ui->markdownEditor->openUrl(arg1.toString());
+    }
 }
