@@ -13,6 +13,7 @@
 #include <QMenuBar>
 #include <QPrinter>
 #include <QSplitter>
+#include <QFileDialog>
 
 namespace Ui
 {
@@ -50,7 +51,10 @@ private:
     void setSplitterSizes();
     void setBackgroundSplitterSizes();
 
-    QString getExportFileName(const QString &windowTitle, const QString &fileType, const QString &suffix);
+    QString getExportFileName(
+            const QString &windowTitle, const QString &fileType, QStringList suffixList,
+            QFileDialog::AcceptMode acceptMode = QFileDialog::AcceptSave,
+            QFileDialog::FileMode fileMode = QFileDialog::AnyFile);
 
     void setLineTextTitleSign(const QString &titleSign);
     bool undoFormatting(const QString &formatterStart, const QString &formatterEnd);

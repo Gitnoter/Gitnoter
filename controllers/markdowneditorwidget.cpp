@@ -1,5 +1,4 @@
 #include "ui_markdowneditorwidget.h"
-#include "ui_menubar.h"
 
 #include "markdowneditorwidget.h"
 #include "globals.h"
@@ -815,7 +814,7 @@ void MarkdownEditorWidget::resizeEvent(QResizeEvent *event)
 
 void MarkdownEditorWidget::exportHtmlForPDF()
 {
-    const QString fileName = getExportFileName(tr("导出 HTML 为 PDF"), "PDF", "pdf");
+    const QString fileName = getExportFileName(tr("导出 HTML 为 PDF"), "PDF", {"pdf"});
 
     if (fileName.isEmpty()) {
         return;
@@ -830,7 +829,7 @@ void MarkdownEditorWidget::exportHtmlForPDF()
 
 void MarkdownEditorWidget::exportMarkdownForPDF()
 {
-    const QString fileName = getExportFileName(tr("导出 Markdown 为 PDF"), "PDF", "pdf");
+    const QString fileName = getExportFileName(tr("导出 Markdown 为 PDF"), "PDF", {"pdf"});
 
     if (fileName.isEmpty()) {
         return;
@@ -845,7 +844,7 @@ void MarkdownEditorWidget::exportMarkdownForPDF()
 
 void MarkdownEditorWidget::exportHtml()
 {
-    const QString fileName = getExportFileName(tr("导出 HTML 文本"), "HTML", "html");
+    const QString fileName = getExportFileName(tr("导出 HTML 文本"), "HTML", {"html"});
 
     if (fileName.isEmpty()) {
         return;
@@ -856,7 +855,7 @@ void MarkdownEditorWidget::exportHtml()
 
 void MarkdownEditorWidget::exportMarkdown()
 {
-    const QString fileName = getExportFileName(tr("导出 Markdown 文件"), "Markdown", "md");
+    const QString fileName = getExportFileName(tr("导出 Markdown 文件"), "Markdown", {"md"});
 
     if (fileName.isEmpty()) {
         return;
@@ -866,14 +865,24 @@ void MarkdownEditorWidget::exportMarkdown()
 }
 
 QString MarkdownEditorWidget::getExportFileName(
-        const QString &windowTitle, const QString &fileType, const QString &suffix)
+        const QString &windowTitle, const QString &fileType, QStringList suffixList,
+        QFileDialog::AcceptMode acceptMode, QFileDialog::FileMode fileMode)
 {
     QFileDialog *dialog = new QFileDialog();
-    dialog->setFileMode(QFileDialog::AnyFile);
-    dialog->setAcceptMode(QFileDialog::AcceptSave);
-    dialog->setNameFilter(fileType + tr(" files") + " (*." + suffix + ")");
+    dialog->setFileMode(fileMode);
+    dialog->setAcceptMode(acceptMode);
     dialog->setWindowTitle(windowTitle);
-    dialog->selectFile(mNoteModel->getTitle() + "." + suffix);
+
+    if (suffixList.length() != 0) {
+        for (int i = 0; i < suffixList.length(); ++i) {
+            suffixList.replace(i, "*." + suffixList[i]);
+        }
+        dialog->setNameFilter(fileType + tr(" files") + " (" + suffixList.join(" ") + ")");
+    }
+
+    if (QFileDialog::AcceptSave == acceptMode) {
+        dialog->selectFile(mNoteModel->getTitle());
+    }
 
     if (dialog->exec() != QDialog::Accepted) {
         return "";
@@ -890,7 +899,7 @@ QString MarkdownEditorWidget::getExportFileName(
     }
 
     if (QFileInfo(fileName).suffix().isEmpty()) {
-        fileName.append("." + suffix);
+        fileName.append("." + suffixList[0]);
     }
 
     return fileName;
@@ -999,12 +1008,48 @@ void MarkdownEditorWidget::linkImage()
 
 void MarkdownEditorWidget::insertImage()
 {
+    if (!ui->markdownEditor->hasFocus()) {
+        return;
+    }
 
+    const QString filePath = getExportFileName(tr("插入图片"), "图片", {"jpg", "jpeg", "png", "gif"},
+                                               QFileDialog::AcceptOpen);
+
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    const QFileInfo fileInfo = QFileInfo(filePath);
+    const QString newFilePath = QDir(mNoteModel->getNoteDir()).filePath(fileInfo.fileName());
+
+    QFile::copy(filePath, newFilePath);
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("![" + fileInfo.baseName() + "](gnr://" + fileInfo.fileName() + ")");
+    ui->markdownEditor->setTextCursor(textCursor);
 }
 
 void MarkdownEditorWidget::accessory()
 {
+    if (!ui->markdownEditor->hasFocus()) {
+        return;
+    }
 
+    const QString filePath = getExportFileName(tr("插入附件"), "附件", {},
+                                               QFileDialog::AcceptOpen, QFileDialog::ExistingFile);
+
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    const QFileInfo fileInfo = QFileInfo(filePath);
+    const QString newFilePath = QDir(mNoteModel->getNoteDir()).filePath(fileInfo.fileName());
+
+    QFile::copy(filePath, newFilePath);
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("[" + fileInfo.baseName() + "](gnr://" + fileInfo.fileName() + ")");
+    ui->markdownEditor->setTextCursor(textCursor);
 }
 
 void MarkdownEditorWidget::quoteBlock()
