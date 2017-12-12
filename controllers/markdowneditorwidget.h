@@ -142,7 +142,7 @@ private slots:
      */
     void onMarkdownPreviewSliderValueChanged(int value, bool force = false);
 
-    void onTagCellWidgetClicked(const QString tagName);
+    void onTagCellWidgetClicked(QString tagName);
 
     void onNavigationBarChenged();
 
@@ -163,6 +163,8 @@ private slots:
     void on_markdownEditor_customContextMenuRequested(const QPoint &pos);
 
     void on_splitter_background_splitterMoved(int pos = 0, int index = 0);
+
+    void onOpenLocalUrl(QString urlString);
 
 public:
     MainWindow *mainWindow() { return mMainWindow; }

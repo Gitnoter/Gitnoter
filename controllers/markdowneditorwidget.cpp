@@ -232,7 +232,7 @@ void MarkdownEditorWidget::onMarkdownPreviewSliderValueChanged(int value, bool f
     editScrollBar->setSliderPosition(editPosition);
 }
 
-void MarkdownEditorWidget::onTagCellWidgetClicked(const QString tagName)
+void MarkdownEditorWidget::onTagCellWidgetClicked(QString tagName)
 {
     removeTag(tagName);
 }
@@ -364,6 +364,7 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
+    ui->markdownEditor->setIgnoredClickUrlSchemata({gFilePrefix});
     if (!parent()) { setGeometry(gConfigModel->getEditorWindowRect()); }
     setSplitterSizes();
     setBackgroundSplitterSizes();
@@ -379,6 +380,7 @@ void MarkdownEditorWidget::setupUi()
     connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
     connect(ui->navigationBar, SIGNAL(positionClicked(int)), this, SLOT(onNavigationWidgetPositionClicked(int)));
 
+    connect(ui->markdownEditor, SIGNAL(urlClicked(QString)), this, SLOT(onOpenLocalUrl(QString)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCut(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCopy(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionWebSearch(), SLOT(setEnabled(bool)));
@@ -1025,7 +1027,7 @@ void MarkdownEditorWidget::insertImage()
     QFile::copy(filePath, newFilePath);
 
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("![" + fileInfo.baseName() + "](gnr://" + fileInfo.fileName() + ")");
+    textCursor.insertText("![" + fileInfo.baseName() + "](" + gFilePrefix + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 
@@ -1048,7 +1050,7 @@ void MarkdownEditorWidget::accessory()
     QFile::copy(filePath, newFilePath);
 
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("[" + fileInfo.baseName() + "](gnr://" + fileInfo.fileName() + ")");
+    textCursor.insertText("[" + fileInfo.baseName() + "](" + gFilePrefix + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 
@@ -1152,4 +1154,10 @@ void MarkdownEditorWidget::applyFormatter(const QString &formatterStart, const Q
             textCursor.insertText(match.captured(1) + formatterStart + match.captured(2) + formatterEnd + match.captured(3));
         }
     }
+}
+
+void MarkdownEditorWidget::onOpenLocalUrl(QString urlString) {
+    QString path = mNoteModel->getFilePath(urlString);
+    qDebug() << path;
+    QDesktopServices::openUrl(QUrl(path));
 }

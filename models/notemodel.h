@@ -30,6 +30,8 @@ public:
 
     QString getNoteDir();
 
+    QString getFilePath(QString noteFilePath);
+
     const QStringList &getTagList() const;
 
     void setTagList(const QStringList &tagList = {});

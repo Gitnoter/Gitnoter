@@ -517,3 +517,7 @@ QString NoteModel::getShortUuid() const
 {
     return mUuid.mid(0, 7);
 }
+
+QString NoteModel::getFilePath(QString noteFilePath) {
+    return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(gFilePrefix, ""));
+}
