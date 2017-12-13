@@ -96,6 +96,9 @@ public slots:
     void issue();
     void about();
 
+    void aboutGitnoter();
+    void setting();
+
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 
@@ -130,6 +133,8 @@ public:
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
+    AboutDialog *mAboutDialog;
+    SettingDialog *mSettingDialog;
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;

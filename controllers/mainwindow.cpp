@@ -15,7 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
         ui(new Ui::MainWindow),
         mMenuBar(new MenuBar(this)),
         mAutoSyncRepoTimer(new QTimer(this)),
-        mAutoLockTimer(new QTimer(this))
+        mAutoLockTimer(new QTimer(this)),
+        mAboutDialog(new AboutDialog(this)),
+        mSettingDialog(new SettingDialog(this))
 {
     ui->setupUi(this);
     init();
@@ -89,6 +91,9 @@ void MainWindow::setupUi()
     connect(mMenuBar->getActionFeedback(), SIGNAL(triggered()), this, SLOT(feedback()));
     connect(mMenuBar->getActionIssue(), SIGNAL(triggered()), this, SLOT(issue()));
     connect(mMenuBar->getActionAbout(), SIGNAL(triggered()), this, SLOT(about()));
+
+    connect(mMenuBar->getActionAbout(), SIGNAL(triggered()), this, SLOT(aboutGitnoter()));
+    connect(mMenuBar->getActionPreferences(), SIGNAL(triggered()), this, SLOT(setting()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -609,4 +614,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::importEvernote()
 {
     (new ImportNoteDialog(this))->init();
+}
+
+void MainWindow::aboutGitnoter()
+{
+    mAboutDialog->exec();
+}
+
+void MainWindow::setting()
+{
+    mSettingDialog->open();
 }
