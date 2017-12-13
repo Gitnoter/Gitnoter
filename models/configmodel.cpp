@@ -128,7 +128,8 @@ const QString ConfigModel::getRepoUsername() const
 
 const QString ConfigModel::getRepoPassword() const
 {
-    return decrypt(settings->value(mRepoPassword, "").toString());
+    QString password = settings->value(mRepoPassword, "").toString();
+    return password.isEmpty() ? password : decrypt(password);
 }
 
 const QString ConfigModel::openMainWindowNoteUuid() const
