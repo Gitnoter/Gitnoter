@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
+    <width>338</width>
     <height>300</height>
    </rect>
   </property>
@@ -29,7 +29,7 @@
       <number>-1</number>
      </property>
      <property name="leftMargin">
-      <number>87</number>
+      <number>0</number>
      </property>
      <property name="topMargin">
       <number>0</number>
@@ -37,6 +37,9 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
+     <item>
+      <widget class="QWidget" name="widget" native="true"/>
+     </item>
      <item>
       <widget class="QLabel" name="logo">
        <property name="minimumSize">
@@ -79,7 +82,7 @@
        <item>
         <widget class="QLabel" name="name">
          <property name="text">
-          <string>GitNoter</string>
+          <string>Gitnoter</string>
          </property>
         </widget>
        </item>
@@ -91,7 +94,7 @@
           </font>
          </property>
          <property name="text">
-          <string>version:1.0.0</string>
+          <string>version: </string>
          </property>
         </widget>
        </item>

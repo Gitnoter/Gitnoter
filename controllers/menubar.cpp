@@ -1,4 +1,5 @@
 #include "ui_menubar.h"
+
 #include "menubar.h"
 #include "globals.h"
 
