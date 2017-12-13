@@ -3,6 +3,7 @@
 #include "markdowneditorwidget.h"
 #include "globals.h"
 #include "tools.h"
+#include "screenshot.h"
 
 #include <QScrollBar>
 #include <QFileDialog>
@@ -926,6 +927,7 @@ void MarkdownEditorWidget::title1()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("#");
+    fullScreenShot();
 }
 
 void MarkdownEditorWidget::title2()
@@ -933,6 +935,7 @@ void MarkdownEditorWidget::title2()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("##");
+    windowScreenShot();
 }
 
 void MarkdownEditorWidget::title3()
@@ -940,6 +943,7 @@ void MarkdownEditorWidget::title3()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("###");
+    partScreenShot();
 }
 
 void MarkdownEditorWidget::Title4()
@@ -1215,5 +1219,46 @@ void MarkdownEditorWidget::headerSize()
     }
 
     textCursor.insertText(text);
+    ui->markdownEditor->setTextCursor(textCursor);
+}
+
+void MarkdownEditorWidget::fullScreenShot()
+{
+    const QPixmap pixmap = ScreenShot::fullScreenShot();
+    savePixmap(pixmap, tr("全屏"));
+}
+
+void MarkdownEditorWidget::windowScreenShot()
+{
+    QPixmap pixmap = ScreenShot::windowScreenShot();
+    if (!pixmap.isNull()) {
+        savePixmap(pixmap, tr("窗口"));
+    }
+}
+
+void MarkdownEditorWidget::partScreenShot()
+{
+    ScreenShot *screenShot = new ScreenShot(this);
+
+    if (screenShot->exec() == QDialog::Accepted) {
+        const QPixmap pixmap = screenShot->shotPixmap();
+        if (!pixmap.isNull()) {
+            savePixmap(pixmap, tr("截屏"));
+        }
+    }
+
+    raise();
+    activateWindow();
+}
+
+void MarkdownEditorWidget::savePixmap(const QPixmap &pixmap, const QString &name)
+{
+    const QString filePath = QDir(mNoteModel->getNoteDir()).filePath(Tools::getShortUuid() + ".jpg");
+    const QFileInfo fileInfo = QFileInfo(filePath);
+
+    pixmap.save(filePath, "JPG", gImageQuality);
+
+    QTextCursor textCursor = ui->markdownEditor->textCursor();
+    textCursor.insertText("![" + name + "-" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }

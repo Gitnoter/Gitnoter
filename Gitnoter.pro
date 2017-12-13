@@ -61,10 +61,13 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp
+    helps/notepreviewwidget.cpp \
+    helps/screenshot.cpp
 
 HEADERS += \
-        controllers/mainwindow.h  \
+    gitnoter.h  \
+    version.h \
+    controllers/mainwindow.h  \
     controllers/categorylistwidget.h  \
     controllers/loginwidget.h \
     controllers/settingdialog.h \
@@ -89,8 +92,7 @@ HEADERS += \
     helps/gitmanager.h \
     helps/thememanager.h \
     helps/notepreviewwidget.h \
-    gitnoter.h  \
-    version.h
+    helps/screenshot.h
 
 FORMS += \
     views/mainwindow.ui \

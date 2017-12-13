@@ -26,6 +26,7 @@ const QString gCutWindowKeySequence = "Ctrl+Shift+X";
 
 const int gEditorFontSize = 14;
 const QString gFileScheme = "gnr";
+const int gImageQuality = 85;
 
 const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
                                                                   : "https://www.google.com/search?&q=";

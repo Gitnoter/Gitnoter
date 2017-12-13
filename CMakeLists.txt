@@ -71,6 +71,7 @@ add_executable(${PROJECT_NAME}
         helps/gitmanager.h          helps/gitmanager.cpp
         helps/thememanager.h        helps/thememanager.cpp
         helps/notepreviewwidget.h   helps/notepreviewwidget.cpp
+        helps/screenshot.h          helps/screenshot.cpp
 
         ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES})
 

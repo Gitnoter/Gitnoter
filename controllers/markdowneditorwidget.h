@@ -60,6 +60,8 @@ private:
     bool undoFormatting(const QString &formatterStart, const QString &formatterEnd);
     void applyFormatter(const QString &formatterStart, const QString &formatterEnd);
 
+    void savePixmap(const QPixmap &pixmap, const QString &name = "");
+
 public slots:
     void appendTag(const QString &tag);
     void removeTag(QString tagName = "");
@@ -131,6 +133,10 @@ public slots:
     void codeBlock();
     void annotation();
     void moreAnnotation();
+
+    void fullScreenShot();
+    void windowScreenShot();
+    void partScreenShot();
 
 private slots:
 
