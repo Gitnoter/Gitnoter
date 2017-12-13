@@ -10,7 +10,7 @@
 
 #define VER_COMPANYNAME_STR         "Gitnoter"
 #define VER_INTERNALNAME_STR        "Gitnoter.exe"
-#define VER_LEGALCOPYRIGHT_STR      "Copyright 2017 MakeHui"  // 版权
+#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2017 MakeHui"  // 版权
 #define VER_LEGALTRADEMARKS1_STR    "All rights reserved"
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
 #define VER_PRODUCTNAME_STR         "Gitnoter"        // 产品名称

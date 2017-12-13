@@ -11,6 +11,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     ui->name->setText(VER_PRODUCTNAME_STR);
     ui->version->setText(ui->version->text() + VER_PRODUCTVERSION_STR);
+    ui->copyright->setText(VER_LEGALCOPYRIGHT_STR);
 }
 
 AboutDialog::~AboutDialog()

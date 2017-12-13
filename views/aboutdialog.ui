@@ -121,7 +121,7 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="copyright">
      <property name="text">
       <string>Copyright © 2017 MakeHui</string>
      </property>
