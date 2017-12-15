@@ -8,8 +8,9 @@
 ConfigModel::ConfigModel()
 {
     mVersion = "version";
-    mNewNoteKeySequence = "keySequence/newNote";
     mLockWindowKeySequence = "keySequence/lockWindow";
+    mCutRectKeySequence = "keySequence/cutRect";
+    mCutFullKeySequence = "keySequence/cutFull";
     mCutWindowKeySequence = "keySequence/cutWindow";
     mRepoDir = "git/repoDir";
     mRepoUrl = "git/repoUrl";
@@ -222,36 +223,48 @@ void ConfigModel::setEditorFont(const QFont &font)
     settings->setValue(mEditorFont, font.toString());
 }
 
-const QString ConfigModel::getNewNoteKeySequence() const
+const QString ConfigModel::getCutRectKeySequence() const
 {
-    return settings->value(mNewNoteKeySequence, gNewNoteKeySequence).toString();
+    const QString keySequence = settings->value(mCutRectKeySequence, gCutRectKeySequence).toString();
+    return keySequence.isEmpty() ? gCutRectKeySequence : keySequence;
 }
 
-void ConfigModel::setNewNoteKeySequence(const QString &newNoteKeySequence)
+void ConfigModel::setCutRectKeySequence(const QString &keySequence)
 {
-    settings->setValue(mNewNoteKeySequence, newNoteKeySequence);
+    settings->setValue(mCutRectKeySequence, keySequence);
+}
+
+const QString ConfigModel::getCutFullKeySequence() const
+{
+    const QString keySequence = settings->value(mCutFullKeySequence, gCutFullKeySequence).toString();
+    return keySequence.isEmpty() ? gCutFullKeySequence : keySequence;
+}
+
+void ConfigModel::setCutFullKeySequence(const QString &keySequence)
+{
+    settings->setValue(mCutFullKeySequence, keySequence);
 }
 
 const QString ConfigModel::getLockWindowKeySequence() const
 {
-    return settings->value(mLockWindowKeySequence, gLockWindowKeySequence).toString();
+    const QString keySequence = settings->value(mLockWindowKeySequence, gLockWindowKeySequence).toString();
+    return keySequence.isEmpty() ? gLockWindowKeySequence : keySequence;
 }
 
-void ConfigModel::setLockWindowKeySequence(const QString &lockWindowKeySequence)
+void ConfigModel::setLockWindowKeySequence(const QString &keySequence)
 {
-    mLockWindowKeySequence = lockWindowKeySequence;
-    settings->setValue(mLockWindowKeySequence, lockWindowKeySequence);
+    settings->setValue(mLockWindowKeySequence, keySequence);
 }
 
 const QString ConfigModel::getCutWindowKeySequence() const
 {
-    return settings->value(mCutWindowKeySequence, gCutWindowKeySequence).toString();
+    const QString keySequence = settings->value(mCutWindowKeySequence, gCutWindowKeySequence).toString();
+    return keySequence.isEmpty() ? gCutWindowKeySequence : keySequence;
 }
 
-void ConfigModel::setCutWindowKeySequence(const QString &cutWindowKeySequence)
+void ConfigModel::setCutWindowKeySequence(const QString &keySequence)
 {
-    mCutWindowKeySequence = cutWindowKeySequence;
-    settings->setValue(mCutWindowKeySequence, cutWindowKeySequence);
+    settings->setValue(mCutWindowKeySequence, keySequence);
 }
 
 ThemeManager::ThemeFlag ConfigModel::getTheme() const
@@ -261,7 +274,6 @@ ThemeManager::ThemeFlag ConfigModel::getTheme() const
 
 void ConfigModel::setTheme(const ThemeManager::ThemeFlag &theme)
 {
-    mTheme = theme;
     settings->setValue(mTheme, theme);
 }
 

@@ -12,6 +12,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/json JSON)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qmarkdowntextedit)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qkeysequencewidget)
 
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include)
 link_directories(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/lib)

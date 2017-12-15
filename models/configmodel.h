@@ -71,17 +71,20 @@ public:
 
     void setEditorFont(const QFont &font);
 
-    const QString getNewNoteKeySequence() const;
+    const QString getCutRectKeySequence() const;
 
-    void setNewNoteKeySequence(const QString &newNoteKeySequence);
+    void setCutRectKeySequence(const QString &keySequence);
 
     const QString getLockWindowKeySequence() const;
 
-    void setLockWindowKeySequence(const QString &lockWindowKeySequence);
+    void setLockWindowKeySequence(const QString &keySequence);
 
     const QString getCutWindowKeySequence() const;
 
-    void setCutWindowKeySequence(const QString &cutWindowKeySequence);
+    void setCutWindowKeySequence(const QString &keySequence);
+
+    const QString getCutFullKeySequence() const;
+    void setCutFullKeySequence(const QString &keySequence);
 
     ThemeManager::ThemeFlag getTheme() const;
 
@@ -183,8 +186,9 @@ private:
 
     QString mEditorFont;
 
-    QString mNewNoteKeySequence;
     QString mLockWindowKeySequence;
+    QString mCutRectKeySequence;
+    QString mCutFullKeySequence;
     QString mCutWindowKeySequence;
 
     QString mTheme;

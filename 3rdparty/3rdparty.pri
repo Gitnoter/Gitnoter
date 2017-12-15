@@ -24,3 +24,8 @@ include($$PWD/json/json.pri)
 # qtinyaes
 #
 include($$PWD/qtinyaes/qtinyaes.pri)
+
+#
+# qkeysequencewidget
+#
+include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)

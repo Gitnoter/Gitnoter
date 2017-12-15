@@ -20,12 +20,15 @@
    <item>
     <widget class="QWidget" name="widget_content" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="pushButton_general">
           <property name="focusPolicy">
-           <enum>Qt::TabFocus</enum>
+           <enum>Qt::NoFocus</enum>
           </property>
           <property name="text">
            <string>通用</string>
@@ -34,6 +37,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_accountRepo">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="text">
            <string>用户仓库</string>
           </property>
@@ -41,6 +47,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_edit">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="text">
            <string>编辑排版</string>
           </property>
@@ -48,6 +57,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_shortcuts">
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="text">
            <string>快捷键</string>
           </property>
@@ -558,7 +570,7 @@
             <property name="title">
              <string/>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0">
+            <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -590,24 +602,8 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <property name="spacing">
-                <number>0</number>
+                <number>6</number>
                </property>
-               <item>
-                <widget class="QLabel" name="label_8">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>21</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>新建笔记:   </string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
                <item>
                 <widget class="QLabel" name="label_9">
                  <property name="maximumSize">
@@ -617,7 +613,23 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>锁定本应用窗口:   </string>
+                  <string>锁定本应用窗口:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_12">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>21</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>剪切任意矩形:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -633,7 +645,23 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>剪切整个屏幕:   </string>
+                  <string>剪切整个屏幕:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_8">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>21</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>剪切当前窗口:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -643,99 +671,65 @@
               </layout>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_9">
-               <property name="spacing">
-                <number>0</number>
+              <widget class="QWidget" name="widget" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>0</height>
+                </size>
                </property>
-               <property name="topMargin">
-                <number>0</number>
+               <property name="maximumSize">
+                <size>
+                 <width>250</width>
+                 <height>16777215</height>
+                </size>
                </property>
-               <item>
-                <widget class="QKeySequenceEdit" name="keySequenceEdit_newNote">
-                 <property name="focusPolicy">
-                  <enum>Qt::ClickFocus</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QKeySequenceEdit" name="keySequenceEdit_lockWindow">
-                 <property name="focusPolicy">
-                  <enum>Qt::ClickFocus</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QKeySequenceEdit" name="keySequenceEdit_cutWindow">
-                 <property name="focusPolicy">
-                  <enum>Qt::ClickFocus</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_11">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>4</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label_defaultNewNote">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>21</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>默认</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_defaultLockWindow">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>21</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>默认</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_defaultCutWindow">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>21</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>默认</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>12</number>
+                </property>
+                <property name="topMargin">
+                 <number>3</number>
+                </property>
+                <property name="rightMargin">
+                 <number>12</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QKeySequenceWidget" name="keySequenceWidget_lockWindow" native="true">
+                  <property name="focusPolicy">
+                   <enum>Qt::ClickFocus</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QKeySequenceWidget" name="keySequenceWidget_cutRect" native="true">
+                  <property name="focusPolicy">
+                   <enum>Qt::ClickFocus</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QKeySequenceWidget" name="keySequenceWidget_cutFull" native="true">
+                  <property name="focusPolicy">
+                   <enum>Qt::ClickFocus</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QKeySequenceWidget" name="keySequenceWidget_cutWindow" native="true">
+                  <property name="focusPolicy">
+                   <enum>Qt::ClickFocus</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer_9">
@@ -777,6 +771,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QKeySequenceWidget</class>
+   <extends>QWidget</extends>
+   <header>qkeysequencewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

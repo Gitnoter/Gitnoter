@@ -19,12 +19,43 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_password->setText(gConfigModel->getRepoPassword());
 //    ui->fontComboBox->setCurrentText(configModel->getEditorFont());
 //    ui->comboBox_fontSize->setCurrentText(QString::number(configModel->getFontPixelSize()));
-    ui->keySequenceEdit_newNote->setKeySequence(QKeySequence(gConfigModel->getNewNoteKeySequence()));
-    ui->keySequenceEdit_lockWindow->setKeySequence(QKeySequence(gConfigModel->getLockWindowKeySequence()));
-    ui->keySequenceEdit_cutWindow->setKeySequence(QKeySequence(gConfigModel->getCutWindowKeySequence()));
-    ui->label_defaultNewNote->setText(tr("默认: %1").arg(gNewNoteKeySequence));
-    ui->label_defaultLockWindow->setText(tr("默认: %1").arg(gLockWindowKeySequence));
-    ui->label_defaultCutWindow->setText(tr("默认: %1").arg(gCutWindowKeySequence));
+
+    // default key sequence
+    ui->keySequenceWidget_lockWindow->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
+    ui->keySequenceWidget_lockWindow->setClearButtonStyleSheet("border:none;");
+    ui->keySequenceWidget_lockWindow->setDefaultKeySequence(gLockWindowKeySequence);
+    ui->keySequenceWidget_lockWindow->setKeySequence(QKeySequence(gConfigModel->getLockWindowKeySequence()));
+    connect(ui->keySequenceWidget_lockWindow, SIGNAL(keySequenceAccepted(const QKeySequence &)),
+            this, SLOT(onLockWindowKeySequenceAccepted(const QKeySequence &)));
+    connect(ui->keySequenceWidget_lockWindow, SIGNAL(keySequenceCleared()),
+            this, SLOT(onLockWindowKeySequenceCleared()));
+
+    ui->keySequenceWidget_cutRect->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
+    ui->keySequenceWidget_cutRect->setClearButtonStyleSheet("border:none;");
+    ui->keySequenceWidget_cutRect->setDefaultKeySequence(gCutRectKeySequence);
+    ui->keySequenceWidget_cutRect->setKeySequence(QKeySequence(gConfigModel->getCutRectKeySequence()));
+    connect(ui->keySequenceWidget_cutRect, SIGNAL(keySequenceAccepted(const QKeySequence &)),
+            this, SLOT(onCutRectKeySequenceAccepted(const QKeySequence &)));
+    connect(ui->keySequenceWidget_cutRect, SIGNAL(keySequenceCleared()),
+            this, SLOT(onCutRectKeySequenceCleared()));
+
+    ui->keySequenceWidget_cutFull->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
+    ui->keySequenceWidget_cutFull->setClearButtonStyleSheet("border:none;");
+    ui->keySequenceWidget_cutFull->setDefaultKeySequence(gCutFullKeySequence);
+    ui->keySequenceWidget_cutFull->setKeySequence(QKeySequence(gConfigModel->getCutFullKeySequence()));
+    connect(ui->keySequenceWidget_cutFull, SIGNAL(keySequenceAccepted(const QKeySequence &)),
+            this, SLOT(onCutFullKeySequenceAccepted(const QKeySequence &)));
+    connect(ui->keySequenceWidget_cutFull, SIGNAL(keySequenceCleared()),
+            this, SLOT(onCutFullKeySequenceCleared()));
+
+    ui->keySequenceWidget_cutWindow->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
+    ui->keySequenceWidget_cutWindow->setClearButtonStyleSheet("border:none;");
+    ui->keySequenceWidget_cutWindow->setDefaultKeySequence(gCutWindowKeySequence);
+    ui->keySequenceWidget_cutWindow->setKeySequence(QKeySequence(gConfigModel->getCutWindowKeySequence()));
+    connect(ui->keySequenceWidget_cutWindow, SIGNAL(keySequenceAccepted(const QKeySequence &)),
+            this, SLOT(onCutWindowKeySequenceAccepted(const QKeySequence &)));
+    connect(ui->keySequenceWidget_cutWindow, SIGNAL(keySequenceCleared()),
+            this, SLOT(onCutWindowKeySequenceCleared()));
 }
 
 SettingDialog::~SettingDialog()
@@ -179,17 +210,47 @@ void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1
     emit editorFontChanged();
 }
 
-void SettingDialog::on_keySequenceEdit_newNote_keySequenceChanged(const QKeySequence &keySequence)
+void SettingDialog::onLockWindowKeySequenceAccepted(const QKeySequence &keySequence)
 {
-    gConfigModel->setNewNoteKeySequence(keySequence.toString());
-}
-
-void SettingDialog::on_keySequenceEdit_lockWindow_keySequenceChanged(const QKeySequence &keySequence)
-{
+    qDebug() << __func__ << keySequence;
     gConfigModel->setLockWindowKeySequence(keySequence.toString());
 }
 
-void SettingDialog::on_keySequenceEdit_cutWindow_keySequenceChanged(const QKeySequence &keySequence)
+void SettingDialog::onCutRectKeySequenceAccepted(const QKeySequence &keySequence)
 {
+    qDebug() << __func__ << keySequence;
+    gConfigModel->setCutRectKeySequence(keySequence.toString());
+}
+
+void SettingDialog::onCutWindowKeySequenceAccepted(const QKeySequence &keySequence)
+{
+    qDebug() << __func__ << keySequence;
     gConfigModel->setCutWindowKeySequence(keySequence.toString());
+}
+
+void SettingDialog::onCutFullKeySequenceAccepted(const QKeySequence &keySequence)
+{
+    qDebug() << __func__ << keySequence;
+    gConfigModel->setCutFullKeySequence(keySequence.toString());
+}
+
+void SettingDialog::onLockWindowKeySequenceCleared()
+{
+    qDebug() << __func__;
+    gConfigModel->setLockWindowKeySequence("");
+}
+
+void SettingDialog::onCutRectKeySequenceCleared()
+{
+    gConfigModel->setCutRectKeySequence("");
+}
+
+void SettingDialog::onCutWindowKeySequenceCleared()
+{
+    gConfigModel->setCutWindowKeySequence("");
+}
+
+void SettingDialog::onCutFullKeySequenceCleared()
+{
+    gConfigModel->setCutFullKeySequence("");
 }
