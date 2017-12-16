@@ -25,6 +25,8 @@ signals:
 
     void editorFontChanged();
 
+    void globalHotKeysChanged();
+
 private slots:
 
     void on_pushButton_general_clicked();

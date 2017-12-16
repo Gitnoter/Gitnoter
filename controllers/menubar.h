@@ -40,6 +40,9 @@ signals:
     void printEditAccepted(QPrinter *printer);
     void printPreviewAccepted(QPrinter *printer);
 
+public slots:
+    void initGlobalHotKeys();
+
 private slots:
     void onPrintEditAccepted();
     void onPrintPreviewAccepted();

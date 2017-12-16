@@ -108,6 +108,8 @@ void MainWindow::setupUi()
             default:break;
         }
     });
+
+    connect(mSettingDialog, SIGNAL(globalHotKeysChanged()), mMenuBar, SLOT(initGlobalHotKeys()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)

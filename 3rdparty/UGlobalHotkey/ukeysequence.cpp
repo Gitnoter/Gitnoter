@@ -111,11 +111,11 @@ void UKeySequence::AddKey(const QString& key) {
         return;
     }
     if (mod == "control" || mod == "ctrl") {
-        AddKey(Qt::Key_Control);
+        AddKey(Qt::Key_Meta);
         return;
     }
     if (mod == "win" || mod == "meta") {
-        AddKey(Qt::Key_Meta);
+        AddKey(Qt::Key_Control);
         return;
     }
     QKeySequence seq(key);

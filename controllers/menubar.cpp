@@ -27,9 +27,7 @@ void MenuBar::setupUi(QWidget *parent)
     mWindowMenuActionGroup->setExclusive(true);
     ui->action_preferences->setMenuRole(QAction::PreferencesRole);
     ui->action_about->setMenuRole(QAction::AboutRole);
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
+    initGlobalHotKeys();
 
     if (qobject_cast<MainWindow *>(parent)) {
         setGroupEnable();
@@ -600,4 +598,11 @@ QWidgetList MenuBar::windowMenuWidgetList()
 QAction *MenuBar::getActionTaskList() const
 {
     return ui->action_taskList;
+}
+
+void MenuBar::initGlobalHotKeys()
+{
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
 }

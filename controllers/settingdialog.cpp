@@ -204,29 +204,35 @@ void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1
 void SettingDialog::onCutRectKeySequenceAccepted(const QKeySequence &keySequence)
 {
     gConfigModel->setCutRectKeySequence(keySequence.toString());
+    emit globalHotKeysChanged();
 }
 
 void SettingDialog::onCutWindowKeySequenceAccepted(const QKeySequence &keySequence)
 {
     gConfigModel->setCutWindowKeySequence(keySequence.toString());
+    emit globalHotKeysChanged();
 }
 
 void SettingDialog::onCutFullKeySequenceAccepted(const QKeySequence &keySequence)
 {
     gConfigModel->setCutFullKeySequence(keySequence.toString());
+    emit globalHotKeysChanged();
 }
 
 void SettingDialog::onCutRectKeySequenceCleared()
 {
     gConfigModel->setCutRectKeySequence("");
+    emit globalHotKeysChanged();
 }
 
 void SettingDialog::onCutWindowKeySequenceCleared()
 {
     gConfigModel->setCutWindowKeySequence("");
+    emit globalHotKeysChanged();
 }
 
 void SettingDialog::onCutFullKeySequenceCleared()
 {
     gConfigModel->setCutFullKeySequence("");
+    emit globalHotKeysChanged();
 }
