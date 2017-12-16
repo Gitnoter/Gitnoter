@@ -186,7 +186,6 @@ private:
 
     QString mEditorFont;
 
-    QString mLockWindowKeySequence;
     QString mCutRectKeySequence;
     QString mCutFullKeySequence;
     QString mCutWindowKeySequence;

@@ -11,6 +11,9 @@
 #include "menubar.h"
 #include "notemodel.h"
 
+#include <UGlobalHotkey/uglobalhotkeys.h>
+
+
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
@@ -31,13 +34,14 @@ class GroupTreeWidget;
 class MarkdownEditorWidget;
 class NoteListWidget;
 class MenuBar;
+class UGlobalHotkey;
 
 class MainWindow : public QMainWindow
 {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(MenuBar *menubar, QWidget *parent = 0);
 
     ~MainWindow();
 
@@ -121,6 +125,10 @@ private slots:
     void on_noteListWidget_itemClicked(QListWidgetItem *item);
 
     void on_lineEdit_noteSearch_textChanged(const QString &arg1);
+
+    void fullScreenShot(size_t id = 1);
+    void windowScreenShot(size_t id = 1);
+    void partScreenShot(size_t id = 1);
 
 public:
     GroupTreeWidget *groupTreeWidget();

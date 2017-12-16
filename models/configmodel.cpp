@@ -8,7 +8,6 @@
 ConfigModel::ConfigModel()
 {
     mVersion = "version";
-    mLockWindowKeySequence = "keySequence/lockWindow";
     mCutRectKeySequence = "keySequence/cutRect";
     mCutFullKeySequence = "keySequence/cutFull";
     mCutWindowKeySequence = "keySequence/cutWindow";
@@ -243,17 +242,6 @@ const QString ConfigModel::getCutFullKeySequence() const
 void ConfigModel::setCutFullKeySequence(const QString &keySequence)
 {
     settings->setValue(mCutFullKeySequence, keySequence);
-}
-
-const QString ConfigModel::getLockWindowKeySequence() const
-{
-    const QString keySequence = settings->value(mLockWindowKeySequence, gLockWindowKeySequence).toString();
-    return keySequence.isEmpty() ? gLockWindowKeySequence : keySequence;
-}
-
-void ConfigModel::setLockWindowKeySequence(const QString &keySequence)
-{
-    settings->setValue(mLockWindowKeySequence, keySequence);
 }
 
 const QString ConfigModel::getCutWindowKeySequence() const

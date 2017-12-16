@@ -51,12 +51,10 @@ private slots:
     
     void on_comboBox_fontSize_currentIndexChanged(const QString &arg1);
 
-    void onLockWindowKeySequenceAccepted(const QKeySequence &keySequence);
     void onCutRectKeySequenceAccepted(const QKeySequence &keySequence);
     void onCutWindowKeySequenceAccepted(const QKeySequence &keySequence);
     void onCutFullKeySequenceAccepted(const QKeySequence &keySequence);
 
-    void onLockWindowKeySequenceCleared();
     void onCutRectKeySequenceCleared();
     void onCutWindowKeySequenceCleared();
     void onCutFullKeySequenceCleared();

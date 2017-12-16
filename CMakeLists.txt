@@ -10,6 +10,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/hoedown HOEDOWN)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include LIBGIT2)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/json JSON)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/UGlobalHotkey UGlOBLEHOTKEY)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qmarkdowntextedit)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qkeysequencewidget)
@@ -74,6 +75,6 @@ add_executable(${PROJECT_NAME}
         helps/notepreviewwidget.h   helps/notepreviewwidget.cpp
         helps/screenshot.h          helps/screenshot.cpp
 
-        ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES})
+        ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES} ${UGlOBLEHOTKEY})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml Qt5::XmlPatterns git2)

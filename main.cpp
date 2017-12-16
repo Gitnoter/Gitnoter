@@ -2,6 +2,7 @@
 #include "loginwidget.h"
 #include "globals.h"
 #include "tools.h"
+#include "menubar.h"
 
 #include <QApplication>
 
@@ -15,12 +16,14 @@ int main(int argc, char *argv[])
 
     QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
 
+    MenuBar *menuBar = new MenuBar();
+
     if (gConfigModel->getLocalRepoStatus() > Gitnoter::NoneRepo) {
-        MainWindow *w = new MainWindow;
+        MainWindow *w = new MainWindow(menuBar);
         w->show();
     }
     else {
-        LoginWidget *l = new LoginWidget;
+        LoginWidget *l = new LoginWidget(menuBar);
         l->show();
     }
 

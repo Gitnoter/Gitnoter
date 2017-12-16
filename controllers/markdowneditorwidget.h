@@ -8,6 +8,8 @@
 #include "notelistwidget.h"
 #include "mainwindow.h"
 
+#include <UGlobalHotkey/uglobalhotkeys.h>
+
 #include <QWidget>
 #include <QPushButton>
 #include <QMenuBar>
@@ -37,6 +39,7 @@ public:
     void init(NoteModel *noteModel, MainWindow *mainWindow = 0);
 
     void setWindowTitle();
+    bool editorHasFocus();
 
 private:
     void setupUi();
@@ -59,8 +62,6 @@ private:
     void setLineTextTitleSign(const QString &titleSign);
     bool undoFormatting(const QString &formatterStart, const QString &formatterEnd);
     void applyFormatter(const QString &formatterStart, const QString &formatterEnd);
-
-    void savePixmap(const QPixmap &pixmap, const QString &name = "");
 
 public slots:
     void appendTag(const QString &tag);
@@ -137,6 +138,7 @@ public slots:
     void fullScreenShot();
     void windowScreenShot();
     void partScreenShot();
+    void savePixmap(const QPixmap &pixmap, const QString &name = "");
 
 private slots:
 
@@ -177,6 +179,7 @@ private slots:
     void on_markdownPreview_anchorClicked(const QUrl &arg1);
 
 public:
+    void setMainWindow(MainWindow *mainWindow) { mMainWindow = mainWindow; }
     MainWindow *mainWindow() { return mMainWindow; }
 
     NoteModel *noteModel() {return mNoteModel; }
@@ -185,6 +188,7 @@ private:
     Ui::MarkdownEditorWidget *ui;
     MainWindow *mMainWindow;
     CategoryListWidget *mCategoryListWidget;
+    bool mInit;
 
     NoteModel *mNoteModel;
     QList<TagCellWidget *> mTagCellWidgetList;

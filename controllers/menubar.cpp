@@ -10,7 +10,8 @@ MenuBar::MenuBar(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MenuBar),
         mWindowMenuActionGroup(new QActionGroup(this)),
-        mPrinter(new QPrinter())
+        mPrinter(new QPrinter()),
+        mKeyGlobalHotKeys(new UGlobalHotkeys())
 {
     ui->setupUi(this);
     setupUi(parent);
@@ -26,6 +27,9 @@ void MenuBar::setupUi(QWidget *parent)
     mWindowMenuActionGroup->setExclusive(true);
     ui->action_preferences->setMenuRole(QAction::PreferencesRole);
     ui->action_about->setMenuRole(QAction::AboutRole);
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
+    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
 
     if (qobject_cast<MainWindow *>(parent)) {
         setGroupEnable();

@@ -29,3 +29,8 @@ include($$PWD/qtinyaes/qtinyaes.pri)
 # qkeysequencewidget
 #
 include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)
+
+#
+# qkeysequencewidget
+#
+include($$PWD/UGlobalHotkey/uglobalhotkey.pri)

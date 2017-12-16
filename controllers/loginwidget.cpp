@@ -5,17 +5,18 @@
 #include "tools.h"
 #include "globals.h"
 
-LoginWidget::LoginWidget(QWidget *parent) :
+LoginWidget::LoginWidget(MenuBar *menuBar, QWidget *parent) :
         QWidget(parent),
+        mMenuBar(menuBar),
         ui(new Ui::LoginWidget)
 {
     ui->setupUi(this);
 
     setWindowFlags(Qt::FramelessWindowHint);    //去掉窗口边框
     setAttribute(Qt::WA_TranslucentBackground, true);   // 背景透明
-    ui->lineEdit_username->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEdit_password->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEdit_repoUrl->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->lineEdit_username->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->lineEdit_password->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->lineEdit_repoUrl->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 LoginWidget::~LoginWidget()
@@ -83,7 +84,7 @@ void LoginWidget::openMainWindow()
     Tools::createMkDir(gRepoNoteDataPath);
 
     close();
-    (new MainWindow)->show();
+    (new MainWindow(mMenuBar))->show();
 }
 
 void LoginWidget::on_pushButton_initLocal_clicked()

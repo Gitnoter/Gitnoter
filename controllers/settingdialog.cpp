@@ -21,15 +21,6 @@ SettingDialog::SettingDialog(QWidget *parent) :
 //    ui->comboBox_fontSize->setCurrentText(QString::number(configModel->getFontPixelSize()));
 
     // default key sequence
-    ui->keySequenceWidget_lockWindow->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
-    ui->keySequenceWidget_lockWindow->setClearButtonStyleSheet("border:none;");
-    ui->keySequenceWidget_lockWindow->setDefaultKeySequence(gLockWindowKeySequence);
-    ui->keySequenceWidget_lockWindow->setKeySequence(QKeySequence(gConfigModel->getLockWindowKeySequence()));
-    connect(ui->keySequenceWidget_lockWindow, SIGNAL(keySequenceAccepted(const QKeySequence &)),
-            this, SLOT(onLockWindowKeySequenceAccepted(const QKeySequence &)));
-    connect(ui->keySequenceWidget_lockWindow, SIGNAL(keySequenceCleared()),
-            this, SLOT(onLockWindowKeySequenceCleared()));
-
     ui->keySequenceWidget_cutRect->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
     ui->keySequenceWidget_cutRect->setClearButtonStyleSheet("border:none;");
     ui->keySequenceWidget_cutRect->setDefaultKeySequence(gCutRectKeySequence);
@@ -210,34 +201,19 @@ void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1
     emit editorFontChanged();
 }
 
-void SettingDialog::onLockWindowKeySequenceAccepted(const QKeySequence &keySequence)
-{
-    qDebug() << __func__ << keySequence;
-    gConfigModel->setLockWindowKeySequence(keySequence.toString());
-}
-
 void SettingDialog::onCutRectKeySequenceAccepted(const QKeySequence &keySequence)
 {
-    qDebug() << __func__ << keySequence;
     gConfigModel->setCutRectKeySequence(keySequence.toString());
 }
 
 void SettingDialog::onCutWindowKeySequenceAccepted(const QKeySequence &keySequence)
 {
-    qDebug() << __func__ << keySequence;
     gConfigModel->setCutWindowKeySequence(keySequence.toString());
 }
 
 void SettingDialog::onCutFullKeySequenceAccepted(const QKeySequence &keySequence)
 {
-    qDebug() << __func__ << keySequence;
     gConfigModel->setCutFullKeySequence(keySequence.toString());
-}
-
-void SettingDialog::onLockWindowKeySequenceCleared()
-{
-    qDebug() << __func__;
-    gConfigModel->setLockWindowKeySequence("");
 }
 
 void SettingDialog::onCutRectKeySequenceCleared()

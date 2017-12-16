@@ -9,11 +9,12 @@
 #include "groupmodel.h"
 #include "version.h"
 #include "importnotedialog.h"
+#include "screenshot.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         QMainWindow(parent),
+        mMenuBar(menubar),
         ui(new Ui::MainWindow),
-        mMenuBar(new MenuBar(this)),
         mAutoSyncRepoTimer(new QTimer(this)),
         mAutoLockTimer(new QTimer(this)),
         mAboutDialog(new AboutDialog(this)),
@@ -34,8 +35,8 @@ void MainWindow::setupUi()
     mMenuBar->addActionToWindowMenu(this);
     setMenuBar(mMenuBar->menuBar());
     ui->groupTreeWidget->expandAll();
-    ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->markdownEditorWidget->setParent(ui->stackWidget_editor);
 
@@ -94,6 +95,19 @@ void MainWindow::setupUi()
 
     connect(mMenuBar->getActionAbout(), SIGNAL(triggered()), this, SLOT(aboutGitnoter()));
     connect(mMenuBar->getActionPreferences(), SIGNAL(triggered()), this, SLOT(setting()));
+
+    connect(mMenuBar->keyGlobalHotKeys(), &UGlobalHotkeys::activated, [=](size_t id) {
+        if (!isActiveWindow() || ui->markdownEditorWidget->editorHasFocus()) {
+            return;
+        }
+        qDebug() << __func__ << "main" << id;
+        switch (id) {
+            case Gitnoter::CutRect:partScreenShot();break;
+            case Gitnoter::CutFull:fullScreenShot();break;
+            case Gitnoter::CutWindow:windowScreenShot();break;
+            default:break;
+        }
+    });
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -624,4 +638,44 @@ void MainWindow::aboutGitnoter()
 void MainWindow::setting()
 {
     mSettingDialog->open();
+}
+
+void MainWindow::fullScreenShot(size_t)
+{
+    if (!isActiveWindow() || ui->markdownEditorWidget->editorHasFocus()) {
+        return;
+    }
+
+    appendNote();
+    const QPixmap pixmap = ScreenShot::fullScreenShot();
+    ui->markdownEditorWidget->savePixmap(pixmap, "全屏");
+}
+
+void MainWindow::windowScreenShot(size_t)
+{
+    if (!isActiveWindow() || ui->markdownEditorWidget->editorHasFocus()) {
+        return;
+    }
+
+    appendNote();
+    QPixmap pixmap = ScreenShot::windowScreenShot();
+    if (!pixmap.isNull()) {
+        ui->markdownEditorWidget->savePixmap(pixmap, "窗口");
+    }
+}
+
+void MainWindow::partScreenShot(size_t)
+{
+    if (!isActiveWindow() || ui->markdownEditorWidget->editorHasFocus()) {
+        return;
+    }
+
+    appendNote();
+    ScreenShot *screenShot = new ScreenShot(this);
+    if (screenShot->exec() == QDialog::Accepted) {
+        const QPixmap pixmap = screenShot->shotPixmap();
+        if (!pixmap.isNull()) {
+            ui->markdownEditorWidget->savePixmap(pixmap, "截屏");
+        }
+    }
 }

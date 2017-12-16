@@ -20,7 +20,6 @@ const QString gRepoNoteDataPath = QDir(gRepoPath).filePath("data");
 const QString gRepoCategoryListPath = QDir(gRepoNoteDataPath).filePath("categories.list");
 const QString gRepoTagListPath = QDir(gRepoNoteDataPath).filePath("tags.list");
 
-const QString gLockWindowKeySequence = "Ctrl+Shift+L";
 const QString gCutRectKeySequence = "Ctrl+Shift+R";
 const QString gCutFullKeySequence = "Ctrl+Shift+X";
 const QString gCutWindowKeySequence = "Ctrl+Shift+D";

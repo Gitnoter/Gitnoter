@@ -5,6 +5,8 @@
 #include "tools.h"
 #include "screenshot.h"
 
+#include <UGlobalHotkey/uglobalhotkeys.h>
+
 #include <QScrollBar>
 #include <QFileDialog>
 #include <QDebug>
@@ -13,7 +15,8 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
-    mNoteModel(nullptr)
+    mNoteModel(nullptr),
+    mInit(false)
 {
     ui->setupUi(this);
 }
@@ -360,8 +363,11 @@ void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QP
 
 void MarkdownEditorWidget::setupUi()
 {
-    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->navigationBar->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    if (mInit) { return; }
+    else { mInit = true; }
+
+    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->navigationBar->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
@@ -374,10 +380,8 @@ void MarkdownEditorWidget::setupUi()
 
     MenuBar *menuBar = mMainWindow->menuBar();
 
-    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(
-            onMarkdownEditorSliderValueChanged(int)));
-    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(
-            onMarkdownPreviewSliderValueChanged(int)));
+    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onMarkdownEditorSliderValueChanged(int)));
+    connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onMarkdownPreviewSliderValueChanged(int)));
     connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
     connect(ui->navigationBar, SIGNAL(positionClicked(int)), this, SLOT(onNavigationWidgetPositionClicked(int)));
 
@@ -479,6 +483,19 @@ void MarkdownEditorWidget::setupUi()
     connect(ui->pushButton_unordered, SIGNAL(clicked()), this, SLOT(unorderedList()));
     connect(ui->pushButton_taskList, SIGNAL(clicked()), this, SLOT(todoList()));
     connect(ui->pushButton_table, SIGNAL(clicked()), this, SLOT(table()));
+
+    connect(mMainWindow->menuBar()->keyGlobalHotKeys(), &UGlobalHotkeys::activated, [=](size_t id) {
+        if (!editorHasFocus() || !mMainWindow || !isActiveWindow()) {
+            return;
+        }
+        qDebug() << __func__ << "mark" << id;
+        switch (id) {
+            case Gitnoter::CutRect:partScreenShot();break;
+            case Gitnoter::CutFull:fullScreenShot();break;
+            case Gitnoter::CutWindow:windowScreenShot();break;
+            default:break;
+        }
+    });
 }
 
 void MarkdownEditorWidget::saveNote()
@@ -927,7 +944,6 @@ void MarkdownEditorWidget::title1()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("#");
-    fullScreenShot();
 }
 
 void MarkdownEditorWidget::title2()
@@ -935,7 +951,6 @@ void MarkdownEditorWidget::title2()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("##");
-    windowScreenShot();
 }
 
 void MarkdownEditorWidget::title3()
@@ -943,7 +958,6 @@ void MarkdownEditorWidget::title3()
     if (ui->stackedWidget->currentIndex() != 0) { return; }
 
     setLineTextTitleSign("###");
-    partScreenShot();
 }
 
 void MarkdownEditorWidget::Title4()
@@ -1224,12 +1238,23 @@ void MarkdownEditorWidget::headerSize()
 
 void MarkdownEditorWidget::fullScreenShot()
 {
+    if (!ui->markdownEditor->hasFocus()) {
+        return;
+    }
+
+
+    qDebug() << __func__;
+
     const QPixmap pixmap = ScreenShot::fullScreenShot();
     savePixmap(pixmap, tr("全屏"));
 }
 
 void MarkdownEditorWidget::windowScreenShot()
 {
+    if (!ui->markdownEditor->hasFocus()) {
+        return;
+    }
+    qDebug() << __func__;
     QPixmap pixmap = ScreenShot::windowScreenShot();
     if (!pixmap.isNull()) {
         savePixmap(pixmap, tr("窗口"));
@@ -1238,6 +1263,10 @@ void MarkdownEditorWidget::windowScreenShot()
 
 void MarkdownEditorWidget::partScreenShot()
 {
+    if (!ui->markdownEditor->hasFocus() || !mMainWindow || !isActiveWindow()) {
+        return;
+    }
+    qDebug() << __func__;
     ScreenShot *screenShot = new ScreenShot(this);
 
     if (screenShot->exec() == QDialog::Accepted) {
@@ -1261,4 +1290,9 @@ void MarkdownEditorWidget::savePixmap(const QPixmap &pixmap, const QString &name
     QTextCursor textCursor = ui->markdownEditor->textCursor();
     textCursor.insertText("![" + name + "-" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
+}
+
+bool MarkdownEditorWidget::editorHasFocus()
+{
+    return ui->markdownEditor->hasFocus();
 }

@@ -24,7 +24,6 @@ extern const QString gRepoNoteDataPath;
 extern const QString gRepoCategoryListPath;
 extern const QString gRepoTagListPath;
 
-extern const QString gLockWindowKeySequence;
 extern const QString gCutRectKeySequence;
 extern const QString gCutFullKeySequence;
 extern const QString gCutWindowKeySequence;

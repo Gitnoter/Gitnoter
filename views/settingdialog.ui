@@ -605,22 +605,6 @@
                 <number>6</number>
                </property>
                <item>
-                <widget class="QLabel" name="label_9">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>21</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>锁定本应用窗口:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QLabel" name="label_12">
                  <property name="maximumSize">
                   <size>
@@ -700,13 +684,6 @@
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item>
-                 <widget class="QKeySequenceWidget" name="keySequenceWidget_lockWindow" native="true">
-                  <property name="focusPolicy">
-                   <enum>Qt::ClickFocus</enum>
-                  </property>
-                 </widget>
-                </item>
                 <item>
                  <widget class="QKeySequenceWidget" name="keySequenceWidget_cutRect" native="true">
                   <property name="focusPolicy">

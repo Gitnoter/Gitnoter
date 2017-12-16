@@ -1,18 +1,22 @@
 #ifndef LOGINWIDGET_H
 #define LOGINWIDGET_H
 
+#include "menubar.h"
+
 #include <QWidget>
 
 namespace Ui {
 class LoginWidget;
 }
 
+class MenuBar;
+
 class LoginWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit LoginWidget(QWidget *parent = 0);
+    explicit LoginWidget(MenuBar *menuBar, QWidget *parent = 0);
     ~LoginWidget();
 
 private slots:
@@ -30,6 +34,7 @@ private slots:
 
 private:
     Ui::LoginWidget *ui;
+    MenuBar *mMenuBar;
 
     bool changeEnterButtonStatus();
 

@@ -36,6 +36,12 @@ public:
         RemoteRepo = 0x003002,
         LocalRepo = 0x003003
     };
+
+    enum GlobalHotKeys {
+        CutRect,
+        CutFull,
+        CutWindow
+    };
     
 };
 

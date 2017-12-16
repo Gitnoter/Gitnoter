@@ -536,9 +536,8 @@ void ScreenShot::drawXYWHInfo()
 
 QPixmap ScreenShot::fullScreenShot()
 {
-    QPixmap pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
-//    pixmap.save(QDir(savePath).filePath(Tools::getShortUuid() + ".jpg"), "JPG");
-    //    pixmap.save("Screenshot.png","png");
+    QScreen *screen = QApplication::primaryScreen();
+    QPixmap pixmap = screen->grabWindow(QApplication::desktop()->winId());
 
     return pixmap;
 }
@@ -546,7 +545,8 @@ QPixmap ScreenShot::fullScreenShot()
 QPixmap ScreenShot::windowScreenShot()
 {
     if (QApplication::activeWindow()) {
-        QPixmap pixmap = QPixmap::grabWindow(
+        QScreen *screen = QApplication::primaryScreen();
+        QPixmap pixmap = screen->grabWindow(
                 QApplication::activeWindow()->winId(), -2, -26,
                 QApplication::activeWindow()->width() + 4,
                 QApplication::activeWindow()->height() + 30);

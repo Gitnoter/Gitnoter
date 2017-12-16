@@ -20,6 +20,6 @@ void LockDialog::on_lineEdit_returnPressed()
 {
     if (gConfigModel->getUnlockPassword() == ui->lineEdit->text()) {
         close();
-        (new MainWindow)->show();
+//        (new MainWindow())->show();
     }
 }
