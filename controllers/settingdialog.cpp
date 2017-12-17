@@ -4,12 +4,27 @@
 #include "globals.h"
 #include "tools.h"
 
+#include <QPropertyAnimation>
+#include <QDebug>
+
 SettingDialog::SettingDialog(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::SettingDialog)
+        ui(new Ui::SettingDialog),
+        mHeight({220, 300, 180, 240})
 {
     ui->setupUi(this);
+    setupUi();
+}
+
+SettingDialog::~SettingDialog()
+{
+    delete ui;
+}
+
+void SettingDialog::setupUi()
+{
     setWindowHeight(0);
+    qApp->setAttribute(Qt::AA_NativeWindows, true);
 
     ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(gConfigModel->getAutoSyncRepoTime()));
     ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(gConfigModel->getAutoLockTime()));
@@ -17,8 +32,8 @@ SettingDialog::SettingDialog(QWidget *parent) :
     ui->lineEdit_repoUrl->setText(gConfigModel->getRepoUrl());
     ui->lineEdit_username->setText(gConfigModel->getRepoUsername());
     ui->lineEdit_password->setText(gConfigModel->getRepoPassword());
-//    ui->fontComboBox->setCurrentText(configModel->getEditorFont());
-//    ui->comboBox_fontSize->setCurrentText(QString::number(configModel->getFontPixelSize()));
+    //    ui->fontComboBox->setCurrentText(configModel->getEditorFont());
+    //    ui->comboBox_fontSize->setCurrentText(QString::number(configModel->getFontPixelSize()));
 
     // default key sequence
     ui->keySequenceWidget_cutRect->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
@@ -49,44 +64,28 @@ SettingDialog::SettingDialog(QWidget *parent) :
             this, SLOT(onCutWindowKeySequenceCleared()));
 }
 
-SettingDialog::~SettingDialog()
-{
-    delete ui;
-}
-
 void SettingDialog::setWindowHeight(int pageIndex)
 {
     if (ui->stackedWidget->currentIndex() == pageIndex) {
         return;
     }
 
-    // todo: 切换page时动态修改当前页面的高度, 直接修改 this 会出现闪烁的情况
-//    if (contentGeometry.isEmpty()) {
-//        contentGeometry = ui->widget_content->geometry();
-//    }
-
+    int height = mHeight[pageIndex];
     ui->stackedWidget->setCurrentIndex(pageIndex);
-    int _height = 0;
-    switch (pageIndex) {
-        case 0:_height = 260;break;
-        case 1:_height = 320;break;
-        case 2:_height = 240;break;
-        case 3:_height = 280;break;
-        case 4:_height = 500;break;
-        default:return;
-    }
+    ui->widget_content->hide();
+    ui->widget_content->setFixedHeight(height - ui->widget_buttons->height());
 
-    setFixedHeight(_height);
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
+    animation->setDuration(abs(size().height() - height));
+    animation->setStartValue(size());
+    animation->setEndValue(QSize(size().width(), height));
+    animation->setEasingCurve(QEasingCurve::Linear);
 
-//    QPropertyAnimation *animation = new QPropertyAnimation(ui->widget_content, "geometry");
-//    QRect endRect = QRect(contentGeometry.x(), contentGeometry.y(), contentGeometry.width(), _height);
-//    animation->setDuration(200);
-//    animation->setStartValue(contentGeometry);
-//    animation->setEndValue(endRect);
-//    animation->setEasingCurve(QEasingCurve::Linear);
-//    animation->start(QAbstractAnimation::DeleteWhenStopped);
+    connect(animation, &QPropertyAnimation::finished, [=]() {
+        ui->widget_content->show();
+    });
 
-//    contentGeometry = endRect;
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void SettingDialog::on_pushButton_general_clicked()

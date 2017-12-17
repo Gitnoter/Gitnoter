@@ -17,6 +17,15 @@ public:
 
     ~SettingDialog();
 
+private:
+    void setupUi();
+
+    void setWindowHeight(int pageIndex);
+
+    int getTimeByComboBoxIndex(int index);
+
+    int getComboBoxIndexByTime(int time);
+
 signals:
 
     void autoSyncRepoTimeChanged();
@@ -63,13 +72,9 @@ private slots:
 
 private:
     Ui::SettingDialog *ui;
-    QRect contentGeometry;
+    QSize mContentGeometry;
 
-    void setWindowHeight(int pageIndex);
-
-    int getTimeByComboBoxIndex(int index);
-
-    int getComboBoxIndexByTime(int time);
+    QList<int> mHeight;
 
 };
 
