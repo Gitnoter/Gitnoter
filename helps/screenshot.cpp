@@ -14,6 +14,9 @@ ScreenShot::ScreenShot(QWidget *parent) :
     infoWidth = 100; //坐标信息框的宽度
     infoHeight = 50; //坐标信息框的高度
 
+
+    pixelRatio = static_cast<int>(qApp->devicePixelRatio());
+
     setWindowState(Qt::WindowActive | Qt::WindowFullScreen);
     initFullScreenWidget();
 
@@ -58,12 +61,14 @@ void ScreenShot::loadBackgroundPixmap(const QPixmap &bgPixmap, int x, int y, int
 
 void ScreenShot::paintEvent(QPaintEvent *event)
 {
+    loadPixmap.setDevicePixelRatio(pixelRatio);
+
     QColor shadowColor;
     shadowColor = QColor(0, 0, 0, 100); //阴影颜色设置
     painter.begin(this); //进行重绘
 
     painter.setPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::FlatCap));//设置画笔
-    painter.drawPixmap(screenx, screeny, loadPixmap.scaled(screenwidth, screenheight, Qt::KeepAspectRatio)); //将背景图片画到窗体上
+    painter.drawPixmap(screenx, screeny, loadPixmap); //将背景图片画到窗体上
     painter.fillRect(screenx, screeny, screenwidth, screenheight, shadowColor); //画影罩效果
 
     switch (currentShotState) {
@@ -101,7 +106,7 @@ void ScreenShot::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
         initFullScreenWidget();
-        accept();
+        close();
     }
 }
 
@@ -499,10 +504,15 @@ int ScreenShot::getMinValue(int num1, int num2)
 void ScreenShot::drawSelectedPixmap()
 {
     painter.drawRect(selectedRect); //画选中的矩形框
-    mShotPixmap = loadPixmap.copy(selectedRect);  //更新选区的Pixmap
+
+    QRect shotRect = QRect(selectedRect.x() * pixelRatio, selectedRect.y() * pixelRatio,
+                           selectedRect.width() * pixelRatio, selectedRect.height() * pixelRatio);
+    mShotPixmap = loadPixmap.copy(shotRect);  //更新选区的Pixmap
     if (selectedRect.width() > 0 && selectedRect.height()) {
         painter.drawPixmap(selectedRect.topLeft(), mShotPixmap); //画选中区域的图片
     }
+
+
     draw8ControlPoint(selectedRect); //画出选区的8个控制点
 }
 

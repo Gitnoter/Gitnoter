@@ -120,6 +120,8 @@ private:
     int screeny; //选区的Y
     int tipWidth, tipHeight, infoWidth, infoHeight; //加载初始框的宽度，高度；显示坐标信息的宽度，高度
 
+    int pixelRatio;
+
 };
 
 #endif // SCREENSHOT_H
