@@ -608,9 +608,11 @@ void MainWindow::markdownLanguage()
 
 void MainWindow::feedback()
 {
-    const QString body = "\n\n" + VER_FILEDESCRIPTION_STR + "\n" + QSysInfo::prettyProductName();
-    QDesktopServices::openUrl(
-            QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
+    const QString body = QString("\n\n") + VER_PRODUCTNAME_STR + " for "
+                         + QSysInfo::productType().toUpper() + " Version "
+                         + VER_PRODUCTVERSION_STR + " (build " + QString::number(VER_PRODUCTBUILD_STR) + ")"
+                         + "\n" + QSysInfo::prettyProductName();
+    QDesktopServices::openUrl(QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
                     gEmailToUser, body), QUrl::TolerantMode));
 }
 
