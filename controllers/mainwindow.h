@@ -48,9 +48,6 @@ public:
     void updateView(Gitnoter::UpdateViewFlags flags = Gitnoter::GroupTreeWidget);
     void setNoteListTitle();
 
-    void updateAutoSyncRepoTimer();
-    void updateAutoLockTimer();
-
 private:
     void setupUi();
 
@@ -129,6 +126,9 @@ private slots:
     void fullScreenShot(size_t id = 1);
     void windowScreenShot(size_t id = 1);
     void partScreenShot(size_t id = 1);
+
+    void updateAutoSyncRepoTimer();
+    void updateAutoLockTimer();
 
 public:
     GroupTreeWidget *groupTreeWidget();

@@ -110,6 +110,11 @@ void MainWindow::setupUi()
     });
 
     connect(mSettingDialog, SIGNAL(globalHotKeysChanged()), mMenuBar, SLOT(initGlobalHotKeys()));
+    connect(mSettingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(updateAutoSyncRepoTimer()));
+    connect(mSettingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(updateAutoLockTimer()));
+
+    connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
+    connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -372,10 +377,8 @@ void MainWindow::setSearchFocus()
 
 void MainWindow::updateAutoSyncRepoTimer()
 {
-    qDebug() << "updateAutoSyncRepoTimer";
     int autoSyncRepo = gConfigModel->getAutoSyncRepoTime();
     if (autoSyncRepo) {
-        connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
         mAutoSyncRepoTimer->start(autoSyncRepo);
     }
     else if (mAutoSyncRepoTimer->isActive()){
@@ -387,7 +390,6 @@ void MainWindow::updateAutoLockTimer()
 {
     int autoLockTime = gConfigModel->getAutoLockTime();
     if (autoLockTime) {
-        connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
         mAutoLockTimer->start(autoLockTime);
     }
     else if (mAutoLockTimer->isActive()){
