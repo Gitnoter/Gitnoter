@@ -2,6 +2,7 @@
 #define SETTINGDIALOG_H
 
 #include <QDialog>
+#include <QFont>
 
 namespace Ui
 {
@@ -32,7 +33,7 @@ signals:
 
     void autoLockTimeChanged();
 
-    void editorFontChanged();
+    void editorFontChanged(const QFont &font);
 
     void globalHotKeysChanged();
 
@@ -48,8 +49,6 @@ private slots:
 
     void on_lineEdit_repoUrl_editingFinished();
 
-    void on_fontComboBox_currentFontChanged(const QFont &f);
-
     void on_comboBox_autoSynch_currentIndexChanged(int index);
 
     void on_comboBox_autoLock_currentIndexChanged(int index);
@@ -59,8 +58,6 @@ private slots:
     void on_lineEdit_username_editingFinished();
 
     void on_lineEdit_password_editingFinished();
-    
-    void on_comboBox_fontSize_currentIndexChanged(const QString &arg1);
 
     void onCutRectKeySequenceAccepted(const QKeySequence &keySequence);
     void onCutWindowKeySequenceAccepted(const QKeySequence &keySequence);
@@ -69,6 +66,8 @@ private slots:
     void onCutRectKeySequenceCleared();
     void onCutWindowKeySequenceCleared();
     void onCutFullKeySequenceCleared();
+
+    void on_pushButton_font_clicked();
 
 private:
     Ui::SettingDialog *ui;

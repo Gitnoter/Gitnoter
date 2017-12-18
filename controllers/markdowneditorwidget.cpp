@@ -496,6 +496,10 @@ void MarkdownEditorWidget::setupUi()
             default:break;
         }
     });
+
+    connect(mMainWindow->settingDialog(), &SettingDialog::editorFontChanged, [=](const QFont &font) {
+        ui->markdownEditor->setFont(font);
+    });
 }
 
 void MarkdownEditorWidget::saveNote()

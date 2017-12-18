@@ -468,14 +468,23 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_7">
+                 <widget class="QLabel" name="label_font">
+                  <property name="maximumSize">
+                   <size>
+                    <width>400</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>TextLabel</string>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="pushButton_font">
                   <property name="text">
                    <string>选择</string>
                   </property>

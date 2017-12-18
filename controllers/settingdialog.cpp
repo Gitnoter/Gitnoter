@@ -5,6 +5,7 @@
 #include "tools.h"
 
 #include <QPropertyAnimation>
+#include <QFontDialog>
 #include <QDebug>
 
 SettingDialog::SettingDialog(QWidget *parent) :
@@ -32,8 +33,8 @@ void SettingDialog::setupUi()
     ui->lineEdit_repoUrl->setText(gConfigModel->getRepoUrl());
     ui->lineEdit_username->setText(gConfigModel->getRepoUsername());
     ui->lineEdit_password->setText(gConfigModel->getRepoPassword());
-    //    ui->fontComboBox->setCurrentText(configModel->getEditorFont());
-    //    ui->comboBox_fontSize->setCurrentText(QString::number(configModel->getFontPixelSize()));
+    ui->label_font->setFont(gConfigModel->getEditorFont());
+    ui->label_font->setText(gConfigModel->getEditorFont().toString());
 
     // default key sequence
     ui->keySequenceWidget_cutRect->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
@@ -188,18 +189,6 @@ void SettingDialog::on_lineEdit_password_editingFinished()
     }
 }
 
-void SettingDialog::on_fontComboBox_currentFontChanged(const QFont &f)
-{
-    gConfigModel->setEditorFont(f.family());
-    emit editorFontChanged();
-}
-
-void SettingDialog::on_comboBox_fontSize_currentIndexChanged(const QString &arg1)
-{
-//    configModel->setFontPixelSize(arg1.toInt());
-    emit editorFontChanged();
-}
-
 void SettingDialog::onCutRectKeySequenceAccepted(const QKeySequence &keySequence)
 {
     gConfigModel->setCutRectKeySequence(keySequence.toString());
@@ -234,4 +223,20 @@ void SettingDialog::onCutFullKeySequenceCleared()
 {
     gConfigModel->setCutFullKeySequence("");
     emit globalHotKeysChanged();
+}
+
+void SettingDialog::on_pushButton_font_clicked()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, ui->label_font->font(), this);
+
+    if (!ok) {
+        return;
+    }
+
+    ui->label_font->setFont(font);
+    ui->label_font->setText(font.toString());
+    gConfigModel->setEditorFont(font);
+
+    emit editorFontChanged(font);
 }

@@ -138,6 +138,8 @@ public:
     QSplitter *splitter();
     MenuBar *menuBar();
 
+    SettingDialog *settingDialog() { return mSettingDialog; }
+
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
