@@ -8,7 +8,6 @@ QT       += core gui network printsupport xml xmlpatterns
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QMAKE_MAC_SDK = macosx10.12
 TARGET = Gitnoter
 TEMPLATE = app
 CONFIG += c++11
