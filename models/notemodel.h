@@ -61,9 +61,9 @@ public:
     void setNoteText(QString body = "");
 
 public:
-    NoteModel(const QString noteText = "");
+    explicit NoteModel(const QString &noteText = "");
 
-    NoteModel(const QString textPath, const QString dataPath);
+    NoteModel(const QString &textPath, const QString &dataPath);
 
     QString getMarkdownHtml();
 
@@ -73,6 +73,12 @@ public:
 
     void setNoteData(const QString &noteData);
 
+    const QString saveMediaToLocal(QString filePath);
+
+    const QString saveMediaToLocal(const QByteArray &data, const QString &suffix = "jpg");
+
+    const QString saveMediaToLocal(const QImage &data);
+
     void saveNoteToLocal();
 
     void saveNoteTextToLocal();
@@ -80,6 +86,10 @@ public:
     void saveNoteDataToLocal();
 
     void clear();
+
+protected:
+    const QString createMediaMarkdown(const QString &fileName, const QString &baseName = "",
+                                      Gitnoter::MediaType type = Gitnoter::Image);
 
 public:
     /**
@@ -93,6 +103,7 @@ public:
     static QString downloadUrlToMedia(QString url, NoteModel *noteModel, bool returnUrlOnly = false);
 
     static QString byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly = false);
+
 
 private:
     QString mUuid;

@@ -109,8 +109,6 @@ private slots:
 
     void on_pushButton_subtract_clicked();
 
-    void on_action_saveNote_triggered();
-
     void on_groupTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
 
     // QListWidget

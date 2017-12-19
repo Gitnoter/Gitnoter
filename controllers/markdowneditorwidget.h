@@ -41,13 +41,17 @@ public:
     void setWindowTitle();
     bool editorHasFocus();
 
-private:
-    void setupUi();
-
+protected:
     bool eventFilter(QObject *object, QEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+
+private:
+    void setupUi();
 
     void setTagList();  // save tagList to noteModel
     void setOpenNote();
@@ -62,6 +66,8 @@ private:
     void setLineTextTitleSign(const QString &titleSign);
     bool undoFormatting(const QString &formatterStart, const QString &formatterEnd);
     void applyFormatter(const QString &formatterStart, const QString &formatterEnd);
+
+    void insertMimeData(const QMimeData *mimeData);
 
 public slots:
     void appendTag(const QString &tag);

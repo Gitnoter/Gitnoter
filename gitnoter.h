@@ -42,7 +42,11 @@ public:
         CutFull,
         CutWindow
     };
-    
+
+    enum MediaType {
+        Image = 0x004001,
+        Accessory = 0x004002
+    };
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Gitnoter::UpdateViewFlags)

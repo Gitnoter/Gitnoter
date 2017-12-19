@@ -10,6 +10,9 @@
     <height>428</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -843,6 +846,9 @@ QPushButton#pushButton_table:hover {
           </property>
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
           </property>
           <property name="plainText">
            <string/>

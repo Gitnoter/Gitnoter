@@ -153,11 +153,6 @@ void MainWindow::on_pushButton_noteAdd_clicked()
     }
 }
 
-void MainWindow::on_action_saveNote_triggered()
-{
-//    mNoteModel->saveNoteToLocal();
-}
-
 void MainWindow::on_pushButton_noteSubtract_clicked()
 {
     if (gConfigModel->getSideSelectedType() == Gitnoter::Trash) {

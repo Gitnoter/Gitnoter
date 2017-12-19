@@ -569,43 +569,7 @@ void MarkdownEditorWidget::pasteHtml()
 {
     QClipboard *clipboard = QApplication::clipboard();
     const QMimeData * mimeData = clipboard->mimeData(QClipboard::Clipboard);
-    if (mimeData->hasHtml()) {
-        QString html = mimeData->html();
-        // convert html tags to markdown
-        html = NoteModel::htmlToMarkdown(html);
-
-        // match image tags
-        QRegularExpression re("<img.+?src=\"(.+?)\".*?>", QRegularExpression::CaseInsensitiveOption);
-        QRegularExpressionMatchIterator i = re.globalMatch(html);
-
-        // find, download locally and replace all images
-        while (i.hasNext()) {
-            QRegularExpressionMatch match = i.next();
-            QString imageTag = match.captured(0);
-            QString imageUrl = match.captured(1);
-
-            qDebug() << __func__ << " - 'imageUrl': " << imageUrl;
-
-            if (!QUrl(imageUrl).isValid()) {
-                continue;
-            }
-
-            // download the image and get the media markdown code for it
-            QString markdownCode = NoteModel::downloadUrlToMedia(imageUrl, mNoteModel);
-
-            if (!markdownCode.isEmpty()) {
-                // replace the image tag with markdown code
-                html.replace(imageTag, markdownCode + "\n");
-            }
-        }
-        // remove all html tags
-        html.remove(QRegularExpression("<.+?>"));
-
-        ui->markdownEditor->textCursor().insertText(html);
-    }
-    else if (mimeData->hasText()) {
-        ui->markdownEditor->textCursor().insertText(mimeData->text());
-    }
+    insertMimeData(mimeData);
 }
 
 void MarkdownEditorWidget::webSearchText()
@@ -1067,13 +1031,8 @@ void MarkdownEditorWidget::insertImage()
         return;
     }
 
-    const QFileInfo fileInfo = QFileInfo(filePath);
-    const QString newFilePath = QDir(mNoteModel->getNoteDir()).filePath(fileInfo.fileName());
-
-    QFile::copy(filePath, newFilePath);
-
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("![" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
+    textCursor.insertText(mNoteModel->saveMediaToLocal(filePath));
     ui->markdownEditor->setTextCursor(textCursor);
 }
 
@@ -1090,13 +1049,8 @@ void MarkdownEditorWidget::accessory()
         return;
     }
 
-    const QFileInfo fileInfo = QFileInfo(filePath);
-    const QString newFilePath = QDir(mNoteModel->getNoteDir()).filePath(fileInfo.fileName());
-
-    QFile::copy(filePath, newFilePath);
-
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("[" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
+    textCursor.insertText(mNoteModel->saveMediaToLocal(filePath));
     ui->markdownEditor->setTextCursor(textCursor);
 }
 
@@ -1299,4 +1253,73 @@ void MarkdownEditorWidget::savePixmap(const QPixmap &pixmap, const QString &name
 bool MarkdownEditorWidget::editorHasFocus()
 {
     return ui->markdownEditor->hasFocus();
+}
+
+
+void MarkdownEditorWidget::dragEnterEvent(QDragEnterEvent *event) {
+    if (event->mimeData()->hasUrls()) {
+        event->acceptProposedAction();
+    }
+}
+
+void MarkdownEditorWidget::dropEvent(QDropEvent *event)
+{
+    insertMimeData(event->mimeData());
+}
+
+void MarkdownEditorWidget::insertMimeData(const QMimeData *mimeData)
+{
+    QString insertText = "";
+
+    if (mimeData->hasImage()) {
+        qDebug() << mimeData->imageData();
+        QImage image = mimeData->imageData().value<QImage>();
+        if (!image.isNull()) {
+            insertText = mNoteModel->saveMediaToLocal(image);
+        }
+    }
+    else if (mimeData->hasUrls()) {
+        for (auto &&url : mimeData->urls()) {
+            if (QFileInfo(url.toLocalFile()).isReadable()) {
+                insertText += mNoteModel->saveMediaToLocal(url.toString()) + "\n";
+            }
+        }
+    }
+    else if (mimeData->hasHtml()) {
+        insertText = mimeData->html();
+        // convert html tags to markdown
+        insertText = NoteModel::htmlToMarkdown(insertText);
+
+        // match image tags
+        QRegularExpression re("<img.+?src=\"(.+?)\".*?>", QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatchIterator i = re.globalMatch(insertText);
+
+        // find, download locally and replace all images
+        while (i.hasNext()) {
+            QRegularExpressionMatch match = i.next();
+            QString imageTag = match.captured(0);
+            QString imageUrl = match.captured(1);
+
+            qDebug() << __func__ << " - 'imageUrl': " << imageUrl;
+
+            if (!QUrl(imageUrl).isValid()) {
+                continue;
+            }
+
+            // download the image and get the media markdown code for it
+            QString markdownCode = NoteModel::downloadUrlToMedia(imageUrl, mNoteModel);
+
+            if (!markdownCode.isEmpty()) {
+                // replace the image tag with markdown code
+                insertText.replace(imageTag, markdownCode + "\n");
+            }
+        }
+        // remove all html tags
+        insertText.remove(QRegularExpression("<.+?>"));
+    }
+    else if (mimeData->hasText()) {
+        insertText = mimeData->text();
+    }
+
+    ui->markdownEditor->textCursor().insertText(insertText);
 }

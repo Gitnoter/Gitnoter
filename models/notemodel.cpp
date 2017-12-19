@@ -13,13 +13,13 @@
 #include <QDir>
 #include <QTemporaryFile>
 
-NoteModel::NoteModel(const QString noteText)
+NoteModel::NoteModel(const QString &noteText)
 {
     clear();
     setNoteText(noteText);
 }
 
-NoteModel::NoteModel(const QString textPath, const QString dataPath)
+NoteModel::NoteModel(const QString &textPath, const QString &dataPath)
 {
     setNoteText(Tools::readerFile(textPath));
     setNoteData(Tools::readerFile(dataPath));
@@ -520,4 +520,56 @@ QString NoteModel::getShortUuid() const
 
 QString NoteModel::getFilePath(QString noteFilePath) {
     return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(gFileScheme + "://", ""));
+}
+
+const QString NoteModel::createMediaMarkdown(const QString &fileName, const QString &baseName, Gitnoter::MediaType type)
+{
+    if (Gitnoter::Image == type) {
+        return "![" + baseName + "](" + gFileScheme + "://" + fileName + ")";
+    }
+    else if (Gitnoter::Accessory == type) {
+        return "[" + baseName + "](" + gFileScheme + "://" + fileName + ")";
+    }
+
+    return "";
+}
+
+const QString NoteModel::saveMediaToLocal(QString filePath)
+{
+    const QFileInfo fileInfo = QFileInfo(filePath);
+    Gitnoter::MediaType type = Gitnoter::Accessory;
+    filePath = filePath.replace("file://", "");
+
+    QFile::copy(filePath, QDir(getNoteDir()).filePath(fileInfo.fileName()));
+
+    if (QStringList({"jpg", "jpeg", "png", "gif"}).contains(fileInfo.suffix(), Qt::CaseInsensitive)) {
+        type = Gitnoter::Image;
+    }
+
+    return createMediaMarkdown(fileInfo.fileName(), fileInfo.baseName(), type);
+}
+
+const QString NoteModel::saveMediaToLocal(const QByteArray &data, const QString &suffix)
+{
+    const QString baseName = Tools::getShortUuid();
+    const QString fileName = baseName + "." + suffix;
+    Gitnoter::MediaType type = Gitnoter::Accessory;
+
+    if (QStringList({"jpg", "jpeg", "png", "gif"}).contains(suffix, Qt::CaseInsensitive)) {
+        type = Gitnoter::Image;
+    }
+
+    Tools::writerFile(QDir(getNoteDir()).filePath(fileName), data);
+
+    return createMediaMarkdown(fileName, baseName, type);
+}
+
+const QString NoteModel::saveMediaToLocal(const QImage &data)
+{
+    const QString baseName = Tools::getShortUuid();
+    const QString fileName = baseName + ".jpg";
+
+    data.save(QDir(getNoteDir()).filePath(fileName), "JPG");
+
+    return createMediaMarkdown(fileName, baseName);
 }
