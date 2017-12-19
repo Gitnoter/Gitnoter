@@ -91,6 +91,7 @@ public slots:
     void removeLine();
     void removeSelectedText();
     void clearText();
+    void pasteData();
     void pasteHtml();
     void webSearchText();
 

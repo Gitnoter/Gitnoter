@@ -403,8 +403,9 @@ void MarkdownEditorWidget::setupUi()
 
     connect(menuBar->getActionCut(), SIGNAL(triggered()), ui->markdownEditor, SLOT(cut()));
     connect(menuBar->getActionCopy(), SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
-    connect(menuBar->getActionPaste(), SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
+    connect(menuBar->getActionPaste(), SIGNAL(triggered()), ui->markdownEditor, SLOT(pasteData()));
     connect(menuBar->getActionSelectAll(), SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
+    connect(menuBar->getActionPaste(), SIGNAL(triggered()), this, SLOT(pasteData()));
     connect(menuBar->getActionPasteHtml(), SIGNAL(triggered()), this, SLOT(pasteHtml()));
     connect(menuBar->getActionDeleteText(), SIGNAL(triggered()), this, SLOT(removeSelectedText()));
     connect(menuBar->getActionClearText(), SIGNAL(triggered()), this, SLOT(clearText()));
@@ -1269,6 +1270,7 @@ void MarkdownEditorWidget::dropEvent(QDropEvent *event)
 
 void MarkdownEditorWidget::insertMimeData(const QMimeData *mimeData)
 {
+    qDebug() << __func__ << mimeData;
     QString insertText = "";
 
     if (mimeData->hasImage()) {
@@ -1322,4 +1324,16 @@ void MarkdownEditorWidget::insertMimeData(const QMimeData *mimeData)
     }
 
     ui->markdownEditor->textCursor().insertText(insertText);
+}
+
+void MarkdownEditorWidget::pasteData()
+{
+    qDebug() << __func__;
+    QClipboard *clipboard = QApplication::clipboard();
+    const QMimeData * mimeData = clipboard->mimeData(QClipboard::Clipboard);
+    if (mimeData->hasHtml() || mimeData->hasText()) {
+        return;
+    }
+
+    insertMimeData(mimeData);
 }
