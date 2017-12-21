@@ -32,7 +32,7 @@ void SettingDialog::setupUi()
     ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(gConfigModel->getAutoLockTime()));
     ui->lineEdit_unlockPassword->setText(gConfigModel->getUnlockPassword());
     ui->lineEdit_repoUrl->setText(gConfigModel->getRepoUrl());
-    ui->lineEdit_username->setText(gConfigModel->getRepoUsername());
+    ui->lineEdit_username->setText(gConfigModel->getRepoEmail());
     ui->lineEdit_password->setText(gConfigModel->getRepoPassword());
     ui->label_font->setFont(gConfigModel->getEditorFont());
     ui->label_font->setText(gConfigModel->getEditorFont().toString());
@@ -167,7 +167,7 @@ void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 {
     QRegExp regExp("((http|https)://|(www)\\.)(\\w+)(\\.?[\\.a-z0-9/:?%&=\\-_+#;]*).git", Qt::CaseInsensitive);
     if (regExp.exactMatch(ui->lineEdit_repoUrl->text())) {
-        gConfigModel->setRepoUrlNew(ui->lineEdit_repoUrl->text());
+        gConfigModel->setRepoUrlNew(ui->lineEdit_repoUrl->text().trimmed());
 //        gConfigModel->setRepoUrl(ui->lineEdit_repoUrl->text());
 //        gGitManager->clearRemoteList();
 //        gGitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
@@ -180,7 +180,7 @@ void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 void SettingDialog::on_lineEdit_username_editingFinished()
 {
     if (!ui->lineEdit_username->text().isEmpty()) {
-        gConfigModel->setRepoEmailNew(ui->lineEdit_username->text());
+        gConfigModel->setRepoEmailNew(ui->lineEdit_username->text().trimmed());
     }
 
     qDebug() << __func__ << ui->lineEdit_username->text();
@@ -189,7 +189,7 @@ void SettingDialog::on_lineEdit_username_editingFinished()
 void SettingDialog::on_lineEdit_password_editingFinished()
 {
     if (!ui->lineEdit_password->text().isEmpty()) {
-        gConfigModel->setRepoPasswordNew(ui->lineEdit_password->text());
+        gConfigModel->setRepoPasswordNew(ui->lineEdit_password->text().trimmed());
     }
 
     qDebug() << __func__ << ui->lineEdit_password->text();

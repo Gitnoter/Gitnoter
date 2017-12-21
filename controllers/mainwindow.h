@@ -53,6 +53,8 @@ public:
 private:
     void setupUi();
 
+    void initTempDir();
+
     void changeEvent(QEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "loginwidget.h"
 #include "globals.h"
 #include "tools.h"
 #include "menubar.h"
@@ -18,14 +17,8 @@ int main(int argc, char *argv[])
 
     MenuBar *menuBar = new MenuBar();
 
-    if (gConfigModel->getLocalRepoStatus() > Gitnoter::NoneRepo) {
-        MainWindow *w = new MainWindow(menuBar);
-        w->show();
-    }
-    else {
-        LoginWidget *l = new LoginWidget(menuBar);
-        l->show();
-    }
+    MainWindow *w = new MainWindow(menuBar);
+    w->show();
 
     return a.exec();
 }

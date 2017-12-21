@@ -21,6 +21,7 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mSettingDialog(new SettingDialog(this))
 {
     ui->setupUi(this);
+    initTempDir();
     init();
     setupUi();
 }
@@ -117,6 +118,20 @@ void MainWindow::setupUi()
 
     connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
     connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
+}
+
+void MainWindow::initTempDir()
+{
+    QDir dir;
+    dir.mkdir(gAppDataLocation);
+    dir.mkdir(gAppDataPath);
+
+    if (Gitnoter::NoneRepo == gConfigModel->getLocalRepoStatus()) {
+        gGitManager->initLocalRepo(gRepoPath.toStdString().c_str());
+    }
+
+    dir.mkdir(gRepoNoteTextPath);
+    dir.mkdir(gRepoNoteDataPath);
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -736,10 +751,8 @@ void MainWindow::setRepoApplyClicked()
     }
 
     const QString repoNoteDataPathTemp = QString(gRepoNoteDataPath).replace(gRepoName, gRepoNameTemp);
-    if (QDir(gRepoNoteDataPath).isReadable()) {
-        QDir(repoNoteDataPathTemp).removeRecursively();
-        QDir().rename(gRepoNoteDataPath, repoNoteDataPathTemp);
-    }
+    QDir(repoNoteDataPathTemp).removeRecursively();
+    QDir().rename(gRepoNoteDataPath, repoNoteDataPathTemp);
 
     QDir(gRepoPath).removeRecursively();
     QDir().rename(repoPathTemp, gRepoPath);
