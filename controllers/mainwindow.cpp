@@ -63,7 +63,7 @@ void MainWindow::setupUi()
     connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(appendNote()));
     connect(mMenuBar->getActionNewCategories(), SIGNAL(triggered()), this, SLOT(appendGroup()));
     connect(mMenuBar->getActionNewTags(), SIGNAL(triggered()), this, SLOT(appendGroup()));
-    connect(mMenuBar->getActionReloadNotes(), SIGNAL(triggered()), this, SLOT(init()));
+    connect(mMenuBar->getActionReloadNotes(), SIGNAL(triggered()), this, SLOT(reload()));
     connect(mMenuBar->getActionPreferences(), SIGNAL(triggered()), this, SLOT(openSettingWidget()));
     connect(mMenuBar->getActionDeleteNote(), SIGNAL(triggered()), this, SLOT(trashNote()));
     connect(mMenuBar->getActionGroupSearch(), SIGNAL(triggered()), this, SLOT(setSearchFocus()));

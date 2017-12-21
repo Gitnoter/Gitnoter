@@ -142,7 +142,7 @@ void ImportNoteDialog::importNotes(QString data)
 
             if (ui->progressBar->value() == ui->progressBar->maximum()) {
                 ui->buttonBox->setEnabled(true);
-                ((MainWindow *) parent())->init();
+                ((MainWindow *) parent())->reload();
             }
         }
 

@@ -403,7 +403,7 @@ void MarkdownEditorWidget::setupUi()
 
     connect(menuBar->getActionCut(), SIGNAL(triggered()), ui->markdownEditor, SLOT(cut()));
     connect(menuBar->getActionCopy(), SIGNAL(triggered()), ui->markdownEditor, SLOT(copy()));
-    connect(menuBar->getActionPaste(), SIGNAL(triggered()), ui->markdownEditor, SLOT(pasteData()));
+    connect(menuBar->getActionPaste(), SIGNAL(triggered()), ui->markdownEditor, SLOT(paste()));
     connect(menuBar->getActionSelectAll(), SIGNAL(triggered()), ui->markdownEditor, SLOT(selectAll()));
     connect(menuBar->getActionPaste(), SIGNAL(triggered()), this, SLOT(pasteData()));
     connect(menuBar->getActionPasteHtml(), SIGNAL(triggered()), this, SLOT(pasteHtml()));
