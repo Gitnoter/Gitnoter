@@ -249,5 +249,5 @@ void SettingDialog::on_pushButton_font_clicked()
 
 void SettingDialog::on_buttonBox_rejected()
 {
-    ((MainWindow *) parentWidget())->setRepo();
+    ((MainWindow *) parentWidget())->setRemoteToRepo();
 }

@@ -41,7 +41,7 @@ void MainWindow::setupUi()
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->markdownEditorWidget->setParent(ui->stackWidget_editor);
 
-    gitPush();
+    syncRepo();
 
     NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
@@ -128,6 +128,7 @@ void MainWindow::initTempDir()
 
     if (Gitnoter::NoneRepo == gConfigModel->getLocalRepoStatus()) {
         gGitManager->initLocalRepo(gRepoPath.toStdString().c_str());
+        gConfigModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
     }
 
     dir.mkdir(gRepoNoteTextPath);
@@ -409,22 +410,6 @@ void MainWindow::updateAutoLockTimer()
     }
 }
 
-void MainWindow::syncRepo()
-{
-    qDebug() << "syncRepo" << __func__;
-    Gitnoter::RepoStatus status = gConfigModel->getLocalRepoStatus();
-    if (Gitnoter::NoneRepo == status) {
-        return;
-    }
-
-//            gitManager->commitA();
-//            gitManager->pull();
-//            gitManager->commitA();
-//
-//            if (Gitnoter::RemoteRepo == status) {
-//                gitManager->push();
-//            }
-}
 void MainWindow::lockWindow()
 {
     qDebug() << "lockWindow" << __func__;
@@ -704,7 +689,7 @@ void MainWindow::reload()
     init();
 }
 
-void MainWindow::setRepo()
+void MainWindow::setRemoteToRepo()
 {
     const QString repoUrl = gConfigModel->getRepoUrl();
     const QString repoEmail = gConfigModel->getRepoEmail();
@@ -757,8 +742,7 @@ void MainWindow::setRepoApplyClicked()
     QDir(gRepoPath).removeRecursively();
     QDir().rename(repoPathTemp, gRepoPath);
 
-    gitPush();
-    reload();
+    syncRepo();
 }
 
 void MainWindow::setRepoCloseClicked()
@@ -770,8 +754,12 @@ void MainWindow::setRepoCloseClicked()
     reload();
 }
 
-void MainWindow::gitPush()
+void MainWindow::syncRepo()
 {
+    if (Gitnoter::RemoteRepo != gConfigModel->getLocalRepoStatus()) {
+        return;
+    }
+
     const QString repoEmail = gConfigModel->getRepoEmail();
     const QString repoPassword = gConfigModel->getRepoPassword();
     const QString repoUsername = gConfigModel->getRepoUsername();
@@ -780,6 +768,8 @@ void MainWindow::gitPush()
     gGitManager->setUserPass(repoEmail.toStdString().c_str(), repoPassword.toStdString().c_str());
     gGitManager->setSignature(repoUsername.toStdString().c_str(), repoEmail.toStdString().c_str());
 
+    gGitManager->pull();
     gGitManager->commitA();
     gGitManager->push();
+    reload();
 }
