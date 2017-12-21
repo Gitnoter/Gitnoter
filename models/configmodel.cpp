@@ -16,6 +16,9 @@ ConfigModel::ConfigModel()
     mRepoEmail = "git/repoEmail";
     mRepoUsername = "git/repoUsername";
     mRepoPassword = "git/repoPassword";
+    mRepoUrlNew = "git/repoUrlNew";
+    mRepoEmailNew = "git/repoEmailNew";
+    mRepoPasswordNew = "git/repoPasswordNew";
     mRepoStatus = "git/repoStatus";
     mAutoSyncRepoTime = "git/autoSyncRepoTime";
     mOpenMainWindowNoteUuid = "editor/openMainWindowNoteUuid";
@@ -92,14 +95,29 @@ void ConfigModel::setRepoUrl(const QString &repoUrl)
     settings->setValue(mRepoUrl, repoUrl);
 }
 
+void ConfigModel::setRepoUrlNew(const QString &repoUrl)
+{
+    settings->setValue(mRepoUrlNew, repoUrl);
+}
+
 void ConfigModel::setRepoUsername(const QString &repoUsername)
 {
     settings->setValue(mRepoUsername, repoUsername);
 }
 
+void ConfigModel::setRepoEmailNew(const QString &email)
+{
+    settings->setValue(mRepoEmailNew, email);
+}
+
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
     settings->setValue(mRepoPassword, encrypt(repoPassword));
+}
+
+void ConfigModel::setRepoPasswordNew(const QString &repoPassword)
+{
+    settings->setValue(mRepoPasswordNew, encrypt(repoPassword));
 }
 
 void ConfigModel::setOpenMainWindowNoteUuid(const QString &openNoteUuid)
@@ -122,14 +140,30 @@ const QString ConfigModel::getRepoUrl() const
     return settings->value(mRepoUrl, "").toString();
 }
 
+QString ConfigModel::getRepoUrlNew()
+{
+    return settings->value(mRepoUrlNew, "").toString();
+}
+
 const QString ConfigModel::getRepoUsername() const
 {
-    return settings->value(mRepoUsername, "").toString();
+    return settings->value(mRepoUsername, "Gitnoter").toString();
+}
+
+const QString ConfigModel::getRepoEmailNew() const
+{
+    return settings->value(mRepoEmailNew, "").toString();
 }
 
 const QString ConfigModel::getRepoPassword() const
 {
     const QString password = settings->value(mRepoPassword, "").toString();
+    return password.isEmpty() ? password : decrypt(password);
+}
+
+const QString ConfigModel::getRepoPasswordNew() const
+{
+    const QString password = settings->value(mRepoPasswordNew, "").toString();
     return password.isEmpty() ? password : decrypt(password);
 }
 

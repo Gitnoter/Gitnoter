@@ -21,9 +21,15 @@ public:
 
     void setRepoUrl(const QString &repoUrl);
 
+    void setRepoUrlNew(const QString &repoUrl);
+
     void setRepoUsername(const QString &repoUsername);
 
+    void setRepoEmailNew(const QString &email);
+
     void setRepoPassword(const QString &repoPassword);
+
+    void setRepoPasswordNew(const QString &repoPassword);
 
     void setOpenMainWindowNoteUuid(const QString &openNoteUuid);
 
@@ -33,9 +39,15 @@ public:
 
     const QString getRepoUrl() const;
 
+    QString getRepoUrlNew();
+
     const QString getRepoUsername() const;
 
+    const QString getRepoEmailNew() const;
+
     const QString getRepoPassword() const;
+
+    const QString getRepoPasswordNew() const;
 
     const QString openMainWindowNoteUuid() const;
 
@@ -160,6 +172,11 @@ private:
     QString mRepoEmail;
     QString mRepoUsername;
     QString mRepoPassword;
+
+    QString mRepoUrlNew;
+    QString mRepoEmailNew;
+    QString mRepoPasswordNew;
+
     QString mOpenMainWindowNoteUuid;
     QString mOpenWindowListNoteUuid;
 

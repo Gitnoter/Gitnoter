@@ -48,6 +48,8 @@ public:
     void updateView(Gitnoter::UpdateViewFlags flags = Gitnoter::GroupTreeWidget);
     void setNoteListTitle();
 
+    void gitPush();
+
 private:
     void setupUi();
 
@@ -101,6 +103,8 @@ public slots:
     void aboutGitnoter();
     void setting();
 
+    void setRepo();
+
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 
@@ -128,6 +132,9 @@ private slots:
 
     void updateAutoSyncRepoTimer();
     void updateAutoLockTimer();
+
+    void setRepoApplyClicked();
+    void setRepoCloseClicked();
 
 public:
     GroupTreeWidget *groupTreeWidget();

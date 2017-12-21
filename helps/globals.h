@@ -17,6 +17,8 @@ extern const QString gAppDataLocation;
 extern const QString gAppDataPath;
 extern const QString appConfigPath;
 extern const QString gRepoPath;
+extern const QString gRepoName;
+extern const QString gRepoNameTemp;
 extern const QString gRepoNoteTextPath;
 extern const QString gNoteTextFileName;
 extern const QString gNoteDataFileName;

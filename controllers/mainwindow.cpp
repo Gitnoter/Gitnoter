@@ -40,6 +40,8 @@ void MainWindow::setupUi()
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->markdownEditorWidget->setParent(ui->stackWidget_editor);
 
+    gitPush();
+
     NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
     connect(noteListSortPopupMenu, SIGNAL(actionTriggered()), ui->noteListWidget, SLOT(onActionTriggered()));
@@ -685,4 +687,86 @@ void MainWindow::reload()
 {
     ui->noteListWidget->clear();
     init();
+}
+
+void MainWindow::setRepo()
+{
+    const QString repoUrl = gConfigModel->getRepoUrl();
+    const QString repoEmail = gConfigModel->getRepoEmail();
+    const QString repoPassword = gConfigModel->getRepoPassword();
+    const QString repoUrlNew = gConfigModel->getRepoUrlNew();
+    const QString repoEmailNew = gConfigModel->getRepoEmailNew();
+    const QString repoPasswordNew = gConfigModel->getRepoPasswordNew();
+
+    GitManager *gitManager = new GitManager();
+
+    const QString username = Tools::getUsernameByEmail(repoEmailNew);
+    gitManager->setUserPass(repoEmailNew.toStdString().c_str(), repoPasswordNew.toStdString().c_str());
+    gitManager->setSignature(username.toStdString().c_str(), repoEmailNew.toStdString().c_str());
+
+    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
+
+    if (repoUrl != repoUrlNew) {
+        QDir(repoPathTemp).removeRecursively();
+        if (gitManager->clone(repoUrlNew.toStdString().c_str(), repoPathTemp.toStdString().c_str()) < 0) {
+            MessageDialog::openMessage(this, "更新仓库失败, 请确认仓库地址和账户密码~");
+            return;
+        }
+
+        gConfigModel->setRepoUrl(repoUrlNew);
+        gConfigModel->setRepoEmail(repoEmailNew);
+        gConfigModel->setRepoPassword(repoPasswordNew);
+
+        MessageDialog *messageDialog = MessageDialog::openMessage(this, "更新仓库成功, 是否把现有的数据拷贝至新仓库中~");
+        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(setRepoApplyClicked()));
+        connect(messageDialog, SIGNAL(closeClicked()), this, SLOT(setRepoCloseClicked()));
+    }
+}
+
+void MainWindow::setRepoApplyClicked()
+{
+    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
+    const QString repoNoteTextPathTemp = QString(gRepoNoteTextPath).replace(gRepoName, gRepoNameTemp);
+    QDir().mkdir(repoNoteTextPathTemp);
+    QList<NoteModel *> noteModelList = ui->noteListWidget->getNoteModelList();
+    for (auto &&noteModel : noteModelList) {
+        const QString newPath = QDir(repoNoteTextPathTemp).filePath(noteModel->getUuid());
+        QDir(newPath).removeRecursively();
+        QDir().rename(noteModel->getNoteDir(), newPath);
+    }
+
+    const QString repoNoteDataPathTemp = QString(gRepoNoteDataPath).replace(gRepoName, gRepoNameTemp);
+    if (QDir(gRepoNoteDataPath).isReadable()) {
+        QDir(repoNoteDataPathTemp).removeRecursively();
+        QDir().rename(gRepoNoteDataPath, repoNoteDataPathTemp);
+    }
+
+    QDir(gRepoPath).removeRecursively();
+    QDir().rename(repoPathTemp, gRepoPath);
+
+    gitPush();
+    reload();
+}
+
+void MainWindow::setRepoCloseClicked()
+{
+    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
+    QDir(gRepoPath).removeRecursively();
+    QDir().rename(repoPathTemp, gRepoPath);
+
+    reload();
+}
+
+void MainWindow::gitPush()
+{
+    const QString repoEmail = gConfigModel->getRepoEmail();
+    const QString repoPassword = gConfigModel->getRepoPassword();
+    const QString repoUsername = gConfigModel->getRepoUsername();
+
+    gGitManager->initLocalRepo(gRepoPath.toStdString().c_str());
+    gGitManager->setUserPass(repoEmail.toStdString().c_str(), repoPassword.toStdString().c_str());
+    gGitManager->setSignature(repoUsername.toStdString().c_str(), repoEmail.toStdString().c_str());
+
+    gGitManager->commitA();
+    gGitManager->push();
 }

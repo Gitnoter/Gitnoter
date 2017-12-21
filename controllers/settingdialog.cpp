@@ -3,6 +3,7 @@
 #include "settingdialog.h"
 #include "globals.h"
 #include "tools.h"
+#include "mainwindow.h"
 
 #include <QPropertyAnimation>
 #include <QFontDialog>
@@ -166,9 +167,10 @@ void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 {
     QRegExp regExp("((http|https)://|(www)\\.)(\\w+)(\\.?[\\.a-z0-9/:?%&=\\-_+#;]*).git", Qt::CaseInsensitive);
     if (regExp.exactMatch(ui->lineEdit_repoUrl->text())) {
-        gConfigModel->setRepoUrl(ui->lineEdit_repoUrl->text());
-        gGitManager->clearRemoteList();
-        gGitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
+        gConfigModel->setRepoUrlNew(ui->lineEdit_repoUrl->text());
+//        gConfigModel->setRepoUrl(ui->lineEdit_repoUrl->text());
+//        gGitManager->clearRemoteList();
+//        gGitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
     }
     else {
         ui->lineEdit_repoUrl->setText(gConfigModel->getRepoUrl());
@@ -178,15 +180,19 @@ void SettingDialog::on_lineEdit_repoUrl_editingFinished()
 void SettingDialog::on_lineEdit_username_editingFinished()
 {
     if (!ui->lineEdit_username->text().isEmpty()) {
-        gConfigModel->setRepoUsername(ui->lineEdit_username->text());
+        gConfigModel->setRepoEmailNew(ui->lineEdit_username->text());
     }
+
+    qDebug() << __func__ << ui->lineEdit_username->text();
 }
 
 void SettingDialog::on_lineEdit_password_editingFinished()
 {
     if (!ui->lineEdit_password->text().isEmpty()) {
-        gConfigModel->setRepoPassword(ui->lineEdit_password->text());
+        gConfigModel->setRepoPasswordNew(ui->lineEdit_password->text());
     }
+
+    qDebug() << __func__ << ui->lineEdit_password->text();
 }
 
 void SettingDialog::onCutRectKeySequenceAccepted(const QKeySequence &keySequence)
@@ -239,4 +245,9 @@ void SettingDialog::on_pushButton_font_clicked()
     gConfigModel->setEditorFont(font);
 
     emit editorFontChanged(font);
+}
+
+void SettingDialog::on_buttonBox_rejected()
+{
+    ((MainWindow *) parentWidget())->setRepo();
 }

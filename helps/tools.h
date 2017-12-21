@@ -36,7 +36,7 @@ public:
 
     static QGraphicsDropShadowEffect *createShadowEffect();
 
-    static void changeWidgetBorder(QWidget *widget, const QString color, int width);
+    static void changeWidgetBorder(QWidget *widget, const QString &color, int width);
 
     static int rowShowCount(QTableWidget *tableWidget);
 
@@ -47,6 +47,8 @@ public:
     static QByteArray downloadUrlToData(QUrl url);
 
     static QString firstUpperCase(QString text);
+
+    static QString getUsernameByEmail(const QString &email);
 
 };
 

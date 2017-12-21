@@ -69,6 +69,8 @@ private slots:
 
     void on_pushButton_font_clicked();
 
+    void on_buttonBox_rejected();
+
 private:
     Ui::SettingDialog *ui;
     QSize mContentGeometry;

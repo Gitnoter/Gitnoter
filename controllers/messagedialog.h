@@ -18,7 +18,8 @@ public:
     void openMessage(const QString &body, const QString &title = "",
                      const QString &apply = "", const QString &close = "");
 
-    void openMessage(QWidget *parent, const QString &body, const QString &title = "",
+public:
+    static MessageDialog *openMessage( QWidget *parent, const QString &body, const QString &title = "",
                             const QString &apply = "", const QString &close = "");
 
 signals:

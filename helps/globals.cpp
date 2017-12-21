@@ -11,8 +11,10 @@ const int gSevenDays = 7 * 24 * 60 * 60;
 const QString gAppDataLocation = QDir(
         QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(gPackageName);
 const QString gAppDataPath = QDir(gAppDataLocation).filePath("data/");
-const QString appConfigPath = QDir(gAppDataPath).filePath("appconfig.json");
+const QString appConfigPath = QDir(gAppDataPath).filePath("appconfig.xml");
 const QString gRepoPath = QDir(gAppDataLocation).filePath("user/user.git");
+const QString gRepoName = "user.git";
+const QString gRepoNameTemp = "user-temp.git";
 const QString gRepoNoteTextPath = QDir(gRepoPath).filePath("notes/");
 const QString gNoteTextFileName = "markdown.md";
 const QString gNoteDataFileName = "data.json";

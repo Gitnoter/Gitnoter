@@ -13,11 +13,12 @@ MessageDialog::~MessageDialog()
     delete ui;
 }
 
-void MessageDialog::openMessage(QWidget *parent, const QString &body, const QString &title,
-                                const QString &apply, const QString &close)
+MessageDialog *MessageDialog::openMessage(QWidget *parent, const QString &body, const QString &title, const QString &apply, const QString &close)
 {
-    setParent(parent);
-    openMessage(body, title, apply, close);
+    MessageDialog *messageDialog = new MessageDialog(parent);
+    messageDialog->openMessage(body, title, apply, close);
+
+    return messageDialog;
 }
 
 void MessageDialog::openMessage(const QString &body, const QString &title, const QString &apply, const QString &close)

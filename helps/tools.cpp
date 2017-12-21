@@ -119,7 +119,7 @@ QGraphicsDropShadowEffect *Tools::createShadowEffect()
 }
 
 
-void Tools::changeWidgetBorder(QWidget *widget, const QString color, int width)
+void Tools::changeWidgetBorder(QWidget *widget, const QString &color, int width)
 {
     widget->setStyleSheet(
             widget->styleSheet().replace(QRegExp("border-color: ?#[A-Z0-9]{6}"), "border-color: " + color));
@@ -270,4 +270,11 @@ QString Tools::firstUpperCase(QString text)
     }
 
     return words.join("");
+}
+
+QString Tools::getUsernameByEmail(const QString &email)
+{
+    QStringList stringList = email.split("@");
+
+    return stringList.length() > 0 ? stringList[0] : "";
 }
