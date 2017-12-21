@@ -75,10 +75,6 @@ public:
 
     void setCutRectKeySequence(const QString &keySequence);
 
-    const QString getLockWindowKeySequence() const;
-
-    void setLockWindowKeySequence(const QString &keySequence);
-
     const QString getCutWindowKeySequence() const;
 
     void setCutWindowKeySequence(const QString &keySequence);
@@ -153,7 +149,7 @@ private:
 
     QString encrypt(const QString &string);
 
-    const QString &decrypt(const QString &string) const;
+    QString decrypt(const QString &string) const;
 
 private:
     QSettings *settings;

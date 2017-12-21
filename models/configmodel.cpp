@@ -52,10 +52,11 @@ QString ConfigModel::encrypt(const QString &string)
     return aes.encrypt(string.toUtf8()).toBase64();
 }
 
-const QString &ConfigModel::decrypt(const QString &string) const
+QString ConfigModel::decrypt(const QString &string) const
 {
     QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
-    return aes.decrypt(QByteArray::fromBase64(string.toUtf8()));
+
+    return QString(aes.decrypt(QByteArray::fromBase64(string.toUtf8())));
 }
 
 template <typename T>
@@ -128,7 +129,7 @@ const QString ConfigModel::getRepoUsername() const
 
 const QString ConfigModel::getRepoPassword() const
 {
-    QString password = settings->value(mRepoPassword, "").toString();
+    const QString password = settings->value(mRepoPassword, "").toString();
     return password.isEmpty() ? password : decrypt(password);
 }
 
