@@ -59,6 +59,7 @@ private:
 
 public slots:
     void init();
+    void reload();
 
     void appendGroup();
     void removeGroup();

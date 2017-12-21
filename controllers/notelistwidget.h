@@ -33,6 +33,8 @@ public:
     void setItemSelected();
 
 public slots:
+    void clear();
+
     void noteModelChanged(NoteModel *noteModel);
 
     void onActionTriggered();

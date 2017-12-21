@@ -680,3 +680,9 @@ void MainWindow::partScreenShot(size_t)
         }
     }
 }
+
+void MainWindow::reload()
+{
+    ui->noteListWidget->clear();
+    init();
+}

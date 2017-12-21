@@ -303,3 +303,9 @@ void NoteListWidget::onActionTriggered()
 {
     sort();
 }
+
+void NoteListWidget::clear()
+{
+    QListWidget::clear();
+    mListWidgetItemList.clear();
+}
