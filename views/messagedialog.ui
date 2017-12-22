@@ -15,32 +15,44 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="leftMargin">
-    <number>8</number>
+    <number>28</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>8</number>
    </property>
    <property name="rightMargin">
-    <number>8</number>
+    <number>16</number>
    </property>
    <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+     <property name="spacing">
+      <number>-1</number>
+     </property>
      <item>
-      <widget class="QWidget" name="widget" native="true">
+      <widget class="QLabel" name="label">
        <property name="minimumSize">
         <size>
-         <width>140</width>
-         <height>0</height>
+         <width>80</width>
+         <height>80</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>140</width>
-         <height>16777215</height>
+         <width>80</width>
+         <height>80</height>
         </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../resources/resources.qrc">:/images/icon-logo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -97,6 +109,12 @@
       </size>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -112,6 +130,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_close">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>取消</string>
         </property>
@@ -122,6 +143,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_apply">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>确定</string>
         </property>
@@ -135,7 +159,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton_apply</sender>
