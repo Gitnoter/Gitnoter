@@ -621,7 +621,7 @@ void MenuBar::initLicenseAction(bool license)
 
 void MenuBar::addHasLicenseAction()
 {
-    QAction *action = new QAction(tr("删除是许可证"), this);
+    QAction *action = new QAction(tr("删除许可证"), this);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, [=]() {
         MessageDialog *messageDialog = MessageDialog::openMessage(
