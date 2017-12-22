@@ -3,8 +3,6 @@
 #include "tools.h"
 #include "markdowneditorwidget.h"
 
-#include <qtinyaes/qtinyaes.h>
-
 ConfigModel::ConfigModel()
 {
     mVersion = "version";
@@ -46,20 +44,7 @@ ConfigModel::ConfigModel()
 void ConfigModel::init()
 {
     Tools::createMkDir(gAppDataPath);
-    settings = new QSettings(appConfigPath, QSettings::NativeFormat);
-}
-
-QString ConfigModel::encrypt(const QString &string)
-{
-    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
-    return aes.encrypt(string.toUtf8()).toBase64();
-}
-
-QString ConfigModel::decrypt(const QString &string) const
-{
-    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
-
-    return QString(aes.decrypt(QByteArray::fromBase64(string.toUtf8())));
+    settings = new QSettings(gAppConfigPath, QSettings::NativeFormat);
 }
 
 template <typename T>
@@ -112,12 +97,12 @@ void ConfigModel::setRepoEmailNew(const QString &email)
 
 void ConfigModel::setRepoPassword(const QString &repoPassword)
 {
-    settings->setValue(mRepoPassword, encrypt(repoPassword));
+    settings->setValue(mRepoPassword, Tools::encrypt(repoPassword));
 }
 
 void ConfigModel::setRepoPasswordNew(const QString &repoPassword)
 {
-    settings->setValue(mRepoPasswordNew, encrypt(repoPassword));
+    settings->setValue(mRepoPasswordNew, Tools::encrypt(repoPassword));
 }
 
 void ConfigModel::setOpenMainWindowNoteUuid(const QString &openNoteUuid)
@@ -158,13 +143,13 @@ const QString ConfigModel::getRepoEmailNew() const
 const QString ConfigModel::getRepoPassword() const
 {
     const QString password = settings->value(mRepoPassword, "").toString();
-    return password.isEmpty() ? password : decrypt(password);
+    return password.isEmpty() ? password : Tools::decrypt(password);
 }
 
 const QString ConfigModel::getRepoPasswordNew() const
 {
     const QString password = settings->value(mRepoPasswordNew, "").toString();
-    return password.isEmpty() ? password : decrypt(password);
+    return password.isEmpty() ? password : Tools::decrypt(password);
 }
 
 const QString ConfigModel::openMainWindowNoteUuid() const

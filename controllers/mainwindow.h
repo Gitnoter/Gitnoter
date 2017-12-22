@@ -10,6 +10,7 @@
 #include "markdowneditorwidget.h"
 #include "menubar.h"
 #include "notemodel.h"
+#include "enterlicensedialog.h"
 
 #include <UGlobalHotkey/uglobalhotkeys.h>
 
@@ -53,6 +54,7 @@ private:
 
     void initTempDir();
 
+protected:
     void changeEvent(QEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -136,6 +138,8 @@ private slots:
     void setRepoApplyClicked();
     void setRepoCloseClicked();
 
+    void openPurchasePanel();
+
 public:
     GroupTreeWidget *groupTreeWidget();
     NoteListWidget *noteListWidget();
@@ -145,15 +149,18 @@ public:
     MenuBar *menuBar();
 
     SettingDialog *settingDialog() { return mSettingDialog; }
+    EnterLicenseDialog *enterLicenseDialog() { return mEnterLicenseDialog; }
 
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
     AboutDialog *mAboutDialog;
     SettingDialog *mSettingDialog;
+    EnterLicenseDialog *mEnterLicenseDialog;
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;
+    int mOpenPurchasePanelTimestamp;
 
 };
 

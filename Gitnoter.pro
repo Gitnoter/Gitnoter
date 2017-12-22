@@ -54,6 +54,7 @@ SOURCES += \
     controllers/menubar.cpp \
     controllers/navigationbarwidget.cpp \
     controllers/importnotedialog.cpp \
+    controllers/enterlicensedialog.cpp \
     models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
@@ -84,6 +85,7 @@ HEADERS += \
     controllers/menubar.h  \
     controllers/navigationbarwidget.h \
     controllers/importnotedialog.h \
+    controllers/enterlicensedialog.h \
     models/notemodel.h  \
     models/configmodel.h \
     models/groupmodel.h \
@@ -106,7 +108,8 @@ FORMS += \
     views/tagcellwidget.ui \
     views/messagedialog.ui \
     views/menubar.ui \
-    views/importnotedialog.ui
+    views/importnotedialog.ui \
+    views/enterlicensedialog.ui
 
 RESOURCES += \
     resources/resources.qrc

@@ -23,6 +23,12 @@ MessageDialog *MessageDialog::openMessage(QWidget *parent, const QString &body, 
 
 void MessageDialog::openMessage(const QString &body, const QString &title, const QString &apply, const QString &close)
 {
+    setMessageInfo(body, title, apply, close);
+    open();
+}
+
+void MessageDialog::setMessageInfo(const QString &body, const QString &title, const QString &apply, const QString &close)
+{
     ui->label_body->setText(body);
 
     if (!title.isEmpty()) {
@@ -36,8 +42,16 @@ void MessageDialog::openMessage(const QString &body, const QString &title, const
     if (!close.isEmpty()) {
         ui->pushButton_close->setText(close);
     }
+}
 
-    open();
+void MessageDialog::setActiveButton(MessageDialog::ActiveButton activeButton)
+{
+    if (MessageDialog::Apply == activeButton) {
+        ui->pushButton_apply->setFocus();
+    }
+    else if (MessageDialog::Close == activeButton) {
+        ui->pushButton_close->setFocus();
+    }
 }
 
 void MessageDialog::on_pushButton_close_clicked()

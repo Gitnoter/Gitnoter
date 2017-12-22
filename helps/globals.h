@@ -15,7 +15,8 @@ extern const int gSevenDays;
 
 extern const QString gAppDataLocation;
 extern const QString gAppDataPath;
-extern const QString appConfigPath;
+extern const QString gAppConfigPath;
+extern const QString gAppLicensePath;
 extern const QString gRepoPath;
 extern const QString gRepoName;
 extern const QString gRepoNameTemp;
@@ -40,6 +41,7 @@ extern const QString gHistoryChangeUrl;
 extern const QString gMarkdownLanguageUrl;
 extern const QString gIssueUrl;
 extern const QString gEmailToUser;
+extern const QString gPurchaseLicenseUrl;
 
 extern const QByteArray gAesKey;
 extern const QByteArray gAesIv;

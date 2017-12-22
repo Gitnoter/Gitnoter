@@ -159,10 +159,6 @@ private:
     template <typename T>
     QList<T> fromVariantList(const QVariantList &list);
 
-    QString encrypt(const QString &string);
-
-    QString decrypt(const QString &string) const;
-
 private:
     QSettings *settings;
 

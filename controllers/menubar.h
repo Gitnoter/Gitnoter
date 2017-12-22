@@ -22,12 +22,16 @@ class MenuBar : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MenuBar(QWidget *parent = 0);
+    explicit MenuBar(QWidget *parent = nullptr, MainWindow *mainWindow = nullptr);
     ~MenuBar();
 
     void setGroupEnable();
     void addActionToWindowMenu(QWidget *widget = 0);
     void removeActionToWindowMenu(QWidget *widget = 0);
+
+    void initLicenseAction(bool license = false);
+    void addHasLicenseAction();
+    void addNoLicenseAction();
 
 //    void initFormMarkdownEditorWidget();
 //    void initFormGroupTreeWidget();
@@ -151,12 +155,14 @@ public:
 
     UGlobalHotkeys *keyGlobalHotKeys() { return mKeyGlobalHotKeys; }
 
+    void setMainWindow(MainWindow *mainWindow) { mMainWindow = mainWindow; }
+
 private:
     Ui::MenuBar *ui;
     QPrinter *mPrinter;
     QActionGroup *mWindowMenuActionGroup;
-
     UGlobalHotkeys *mKeyGlobalHotKeys;
+    MainWindow *mMainWindow;
 
 };
 

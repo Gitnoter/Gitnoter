@@ -9,6 +9,8 @@
 #include <QTimer>
 #include <QNetworkReply>
 
+#include <qtinyaes/qtinyaes.h>
+
 QFileInfoList Tools::getFilesPath(const QString path)
 {
     QDir dir(path);
@@ -277,4 +279,17 @@ QString Tools::getUsernameByEmail(const QString &email)
     QStringList stringList = email.split("@");
 
     return stringList.length() > 0 ? stringList[0] : "";
+}
+
+QString Tools::encrypt(const QString &string)
+{
+    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
+    return aes.encrypt(string.toUtf8()).toBase64();
+}
+
+QString Tools::decrypt(const QString &string)
+{
+    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
+
+    return QString(aes.decrypt(QByteArray::fromBase64(string.toUtf8())));
 }

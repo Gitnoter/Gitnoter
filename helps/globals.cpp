@@ -11,7 +11,8 @@ const int gSevenDays = 7 * 24 * 60 * 60;
 const QString gAppDataLocation = QDir(
         QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath(gPackageName);
 const QString gAppDataPath = QDir(gAppDataLocation).filePath("local/");
-const QString appConfigPath = QDir(gAppDataPath).filePath("appconfig.xml");
+const QString gAppConfigPath = QDir(gAppDataPath).filePath("appconfig.xml");
+const QString gAppLicensePath = QDir(gAppDataPath).filePath("license.gitnoter");
 const QString gRepoPath = QDir(gAppDataLocation).filePath("user/user.git");
 const QString gRepoName = "user.git";
 const QString gRepoNameTemp = "user-temp.git";
@@ -35,6 +36,7 @@ const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www
 const QString gGuideUrl = "http://gitnoter.github.io/";
 const QString gHistoryChangeUrl = "http://gitnoter.github.io/";
 const QString gMarkdownLanguageUrl = "http://gitnoter.github.io/";
+const QString gPurchaseLicenseUrl = "http://gitnoter.github.io/";
 const QString gIssueUrl = "https://github.com/Gitnoter/Gitnoter/issues";
 const QString gEmailToUser = "gitnoter@gmail.com";
 

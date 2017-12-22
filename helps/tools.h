@@ -50,6 +50,11 @@ public:
 
     static QString getUsernameByEmail(const QString &email);
 
+    static QString encrypt(const QString &string);
+
+    static QString decrypt(const QString &string);
+
+
 };
 
 #endif // TOOLS_H

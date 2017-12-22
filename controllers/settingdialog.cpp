@@ -168,9 +168,6 @@ void SettingDialog::on_lineEdit_repoUrl_editingFinished()
     QRegExp regExp("((http|https)://|(www)\\.)(\\w+)(\\.?[\\.a-z0-9/:?%&=\\-_+#;]*).git", Qt::CaseInsensitive);
     if (regExp.exactMatch(ui->lineEdit_repoUrl->text())) {
         gConfigModel->setRepoUrlNew(ui->lineEdit_repoUrl->text().trimmed());
-//        gConfigModel->setRepoUrl(ui->lineEdit_repoUrl->text());
-//        gGitManager->clearRemoteList();
-//        gGitManager->addRemote("origin", ui->lineEdit_repoUrl->text().toUtf8().constData());
     }
     else {
         ui->lineEdit_repoUrl->setText(gConfigModel->getRepoUrl());

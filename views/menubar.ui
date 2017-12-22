@@ -193,6 +193,7 @@
     <addaction name="action_feedback"/>
     <addaction name="action_issue"/>
     <addaction name="action_about"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu_notes"/>
    <addaction name="menu_edit"/>

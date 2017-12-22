@@ -2,12 +2,14 @@
 
 #include "menubar.h"
 #include "globals.h"
+#include "messagedialog.h"
 
 #include <QPrintDialog>
 #include <QPageSetupDialog>
 
-MenuBar::MenuBar(QWidget *parent) :
+MenuBar::MenuBar(QWidget *parent, MainWindow *mainWindow ) :
         QMainWindow(parent),
+        mMainWindow(mainWindow),
         ui(new Ui::MenuBar),
         mWindowMenuActionGroup(new QActionGroup(this)),
         mPrinter(new QPrinter()),
@@ -605,4 +607,47 @@ void MenuBar::initGlobalHotKeys()
     mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
     mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
     mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
+}
+
+void MenuBar::initLicenseAction(bool license)
+{
+    if (license) {
+        addHasLicenseAction();
+    }
+    else {
+        addNoLicenseAction();
+    }
+}
+
+void MenuBar::addHasLicenseAction()
+{
+    QAction *action = new QAction(tr("删除是许可证"), this);
+    ui->menu_help->addAction(action);
+    connect(action, &QAction::triggered, [=]() {
+        MessageDialog *messageDialog = MessageDialog::openMessage(
+                mMainWindow,
+                tr("删除后会将应用退回到未许可的状态\nTip: 删除后重新填写许可证仍然可以激活"),
+                tr("您确定需要删除许可证吗 (..•˘_˘•..)"),
+                tr("确定删除"));
+        connect(messageDialog, &MessageDialog::applyClicked, [=]() {
+            ui->menu_help->removeAction(action);
+            QDir().remove(gAppLicensePath);
+            mMainWindow->enterLicenseDialog()->init();
+        });
+    });
+}
+
+void MenuBar::addNoLicenseAction()
+{
+    QAction *action = new QAction(tr("购买许可证"), this);
+    ui->menu_help->addAction(action);
+    connect(action, &QAction::triggered, []() {
+        QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
+    });
+
+    action = new QAction(tr("输入许可证"), this);
+    ui->menu_help->addAction(action);
+    connect(action, &QAction::triggered, [=]() {
+        mMainWindow->enterLicenseDialog()->open();
+    });
 }

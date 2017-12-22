@@ -11,6 +11,8 @@
 #include "importnotedialog.h"
 #include "screenshot.h"
 
+#define __OPEN_PURCHASE_PANEL_TIME__ 300
+
 MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         QMainWindow(parent),
         mMenuBar(menubar),
@@ -18,7 +20,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mAutoSyncRepoTimer(new QTimer(this)),
         mAutoLockTimer(new QTimer(this)),
         mAboutDialog(new AboutDialog(this)),
-        mSettingDialog(new SettingDialog(this))
+        mSettingDialog(new SettingDialog(this)),
+        mEnterLicenseDialog(new EnterLicenseDialog(this))
 {
     ui->setupUi(this);
     initTempDir();
@@ -33,15 +36,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
+    mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
     mMenuBar->addActionToWindowMenu(this);
+    mMenuBar->setMainWindow(this);
+    mEnterLicenseDialog->init();
     setMenuBar(mMenuBar->menuBar());
     ui->groupTreeWidget->expandAll();
     ui->groupTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->noteListWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->lineEdit_noteSearch->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
     ui->markdownEditorWidget->setParent(ui->stackWidget_editor);
-
-    syncRepo();
 
     NoteListSortPopupMenu *noteListSortPopupMenu = new NoteListSortPopupMenu(ui->pushButton_sort, this);
     ui->pushButton_sort->setMenu(noteListSortPopupMenu);
@@ -54,6 +58,8 @@ void MainWindow::setupUi()
     if (gConfigModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
+
+    syncRepo();
 
     updateAutoLockTimer();
     updateAutoSyncRepoTimer();
@@ -118,6 +124,20 @@ void MainWindow::setupUi()
 
     connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
     connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
+
+
+    connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionNewCategories(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionNewTags(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionDeleteNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionSynchNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionSaveNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionFindText(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionReplaceText(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionFindNext(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionFindLast(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionReplaceAndNext(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
+    connect(mMenuBar->getActionReplaceAll(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
 }
 
 void MainWindow::initTempDir()
@@ -772,4 +792,26 @@ void MainWindow::syncRepo()
     gGitManager->commitA();
     gGitManager->push();
     reload();
+}
+
+void MainWindow::openPurchasePanel()
+{
+    if (mEnterLicenseDialog->isLicense()
+        || mOpenPurchasePanelTimestamp + __OPEN_PURCHASE_PANEL_TIME__ > QDateTime::currentSecsSinceEpoch()) {
+        return;
+    }
+
+    MessageDialog *messageDialog = new MessageDialog(this);
+    messageDialog->setMessageInfo(
+            tr("您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(gPurchaseLicenseUrl),
+            tr("感谢您试用 %1（￣▽￣）").arg(VER_PRODUCTNAME_STR), tr("购买"));
+    connect(messageDialog, &MessageDialog::applyClicked, [=]() {
+        mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
+        QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
+    });
+    connect(messageDialog, &MessageDialog::closeClicked, [=]() {
+        mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
+    });
+
+    messageDialog->exec();
 }
