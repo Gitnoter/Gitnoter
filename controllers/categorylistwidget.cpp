@@ -10,7 +10,8 @@ CategoryListWidget::CategoryListWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->lineEdit->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
 }
 
 CategoryListWidget::~CategoryListWidget()

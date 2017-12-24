@@ -49,6 +49,15 @@
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
@@ -61,10 +70,21 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>15</number>
+     </property>
+     <property name="rightMargin">
+      <number>15</number>
+     </property>
      <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">QLineEdit {
+	border-radius: 4px;
+	border: 0.5px solid rgb(191, 191, 191);
+	font-size: 12px;
+	height: 18px;
+}</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -94,16 +114,58 @@
      <property name="styleSheet">
       <string notr="true">QListWidget#listWidget_data{
 	border: 0px solid;
-	background-color:#EFEFEF;
+	background-color:#ececec;
+}
+
+/* Works for both QListView and QListWidget */
+QListWidget::item {
+    border: 0px;
+}
+
+/* For icon only */
+QListWidget::icon {
+    left: 15px;
+	right: 15px;
+}
+
+/* For text only */
+QListWidget::text {
+    left: 15px;
+	right: 15px;
+}
+
+QListWidget::item:selected {
+	background-color: #0069d9;
 }</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
+    <widget class="QFrame" name="frame">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>15</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>15</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QDialogButtonBox" name="buttonBox">
+        <property name="standardButtons">
+         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -118,7 +180,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>599</y>
+     <y>591</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
@@ -134,7 +196,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>599</y>
+     <y>591</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
