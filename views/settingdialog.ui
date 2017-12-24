@@ -340,6 +340,9 @@
                   <property name="focusPolicy">
                    <enum>Qt::ClickFocus</enum>
                   </property>
+                  <property name="placeholderText">
+                   <string>http(s)://git.git.com/gitnoter/notes/git</string>
+                  </property>
                   <property name="cursorMoveStyle">
                    <enum>Qt::LogicalMoveStyle</enum>
                   </property>
@@ -381,6 +384,9 @@
                     <property name="focusPolicy">
                      <enum>Qt::ClickFocus</enum>
                     </property>
+                    <property name="placeholderText">
+                     <string>gitnoter@gmail.com</string>
+                    </property>
                    </widget>
                   </item>
                   <item>
@@ -417,6 +423,9 @@
                     </property>
                     <property name="echoMode">
                      <enum>QLineEdit::Password</enum>
+                    </property>
+                    <property name="placeholderText">
+                     <string>*********</string>
                     </property>
                    </widget>
                   </item>
