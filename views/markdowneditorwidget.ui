@@ -77,100 +77,20 @@ QLineEdit#lineEdit_tag,
   border: none;
 }
 
+QLabel#label_tagIcon,
+QPushButton#pushButton_bold,
+QPushButton#pushButton_italic,
+QPushButton#pushButton_strickout,
+QPushButton#pushButton_quote,
+QPushButton#pushButton_code,
+QPushButton#pushButton_link,
+QPushButton#pushButton_image,
+QPushButton#pushButton_unordered,
+QPushButton#pushButton_ordered,
+QPushButton#pushButton_taskList,
+QPushButton#pushButton_table,
 QPushButton#pushButton_headerSize {
-  border-image: url(:/images/icon-text-size.svg);
-}
-
-QPushButton#pushButton_headerSize:hover {
-  border-image: url(:/images/icon-text-size-down.svg);
-}
-
-QPushButton#pushButton_bold {
-  border-image: url(:/images/icon-bold.svg);
-}
-
-QPushButton#pushButton_bold:hover {
-  border-image: url(:/images/icon-bold-down.svg);
-}
-
-QPushButton#pushButton_italic {
-  border-image: url(:/images/icon-italic.svg);
-}
-
-QPushButton#pushButton_italic:hover {
-  border-image: url(:/images/icon-italic-down.svg);
-}
-
-QPushButton#pushButton_strickout {
-  border-image: url(:/images/icon-strickout.svg);
-}
-
-QPushButton#pushButton_strickout:hover {
-  border-image: url(:/images/icon-strickout-down.svg);
-}
-
-QPushButton#pushButton_quote {
-  border-image: url(:/images/icon-quote.svg);
-}
-
-QPushButton#pushButton_quote:hover {
-  border-image: url(:/images/icon-quote-down.svg);
-}
-
-QPushButton#pushButton_code {
-  border-image: url(:/images/icon-code.svg);
-}
-
-QPushButton#pushButton_code:hover {
-  border-image: url(:/images/icon-code-down.svg);
-}
-
-QPushButton#pushButton_link {
-  border-image: url(:/images/icon-link.svg);
-}
-
-QPushButton#pushButton_link:hover {
-  border-image: url(:/images/icon-link-down.svg);
-}
-
-QPushButton#pushButton_image {
-  border-image: url(:/images/icon-file-media.svg);
-}
-
-QPushButton#pushButton_image:hover {
-  border-image: url(:/images/icon-file-media-down.svg);
-}
-
-QPushButton#pushButton_unordered {
-  border-image: url(:/images/icon-list-unordered.svg);
-}
-
-QPushButton#pushButton_unordered:hover {
-  border-image: url(:/images/icon-list-unordered-down.svg);
-}
-
-QPushButton#pushButton_ordered {
-  border-image: url(:/images/icon-list-ordered.svg);
-}
-
-QPushButton#pushButton_ordered:hover {
-  border-image: url(:/images/icon-list-ordered-down.svg);
-}
-
-QPushButton#pushButton_taskList {
-  border-image: url(:/images/icon-tasklist.svg);
-}
-
-QPushButton#pushButton_taskList:hover {
-  border-image: url(:/images/icon-tasklist-down.svg);
-}
-
-QPushButton#pushButton_table {
-  border-image: url(:/images/icon-table.svg);
-}
-
-QPushButton#pushButton_table:hover {
-  border-image: url(:/images/icon-table-down.svg);
+  border: none;
 }
    </string>
   </property>
@@ -390,25 +310,19 @@ QPushButton#pushButton_table:hover {
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Ignored</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
               <widget class="QPushButton" name="pushButton_splitterPreview">
                <property name="text">
                 <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../resources/resources.qrc">
+                 <normaloff>:/images/icon-splitterpreview.png</normaloff>:/images/icon-splitterpreview.png</iconset>
+               </property>
+               <property name="autoDefault">
+                <bool>false</bool>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -416,6 +330,19 @@ QPushButton#pushButton_table:hover {
               <widget class="QPushButton" name="pushButton_markdownPeview">
                <property name="text">
                 <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../resources/resources.qrc">
+                 <normaloff>:/images/icon-markdownpreview.png</normaloff>:/images/icon-markdownpreview.png</iconset>
+               </property>
+               <property name="autoDefault">
+                <bool>false</bool>
+               </property>
+               <property name="default">
+                <bool>false</bool>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -437,7 +364,7 @@ QPushButton#pushButton_table:hover {
              </size>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="page_editTools">
              <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -465,8 +392,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_headerSize">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -477,6 +404,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-text-size.svg</normaloff>:/images/icon-text-size.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -484,8 +418,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_bold">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -496,6 +430,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-bold.svg</normaloff>:/images/icon-bold.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -503,8 +444,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_italic">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -515,6 +456,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-italic.svg</normaloff>:/images/icon-italic.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -522,18 +470,25 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_strickout">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>16777215</width>
+                    <height>16777215</height>
                    </size>
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-strickout.svg</normaloff>:/images/icon-strickout.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -558,14 +513,14 @@ QPushButton#pushButton_table:hover {
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <property name="spacing">
-                 <number>6</number>
+                 <number>8</number>
                 </property>
                 <item>
                  <widget class="QPushButton" name="pushButton_quote">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -576,6 +531,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-quote.svg</normaloff>:/images/icon-quote.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -583,8 +545,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_code">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -595,6 +557,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-code.svg</normaloff>:/images/icon-code.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -602,8 +571,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_link">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -614,6 +583,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-link.svg</normaloff>:/images/icon-link.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -621,8 +597,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_image">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -633,6 +609,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-file-media.svg</normaloff>:/images/icon-file-media.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -657,14 +640,20 @@ QPushButton#pushButton_table:hover {
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <property name="spacing">
-                 <number>9</number>
+                 <number>8</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
                 </property>
                 <item>
                  <widget class="QPushButton" name="pushButton_unordered">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -675,6 +664,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-list-unordered.svg</normaloff>:/images/icon-list-unordered.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -682,8 +678,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_ordered">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -694,6 +690,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-list-ordered.svg</normaloff>:/images/icon-list-ordered.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -701,8 +704,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_taskList">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -713,6 +716,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-tasklist.svg</normaloff>:/images/icon-tasklist.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -720,8 +730,8 @@ QPushButton#pushButton_table:hover {
                  <widget class="QPushButton" name="pushButton_table">
                   <property name="minimumSize">
                    <size>
-                    <width>16</width>
-                    <height>16</height>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -732,6 +742,13 @@ QPushButton#pushButton_table:hover {
                   </property>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/resources.qrc">
+                    <normaloff>:/images/icon-table.svg</normaloff>:/images/icon-table.svg</iconset>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1034,6 +1051,7 @@ QTreeWidget#navigationBar::branch:open:has-children:has-siblings  {
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>NotePreviewWidget</class>
