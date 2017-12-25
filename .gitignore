@@ -38,3 +38,8 @@ Makefile*
 .idea
 *.user
 !3rdparty/libgit2/lib/*
+.vs/**
+*.vcxproj*
+debug/**
+release/**
+Win32/**

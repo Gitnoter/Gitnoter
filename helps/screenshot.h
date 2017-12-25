@@ -1,4 +1,4 @@
-#ifndef SCREENSHOT_H
+﻿#ifndef SCREENSHOT_H
 #define SCREENSHOT_H
 
 #include <QtGui>

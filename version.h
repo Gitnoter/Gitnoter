@@ -1,4 +1,4 @@
-#ifndef VERSION_H
+﻿#ifndef VERSION_H
 #define VERSION_H
 
 #define VER_FILEVERSION             1,0,0,0     //文件版本
@@ -15,7 +15,7 @@
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
 #define VER_PRODUCTNAME_STR         "Gitnoter"        // 产品名称
 #define VER_ORIGINALFILENAME_STR    "Gitnoter.exe"    // 原始文件名
-#define VER_FILEDESCRIPTION_STR     QString("%1 for %3 Version %2 (build %4)").arg(VER_PRODUCTNAME_STR, VER_PRODUCTVERSION_STR, "Windows").arg(VER_PRODUCTBUILD_STR)    // 文件说明
+#define VER_FILEDESCRIPTION_STR     "Gitnoter for Windows Version 1.0.0.0 (build 1)"    // 文件说明
 
 #define VER_ORGANIZATIONDOMAIN_STR  "http://gitnoter.com"
 

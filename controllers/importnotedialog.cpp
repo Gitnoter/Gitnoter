@@ -1,4 +1,4 @@
-#include "ui_importnotedialog.h"
+﻿#include "ui_importnotedialog.h"
 
 #include "importnotedialog.h"
 #include "tools.h"

@@ -1,4 +1,4 @@
-#include "notelistsortpopupmenu.h"
+﻿#include "notelistsortpopupmenu.h"
 #include "globals.h"
 
 NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* parent) :

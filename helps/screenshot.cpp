@@ -1,4 +1,4 @@
-#include "screenshot.h"
+﻿#include "screenshot.h"
 #include "tools.h"
 #include "globals.h"
 

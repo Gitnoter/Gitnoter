@@ -1,4 +1,4 @@
-#include "ui_markdowneditorwidget.h"
+﻿#include "ui_markdowneditorwidget.h"
 
 #include "markdowneditorwidget.h"
 #include "globals.h"

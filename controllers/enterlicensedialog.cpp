@@ -1,4 +1,4 @@
-#include "enterlicensedialog.h"
+﻿#include "enterlicensedialog.h"
 #include "ui_enterlicensedialog.h"
 #include "tools.h"
 #include "globals.h"
