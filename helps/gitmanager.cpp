@@ -1,4 +1,6 @@
-﻿#include "gitmanager.h"
+#include "gitmanager.h"
+
+#include <string.h>
 
 GitManager::GitManager()
 {

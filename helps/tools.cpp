@@ -95,7 +95,7 @@ QStringList Tools::splitNotesData(QString string)
     list << "" << "";
 
     for (int i = 0; i < string.length(); ++i) {
-        if (!split && QString::QString(string[i]) == ":") {
+        if (!split && QString(string[i]) == ":") {
             split = true;
             continue;
         }

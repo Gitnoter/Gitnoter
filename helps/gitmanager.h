@@ -1,8 +1,10 @@
-﻿#ifndef GITMANAGER_H
+#ifndef GITMANAGER_H
 #define GITMANAGER_H
 
 #include <vector>
 #include <assert.h>
+#include <stdio.h>
+
 #include <git2.h>
 
 typedef struct
