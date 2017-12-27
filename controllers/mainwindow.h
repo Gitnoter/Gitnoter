@@ -11,6 +11,7 @@
 #include "menubar.h"
 #include "notemodel.h"
 #include "enterlicensedialog.h"
+#include "gitmanager.h"
 
 #include <UGlobalHotkey/uglobalhotkeys.h>
 
@@ -161,6 +162,8 @@ private:
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;
     int mOpenPurchasePanelTimestamp;
+
+    GitManager *mGitManager;
 
 };
 
