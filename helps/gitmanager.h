@@ -1,4 +1,4 @@
-#ifndef GITMANAGER_H
+﻿#ifndef GITMANAGER_H
 #define GITMANAGER_H
 
 #include <vector>
