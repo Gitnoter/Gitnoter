@@ -21,7 +21,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mAutoLockTimer(new QTimer(this)),
         mAboutDialog(new AboutDialog(this)),
         mSettingDialog(new SettingDialog(this)),
-        mEnterLicenseDialog(new EnterLicenseDialog(this))
+        mEnterLicenseDialog(new EnterLicenseDialog(this)),
+        mGitManager(new GitManager())
 {
     ui->setupUi(this);
     initTempDir();
@@ -709,6 +710,11 @@ void MainWindow::reload()
     init();
 }
 
+const char *qstringToConstData(const QString &string)
+{
+    return (new QByteArray(string.toLatin1()))->data();
+}
+
 void MainWindow::setRemoteToRepo()
 {
     const QString repoUrl = gConfigModel->getRepoUrl();
@@ -717,18 +723,22 @@ void MainWindow::setRemoteToRepo()
     const QString repoUrlNew = gConfigModel->getRepoUrlNew();
     const QString repoEmailNew = gConfigModel->getRepoEmailNew();
     const QString repoPasswordNew = gConfigModel->getRepoPasswordNew();
-
-    GitManager *gitManager = new GitManager();
-
-    const QString username = Tools::getUsernameByEmail(repoEmailNew);
-    gitManager->setUserPass(repoEmailNew.toStdString().c_str(), repoPasswordNew.toStdString().c_str());
-    gitManager->setSignature(username.toStdString().c_str(), repoEmailNew.toStdString().c_str());
-
     const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
+
+    const char *email = qstringToConstData(repoEmailNew);
+    const char *password = qstringToConstData(repoPasswordNew);
+    const char *username = qstringToConstData(repoEmailNew);
+    const char *path = qstringToConstData(repoPathTemp);
+    const char *url = qstringToConstData(repoUrlNew);
 
     if (repoUrl != repoUrlNew) {
         QDir(repoPathTemp).removeRecursively();
-        if (gitManager->clone(repoUrlNew.toStdString().c_str(), repoPathTemp.toStdString().c_str()) < 0) {
+
+        GitManager *gitManager = new GitManager();
+        gitManager->setUserPass(email, password);
+        gitManager->setSignature(username, email);
+        int result = gitManager->clone(url, path);
+        if (result < 0) {
             MessageDialog::openMessage(this, "更新仓库失败, 请确认仓库地址和账户密码~");
             return;
         }
@@ -784,13 +794,14 @@ void MainWindow::syncRepo()
     const QString repoPassword = gConfigModel->getRepoPassword();
     const QString repoUsername = gConfigModel->getRepoUsername();
 
-    gGitManager->initLocalRepo(gRepoPath.toStdString().c_str());
-    gGitManager->setUserPass(repoEmail.toStdString().c_str(), repoPassword.toStdString().c_str());
-    gGitManager->setSignature(repoUsername.toStdString().c_str(), repoEmail.toStdString().c_str());
+    mGitManager->initLocalRepo(qstringToConstData(gRepoPath));
+    mGitManager->setUserPass(qstringToConstData(repoEmail), qstringToConstData(repoPassword));
+    mGitManager->setSignature(qstringToConstData(repoUsername), qstringToConstData(repoEmail));
 
-    gGitManager->pull();
-    gGitManager->commitA();
-    gGitManager->push();
+    mGitManager->pull();
+    mGitManager->commitA();
+    mGitManager->push();
+
     reload();
 }
 
