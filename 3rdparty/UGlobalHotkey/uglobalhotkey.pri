@@ -2,33 +2,31 @@
 #include(uglobalhotkey-sources.pri)
 #include(uglobalhotkey-libs.pri)
 
-QT += gui-private
+!win32 {
+    QT += gui-private
 
-INCLUDEPATH += $$PWD/
+    INCLUDEPATH += $$PWD/
 
-HEADERS += \
-    $$PWD/ukeysequence.h \
-    $$PWD/uglobalhotkeys.h \
-    $$PWD/uexception.h \
-    $$PWD/hotkeymap.h \
-    $$PWD/uglobal.h
+    HEADERS += \
+        $$PWD/ukeysequence.h \
+        $$PWD/uglobalhotkeys.h \
+        $$PWD/uexception.h \
+        $$PWD/hotkeymap.h \
+        $$PWD/uglobal.h
 
-SOURCES += \
-    $$PWD/ukeysequence.cpp \
-    $$PWD/uglobalhotkeys.cpp \
-    $$PWD/uexception.cpp
+    SOURCES += \
+        $$PWD/ukeysequence.cpp \
+        $$PWD/uglobalhotkeys.cpp \
+        $$PWD/uexception.cpp
 
-# Linking options for different platforms
+    # Linking options for different platforms
 
-linux: LIBS += -lxcb -lxcb-keysyms
-mac: LIBS += -framework Carbon
-
-windows {
-    *-g++* {
-        LIBS += -luser32
-    }
-    *-msvc* {
-        LIBS += user32.lib
-    }
+    linux: LIBS += -lxcb -lxcb-keysyms
+    mac: LIBS += -framework Carbon
 }
 
+win32 {
+    LIBS += -L$$PWD/build/ -lUGlobalHotkey
+    INCLUDEPATH += $$PWD/build
+    DEPENDPATH += $$PWD/build
+}
