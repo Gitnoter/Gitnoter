@@ -743,6 +743,8 @@ void MainWindow::setRemoteToRepo()
             return;
         }
 
+        delete gitManager;
+
         gConfigModel->setRepoUrl(repoUrlNew);
         gConfigModel->setRepoEmail(repoEmailNew);
         gConfigModel->setRepoPassword(repoPasswordNew);

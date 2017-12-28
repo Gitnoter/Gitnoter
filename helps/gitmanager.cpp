@@ -16,6 +16,7 @@ GitManager::GitManager(const char *username, const char *password, const char *n
 
 GitManager::~GitManager()
 {
+    git_repository_free(mRepo);
     git_libgit2_shutdown();
 }
 
