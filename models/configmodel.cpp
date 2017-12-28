@@ -44,7 +44,7 @@ ConfigModel::ConfigModel()
 void ConfigModel::init()
 {
     Tools::createMkDir(gAppDataPath);
-    settings = new QSettings(gAppConfigPath, QSettings::NativeFormat);
+    settings = new QSettings(gAppConfigPath, QSettings::IniFormat);
 }
 
 template <typename T>
