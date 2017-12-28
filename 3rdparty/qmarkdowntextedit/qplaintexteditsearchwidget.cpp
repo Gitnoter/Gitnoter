@@ -81,10 +81,10 @@ bool PopupMenu::matchCaseSensitiveChecked()
 
 void PopupMenu::setupUi(QWidget *parent)
 {
-    action_plainText = new QAction(tr("纯文本"), this);
-    action_wholeWords = new QAction(tr("全词匹配"), this);
-    action_regularExpression = new QAction(tr("正则匹配"), this);
-    action_matchCaseSensitive = new QAction(tr("是否区分大小写"), this);
+    action_plainText = new QAction(tr(u8"纯文本"), this);
+    action_wholeWords = new QAction(tr(u8"全词匹配"), this);
+    action_regularExpression = new QAction(tr(u8"正则匹配"), this);
+    action_matchCaseSensitive = new QAction(tr(u8"是否区分大小写"), this);
 
     action_plainText->setObjectName(QStringLiteral("action_plainText"));
     action_wholeWords->setObjectName(QStringLiteral("action_wholeWords"));

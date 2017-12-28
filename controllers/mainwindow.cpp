@@ -183,9 +183,9 @@ void MainWindow::on_pushButton_noteAdd_clicked()
         const QString category = noteModel->getCategory().isEmpty() ?
                                  ui->groupTreeWidget->topLevelItem(1)->text(0) :
                                  noteModel->getCategory();
-        messageDialog->openMessage(tr("笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
-                                   tr("恢复笔记提示"),
-                                   tr("确定恢复"));
+        messageDialog->openMessage(tr(u8"笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
+                                   tr(u8"恢复笔记提示"),
+                                   tr(u8"确定恢复"));
     }
     else {
         appendNote();
@@ -201,7 +201,7 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
 
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNote()));
-        messageDialog->openMessage(tr("删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr("删除笔记提示"), tr("确定删除"));
+        messageDialog->openMessage(tr(u8"删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr(u8"删除笔记提示"), tr(u8"确定删除"));
     }
     else {
         trashNote();
@@ -230,7 +230,7 @@ void MainWindow::on_pushButton_subtract_clicked()
     if (Gitnoter::Category <= type) {
         MessageDialog *messageDialog = new MessageDialog(this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeGroup()));
-        messageDialog->openMessage(tr("笔记本删除后, 笔记本内的笔记将会移动到回收站~ \n\nTip: 还没想好要说些什么o(╯□╰)o"), tr("删除笔记本提示"), tr("确定删除"));
+        messageDialog->openMessage(tr(u8"笔记本删除后, 笔记本内的笔记将会移动到回收站~ \n\nTip: 还没想好要说些什么o(╯□╰)o"), tr(u8"删除笔记本提示"), tr(u8"确定删除"));
     }
 }
 
@@ -238,7 +238,7 @@ void MainWindow::setNoteListTitle()
 {
     GroupModel *groupModel = ui->groupTreeWidget->selectedGroupModel();
     if (groupModel) {
-        ui->label_groupName->setText(tr("%1 (%2)").arg(groupModel->getName()).arg(groupModel->getCount()));
+        ui->label_groupName->setText(tr(u8"%1 (%2)").arg(groupModel->getName()).arg(groupModel->getCount()));
         if (!groupModel->getCount()) setWindowTitle(groupModel->getName());
     }
 }
@@ -316,7 +316,7 @@ void MainWindow::appendGroup()
     Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
     QString name = "";
     for (int i = 0; i < 100; ++i) {
-        name = ((Gitnoter::Tag == type) ? tr("新建标签%1") : tr("新建笔记本%1")).arg(i == 0 ? "" : QString::number(i));
+        name = ((Gitnoter::Tag == type) ? tr(u8"新建标签%1") : tr(u8"新建笔记本%1")).arg(i == 0 ? "" : QString::number(i));
         if (groupTreeWidget()->append(type, name)) {
             groupTreeWidget()->editItem(groupTreeWidget()->getTreeWidgetItem(type, name));
             gConfigModel->setSideSelected(type, name);
@@ -672,7 +672,7 @@ void MainWindow::fullScreenShot(size_t)
 
     appendNote();
     const QPixmap pixmap = ScreenShot::fullScreenShot();
-    ui->markdownEditorWidget->savePixmap(pixmap, "全屏");
+    ui->markdownEditorWidget->savePixmap(pixmap, tr(u8"全屏"));
 }
 
 void MainWindow::windowScreenShot(size_t)
@@ -684,7 +684,7 @@ void MainWindow::windowScreenShot(size_t)
     appendNote();
     QPixmap pixmap = ScreenShot::windowScreenShot();
     if (!pixmap.isNull()) {
-        ui->markdownEditorWidget->savePixmap(pixmap, "窗口");
+        ui->markdownEditorWidget->savePixmap(pixmap, tr(u8"窗口"));
     }
 }
 
@@ -699,7 +699,7 @@ void MainWindow::partScreenShot(size_t)
     if (screenShot->exec() == QDialog::Accepted) {
         const QPixmap pixmap = screenShot->shotPixmap();
         if (!pixmap.isNull()) {
-            ui->markdownEditorWidget->savePixmap(pixmap, "截屏");
+            ui->markdownEditorWidget->savePixmap(pixmap, tr(u8"截屏"));
         }
     }
 }
@@ -739,7 +739,7 @@ void MainWindow::setRemoteToRepo()
         gitManager->setSignature(username, email);
         int result = gitManager->clone(url, path);
         if (result < 0) {
-            MessageDialog::openMessage(this, "更新仓库失败, 请确认仓库地址和账户密码~");
+            MessageDialog::openMessage(this, tr(u8"更新仓库失败, 请确认仓库地址和账户密码~"));
             return;
         }
 
@@ -749,7 +749,7 @@ void MainWindow::setRemoteToRepo()
         gConfigModel->setRepoEmail(repoEmailNew);
         gConfigModel->setRepoPassword(repoPasswordNew);
 
-        MessageDialog *messageDialog = MessageDialog::openMessage(this, "更新仓库成功, 是否把现有的数据拷贝至新仓库中~");
+        MessageDialog *messageDialog = MessageDialog::openMessage(this, tr(u8"更新仓库成功, 是否把现有的数据拷贝至新仓库中~"));
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(setRepoApplyClicked()));
         connect(messageDialog, SIGNAL(closeClicked()), this, SLOT(setRepoCloseClicked()));
     }
@@ -781,7 +781,6 @@ void MainWindow::setRepoCloseClicked()
 {
     const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
     QDir(gRepoPath).removeRecursively();
-    QDir().rename(repoPathTemp, gRepoPath);
 
     reload();
 }
@@ -816,8 +815,8 @@ void MainWindow::openPurchasePanel()
 
     MessageDialog *messageDialog = new MessageDialog(this);
     messageDialog->setMessageInfo(
-            tr("您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(gPurchaseLicenseUrl),
-            tr("感谢您试用 %1（￣▽￣）").arg(VER_PRODUCTNAME_STR), tr("购买"));
+            tr(u8"您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(gPurchaseLicenseUrl),
+            tr(u8"感谢您试用 %1（￣▽￣）").arg(VER_PRODUCTNAME_STR), tr(u8"购买"));
     connect(messageDialog, &MessageDialog::applyClicked, [=]() {
         mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
         QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));

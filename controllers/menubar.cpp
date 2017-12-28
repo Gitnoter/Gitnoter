@@ -621,14 +621,14 @@ void MenuBar::initLicenseAction(bool license)
 
 void MenuBar::addHasLicenseAction()
 {
-    QAction *action = new QAction(tr("删除许可证"), this);
+    QAction *action = new QAction(tr(u8"删除许可证"), this);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, [=]() {
         MessageDialog *messageDialog = MessageDialog::openMessage(
                 mMainWindow,
-                tr("删除后会将应用退回到未许可的状态\nTip: 删除后重新填写许可证仍然可以激活"),
-                tr("您确定需要删除许可证吗 (..•˘_˘•..)"),
-                tr("确定删除"));
+                tr(u8"删除后会将应用退回到未许可的状态\nTip: 删除后重新填写许可证仍然可以激活"),
+                tr(u8"您确定需要删除许可证吗 (..•˘_˘•..)"),
+                tr(u8"确定删除"));
         connect(messageDialog, &MessageDialog::applyClicked, [=]() {
             ui->menu_help->removeAction(action);
             QDir().remove(gAppLicensePath);
@@ -639,13 +639,13 @@ void MenuBar::addHasLicenseAction()
 
 void MenuBar::addNoLicenseAction()
 {
-    QAction *action = new QAction(tr("购买许可证"), this);
+    QAction *action = new QAction(tr(u8"购买许可证"), this);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, []() {
         QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
     });
 
-    action = new QAction(tr("输入许可证"), this);
+    action = new QAction(tr(u8"输入许可证"), this);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, [=]() {
         mMainWindow->enterLicenseDialog()->open();

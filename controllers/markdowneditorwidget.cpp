@@ -258,9 +258,9 @@ void MarkdownEditorWidget::setOpenNote()
 {
     ui->markdownEditor->setText(mNoteModel->getNoteText());
     ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
-    ui->pushButton_category->setText(mNoteModel->getCategory().isEmpty() ? tr("所有笔记") : mNoteModel->getCategory());
-    ui->label_createTime->setText(tr("创建时间: %1").arg(mNoteModel->getCreateDateString()));
-    ui->label_updateTime->setText(tr("更新时间: %1").arg(mNoteModel->getUpdateDateString()));
+    ui->pushButton_category->setText(mNoteModel->getCategory().isEmpty() ? tr(u8"所有笔记") : mNoteModel->getCategory());
+    ui->label_createTime->setText(tr(u8"创建时间: %1").arg(mNoteModel->getCreateDateString()));
+    ui->label_updateTime->setText(tr(u8"更新时间: %1").arg(mNoteModel->getUpdateDateString()));
 
     // todo: 下面删除会失败, 可能是获取widget的时候就已经失败了, 目前还不知道到是怎么回事
 //    for (int i = 1; i < ui->horizontalLayout->count() - 1; ++i) {
@@ -350,13 +350,13 @@ void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QP
     QPoint globalPos = ui->markdownEditor->mapToGlobal(pos);
     QMenu *menu = ui->markdownEditor->createStandardContextMenu();
 
-    menu->findChild<QAction *>("edit-undo")->setText(tr("撤销"));
-    menu->findChild<QAction *>("edit-redo")->setText(tr("重做"));
-    menu->findChild<QAction *>("edit-cut")->setText(tr("剪切"));
-    menu->findChild<QAction *>("edit-copy")->setText(tr("拷贝"));
-    menu->findChild<QAction *>("edit-paste")->setText(tr("粘贴"));
-    menu->findChild<QAction *>("edit-delete")->setText(tr("删除"));
-    menu->findChild<QAction *>("select-all")->setText(tr("全选"));
+    menu->findChild<QAction *>("edit-undo")->setText(tr(u8"撤销"));
+    menu->findChild<QAction *>("edit-redo")->setText(tr(u8"重做"));
+    menu->findChild<QAction *>("edit-cut")->setText(tr(u8"剪切"));
+    menu->findChild<QAction *>("edit-copy")->setText(tr(u8"拷贝"));
+    menu->findChild<QAction *>("edit-paste")->setText(tr(u8"粘贴"));
+    menu->findChild<QAction *>("edit-delete")->setText(tr(u8"删除"));
+    menu->findChild<QAction *>("select-all")->setText(tr(u8"全选"));
 
     menu->exec(globalPos);
 }
@@ -781,7 +781,7 @@ void MarkdownEditorWidget::enterFullScreen()
 void MarkdownEditorWidget::setWindowTitle()
 {
     if (!mNoteModel) { return; }
-    QString windowTitle = mNoteModel->getTitle().isEmpty() ? tr("Untitled") : mNoteModel->getTitle();
+    QString windowTitle = mNoteModel->getTitle().isEmpty() ? tr(u8"未命名") : mNoteModel->getTitle();
     windowTitle += " - ";
     windowTitle += (mNoteModel->getCategory().isEmpty()
                     ? mMainWindow->groupTreeWidget()->topLevelItem(1)->text(0) : mNoteModel->getCategory());
@@ -817,7 +817,7 @@ void MarkdownEditorWidget::resizeEvent(QResizeEvent *event)
 
 void MarkdownEditorWidget::exportHtmlForPDF()
 {
-    const QString fileName = getExportFileName(tr("导出 HTML 为 PDF"), "PDF", {"pdf"});
+    const QString fileName = getExportFileName(tr(u8"导出 HTML 为 PDF"), "PDF", {"pdf"});
 
     if (fileName.isEmpty()) {
         return;
@@ -832,7 +832,7 @@ void MarkdownEditorWidget::exportHtmlForPDF()
 
 void MarkdownEditorWidget::exportMarkdownForPDF()
 {
-    const QString fileName = getExportFileName(tr("导出 Markdown 为 PDF"), "PDF", {"pdf"});
+    const QString fileName = getExportFileName(tr(u8"导出 Markdown 为 PDF"), "PDF", {"pdf"});
 
     if (fileName.isEmpty()) {
         return;
@@ -847,7 +847,7 @@ void MarkdownEditorWidget::exportMarkdownForPDF()
 
 void MarkdownEditorWidget::exportHtml()
 {
-    const QString fileName = getExportFileName(tr("导出 HTML 文本"), "HTML", {"html"});
+    const QString fileName = getExportFileName(tr(u8"导出 HTML 文本"), "HTML", {"html"});
 
     if (fileName.isEmpty()) {
         return;
@@ -858,7 +858,7 @@ void MarkdownEditorWidget::exportHtml()
 
 void MarkdownEditorWidget::exportMarkdown()
 {
-    const QString fileName = getExportFileName(tr("导出 Markdown 文件"), "Markdown", {"md"});
+    const QString fileName = getExportFileName(tr(u8"导出 Markdown 文件"), "Markdown", {"md"});
 
     if (fileName.isEmpty()) {
         return;
@@ -1025,7 +1025,7 @@ void MarkdownEditorWidget::insertImage()
         return;
     }
 
-    const QString filePath = getExportFileName(tr("插入图片"), "图片", {"jpg", "jpeg", "png", "gif"},
+    const QString filePath = getExportFileName(tr(u8"插入图片"), tr(u8"图片"), {"jpg", "jpeg", "png", "gif"},
                                                QFileDialog::AcceptOpen);
 
     if (filePath.isEmpty()) {
@@ -1043,7 +1043,7 @@ void MarkdownEditorWidget::accessory()
         return;
     }
 
-    const QString filePath = getExportFileName(tr("插入附件"), "附件", {},
+    const QString filePath = getExportFileName(tr(u8"插入附件"), tr(u8"附件"), {},
                                                QFileDialog::AcceptOpen, QFileDialog::ExistingFile);
 
     if (filePath.isEmpty()) {
@@ -1205,7 +1205,7 @@ void MarkdownEditorWidget::fullScreenShot()
     qDebug() << __func__;
 
     const QPixmap pixmap = ScreenShot::fullScreenShot();
-    savePixmap(pixmap, tr("全屏"));
+    savePixmap(pixmap, tr(u8"全屏"));
 }
 
 void MarkdownEditorWidget::windowScreenShot()
@@ -1216,7 +1216,7 @@ void MarkdownEditorWidget::windowScreenShot()
     qDebug() << __func__;
     QPixmap pixmap = ScreenShot::windowScreenShot();
     if (!pixmap.isNull()) {
-        savePixmap(pixmap, tr("窗口"));
+        savePixmap(pixmap, tr(u8"窗口"));
     }
 }
 
@@ -1231,7 +1231,7 @@ void MarkdownEditorWidget::partScreenShot()
     if (screenShot->exec() == QDialog::Accepted) {
         const QPixmap pixmap = screenShot->shotPixmap();
         if (!pixmap.isNull()) {
-            savePixmap(pixmap, tr("截屏"));
+            savePixmap(pixmap, tr(u8"截屏"));
         }
     }
 

@@ -6,11 +6,11 @@ NoteListSortPopupMenu::NoteListSortPopupMenu(QPushButton* pushButton, QWidget* p
         pushButton(pushButton),
         mMainWindow((MainWindow *) parent)
 {
-    action_title = new QAction(tr("标题"), this);
-    action_createDate = new QAction(tr("创建日期"), this);
-    action_updateDate = new QAction(tr("更新日期"), this);
-    action_asc = new QAction(tr("升序"), this);
-    action_desc = new QAction(tr("降序"), this);
+    action_title = new QAction(tr(u8"标题"), this);
+    action_createDate = new QAction(tr(u8"创建日期"), this);
+    action_updateDate = new QAction(tr(u8"更新日期"), this);
+    action_asc = new QAction(tr(u8"升序"), this);
+    action_desc = new QAction(tr(u8"降序"), this);
 
     action_title->setObjectName(QStringLiteral("action_title"));
     action_createDate->setObjectName(QStringLiteral("action_createDate"));
@@ -120,13 +120,13 @@ void NoteListSortPopupMenu::setPushButtonText(Gitnoter::SortBasis basis)
     }
 
     if (action) {
-        QString text = tr("  按 %1 排序").arg(action->text());
+        QString text = tr(u8"  按 %1 排序").arg(action->text());
         pushButton->setText(text);
     }
 }
 
 void NoteListSortPopupMenu::setPushButtonText(QAction *action)
 {
-    QString text = tr("  按 %1 排序").arg(action->text());
+    QString text = tr(u8"  按 %1 排序").arg(action->text());
     pushButton->setText(text);
 }

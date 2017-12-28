@@ -31,12 +31,12 @@ void EnterLicenseDialog::on_buttonBox_accepted()
     }
 
     if (checkLicense(license, true)) {
-        (new MessageDialog)->openMessage(tr("如有任何疑问, 请随时联系: %1").arg(gEmailToUser), tr("感谢您的购买和支持 (｡･ω･｡)"));
+        (new MessageDialog)->openMessage(tr(u8"如有任何疑问, 请随时联系: %1").arg(gEmailToUser), tr(u8"感谢您的购买和支持 (｡･ω･｡)"));
     }
     else {
         (new MessageDialog)->openMessage(
-                tr("请您检查是否输入正确, 包括许可证的开始和结束行哦~\n如确认无误仍然无法激活, 请及时联系: %1").arg(gEmailToUser),
-                tr("该许可证似乎无效 ╮(￣▽￣)╭"));
+                tr(u8"请您检查是否输入正确, 包括许可证的开始和结束行哦~\n如确认无误仍然无法激活, 请及时联系: %1").arg(gEmailToUser),
+                tr(u8"该许可证似乎无效 ╮(￣▽￣)╭"));
     }
 }
 

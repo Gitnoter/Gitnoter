@@ -27,9 +27,9 @@ ScreenShot::ScreenShot(QWidget *parent) :
 
 void ScreenShot::initSelectedMenu()
 {
-    savePixmapAction = new QAction(tr("保存选区"), this);
-    cancelAction = new QAction(tr("重选"), this);
-    quitAction = new QAction(tr("退出"), this);
+    savePixmapAction = new QAction(tr(u8"保存选区"), this);
+    cancelAction = new QAction(tr(u8"重选"), this);
+    quitAction = new QAction(tr(u8"退出"), this);
     contextMenu = new QMenu(this);
 
     connect(savePixmapAction, SIGNAL(triggered()), this, SLOT(savePixmap()));
@@ -40,7 +40,7 @@ void ScreenShot::initSelectedMenu()
 void ScreenShot::savePixmap()
 {
     QString fileName;
-    fileName = QFileDialog::getSaveFileName(this, tr("保存图片"), QDir::currentPath(), tr("Images (*.jpg *.png *.bmp)"));
+    fileName = QFileDialog::getSaveFileName(this, tr(u8"保存图片"), QDir::currentPath(), tr("Images (*.jpg *.png *.bmp)"));
     if (fileName.isNull()) {
         return;
     }
@@ -252,7 +252,7 @@ void ScreenShot::drawTipsText()
     int y = (screenheight - tipHeight) / 2;
     QColor color = QColor(100, 100, 100, 200);
     QRect rect = QRect(x, y, tipWidth, tipHeight);
-    QString strTipsText = QString(tr("温馨提示\n鼠标拖动进行截屏;截屏区域内右键保存;\n截屏区域外右键取消;ESC退出;"));
+    QString strTipsText = QString(tr(u8"温馨提示\n鼠标拖动进行截屏;截屏区域内右键保存;\n截屏区域外右键取消;ESC退出;"));
 
     painter.fillRect(rect, color);
     painter.setPen(QPen(Qt::white));//设置画笔的颜色为白色
@@ -532,7 +532,7 @@ void ScreenShot::drawXYWHInfo()
             x = selectedRect.x() + 5;
             y = selectedRect.y() > infoHeight ? selectedRect.y() - infoHeight : selectedRect.y();
             rect = QRect(x, y, infoWidth, infoHeight);
-            strTipsText = QString(tr(" 坐标信息\n x:%1 y:%2\n w:%3 h:%4")).arg(selectedRect.x(), 4).arg(selectedRect.y(), 4)
+            strTipsText = QString(tr(u8" 坐标信息\n x:%1 y:%2\n w:%3 h:%4")).arg(selectedRect.x(), 4).arg(selectedRect.y(), 4)
                     .arg(selectedRect.width(), 4).arg(selectedRect.height(), 4);
             painter.fillRect(rect, color);
             painter.setPen(QPen(Qt::black));//设置画笔的颜色为黑色
