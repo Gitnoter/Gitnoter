@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>880</width>
-    <height>38</height>
+    <height>39</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>880</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_notes">
@@ -62,7 +62,7 @@
    </widget>
    <widget class="QMenu" name="menu_edit">
     <property name="title">
-     <string>编辑</string>
+     <string>编辑(&amp;E)</string>
     </property>
     <widget class="QMenu" name="menu_search">
      <property name="title">
@@ -108,7 +108,7 @@
    </widget>
    <widget class="QMenu" name="menu_sign">
     <property name="title">
-     <string>标记</string>
+     <string>标记(&amp;T)</string>
     </property>
     <addaction name="action_title1"/>
     <addaction name="action_title2"/>
@@ -142,7 +142,7 @@
    </widget>
    <widget class="QMenu" name="menu_view">
     <property name="title">
-     <string>视图</string>
+     <string>视图(&amp;V)</string>
     </property>
     <addaction name="action_sidebar"/>
     <addaction name="action_listbar"/>
@@ -164,7 +164,7 @@
    </widget>
    <widget class="QMenu" name="menu_window">
     <property name="title">
-     <string>窗口</string>
+     <string>窗口(&amp;W)</string>
     </property>
     <addaction name="action_mixWindow"/>
     <addaction name="action_resizeWindow"/>
@@ -184,7 +184,7 @@
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
-     <string>帮助</string>
+     <string>帮助(&amp;H)</string>
     </property>
     <addaction name="action_guide"/>
     <addaction name="action_history"/>
