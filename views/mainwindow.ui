@@ -41,6 +41,10 @@ QTreeView#groupTreeWidget::item:selected:active {
 	color:rgb(77, 77, 77);
 }
 
+QTreeWidget#groupTreeWidget::item:hover {
+  background-color: #ffffff;
+}
+
 QTreeWidget#groupTreeWidget::branch:selected:!active,
 QTreeWidget#groupTreeWidget::branch:selected:active{
 	background:rgb(218, 216, 222);
@@ -135,6 +139,10 @@ QListView#noteListWidget::item:selected:!active,
 QListView#noteListWidget::item:selected:active {
   background:#F5F5F5;
   color: #F5F5F5;
+}
+
+QListView#noteListWidget::item:hover {
+  background: #ffffff;
 }
 
 QWidget#widget_6{
