@@ -29,7 +29,7 @@
    <property name="styleSheet">
     <string notr="true">/* folderList */
 QTreeView#groupTreeWidget{
-	background-color:rgb(241, 240, 243);
+	background-color: #ffffff;
 	color:rgb(77, 77, 77);
 	font-size: 12px;
 	border: 0px;
@@ -47,7 +47,7 @@ QTreeWidget#groupTreeWidget::branch:selected:active{
 }
 
 QWidget#widget{
-	background-color:rgb(241, 240, 243);
+	background-color: #ffffff;
 }
 
 QPushButton#pushButton_noteAdd,
@@ -73,11 +73,11 @@ QPushButton#pushButton_subtract:pressed{
 /* noteList */
 
 QWidget#widget_noteSearch {
-	background-color: rgb(247, 247, 247);
+	background-color: #ffffff;
 }
 
 QWidget#widget_noteSort{
-	background-color: rgb(247, 247, 247);
+	background-color: #ffffff;
 	border-top: 0.5px solid rgb(191, 191, 191);
 	border-bottom: 0.5px solid rgb(191, 191, 191);
 }
