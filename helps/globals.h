@@ -47,7 +47,6 @@ extern const QByteArray gAesKey;
 extern const QByteArray gAesIv;
 
 extern ConfigModel *gConfigModel;
-extern GitManager *gGitManager;
 extern ThemeManager *gThemeManager;
 
 #endif // GLOBALS_H

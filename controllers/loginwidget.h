@@ -2,6 +2,7 @@
 #define LOGINWIDGET_H
 
 #include "menubar.h"
+#include "gitmanager.h"
 
 #include <QWidget>
 
@@ -41,6 +42,9 @@ private:
     void openMainWindow();
 
     int initGitManager();
+
+private:
+    GitManager *mGitManager;
 
 };
 

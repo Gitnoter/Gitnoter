@@ -293,3 +293,8 @@ QString Tools::decrypt(const QString &string)
 
     return QString(aes.decrypt(QByteArray::fromBase64(string.toUtf8())));
 }
+
+const char *Tools::qstringToConstData(const QString &string)
+{
+    return (new QByteArray(string.toLatin1()))->data();
+}

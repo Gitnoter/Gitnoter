@@ -54,6 +54,7 @@ public:
 
     static QString decrypt(const QString &string);
 
+    static const char *qstringToConstData(const QString &string);
 
 };
 

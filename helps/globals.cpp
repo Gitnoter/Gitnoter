@@ -44,6 +44,5 @@ const QByteArray gAesKey = "Q5tO3jUB0oe7FmWq";
 const QByteArray gAesIv  = "RNNSR8XNbMTuOSGd";
 
 ConfigModel *gConfigModel = new ConfigModel();
-GitManager *gGitManager = new GitManager();
 ThemeManager *gThemeManager = new ThemeManager();
 

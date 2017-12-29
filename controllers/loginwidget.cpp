@@ -8,7 +8,8 @@
 LoginWidget::LoginWidget(MenuBar *menuBar, QWidget *parent) :
         QWidget(parent),
         mMenuBar(menuBar),
-        ui(new Ui::LoginWidget)
+        ui(new Ui::LoginWidget),
+        mGitManager(new GitManager())
 {
     ui->setupUi(this);
 
@@ -102,16 +103,16 @@ void LoginWidget::on_pushButton_initLocal_clicked()
 int LoginWidget::initGitManager()
 {
     if (QDir(gRepoPath).exists()) {
-        return gGitManager->open(gRepoPath.toUtf8().constData());
+        return mGitManager->open(Tools::qstringToConstData(gRepoPath));
     }
 
     if (!gConfigModel->getRepoUsername().isEmpty()
         && !gConfigModel->getRepoPassword().isEmpty()
         && !gConfigModel->getRepoUrl().isEmpty()) {
-        gGitManager->setUserPass(gConfigModel->getRepoUsername().toUtf8().constData(),
-                                        gConfigModel->getRepoPassword().toUtf8().constData());
-        return gGitManager->clone(gConfigModel->getRepoUrl().toUtf8().constData(), gRepoPath.toUtf8().constData());
+        mGitManager->setUserPass(Tools::qstringToConstData(gConfigModel->getRepoUsername()),
+                                        Tools::qstringToConstData(gConfigModel->getRepoPassword()));
+        return mGitManager->clone(Tools::qstringToConstData(gConfigModel->getRepoUrl()), Tools::qstringToConstData(gRepoPath));
     }
 
-    return gGitManager->initLocalRepo(gRepoPath.toUtf8().constData(), true);
+    return mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath), true);
 }

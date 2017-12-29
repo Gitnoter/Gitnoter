@@ -147,10 +147,7 @@ void MainWindow::initTempDir()
     dir.mkdir(gAppDataLocation);
     dir.mkdir(gAppDataPath);
 
-    if (Gitnoter::NoneRepo == gConfigModel->getLocalRepoStatus()) {
-        gGitManager->initLocalRepo(gRepoPath.toStdString().c_str());
-        gConfigModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
-    }
+    mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath));
 
     dir.mkdir(gRepoNoteTextPath);
     dir.mkdir(gRepoNoteDataPath);
@@ -710,11 +707,6 @@ void MainWindow::reload()
     init();
 }
 
-const char *qstringToConstData(const QString &string)
-{
-    return (new QByteArray(string.toLatin1()))->data();
-}
-
 void MainWindow::setRemoteToRepo()
 {
     const QString repoUrl = gConfigModel->getRepoUrl();
@@ -725,11 +717,11 @@ void MainWindow::setRemoteToRepo()
     const QString repoPasswordNew = gConfigModel->getRepoPasswordNew();
     const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
 
-    const char *email = qstringToConstData(repoEmailNew);
-    const char *password = qstringToConstData(repoPasswordNew);
-    const char *username = qstringToConstData(repoEmailNew);
-    const char *path = qstringToConstData(repoPathTemp);
-    const char *url = qstringToConstData(repoUrlNew);
+    const char *email = Tools::qstringToConstData(repoEmailNew);
+    const char *password = Tools::qstringToConstData(repoPasswordNew);
+    const char *username = Tools::qstringToConstData(repoEmailNew);
+    const char *path = Tools::qstringToConstData(repoPathTemp);
+    const char *url = Tools::qstringToConstData(repoUrlNew);
 
     if (repoUrl != repoUrlNew) {
         QDir(repoPathTemp).removeRecursively();
@@ -795,9 +787,14 @@ void MainWindow::syncRepo()
     const QString repoPassword = gConfigModel->getRepoPassword();
     const QString repoUsername = gConfigModel->getRepoUsername();
 
-    mGitManager->initLocalRepo(qstringToConstData(gRepoPath));
-    mGitManager->setUserPass(qstringToConstData(repoEmail), qstringToConstData(repoPassword));
-    mGitManager->setSignature(qstringToConstData(repoUsername), qstringToConstData(repoEmail));
+    if (repoEmail.isEmpty() || repoPassword.isEmpty() || repoUsername.isEmpty()) {
+        gConfigModel->setLocalRepoStatus(Gitnoter::LocalRepo);
+        return;
+    }
+
+    mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath));
+    mGitManager->setUserPass(Tools::qstringToConstData(repoEmail), Tools::qstringToConstData(repoPassword));
+    mGitManager->setSignature(Tools::qstringToConstData(repoUsername), Tools::qstringToConstData(repoEmail));
 
     mGitManager->pull();
     mGitManager->commitA();
