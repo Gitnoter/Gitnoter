@@ -15,6 +15,7 @@ SettingDialog::SettingDialog(QWidget *parent) :
         mHeight({220, 300, 180, 240})
 {
     ui->setupUi(this);
+    ui->pushButton_shortcuts->setHidden(true);
     setupUi();
 }
 
