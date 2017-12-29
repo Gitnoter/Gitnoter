@@ -8,12 +8,12 @@ class Gitnoter : public QObject
     Q_OBJECT
 public:
     enum GroupType {
-        All = 0x000001,
-        Recent = 0x000002,
-        Unclassified = 0x000003,
-        Trash = 0x000004,
-        Category = 0x000006,
-        Tag = 0x000008
+        All = 0x000000,
+        Recent = 0x000001,
+        Unclassified = 0x000002,
+        Trash = 0x000003,
+        Category = 0x000004,
+        Tag = 0x000005
     };
 
     enum SortBasis {

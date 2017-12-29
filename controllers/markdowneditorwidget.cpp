@@ -784,7 +784,7 @@ void MarkdownEditorWidget::setWindowTitle()
     QString windowTitle = mNoteModel->getTitle().isEmpty() ? tr(u8"未命名") : mNoteModel->getTitle();
     windowTitle += " - ";
     windowTitle += (mNoteModel->getCategory().isEmpty()
-                    ? mMainWindow->groupTreeWidget()->topLevelItem(1)->text(0) : mNoteModel->getCategory());
+                    ? mMainWindow->groupTreeWidget()->topLevelItem(Gitnoter::All)->text(0) : mNoteModel->getCategory());
 
     QWidget::setWindowTitle(windowTitle);
 

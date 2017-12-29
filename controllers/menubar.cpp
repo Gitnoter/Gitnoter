@@ -604,9 +604,9 @@ QAction *MenuBar::getActionTaskList() const
 
 void MenuBar::initGlobalHotKeys()
 {
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
-    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
+//    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutRectKeySequence(), Gitnoter::CutRect);
+//    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutFullKeySequence(), Gitnoter::CutFull);
+//    mKeyGlobalHotKeys->registerHotkey(gConfigModel->getCutWindowKeySequence(), Gitnoter::CutWindow);
 }
 
 void MenuBar::initLicenseAction(bool license)

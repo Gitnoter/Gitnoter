@@ -178,7 +178,7 @@ void MainWindow::on_pushButton_noteAdd_clicked()
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
         NoteModel *noteModel = ui->noteListWidget->getNoteModel(gConfigModel->openMainWindowNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
-                                 ui->groupTreeWidget->topLevelItem(1)->text(0) :
+                                 ui->groupTreeWidget->topLevelItem(Gitnoter::All)->text(0) :
                                  noteModel->getCategory();
         messageDialog->openMessage(tr(u8"笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
                                    tr(u8"恢复笔记提示"),

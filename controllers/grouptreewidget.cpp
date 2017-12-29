@@ -35,21 +35,21 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
     QMap<QString, GroupModel *> systemModelMap = {};
     QStringList stringList = {};
 
-    appendToGroupModelMap(systemModelMap, Gitnoter::All, topLevelItem(1)->text(0), 0);
-    appendToGroupModelMap(systemModelMap, Gitnoter::Recent, topLevelItem(2)->text(0), 0);
-    appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, topLevelItem(3)->text(0), 0);
-    appendToGroupModelMap(systemModelMap, Gitnoter::Trash, topLevelItem(4)->text(0), 0);
+    appendToGroupModelMap(systemModelMap, Gitnoter::All, topLevelItem(Gitnoter::All)->text(0), 0);
+    appendToGroupModelMap(systemModelMap, Gitnoter::Recent, topLevelItem(Gitnoter::Recent)->text(0), 0);
+    appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, topLevelItem(Gitnoter::Unclassified)->text(0), 0);
+    appendToGroupModelMap(systemModelMap, Gitnoter::Trash, topLevelItem(Gitnoter::Trash)->text(0), 0);
 
     for (auto &&noteModel : noteModelList) {
         if (!noteModel->getIsDelete()) {
-            appendToGroupModelMap(systemModelMap, Gitnoter::All, topLevelItem(1)->text(0), 1);
+            appendToGroupModelMap(systemModelMap, Gitnoter::All, topLevelItem(Gitnoter::All)->text(0), 1);
 
             if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) {
-                appendToGroupModelMap(systemModelMap, Gitnoter::Recent, topLevelItem(2)->text(0), 1);
+                appendToGroupModelMap(systemModelMap, Gitnoter::Recent, topLevelItem(Gitnoter::Recent)->text(0), 1);
             }
 
             if (noteModel->getCategory().isEmpty()) {
-                appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, topLevelItem(3)->text(0), 1);
+                appendToGroupModelMap(systemModelMap, Gitnoter::Unclassified, topLevelItem(Gitnoter::Unclassified)->text(0), 1);
             }
             else {
                 appendToGroupModelMap(categoryModelMap, Gitnoter::Category, noteModel->getCategory(), 1);
@@ -60,7 +60,7 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
             }
         }
         else {
-            appendToGroupModelMap(systemModelMap, Gitnoter::Trash, topLevelItem(4)->text(0), 1);
+            appendToGroupModelMap(systemModelMap, Gitnoter::Trash, topLevelItem(Gitnoter::Trash)->text(0), 1);
         }
     }
 
@@ -93,17 +93,17 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
     }
 
     for (auto iterator = systemModelMap.begin(); iterator != systemModelMap.end(); ++iterator) {
-        if (iterator.key() == topLevelItem(1)->text(0)) {
-            topLevelItem(1)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        if (iterator.key() == topLevelItem(Gitnoter::All)->text(0)) {
+            topLevelItem(Gitnoter::All)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
         }
-        else if (iterator.key() == topLevelItem(2)->text(0)) {
-            topLevelItem(2)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        else if (iterator.key() == topLevelItem(Gitnoter::Recent)->text(0)) {
+            topLevelItem(Gitnoter::Recent)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
         }
-        else if (iterator.key() == topLevelItem(3)->text(0)) {
-            topLevelItem(3)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        else if (iterator.key() == topLevelItem(Gitnoter::Unclassified)->text(0)) {
+            topLevelItem(Gitnoter::Unclassified)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
         }
-        else if (iterator.key() == topLevelItem(4)->text(0)) {
-            topLevelItem(4)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
+        else if (iterator.key() == topLevelItem(Gitnoter::Trash)->text(0)) {
+            topLevelItem(Gitnoter::Trash)->setData(0, Qt::UserRole, QVariant::fromValue(iterator.value()));
         }
     }
 
@@ -225,7 +225,7 @@ void GroupTreeWidget::setItemSelected()
     }
 
     if(type == Gitnoter::Category) {
-        QTreeWidgetItem *treeWidgetItem = topLevelItem(6);
+        QTreeWidgetItem *treeWidgetItem = topLevelItem(Gitnoter::Category);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
             if (childItem->text(0) == name) {
@@ -235,7 +235,7 @@ void GroupTreeWidget::setItemSelected()
     }
 
     if (type == Gitnoter::Tag) {
-        QTreeWidgetItem *treeWidgetItem = topLevelItem(8);
+        QTreeWidgetItem *treeWidgetItem = topLevelItem(Gitnoter::Tag);
         for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
             QTreeWidgetItem *childItem = treeWidgetItem->child(i);
             if (childItem->text(0) == name) {
@@ -405,12 +405,12 @@ QList<GroupModel *> GroupTreeWidget::getGroupModelList()
         groupModelList.append(topLevelItem(j)->data(0, Qt::UserRole).value<GroupModel *>());
     }
 
-    QTreeWidgetItem *treeWidgetItem = topLevelItem(6);
+    QTreeWidgetItem *treeWidgetItem = topLevelItem(Gitnoter::Category);
     for (int k = 0; k < treeWidgetItem->childCount(); ++k) {
         groupModelList.append(treeWidgetItem->child(k)->data(0, Qt::UserRole).value<GroupModel *>());
     }
 
-    treeWidgetItem = topLevelItem(8);
+    treeWidgetItem = topLevelItem(Gitnoter::Tag);
     for (int i = 0; i < treeWidgetItem->childCount(); ++i) {
         groupModelList.append(treeWidgetItem->child(i)->data(0, Qt::UserRole).value<GroupModel *>());
     }

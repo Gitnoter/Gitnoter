@@ -247,19 +247,6 @@ QWidget#widget_6{
           </column>
           <item>
            <property name="text">
-            <string/>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>4</pointsize>
-            </font>
-           </property>
-           <property name="flags">
-            <set>ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>所有笔记</string>
            </property>
            <property name="font">
@@ -360,19 +347,6 @@ QWidget#widget_6{
           </item>
           <item>
            <property name="text">
-            <string/>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>4</pointsize>
-            </font>
-           </property>
-           <property name="flags">
-            <set>ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>归档</string>
            </property>
            <property name="font">
@@ -394,19 +368,6 @@ QWidget#widget_6{
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
              <normaloff>:/images/icon-folder.png</normaloff>:/images/icon-folder.png</iconset>
-           </property>
-           <property name="flags">
-            <set>ItemIsEnabled</set>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>4</pointsize>
-            </font>
            </property>
            <property name="flags">
             <set>ItemIsEnabled</set>
