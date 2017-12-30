@@ -22,7 +22,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mAboutDialog(new AboutDialog(this)),
         mSettingDialog(new SettingDialog(this)),
         mEnterLicenseDialog(new EnterLicenseDialog(this)),
-        mGitManager(new GitManager())
+        mGitManager(new GitManager()),
+        mLockDialog(new LockDialog(this))
 {
     ui->setupUi(this);
     initTempDir();
@@ -122,6 +123,7 @@ void MainWindow::setupUi()
     connect(mSettingDialog, SIGNAL(globalHotKeysChanged()), mMenuBar, SLOT(initGlobalHotKeys()));
     connect(mSettingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(updateAutoSyncRepoTimer()));
     connect(mSettingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(updateAutoLockTimer()));
+    connect(mLockDialog, SIGNAL(hideActivated()), this, SLOT(updateAutoLockTimer()));
 
     connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
     connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
@@ -430,12 +432,11 @@ void MainWindow::updateAutoLockTimer()
 
 void MainWindow::lockWindow()
 {
-    qDebug() << "lockWindow" << __func__;
-//            if (mAutoLockTimer->isActive()){
-//                mAutoLockTimer->stop();
-//            }
-//            close();
-//            (new LockDialog())->show();
+    if (mLockDialog->isHidden()) {
+        mLockDialog->showWidget();
+    }
+
+    gConfigModel->setHasLockWindow(true);
 }
 
 void MainWindow::showSidebar(bool clicked)

@@ -16,9 +16,14 @@ int main(int argc, char *argv[])
     QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
 
     MenuBar *menuBar = new MenuBar();
-
     MainWindow *w = new MainWindow(menuBar);
-    w->show();
+
+    if (gConfigModel->getHasLockWindow()) {
+        w->lockDialog()->show();
+    }
+    else {
+        w->show();
+    }
 
     return a.exec();
 }

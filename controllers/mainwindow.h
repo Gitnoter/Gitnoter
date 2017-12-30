@@ -12,6 +12,7 @@
 #include "notemodel.h"
 #include "enterlicensedialog.h"
 #include "gitmanager.h"
+#include "lockdialog.h"
 
 #include <UGlobalHotkey/uglobalhotkeys.h>
 
@@ -32,6 +33,7 @@ namespace Ui
     class MainWindow;
 }
 
+class LockDialog;
 class GroupTreeWidget;
 class MarkdownEditorWidget;
 class NoteListWidget;
@@ -151,6 +153,7 @@ public:
 
     SettingDialog *settingDialog() { return mSettingDialog; }
     EnterLicenseDialog *enterLicenseDialog() { return mEnterLicenseDialog; }
+    LockDialog *lockDialog() { return mLockDialog; }
 
 private:
     Ui::MainWindow *ui;
@@ -158,6 +161,7 @@ private:
     AboutDialog *mAboutDialog;
     SettingDialog *mSettingDialog;
     EnterLicenseDialog *mEnterLicenseDialog;
+    LockDialog *mLockDialog;
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;

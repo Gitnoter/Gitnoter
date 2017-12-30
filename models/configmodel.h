@@ -152,6 +152,9 @@ public:
     QRect getEditorWindowRect();
     void setEditorWindowRect(const QRect &rect);
 
+    bool getHasLockWindow();
+    void setHasLockWindow(bool hasLock);
+
 private:
     template <typename T>
     QVariantList toVariantList(const QList<T> &list);
@@ -203,6 +206,7 @@ private:
     QString mMainWindowSplitterSizes;
     QString mMainWindowRect;
     QString mMainWindowFullScreen;
+    QString mHasLockWindow;
     QString mEditorSplitterSizes;
     QString mEditorBackgroundSplitterSizes;
 

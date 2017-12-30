@@ -37,6 +37,7 @@ ConfigModel::ConfigModel()
     mMainWindowSplitterSizes = "mainWindow/splitterSizes";
     mMainWindowRect = "mainWindow/rect";
     mMainWindowFullScreen = "mainWindow/fullScreen";
+    mHasLockWindow = "mainWindow/hasLock";
     mNoteSortBasis = "noteList/noteSortBasis";
     mNoteSortType = "noteList/noteSortType";
 }
@@ -446,4 +447,14 @@ QList<int> ConfigModel::getEditorBackgroundSplitterSizes()
 void ConfigModel::setEditorBackgroundSplitterSizes(const QList<int> &sizes)
 {
     settings->setValue(mEditorBackgroundSplitterSizes, toVariantList(sizes));
+}
+
+bool ConfigModel::getHasLockWindow()
+{
+    return settings->value(mHasLockWindow, false).toBool();
+}
+
+void ConfigModel::setHasLockWindow(bool hasLock)
+{
+    settings->setValue(mHasLockWindow, hasLock);
 }
