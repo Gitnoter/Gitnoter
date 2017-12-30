@@ -27,7 +27,6 @@ SettingDialog::~SettingDialog()
 void SettingDialog::setupUi()
 {
     setWindowHeight(0);
-    qApp->setAttribute(Qt::AA_NativeWindows, true);
 
     ui->comboBox_autoSynch->setCurrentIndex(getComboBoxIndexByTime(gConfigModel->getAutoSyncRepoTime()));
     ui->comboBox_autoLock->setCurrentIndex(getComboBoxIndexByTime(gConfigModel->getAutoLockTime()));
@@ -76,6 +75,7 @@ void SettingDialog::setWindowHeight(int pageIndex)
     int height = mHeight[pageIndex];
     ui->stackedWidget->setCurrentIndex(pageIndex);
     ui->widget_content->hide();
+    ui->widget_buttons->hide();
     ui->widget_content->setFixedHeight(height - ui->widget_buttons->height());
 
     QPropertyAnimation *animation = new QPropertyAnimation(this, "size");
@@ -86,6 +86,7 @@ void SettingDialog::setWindowHeight(int pageIndex)
 
     connect(animation, &QPropertyAnimation::finished, [=]() {
         ui->widget_content->show();
+        ui->widget_buttons->show();
     });
 
     animation->start(QAbstractAnimation::DeleteWhenStopped);
