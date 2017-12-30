@@ -92,7 +92,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
     }
 
     const QString salt = "FsUr*5GDs9u#o0@Zvace5WAyAmVGX09u";
-    const QString productType = QSysInfo::productType();
+    const QString productType = QSysInfo::kernelType();
     const QString sha512Part1 = QString(QCryptographicHash::hash(QString(email + salt + uid + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
     const QString sha512Part2 = QString(QCryptographicHash::hash(QString(uid + salt + email + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
 
