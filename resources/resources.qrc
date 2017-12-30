@@ -1,12 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>highlight.js/github-gist.css</file>
-        <file>highlight.js/highlight.min.js</file>
-        <file>marked/default.md</file>
-        <file>marked/markdown.css</file>
-        <file>marked/index.html</file>
-        <file>marked/marked.min.js</file>
-        <file>marked/qwebchannel.js</file>
         <file>database/gitnoter.sql</file>
         <file>images/icon-close-down.png</file>
         <file>images/icon-close-up.png</file>
@@ -64,5 +57,13 @@
         <file>images/icon-recover.svg</file>
         <file>images/icon-clear.svg</file>
         <file>images/icon-clear-down.svg</file>
+        <file>html/marked/default.md</file>
+        <file>html/marked/index.html</file>
+        <file>html/marked/markdown.css</file>
+        <file>html/marked/marked.min.js</file>
+        <file>html/marked/qwebchannel.js</file>
+        <file>html/appinfo/about.html</file>
+        <file>html/highlight.js/github-gist.css</file>
+        <file>html/highlight.js/highlight.min.js</file>
     </qresource>
 </RCC>

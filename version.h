@@ -1,4 +1,6 @@
-﻿#ifndef VERSION_H
+﻿#pragma once
+
+#ifndef VERSION_H
 #define VERSION_H
 
 #define VER_FILEVERSION             1,0,0,0     //文件版本
