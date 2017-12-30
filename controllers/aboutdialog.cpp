@@ -2,6 +2,7 @@
 
 #include "aboutdialog.h"
 #include "version.h"
+#include "tools.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
