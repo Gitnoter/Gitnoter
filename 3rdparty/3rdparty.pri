@@ -33,4 +33,4 @@ include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)
 #
 # qkeysequencewidget
 #
-include($$PWD/UGlobalHotkey/uglobalhotkey.pri)
+#include($$PWD/UGlobalHotkey/uglobalhotkey.pri)

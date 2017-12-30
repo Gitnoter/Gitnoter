@@ -5,8 +5,6 @@
 #include "loginwidget.h"
 #include "markdowneditorwidget.h"
 
-#include <UGlobalHotkey/uglobalhotkeys.h>
-
 #include <QMainWindow>
 #include <QPrinter>
 #include <QActionGroup>
@@ -153,15 +151,12 @@ public:
     QActionGroup *windowMenuActionGroup() { return mWindowMenuActionGroup; }
     QWidgetList windowMenuWidgetList();
 
-    UGlobalHotkeys *keyGlobalHotKeys() { return mKeyGlobalHotKeys; }
-
     void setMainWindow(MainWindow *mainWindow) { mMainWindow = mainWindow; }
 
 private:
     Ui::MenuBar *ui;
     QPrinter *mPrinter;
     QActionGroup *mWindowMenuActionGroup;
-    UGlobalHotkeys *mKeyGlobalHotKeys;
     MainWindow *mMainWindow;
 
 };

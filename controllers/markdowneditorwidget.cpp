@@ -485,19 +485,6 @@ void MarkdownEditorWidget::setupUi()
     connect(ui->pushButton_taskList, SIGNAL(clicked()), this, SLOT(todoList()));
     connect(ui->pushButton_table, SIGNAL(clicked()), this, SLOT(table()));
 
-    connect(mMainWindow->menuBar()->keyGlobalHotKeys(), &UGlobalHotkeys::activated, [=](size_t id) {
-        if (!editorHasFocus() || !mMainWindow || !isActiveWindow()) {
-            return;
-        }
-        qDebug() << __func__ << "mark" << id;
-        switch (id) {
-            case Gitnoter::CutRect:partScreenShot();break;
-            case Gitnoter::CutFull:fullScreenShot();break;
-            case Gitnoter::CutWindow:windowScreenShot();break;
-            default:break;
-        }
-    });
-
     connect(mMainWindow->settingDialog(), &SettingDialog::editorFontChanged, [=](const QFont &font) {
         ui->markdownEditor->setFont(font);
     });

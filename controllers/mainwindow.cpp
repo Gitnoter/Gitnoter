@@ -107,19 +107,6 @@ void MainWindow::setupUi()
     connect(mMenuBar->getActionAbout(), SIGNAL(triggered()), this, SLOT(aboutGitnoter()));
     connect(mMenuBar->getActionPreferences(), SIGNAL(triggered()), this, SLOT(setting()));
 
-    connect(mMenuBar->keyGlobalHotKeys(), &UGlobalHotkeys::activated, [=](size_t id) {
-        if (!isActiveWindow() || ui->markdownEditorWidget->editorHasFocus()) {
-            return;
-        }
-        qDebug() << __func__ << "main" << id;
-        switch (id) {
-            case Gitnoter::CutRect:partScreenShot();break;
-            case Gitnoter::CutFull:fullScreenShot();break;
-            case Gitnoter::CutWindow:windowScreenShot();break;
-            default:break;
-        }
-    });
-
     connect(mSettingDialog, SIGNAL(globalHotKeysChanged()), mMenuBar, SLOT(initGlobalHotKeys()));
     connect(mSettingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(updateAutoSyncRepoTimer()));
     connect(mSettingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(updateAutoLockTimer()));

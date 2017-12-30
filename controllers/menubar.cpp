@@ -12,8 +12,7 @@ MenuBar::MenuBar(QWidget *parent, MainWindow *mainWindow ) :
         mMainWindow(mainWindow),
         ui(new Ui::MenuBar),
         mWindowMenuActionGroup(new QActionGroup(this)),
-        mPrinter(new QPrinter()),
-        mKeyGlobalHotKeys(new UGlobalHotkeys())
+        mPrinter(new QPrinter())
 {
     ui->setupUi(this);
     setupUi(parent);
