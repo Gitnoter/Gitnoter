@@ -1,3 +1,7 @@
 # my
 .DS_Store
 .idea/*
+*.app
+*.exe
+*.dmg
+build-*
