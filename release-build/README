@@ -1,0 +1,7 @@
+## Window missing dll
+
+- platforms/qminimal.dll
+- platforms/qoffscreen.dll
+- platforms/qwindows.dll
+- msvcp140.dll
+- vcruntime140.dll
