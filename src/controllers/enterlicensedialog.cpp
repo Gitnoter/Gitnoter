@@ -44,7 +44,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 {
     mLicense = false;
 
-    QString uid, email, licenseKeyPart1, licenseKeyPart2 = "";
+    QString lid, email, licenseKeyPart1, licenseKeyPart2 = "";
     QTextStream in(&license);
     QStringList stringList = {};
 
@@ -77,11 +77,11 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
             email = stringList[i];
         }
         else if (2 == i) {
-            if (!stringList[i].startsWith("UID-")) {
+            if (!stringList[i].startsWith("LID-")) {
                 return false;
             }
 
-            uid = stringList[i].mid(4);
+            lid = stringList[i].mid(4);
         }
         else if (3 <= i && i <= 6) {
             licenseKeyPart1 += stringList[i].replace(" ", "");
@@ -93,8 +93,8 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 
     const QString salt = "FsUr*5GDs9u#o0@Zvace5WAyAmVGX09u";
     const QString productType = QSysInfo::kernelType();
-    const QString sha512Part1 = QString(QCryptographicHash::hash(QString(email + salt + uid + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
-    const QString sha512Part2 = QString(QCryptographicHash::hash(QString(uid + salt + email + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
+    const QString sha512Part1 = QString(QCryptographicHash::hash(QString(email + salt + lid + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
+    const QString sha512Part2 = QString(QCryptographicHash::hash(QString(lid + salt + email + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
 
     if (sha512Part1 != licenseKeyPart1 || sha512Part2 != licenseKeyPart2) {
         return false;
