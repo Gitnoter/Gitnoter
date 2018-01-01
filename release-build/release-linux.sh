@@ -13,7 +13,7 @@ do
         cp ../src/3rdparty/libgit2/lib/libgit2.so ./release/Gitnoter/lib/libgit2.so.24
         echo "app verson: ${VERSION}"
         cd release
-        tar -cvzf Gitnoter-linux-${VERSION}.tar.gz Gitnoter
+        tar -cvzf Gitnoter-linux-v${VERSION}.tar.gz Gitnoter
     fi
     let i=i+1
 done
