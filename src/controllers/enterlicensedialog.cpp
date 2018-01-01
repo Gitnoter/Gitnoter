@@ -62,13 +62,13 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 
     for (int i = 0; i < stringList.length(); ++i) {
         if (0 == i) {
-            if ("—– BEGIN LICENSE —–" != stringList[i]) {
+            if (u8"—– BEGIN LICENSE —–" != stringList[i]) {
                 return false;
             }
             continue;
         }
         else if (11 == i) {
-            if (stringList[i] != "—— END LICENSE ——") {
+            if (u8"—– END LICENSE —–" != stringList[i]) {
                 return false;
             }
             continue;
