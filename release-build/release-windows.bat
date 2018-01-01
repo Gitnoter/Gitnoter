@@ -8,4 +8,4 @@ windeployqt.exe .\release\Gitnoter\Gitnoter.exe --release
 
 xcopy .\window-missing-dll .\release\Gitnoter\ /s/f/h/y
 
-7z.exe a -tzip -r .\release\Gitnoter.zip .\release\Gitnoter\*
+7z.exe a -tzip -r .\release\Gitnoter-windows-.zip .\release\Gitnoter
