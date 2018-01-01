@@ -33,10 +33,10 @@ const int gImageQuality = 85;
 
 const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="
                                                                   : "https://www.google.com/search?&q=";
-const QString gGuideUrl = "http://gitnoter.github.io/";
-const QString gHistoryChangeUrl = "http://gitnoter.github.io/";
-const QString gMarkdownLanguageUrl = "http://gitnoter.github.io/";
-const QString gPurchaseLicenseUrl = "http://gitnoter.github.io/";
+const QString gGuideUrl = "http://www.gitnoter.com/zh/update/";
+const QString gHistoryChangeUrl = "http://www.gitnoter.com/zh/update/";
+const QString gMarkdownLanguageUrl = "https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet";
+const QString gPurchaseLicenseUrl = "http://www.gitnoter.com/zh/buy/";
 const QString gIssueUrl = "https://github.com/Gitnoter/Gitnoter/issues";
 const QString gEmailToUser = "gitnoter@gmail.com";
 
