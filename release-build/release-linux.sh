@@ -12,7 +12,8 @@ do
         linuxdeployqt ./release/Gitnoter/Gitnoter
         cp ../src/3rdparty/libgit2/lib/libgit2.so ./release/Gitnoter/lib/libgit2.so.24
         echo "app verson: ${VERSION}"
-        tar -czf ./release/Gitnoter-linux-${VERSION}.tar.gz ./release/Gitnoter
+        cd release
+        tar -cvzf Gitnoter-linux-${VERSION}.tar.gz Gitnoter
     fi
     let i=i+1
 done
