@@ -1,0 +1,9 @@
+{
+  "title": "Gitnoter Application",
+  "icon": "../../src/Gitnoter.icns",
+  "background": "./1.png",
+  "contents": [
+    { "x": 180, "y": 200, "type": "file", "path": "../release/Gitnoter.app" },
+    { "x": 440, "y": 200, "type": "link", "path": "/Applications" }
+  ]
+}
