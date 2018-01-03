@@ -60,8 +60,11 @@ void MainWindow::setupUi()
 
     ui->splitter->setSizes(gConfigModel->getMainWindowSplitterSizes());
     ui->stackWidget_editor->setCurrentIndex((int) gConfigModel->openMainWindowNoteUuid().isEmpty());
+    
+    if (!gConfigModel->getMainWindowRect().topLeft().isNull()) {
+        setGeometry(gConfigModel->getMainWindowRect());
+    }
 
-    setGeometry(gConfigModel->getMainWindowRect());
     if (gConfigModel->getMainWindowFullScreen()) {
         showFullScreen();
     }
