@@ -912,7 +912,7 @@ QPushButton#pushButton_headerSize {
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">#widget_navigationBar{border: none;border-left: 1px solid rgb(191, 191, 191);}</string>
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
