@@ -5,8 +5,6 @@
 #include "tools.h"
 #include "screenshot.h"
 
-#include <UGlobalHotkey/uglobalhotkeys.h>
-
 #include <QScrollBar>
 #include <QFileDialog>
 #include <QDebug>
@@ -329,7 +327,8 @@ void MarkdownEditorWidget::setSplitterSizes()
     ui->splitter_editor->setSizes(sizes);
 
     bool b = sizes.indexOf(0) != -1;
-    ui->splitter_editor->setStyleSheet(b ? "QSplitter::handle {image: none;}" : "");
+    ui->markdownEditor->setStyleSheet(b ? "" : "#markdownEditor{border: none;border-right: 1px solid rgb(191, 191, 191);}");
+//    ui->splitter_editor->setStyleSheet(b ? "QSplitter::handle {image: none;}" : "");
     ui->splitter_editor->handle(1)->setDisabled(b);
 }
 
@@ -338,9 +337,10 @@ void MarkdownEditorWidget::setBackgroundSplitterSizes()
     QList<int> sizes = gConfigModel->getEditorBackgroundSplitterSizes();
 
     ui->splitter_background->setSizes(sizes);
-
+    qDebug() << sizes << ui->widget_navigationBar->width() << ui->widget_navigationBar->minimumWidth();
     bool b = sizes.length() == 0 || sizes[1] == ui->widget_navigationBar->minimumWidth();
-    ui->splitter_background->setStyleSheet(b ? "QSplitter#splitter_background::handle {image: none;}" : "");
+    ui->widget_navigationBar->setStyleSheet(b ? "" : "#widget_navigationBar{border: none;border-left: 1px solid rgb(191, 191, 191);}");
+//    ui->splitter_background->setStyleSheet(b ? "QSplitter#splitter_background::handle {image: none;}" : "");
     ui->splitter_background->handle(1)->setDisabled(b);
     mMainWindow->menuBar()->getActionNavigationBar()->setChecked(!b);
 }

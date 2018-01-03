@@ -873,6 +873,9 @@ QPushButton#pushButton_headerSize {
           <property name="acceptDrops">
            <bool>false</bool>
           </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <property name="plainText">
            <string/>
           </property>
@@ -907,6 +910,9 @@ QPushButton#pushButton_headerSize {
         <width>16777215</width>
         <height>16777215</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#widget_navigationBar{border: none;border-left: 1px solid rgb(191, 191, 191);}</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
