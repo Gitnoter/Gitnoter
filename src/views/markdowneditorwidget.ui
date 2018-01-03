@@ -23,7 +23,14 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+   <string notr="true">QWidget#QPlainTextEditSearchWidget {
+    background-color: #ffffff;
+}
+
+QWidget#QPlainTextEditSearchWidget &gt; #widget_background {
+    border-top: 0.5px solid rgb(191, 191, 191);
+}
+
 QWidget#MarkdownEditorWidget {
   
 }

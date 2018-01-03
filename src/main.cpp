@@ -8,12 +8,19 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    gConfigModel->init();
 
+#if defined(Q_OS_WIN)
+    qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
+#endif
+
+#if defined(Q_OS_MACOS)
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
-    qApp->setStyleSheet(Tools::readerFile(":/theme/default.qss"));
+#endif
 
+    qApp->setStyleSheet(qApp->styleSheet() + Tools::readerFile(":/theme/default.qss"));
     QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+
+    gConfigModel->init();
 
     MenuBar *menuBar = new MenuBar();
     MainWindow *w = new MainWindow(menuBar);

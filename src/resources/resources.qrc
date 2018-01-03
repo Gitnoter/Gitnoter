@@ -65,5 +65,14 @@
         <file>html/appinfo/about.html</file>
         <file>html/highlight.js/github-gist.css</file>
         <file>html/highlight.js/highlight.min.js</file>
+        <file>images/icon-scroll-horizontal-1.png</file>
+        <file>images/icon-scroll-horizontal-2.png</file>
+        <file>images/icon-scroll-horizontal-3.png</file>
+        <file>images/icon-scroll-horizontal-4.png</file>
+        <file>images/icon-scroll-vertical-1.png</file>
+        <file>images/icon-scroll-vertical-2.png</file>
+        <file>images/icon-scroll-vertical-3.png</file>
+        <file>images/icon-scroll-vertical-4.png</file>
+        <file>theme/windows-default.qss</file>
     </qresource>
 </RCC>
