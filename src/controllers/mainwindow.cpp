@@ -38,7 +38,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUi()
 {
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     ui->widget_listBar->setStyleSheet("#widget_listBar{border: none;border-right: 1px solid rgb(191, 191, 191);}");
     ui->widget_sidebar->setStyleSheet("#widget_sidebar{border: none;border-right: 1px solid rgb(191, 191, 191);}");
 #endif

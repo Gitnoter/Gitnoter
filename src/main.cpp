@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
 #endif
 
