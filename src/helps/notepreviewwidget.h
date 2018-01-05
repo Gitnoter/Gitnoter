@@ -25,6 +25,12 @@ private:
 signals:
     void resize(QSize size, QSize oldSize = QSize());
 
+public Q_SLOTS:
+    void setHtml(const QString &text);
+
+private slots:
+    void changeImageWidth();
+
 private:
     QList<UrlImage> urlImageList;
 

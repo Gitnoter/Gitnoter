@@ -143,6 +143,7 @@ void MainWindow::initTempDir()
     QDir dir;
     dir.mkdir(gAppDataLocation);
     dir.mkdir(gAppDataPath);
+    dir.mkpath(gTempPath);
 
     mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath));
 

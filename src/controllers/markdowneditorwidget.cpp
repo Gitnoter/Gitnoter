@@ -128,7 +128,7 @@ void MarkdownEditorWidget::appendCategory(const QString &category)
 void MarkdownEditorWidget::modifyNote()
 {
     mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
-    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
+    ui->markdownPreview->setHtml(mNoteModel->getMarkdownHtml());
     mNoteModel->saveNoteToLocal();
     mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
 
@@ -268,7 +268,7 @@ void MarkdownEditorWidget::on_markdownEditor_textChanged()
 void MarkdownEditorWidget::setOpenNote()
 {
     ui->markdownEditor->setText(mNoteModel->getNoteText());
-    ui->markdownPreview->setText(mNoteModel->getMarkdownHtml());
+    ui->markdownPreview->setHtml(mNoteModel->getMarkdownHtml());
     ui->pushButton_category->setText(mNoteModel->getCategory().isEmpty() ? tr(u8"所有笔记") : mNoteModel->getCategory());
     ui->label_createTime->setText(tr(u8"创建时间: %1").arg(mNoteModel->getCreateDateString()));
     ui->label_updateTime->setText(tr(u8"更新时间: %1").arg(mNoteModel->getUpdateDateString()));
