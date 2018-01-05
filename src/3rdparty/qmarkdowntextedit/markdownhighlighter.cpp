@@ -263,7 +263,7 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
     // set character formats for headlines
     format = QTextCharFormat();
     format.setForeground(QBrush(QColor(0, 49, 110)));
-    format.setBackground(QBrush(QColor(230, 230, 240)));
+//    format.setBackground(QBrush(QColor(230, 230, 240)));
     format.setFontWeight(QFont::Bold);
     format.setFontPointSize(defaultFontSize * 1.6);
     _formats[H1] = format;
@@ -279,7 +279,7 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
     // set character format for horizontal rulers
     format = QTextCharFormat();
     format.setForeground(QBrush(Qt::darkGray));
-    format.setBackground(QBrush(Qt::lightGray));
+//    format.setBackground(QBrush(Qt::lightGray));
     _formats[HorizontalRuler] = format;
 
     // set character format for lists
@@ -301,9 +301,9 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
 
     // set character format for code blocks
     format = QTextCharFormat();
-    format.setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+//    format.setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     format.setForeground(QBrush(Qt::darkGreen));
-    format.setBackground(QBrush(QColor(217, 231, 217)));
+//    format.setBackground(QBrush(QColor(217, 231, 217)));
     _formats[CodeBlock] = format;
     _formats[InlineCodeBlock] = format;
 
@@ -326,12 +326,12 @@ void MarkdownHighlighter::initTextFormats(int defaultFontSize) {
 
     // set character format for masked syntax
     format = QTextCharFormat();
-    format.setForeground(QBrush("#cccccc"));
+    format.setForeground(QBrush("#2C3E50"));
     _formats[MaskedSyntax] = format;
 
     // set character format for tables
     format = QTextCharFormat();
-    format.setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+//    format.setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     format.setForeground(QBrush(QColor("#649449")));
     _formats[Table] = format;
 
@@ -645,9 +645,7 @@ void MarkdownHighlighter::highlightAdditionalRules(
                 if (capturingGroup > 0) {
                     QTextCharFormat &currentMaskedFormat = maskedFormat;
                     // set the font size from the current rule's font format
-                    if (format.fontPointSize() > 0) {
-                        maskedFormat.setFontPointSize(format.fontPointSize());
-                    }
+                    maskedFormat.setFontPointSize(format.fontPointSize());
 
                     setFormat(match.capturedStart(maskedGroup),
                               match.capturedLength(maskedGroup),

@@ -13,15 +13,28 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
-    mNoteModel(nullptr),
-    mInit(false)
+    mNoteModel(nullptr)
 {
     ui->setupUi(this);
+    setupUi();
 }
 
 MarkdownEditorWidget::~MarkdownEditorWidget()
 {
     delete ui;
+}
+
+void MarkdownEditorWidget::setupUi()
+{
+    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->navigationBar->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->lineEdit_tag->installEventFilter(this);
+    ui->markdownEditor->installEventFilter(this);
+    ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
+    ui->markdownEditor->setIgnoredClickUrlSchemata({gFileScheme});
+
+    updateMarkdownEditorSetting();
+    highlightCurrentLine();
 }
 
 void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
@@ -40,7 +53,7 @@ void MarkdownEditorWidget::init(const QString &uuid, MainWindow *mainWindow)
         setOpenNote();
     }
 
-    setupUi();
+    init();
     setWindowTitle();
 }
 
@@ -49,7 +62,7 @@ void MarkdownEditorWidget::init(NoteModel *noteModel, MainWindow *mainWindow)
     mMainWindow = mainWindow;
     mNoteModel = noteModel;
     setOpenNote();
-    setupUi();
+    init();
     setWindowTitle();
 }
 
@@ -367,18 +380,16 @@ void MarkdownEditorWidget::on_markdownEditor_customContextMenuRequested(const QP
     menu->exec(globalPos);
 }
 
-void MarkdownEditorWidget::setupUi()
+void MarkdownEditorWidget::init()
 {
-    if (mInit) { return; }
-    else { mInit = true; }
+    if (!mMainWindow) {
+        return;
+    }
 
-    ui->lineEdit_tag->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->navigationBar->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->lineEdit_tag->installEventFilter(this);
-    ui->markdownEditor->installEventFilter(this);
-    ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
-    ui->markdownEditor->setIgnoredClickUrlSchemata({gFileScheme});
-    if (!parent()) { setGeometry(gConfigModel->getEditorWindowRect()); }
+    if (!parent()) {
+        setGeometry(gConfigModel->getEditorWindowRect());
+    }
+
     setSplitterSizes();
     setBackgroundSplitterSizes();
 
@@ -386,18 +397,33 @@ void MarkdownEditorWidget::setupUi()
 
     MenuBar *menuBar = mMainWindow->menuBar();
 
-    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onMarkdownEditorSliderValueChanged(int)));
     connect(ui->markdownPreview->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onMarkdownPreviewSliderValueChanged(int)));
-    connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
     connect(ui->navigationBar, SIGNAL(positionClicked(int)), this, SLOT(onNavigationWidgetPositionClicked(int)));
 
+    connect(ui->markdownEditor->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onMarkdownEditorSliderValueChanged(int)));
+    connect(ui->markdownEditor->highlighter(), SIGNAL(highlightingFinished()), this, SLOT(onNavigationBarChenged()));
+
     connect(ui->markdownEditor, SIGNAL(urlClicked(QString)), this, SLOT(onOpenLocalUrl(QString)));
+    connect(ui->markdownEditor, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
+
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCut(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionCopy(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(copyAvailable(bool)), menuBar->getActionWebSearch(), SLOT(setEnabled(bool)));
-
     connect(ui->markdownEditor, SIGNAL(undoAvailable(bool)), menuBar->getActionUndo(), SLOT(setEnabled(bool)));
     connect(ui->markdownEditor, SIGNAL(redoAvailable(bool)), menuBar->getActionRedo(), SLOT(setEnabled(bool)));
+
+    connect(ui->pushButton_bold, SIGNAL(clicked()), this, SLOT(strong()));
+    connect(ui->pushButton_headerSize, SIGNAL(clicked()), this, SLOT(headerSize()));
+    connect(ui->pushButton_italic, SIGNAL(clicked()), this, SLOT(italic()));
+    connect(ui->pushButton_strickout, SIGNAL(clicked()), this, SLOT(strickout()));
+    connect(ui->pushButton_image, SIGNAL(clicked()), this, SLOT(linkImage()));
+    connect(ui->pushButton_link, SIGNAL(clicked()), this, SLOT(link()));
+    connect(ui->pushButton_quote, SIGNAL(clicked()), this, SLOT(quoteBlock()));
+    connect(ui->pushButton_code, SIGNAL(clicked()), this, SLOT(codeBlock()));
+    connect(ui->pushButton_ordered, SIGNAL(clicked()), this, SLOT(orderedList()));
+    connect(ui->pushButton_unordered, SIGNAL(clicked()), this, SLOT(unorderedList()));
+    connect(ui->pushButton_taskList, SIGNAL(clicked()), this, SLOT(todoList()));
+    connect(ui->pushButton_table, SIGNAL(clicked()), this, SLOT(table()));
 
     connect(menuBar->getActionExportHtmlForPDF(), SIGNAL(triggered()), this, SLOT(exportHtmlForPDF()));
     connect(menuBar->getActionExportMarkdownForPDF(), SIGNAL(triggered()), this, SLOT(exportMarkdownForPDF()));
@@ -477,19 +503,6 @@ void MarkdownEditorWidget::setupUi()
     connect(menuBar->getActionCodeBlock(), SIGNAL(triggered()), this, SLOT(codeBlock()));
     connect(menuBar->getActionAnnotation(), SIGNAL(triggered()), this, SLOT(annotation()));
     connect(menuBar->getActionMoreAnnotation(), SIGNAL(triggered()), this, SLOT(moreAnnotation()));
-
-    connect(ui->pushButton_bold, SIGNAL(clicked()), this, SLOT(strong()));
-    connect(ui->pushButton_headerSize, SIGNAL(clicked()), this, SLOT(headerSize()));
-    connect(ui->pushButton_italic, SIGNAL(clicked()), this, SLOT(italic()));
-    connect(ui->pushButton_strickout, SIGNAL(clicked()), this, SLOT(strickout()));
-    connect(ui->pushButton_image, SIGNAL(clicked()), this, SLOT(linkImage()));
-    connect(ui->pushButton_link, SIGNAL(clicked()), this, SLOT(link()));
-    connect(ui->pushButton_quote, SIGNAL(clicked()), this, SLOT(quoteBlock()));
-    connect(ui->pushButton_code, SIGNAL(clicked()), this, SLOT(codeBlock()));
-    connect(ui->pushButton_ordered, SIGNAL(clicked()), this, SLOT(orderedList()));
-    connect(ui->pushButton_unordered, SIGNAL(clicked()), this, SLOT(unorderedList()));
-    connect(ui->pushButton_taskList, SIGNAL(clicked()), this, SLOT(todoList()));
-    connect(ui->pushButton_table, SIGNAL(clicked()), this, SLOT(table()));
 
     connect(mMainWindow->settingDialog(), &SettingDialog::editorFontChanged, [=](const QFont &font) {
         ui->markdownEditor->setFont(font);
@@ -1329,4 +1342,37 @@ void MarkdownEditorWidget::pasteData()
     }
 
     insertMimeData(mimeData);
+}
+
+void MarkdownEditorWidget::updateMarkdownEditorSetting()
+{
+    QMarkdownTextEdit::AutoTextOptions options;
+    options |= QMarkdownTextEdit::AutoTextOption::BracketClosing;
+    options |= QMarkdownTextEdit::AutoTextOption::BracketRemoval;
+
+    ui->markdownEditor->setAutoTextOptions(options);
+}
+
+void MarkdownEditorWidget::highlightCurrentLine()
+{
+    QList<QTextEdit::ExtraSelection> extraSelections;
+
+    // check if current line is really visible!
+    if (!ui->markdownEditor->isReadOnly()) {
+        ui->markdownEditor->ensureCursorVisible();
+        QTextEdit::ExtraSelection selection = QTextEdit::ExtraSelection();
+
+        QColor lineColor = QColor(255, 250, 225);
+
+        selection.format.setBackground(lineColor);
+        selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+        selection.cursor = ui->markdownEditor->textCursor();
+        //        selection.cursor.clearSelection();
+        //        selection.cursor.select(QTextCursor::BlockUnderCursor);
+        extraSelections.append(selection);
+    }
+
+    // be aware that extra selections, like for global searching, gets
+    // removed when the current line gets highlighted
+    ui->markdownEditor->setExtraSelections(extraSelections);
 }

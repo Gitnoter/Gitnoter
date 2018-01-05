@@ -13,6 +13,7 @@ TEMPLATE = app
 CONFIG += c++11
 ICON = Gitnoter.icns
 RC_FILE = Gitnoter.rc
+CODECFORTR = UTF-8
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings

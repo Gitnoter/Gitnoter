@@ -52,6 +52,7 @@ protected:
 
 private:
     void setupUi();
+    void init();
 
     void setTagList();  // save tagList to noteModel
     void setOpenNote();
@@ -68,6 +69,8 @@ private:
     void applyFormatter(const QString &formatterStart, const QString &formatterEnd);
 
     void insertMimeData(const QMimeData *mimeData);
+
+    void updateMarkdownEditorSetting();
 
 public slots:
     void appendTag(const QString &tag);
@@ -185,6 +188,8 @@ private slots:
 
     void on_markdownPreview_anchorClicked(const QUrl &arg1);
 
+    void highlightCurrentLine();
+
 public:
     void setMainWindow(MainWindow *mainWindow) { mMainWindow = mainWindow; }
     MainWindow *mainWindow() { return mMainWindow; }
@@ -195,7 +200,6 @@ private:
     Ui::MarkdownEditorWidget *ui;
     MainWindow *mMainWindow;
     CategoryListWidget *mCategoryListWidget;
-    bool mInit;
 
     NoteModel *mNoteModel;
     QList<TagCellWidget *> mTagCellWidgetList;
