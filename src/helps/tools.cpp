@@ -8,6 +8,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QNetworkReply>
+#include <QCryptographicHash>
 
 #include <qtinyaes/qtinyaes.h>
 
@@ -297,4 +298,9 @@ QString Tools::decrypt(const QString &string)
 const char *Tools::qstringToConstData(const QString &string)
 {
     return (new QByteArray(string.toLatin1()))->data();
+}
+
+QString Tools::md5(const QString &text)
+{
+    return QString(QCryptographicHash::hash(text.toUtf8(), QCryptographicHash::Md5).toHex());
 }

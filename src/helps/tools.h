@@ -18,6 +18,8 @@ public:
 
     static QString getShortUuid();
 
+    static QString md5(const QString &text);
+
     static QString readerFile(QString path);
 
     static QStringList readerFileToList(QString path);
