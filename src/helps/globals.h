@@ -26,6 +26,7 @@ extern const QString gNoteDataFileName;
 extern const QString gRepoNoteDataPath;
 extern const QString gRepoCategoryListPath;
 extern const QString gRepoTagListPath;
+extern const QString gTempPath;
 
 extern const QString gCutRectKeySequence;
 extern const QString gCutFullKeySequence;

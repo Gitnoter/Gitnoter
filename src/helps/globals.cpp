@@ -22,6 +22,7 @@ const QString gNoteDataFileName = "data.json";
 const QString gRepoNoteDataPath = QDir(gRepoPath).filePath("data");
 const QString gRepoCategoryListPath = QDir(gRepoNoteDataPath).filePath("categories.list");
 const QString gRepoTagListPath = QDir(gRepoNoteDataPath).filePath("tags.list");
+const QString gTempPath = QDir(gAppDataLocation).filePath("temp/");
 
 const QString gCutRectKeySequence = "Ctrl+Shift+R";
 const QString gCutFullKeySequence = "Ctrl+Shift+X";
