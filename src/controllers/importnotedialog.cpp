@@ -33,7 +33,7 @@ void ImportNoteDialog::init()
         if (fileName.isEmpty()) { return; }
         ui->buttonBox->setEnabled(false);
         open();
-        QString data = Tools::readerFile(fileName);
+        QString data = Tools::readerFileString(fileName);
         QCoreApplication::processEvents();
         initProgressBar(data);
         QCoreApplication::processEvents();

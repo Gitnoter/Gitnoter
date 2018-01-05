@@ -20,7 +20,9 @@ public:
 
     static QString md5(const QString &text);
 
-    static QString readerFile(QString path);
+    static QString readerFileString(QString path);
+
+    static QByteArray readerFile(QString path);
 
     static QStringList readerFileToList(QString path);
 

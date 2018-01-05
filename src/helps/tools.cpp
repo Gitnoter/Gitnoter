@@ -52,16 +52,22 @@ QString Tools::timestampToDateTime(int timestamp)
     return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(gDateFormat);
 }
 
-QString Tools::readerFile(QString path)
+QString Tools::readerFileString(QString path)
+{
+    return QString(readerFile(path));
+}
+
+QByteArray Tools::readerFile(QString path)
 {
     QFile textFile(path);
     textFile.open(QIODevice::ReadOnly);
-    return QString(textFile.readAll());
+
+    return textFile.readAll();
 }
 
 QStringList Tools::readerFileToList(QString path)
 {
-    QString str = readerFile(path);
+    QString str = readerFileString(path);
     QTextStream in(&str);
     QStringList stringList;
 

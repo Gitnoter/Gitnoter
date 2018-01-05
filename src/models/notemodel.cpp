@@ -21,8 +21,8 @@ NoteModel::NoteModel(const QString &noteText)
 
 NoteModel::NoteModel(const QString &textPath, const QString &dataPath)
 {
-    setNoteText(Tools::readerFile(textPath));
-    setNoteData(Tools::readerFile(dataPath));
+    setNoteText(Tools::readerFileString(textPath));
+    setNoteData(Tools::readerFileString(dataPath));
 }
 
 QString NoteModel::getNoteDir()

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
-    qApp->setStyleSheet(qApp->styleSheet() + Tools::readerFile(":/theme/default.qss"));
+    qApp->setStyleSheet(qApp->styleSheet() + Tools::readerFileString(":/theme/default.qss"));
     QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
 
     gConfigModel->init();

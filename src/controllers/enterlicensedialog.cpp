@@ -111,7 +111,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 
 void EnterLicenseDialog::init()
 {
-    QString license = Tools::readerFile(gAppLicensePath);
+    QString license = Tools::readerFileString(gAppLicensePath);
     mLicense = license.isEmpty() ? false : checkLicense(Tools::decrypt(license));
     ((MainWindow *) parentWidget())->menuBar()->initLicenseAction(mLicense);
 }

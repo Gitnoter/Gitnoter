@@ -14,7 +14,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui->version->setText(ui->version->text() + VER_PRODUCTVERSION_STR);
     ui->build->setText(ui->build->text() + QString::number(VER_PRODUCTBUILD_STR));
     ui->copyright->setText(QString(VER_LEGALCOPYRIGHT_STR) + VER_LEGALTRADEMARKS1_STR);
-    ui->textBrowser->setHtml(Tools::readerFile(":/html/appinfo/about.html"));
+    ui->textBrowser->setHtml(Tools::readerFileString(":/html/appinfo/about.html"));
 }
 
 AboutDialog::~AboutDialog()
