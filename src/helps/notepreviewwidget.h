@@ -15,6 +15,8 @@ class NotePreviewWidget : public QTextBrowser
 public:
     explicit NotePreviewWidget(QWidget *parent = nullptr);
 
+    void setDisplayHtml(const QString &html);
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
     QVariant loadResource(int type, const QUrl &name) override;

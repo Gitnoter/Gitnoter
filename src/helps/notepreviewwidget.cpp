@@ -206,3 +206,9 @@ void NotePreviewWidget::downloadThreadStarted()
 
     changeImageWidth();
 }
+
+void NotePreviewWidget::setDisplayHtml(const QString &html)
+{
+    setHtml(html);
+    changeImageWidth();
+}
