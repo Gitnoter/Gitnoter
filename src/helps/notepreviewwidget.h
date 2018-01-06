@@ -25,14 +25,14 @@ private:
     UrlImage getUrlImageByPath(const QString &path);
     UrlImage getUrlImageByUrl(const QString &url);
     void insertUrlImageToList(UrlImage urlImage);
+    void insertUrlImageToList(const QString &url, QString path = "");
+    void initUrlImageList();
 
 signals:
     void resize(QSize size, QSize oldSize = QSize());
 
 private slots:
     void changeImageWidth();
-
-    void downloadWebImageTimer();
 
     void downloadThreadStarted();
 

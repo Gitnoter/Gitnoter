@@ -60,6 +60,21 @@ public:
 
     static const char *qstringToConstData(const QString &string);
 
+    static QSize getImageSize(const QString &path);
+
+    static QString fileUrlToPath(const QString &url);
+
+private:
+    /**
+     * http://www.cplusplus.com/forum/beginner/45217/
+     *
+     * @param fn
+     * @param x
+     * @param y
+     * @return
+     */
+    static bool getImageSize(const char *fn, int *x,int *y);
+
 };
 
 #endif // TOOLS_H
