@@ -22,12 +22,10 @@ protected:
 private:
     UrlImage getUrlImageByPath(const QString &path);
     UrlImage getUrlImageByUrl(const QString &url);
+    void insertUrlImageToList(UrlImage urlImage);
 
 signals:
     void resize(QSize size, QSize oldSize = QSize());
-
-public slots:
-    void setHtml(const QString &text);
 
 private slots:
     void changeImageWidth();

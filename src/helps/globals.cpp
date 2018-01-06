@@ -30,6 +30,7 @@ const QString gCutWindowKeySequence = "Ctrl+Shift+D";
 
 const int gEditorFontSize = 14;
 const QString gFileScheme = "gnr";
+const QStringList gUrlResourceScheme = { "http", "https", "ftp" };
 const int gImageQuality = 85;
 
 const QString gSearchEngine = QLocale::system().name() == "zh_CN" ? "https://www.baidu.com/s?wd="

@@ -59,8 +59,16 @@ QString Tools::readerFileString(QString path)
 
 QByteArray Tools::readerFile(QString path)
 {
+    if (path.startsWith("file://")) {
+        path = path.mid(7);
+    }
+
     QFile textFile(path);
     textFile.open(QIODevice::ReadOnly);
+
+    if (!textFile.isReadable()) {
+        return "";
+    }
 
     return textFile.readAll();
 }

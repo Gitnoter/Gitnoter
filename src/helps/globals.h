@@ -34,6 +34,7 @@ extern const QString gCutWindowKeySequence;
 
 extern const int gEditorFontSize;
 extern const QString gFileScheme;
+extern const QStringList gUrlResourceScheme;
 extern const int gImageQuality;
 
 extern const QString gSearchEngine;
