@@ -1,5 +1,6 @@
 #include <QTextBrowser>
 #include <QResizeEvent>
+#include <QThread>
 
 struct UrlImage {
     QSize size;
@@ -25,13 +26,20 @@ private:
 signals:
     void resize(QSize size, QSize oldSize = QSize());
 
-public Q_SLOTS:
+public slots:
     void setHtml(const QString &text);
 
 private slots:
     void changeImageWidth();
 
+    void downloadWebImageTimer();
+
+    void downloadThreadStarted();
+
 private:
-    QList<UrlImage> urlImageList;
+    QList<UrlImage> mUrlImageList;
+    bool mResizeWindow;
+    QTimer *mDownloadImageTimer;
+    QThread *mDownloadThread;
 
 };

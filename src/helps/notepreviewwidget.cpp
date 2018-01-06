@@ -5,14 +5,22 @@
 #include <QTimer>
 #include <QDebug>
 
-NotePreviewWidget::NotePreviewWidget(QWidget *parent) : QTextBrowser(parent) {
+NotePreviewWidget::NotePreviewWidget(QWidget *parent) :
+        QTextBrowser(parent),
+        mResizeWindow(true),
+        mDownloadImageTimer(new QTimer(this)),
+        mDownloadThread(new QThread(this))
+{
+    connect(mDownloadImageTimer, SIGNAL(timeout()), this, SLOT(downloadWebImageTimer()));
+    connect(mDownloadThread, SIGNAL(started()), this, SLOT(downloadThreadStarted()));
 }
 
 void NotePreviewWidget::resizeEvent(QResizeEvent* event) {
     // we need this, otherwise the preview is always blank
     QTextBrowser::resizeEvent(event);
 
-    if (urlImageList.length() != 0) {
+    if (mResizeWindow && mUrlImageList.length() != 0) {
+        mResizeWindow = false;
         QTimer::singleShot(500, this, SLOT(changeImageWidth()));
     }
 
@@ -25,34 +33,40 @@ QVariant NotePreviewWidget::loadResource(int type, const QUrl &name)
         const QString filePath = QDir(gTempPath).filePath("note-browser-" + Tools::md5(name.toString()) + ".jpg");
         UrlImage urlImage = getUrlImageByUrl(name.toString());
 
-        if (urlImage.url.isEmpty()) {
+        if (urlImage.size.isEmpty()) {
+            urlImage.url = name.toString();
+            urlImage.path = filePath;
+
             QPixmap pixmap;
             QByteArray data = Tools::readerFile(filePath);
 
             if (!data.isEmpty()) {
                 pixmap.loadFromData(data);
+                urlImage.size = pixmap.size();
             }
             else {
-                data = Tools::downloadUrlToData(name);
-                pixmap.loadFromData(data);
-                Tools::writerFile(filePath, data);
+                if (mDownloadImageTimer->isActive()){
+                    mDownloadImageTimer->stop();
+                }
+                mDownloadImageTimer->start(1000);
             }
 
-            urlImage.size = pixmap.size();
-            urlImage.url = name.toString();
-            urlImage.path = filePath;
+            mUrlImageList.append(urlImage);
+        }
 
-            urlImageList.append(urlImage);
+        if (urlImage.size.isEmpty()) {
+            return QTextBrowser::loadResource(type, name);
         }
 
         return QTextBrowser::loadResource(type, QUrl(urlImage.path));
     }
+
     return QTextBrowser::loadResource(type, name);
 }
 
 UrlImage NotePreviewWidget::getUrlImageByPath(const QString &path)
 {
-    for (auto &&item : urlImageList) {
+    for (auto &&item : mUrlImageList) {
         if (item.path == path) {
             return item;
         }
@@ -63,7 +77,7 @@ UrlImage NotePreviewWidget::getUrlImageByPath(const QString &path)
 
 UrlImage NotePreviewWidget::getUrlImageByUrl(const QString &url)
 {
-    for (auto &&item : urlImageList) {
+    for (auto &&item : mUrlImageList) {
         if (item.url == url) {
             return item;
         }
@@ -74,6 +88,7 @@ UrlImage NotePreviewWidget::getUrlImageByUrl(const QString &url)
 
 void NotePreviewWidget::changeImageWidth()
 {
+    qDebug() << __func__;
     int widgetWidth = width() - 10;
     QString html = toHtml();
     QRegularExpression re("<img src=\"(http[s]+:\\/\\/[^\"]+)\"( width=\"[0-9]*\")?");
@@ -119,10 +134,54 @@ void NotePreviewWidget::changeImageWidth()
         //        }
     }
     setHtml(html);
+
+    mResizeWindow = true;
 }
 
 void NotePreviewWidget::setHtml(const QString &text)
 {
-    urlImageList.clear();
     QTextEdit::setHtml(text);
+    if (mResizeWindow && mUrlImageList.length() != 0) {
+        mResizeWindow = false;
+        QTimer::singleShot(500, this, SLOT(changeImageWidth()));
+    }
+}
+
+void NotePreviewWidget::downloadWebImageTimer()
+{
+    bool hasDownload = false;
+    for (auto &&item : mUrlImageList) {
+        if (item.size.isEmpty()) {
+            hasDownload = true;
+            break;
+        }
+    }
+
+    if (!hasDownload) {
+        mDownloadImageTimer->stop();
+        mDownloadThread->exit();
+        return;
+    }
+
+    if (!mDownloadThread->isRunning()) {
+        mDownloadThread->start();
+    }
+}
+
+void NotePreviewWidget::downloadThreadStarted()
+{
+    for (auto &&item : mUrlImageList) {
+        if (!item.size.isEmpty()) {
+            continue;
+        }
+
+        QByteArray data = Tools::downloadUrlToData(item.url);
+        QPixmap pixmap;
+        pixmap.loadFromData(data);
+        Tools::writerFile(item.path, data);
+
+        item.size = pixmap.size();
+    }
+
+    setHtml(toHtml());
 }
