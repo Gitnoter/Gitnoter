@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME}
         controllers/navigationbarwidget.h   controllers/navigationbarwidget.cpp
         controllers/importnotedialog.h      controllers/importnotedialog.cpp
         controllers/enterlicensedialog.h    controllers/enterlicensedialog.cpp
+        controllers/notepreviewwidget.h     controllers/notepreviewwidget.cpp
 
         models/notemodel.h          models/notemodel.cpp
         models/configmodel.h        models/configmodel.cpp
@@ -74,7 +75,6 @@ add_executable(${PROJECT_NAME}
         helps/tools.h               helps/tools.cpp
         helps/gitmanager.h          helps/gitmanager.cpp
         helps/thememanager.h        helps/thememanager.cpp
-        helps/notepreviewwidget.h   helps/notepreviewwidget.cpp
         helps/screenshot.h          helps/screenshot.cpp
 
         ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES} ${UGlOBLEHOTKEY})

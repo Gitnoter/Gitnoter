@@ -56,6 +56,7 @@ SOURCES += \
     controllers/navigationbarwidget.cpp \
     controllers/importnotedialog.cpp \
     controllers/enterlicensedialog.cpp \
+    controllers/notepreviewwidget.cpp \
     models/notemodel.cpp  \
     models/configmodel.cpp \
     models/groupmodel.cpp  \
@@ -63,7 +64,6 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/notepreviewwidget.cpp \
     helps/screenshot.cpp
 
 HEADERS += \
@@ -87,6 +87,7 @@ HEADERS += \
     controllers/navigationbarwidget.h \
     controllers/importnotedialog.h \
     controllers/enterlicensedialog.h \
+    controllers/notepreviewwidget.h \
     models/notemodel.h  \
     models/configmodel.h \
     models/groupmodel.h \
@@ -94,7 +95,6 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/notepreviewwidget.h \
     helps/screenshot.h
 
 FORMS += \
