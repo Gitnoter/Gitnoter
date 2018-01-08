@@ -64,7 +64,8 @@ SOURCES += \
     helps/tools.cpp \
     helps/gitmanager.cpp \
     helps/thememanager.cpp \
-    helps/screenshot.cpp
+    helps/screenshot.cpp \
+    helps/singletimeout.cpp
 
 HEADERS += \
     gitnoter.h  \
@@ -95,7 +96,8 @@ HEADERS += \
     helps/tools.h \
     helps/gitmanager.h \
     helps/thememanager.h \
-    helps/screenshot.h
+    helps/screenshot.h \
+    helps/singletimeout.h
 
 FORMS += \
     views/mainwindow.ui \
