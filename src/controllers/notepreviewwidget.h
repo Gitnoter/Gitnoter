@@ -1,3 +1,5 @@
+#include "singletimeout.h"
+
 #include <QTextBrowser>
 #include <QResizeEvent>
 #include <QThread>
@@ -38,8 +40,9 @@ private slots:
 
 private:
     QList<UrlImage> mUrlImageList;
-    bool mResizeWindow;
+    SingleTimeout *mSingleTimeout;
     QTimer *mDownloadImageTimer;
     QThread *mDownloadThread;
+
 
 };

@@ -7,7 +7,7 @@
 
 NotePreviewWidget::NotePreviewWidget(QWidget *parent) :
         QTextBrowser(parent),
-        mResizeWindow(true),
+        mSingleTimeout(new SingleTimeout(true, this)),
         mDownloadThread(new QThread(this))
 {
     connect(mDownloadThread, SIGNAL(started()), this, SLOT(downloadThreadStarted()));
@@ -17,9 +17,8 @@ void NotePreviewWidget::resizeEvent(QResizeEvent* event) {
     // we need this, otherwise the preview is always blank
     QTextBrowser::resizeEvent(event);
 
-    if (mResizeWindow && mUrlImageList.length() != 0) {
-        mResizeWindow = false;
-        QTimer::singleShot(500, this, SLOT(changeImageWidth()));
+    if (mUrlImageList.length() != 0) {
+        mSingleTimeout->singleShot(1000, this, SLOT(changeImageWidth()));
     }
 
     emit resize(event->size(), event->oldSize());
@@ -137,8 +136,7 @@ void NotePreviewWidget::changeImageWidth()
         //        }
     }
     setHtml(html);
-
-    mResizeWindow = true;
+    qDebug() << __func__;
 }
 
 void NotePreviewWidget::downloadThreadStarted()
