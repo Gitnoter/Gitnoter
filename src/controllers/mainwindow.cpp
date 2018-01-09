@@ -23,7 +23,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mSettingDialog(new SettingDialog(this)),
         mEnterLicenseDialog(new EnterLicenseDialog(this)),
         mGitManager(new GitManager()),
-        mLockDialog(new LockDialog(this))
+        mLockDialog(new LockDialog(this)),
+        mSearchSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this))
 {
     ui->setupUi(this);
     initTempDir();
@@ -323,7 +324,7 @@ void MainWindow::appendGroup()
 
 void MainWindow::searchNote(const QString &text)
 {
-    noteListWidget()->search(text);
+    noteListWidget()->search(text.isEmpty() ? ui->lineEdit_noteSearch->text() : text);
 }
 
 void MainWindow::sortNote()
@@ -343,7 +344,7 @@ QSplitter *MainWindow::splitter()
 
 void MainWindow::on_lineEdit_noteSearch_textChanged(const QString &arg1)
 {
-    searchNote(arg1);
+    mSearchSingleTimeout->singleShot(500, this, SLOT(searchNote()));
 }
 
 void MainWindow::updateView(Gitnoter::UpdateViewFlags flags)

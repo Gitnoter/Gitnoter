@@ -13,9 +13,7 @@
 #include "enterlicensedialog.h"
 #include "gitmanager.h"
 #include "lockdialog.h"
-
-#include <UGlobalHotkey/uglobalhotkeys.h>
-
+#include "singletimeout.h"
 
 #include <QMainWindow>
 #include <QtCore>
@@ -77,7 +75,7 @@ public slots:
     void restoreNote();
 
     void sortNote();
-    void searchNote(const QString &text);
+    void searchNote(const QString &text = "");
     void openSettingWidget();
     void setSearchFocus();
 
@@ -165,6 +163,7 @@ private:
 
     QTimer *mAutoSyncRepoTimer;
     QTimer *mAutoLockTimer;
+    SingleTimeout *mSearchSingleTimeout;
     int mOpenPurchasePanelTimestamp;
 
     GitManager *mGitManager;
