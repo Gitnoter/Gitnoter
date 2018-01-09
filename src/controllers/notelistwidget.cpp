@@ -149,15 +149,21 @@ void NoteListWidget::setItemSelected()
 {
     clearSelection();
     const QString uuid = gConfigModel->openMainWindowNoteUuid();
+    QListWidgetItem *selectedItem = nullptr;
     if (has(uuid)) {
-        getItem(uuid)->setSelected(true);
+        selectedItem = getItem(uuid);
     }
     else if (mListWidgetItemList.length() > 0) {
-        mListWidgetItemList[0]->setSelected(true);
-        gConfigModel->setOpenMainWindowNoteUuid(getNoteModel(mListWidgetItemList[0])->getUuid());
+        selectedItem = mListWidgetItemList[0];
+        gConfigModel->setOpenMainWindowNoteUuid(getNoteModel(selectedItem)->getUuid());
     }
     else {
         gConfigModel->setOpenMainWindowNoteUuid("");
+    }
+
+    if (selectedItem) {
+        selectedItem->setSelected(true);
+        scrollToItem(selectedItem, QAbstractItemView::PositionAtTop);
     }
 }
 
