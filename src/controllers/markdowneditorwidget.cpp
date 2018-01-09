@@ -263,6 +263,7 @@ void MarkdownEditorWidget::on_lineEdit_tag_returnPressed()
 void MarkdownEditorWidget::on_markdownEditor_textChanged()
 {
     modifyNote();
+    mMainWindow->updateAutoLockTimer();
 }
 
 void MarkdownEditorWidget::setOpenNote()

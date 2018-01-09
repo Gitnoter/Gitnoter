@@ -17,7 +17,7 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         QMainWindow(parent),
         mMenuBar(menubar),
         ui(new Ui::MainWindow),
-        mAutoSyncRepoTimer(new QTimer(this)),
+        mAutoSyncRepoTimer(new SingleTimeout(Gitnoter::SingleTimeNone, this)),
         mAutoLockTimer(new SingleTimeout(Gitnoter::SingleTimeNone, this)),
         mAboutDialog(new AboutDialog(this)),
         mSettingDialog(new SettingDialog(this)),
@@ -120,9 +120,6 @@ void MainWindow::setupUi()
     connect(mSettingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(updateAutoSyncRepoTimer()));
     connect(mSettingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(updateAutoLockTimer()));
     connect(mLockDialog, SIGNAL(hideActivated()), this, SLOT(updateAutoLockTimer()));
-
-    connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
-
 
     connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
     connect(mMenuBar->getActionNewCategories(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
@@ -407,13 +404,8 @@ void MainWindow::setSearchFocus()
 
 void MainWindow::updateAutoSyncRepoTimer()
 {
-    int autoSyncRepo = gConfigModel->getAutoSyncRepoTime();
-    if (autoSyncRepo) {
-        mAutoSyncRepoTimer->start(autoSyncRepo);
-    }
-    else if (mAutoSyncRepoTimer->isActive()){
-        mAutoSyncRepoTimer->stop();
-    }
+    int autoSyncRepoTime = gConfigModel->getAutoSyncRepoTime();
+    mAutoSyncRepoTimer->singleShot(autoSyncRepoTime, this, SLOT(syncRepo()));
 }
 
 void MainWindow::updateAutoLockTimer()

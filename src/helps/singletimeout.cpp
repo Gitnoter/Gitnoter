@@ -10,6 +10,14 @@ SingleTimeout::SingleTimeout(Gitnoter::SingleTimerType type, QObject *parent) :
 
 void SingleTimeout::singleShot(int msec, QObject *receiver, const QString &member)
 {
+    if (0 == msec) {
+        disconnect(this);
+        if (isActive()) {
+            stop();
+        }
+        return;
+    }
+
     if (!isActive()) {
         connect(this, &QTimer::timeout, [=]() {
             QMetaObject::invokeMethod(receiver, Tools::qstringToConstData(member.mid(1, member.length() - 3)));

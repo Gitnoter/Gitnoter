@@ -108,6 +108,7 @@ public slots:
 
     void setRemoteToRepo();
 
+    void updateAutoSyncRepoTimer();
     void updateAutoLockTimer();
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
@@ -134,8 +135,6 @@ private slots:
     void windowScreenShot(size_t id = 1);
     void partScreenShot(size_t id = 1);
 
-    void updateAutoSyncRepoTimer();
-
     void setRepoApplyClicked();
     void setRepoCloseClicked();
 
@@ -161,7 +160,7 @@ private:
     EnterLicenseDialog *mEnterLicenseDialog;
     LockDialog *mLockDialog;
 
-    QTimer *mAutoSyncRepoTimer;
+    SingleTimeout *mAutoSyncRepoTimer;
     SingleTimeout *mAutoLockTimer;
     SingleTimeout *mSearchSingleTimeout;
     int mOpenPurchasePanelTimestamp;
