@@ -293,6 +293,7 @@ void MainWindow::init()
     ui->noteListWidget->init(this);
     ui->groupTreeWidget->init(ui->noteListWidget->getNoteModelList(), this);
     updateView(Gitnoter::NoteListTitle | Gitnoter::MarkdownEditorWidget);
+    ui->noteListWidget->sort();
 }
 
 void MainWindow::removeGroup()
