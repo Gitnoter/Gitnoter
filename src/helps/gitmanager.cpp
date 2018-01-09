@@ -42,6 +42,8 @@ void GitManager::init()
 
 int GitManager::initLocalRepo(const char *repoDirectory, bool initialCommit)
 {
+    git_repository_free(mRepo);
+
     int error = 0;
 
     error = git_repository_init(&mRepo, repoDirectory, 0);

@@ -25,7 +25,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mGitManager(new GitManager()),
         mLockDialog(new LockDialog(this)),
         mSearchSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
-        mOpenPurchasePanelTimestamp((int) QDateTime::currentSecsSinceEpoch())
+        mOpenPurchasePanelTimestamp((int) QDateTime::currentSecsSinceEpoch()),
+        mSyncRepoThread(new QThread(this))
 {
     ui->setupUi(this);
     initTempDir();
@@ -712,6 +713,7 @@ void MainWindow::setRemoteToRepo()
         gConfigModel->setRepoUrl(repoUrlNew);
         gConfigModel->setRepoEmail(repoEmailNew);
         gConfigModel->setRepoPassword(repoPasswordNew);
+        gConfigModel->setLocalRepoStatus(Gitnoter::RemoteRepo);
 
         MessageDialog *messageDialog = MessageDialog::openMessage(this, tr(u8"更新仓库成功, 是否把现有的数据拷贝至新仓库中~"));
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(setRepoApplyClicked()));
@@ -745,13 +747,14 @@ void MainWindow::setRepoCloseClicked()
 {
     const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
     QDir(gRepoPath).removeRecursively();
+    QDir().rename(repoPathTemp, gRepoPath);
 
     reload();
 }
 
 void MainWindow::syncRepo()
 {
-    if (Gitnoter::RemoteRepo != gConfigModel->getLocalRepoStatus()) {
+    if (Gitnoter::RemoteRepo != gConfigModel->getLocalRepoStatus() || mSyncRepoThread->isRunning()) {
         return;
     }
 
@@ -768,11 +771,25 @@ void MainWindow::syncRepo()
     mGitManager->setUserPass(Tools::qstringToConstData(repoEmail), Tools::qstringToConstData(repoPassword));
     mGitManager->setSignature(Tools::qstringToConstData(repoUsername), Tools::qstringToConstData(repoEmail));
 
-    mGitManager->pull();
-    mGitManager->commitA();
-    mGitManager->push();
+    connect(mSyncRepoThread, &QThread::started, [=]() {
+        mGitManager->pull();
+        mGitManager->commitA();
+        qDebug() << mGitManager->push();
 
-    reload();
+        disconnect(mSyncRepoThread);
+        mSyncRepoThread->exit();
+    });
+    mSyncRepoThread->start();
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, [=]() {
+        if (!mSyncRepoThread->isRunning()) {
+            reload();
+            timer->stop();
+            delete timer;
+        }
+    });
+    timer->start(1000);
 }
 
 void MainWindow::openPurchasePanel()

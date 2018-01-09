@@ -25,6 +25,7 @@
 #include <QTreeWidgetItem>
 #include <QStackedWidget>
 #include <QSplitter>
+#include <QThread>
 
 namespace Ui
 {
@@ -160,6 +161,7 @@ private:
     SettingDialog *mSettingDialog;
     EnterLicenseDialog *mEnterLicenseDialog;
     LockDialog *mLockDialog;
+    QThread *mSyncRepoThread;
 
     SingleTimeout *mAutoSyncRepoTimer;
     SingleTimeout *mAutoLockTimer;
