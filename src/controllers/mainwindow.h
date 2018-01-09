@@ -110,6 +110,9 @@ public slots:
 
     void updateAutoSyncRepoTimer();
     void updateAutoLockTimer();
+
+    void openPurchasePanel();
+
 private slots:
     void on_splitter_splitterMoved(int pos, int index);
 
@@ -137,8 +140,6 @@ private slots:
 
     void setRepoApplyClicked();
     void setRepoCloseClicked();
-
-    void openPurchasePanel();
 
 public:
     GroupTreeWidget *groupTreeWidget();

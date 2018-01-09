@@ -120,19 +120,6 @@ void MainWindow::setupUi()
     connect(mSettingDialog, SIGNAL(autoSyncRepoTimeChanged()), this, SLOT(updateAutoSyncRepoTimer()));
     connect(mSettingDialog, SIGNAL(autoLockTimeChanged()), this, SLOT(updateAutoLockTimer()));
     connect(mLockDialog, SIGNAL(hideActivated()), this, SLOT(updateAutoLockTimer()));
-
-    connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionNewCategories(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionNewTags(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionDeleteNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionSynchNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionSaveNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionFindText(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionReplaceText(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionFindNext(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionFindLast(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionReplaceAndNext(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
-    connect(mMenuBar->getActionReplaceAll(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
 }
 
 void MainWindow::initTempDir()

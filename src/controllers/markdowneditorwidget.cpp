@@ -264,6 +264,7 @@ void MarkdownEditorWidget::on_markdownEditor_textChanged()
 {
     modifyNote();
     mMainWindow->updateAutoLockTimer();
+    mMainWindow->openPurchasePanel();
 }
 
 void MarkdownEditorWidget::setOpenNote()
