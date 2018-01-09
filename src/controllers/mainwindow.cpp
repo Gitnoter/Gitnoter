@@ -18,7 +18,7 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mMenuBar(menubar),
         ui(new Ui::MainWindow),
         mAutoSyncRepoTimer(new QTimer(this)),
-        mAutoLockTimer(new QTimer(this)),
+        mAutoLockTimer(new SingleTimeout(Gitnoter::SingleTimeNone, this)),
         mAboutDialog(new AboutDialog(this)),
         mSettingDialog(new SettingDialog(this)),
         mEnterLicenseDialog(new EnterLicenseDialog(this)),
@@ -122,7 +122,6 @@ void MainWindow::setupUi()
     connect(mLockDialog, SIGNAL(hideActivated()), this, SLOT(updateAutoLockTimer()));
 
     connect(mAutoSyncRepoTimer, SIGNAL(timeout()), this, SLOT(syncRepo()));
-    connect(mAutoLockTimer, SIGNAL(timeout()), this, SLOT(lockWindow()));
 
 
     connect(mMenuBar->getActionNewNote(), SIGNAL(triggered()), this, SLOT(openPurchasePanel()));
@@ -420,12 +419,7 @@ void MainWindow::updateAutoSyncRepoTimer()
 void MainWindow::updateAutoLockTimer()
 {
     int autoLockTime = gConfigModel->getAutoLockTime();
-    if (autoLockTime) {
-        mAutoLockTimer->start(autoLockTime);
-    }
-    else if (mAutoLockTimer->isActive()){
-        mAutoLockTimer->stop();
-    }
+    mAutoLockTimer->singleShot(autoLockTime, this, SLOT(lockWindow()));
 }
 
 void MainWindow::lockWindow()
