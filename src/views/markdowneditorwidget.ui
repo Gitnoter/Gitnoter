@@ -894,6 +894,9 @@ QPushButton#pushButton_headerSize {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContents</enum>
+          </property>
           <property name="openExternalLinks">
            <bool>true</bool>
           </property>
