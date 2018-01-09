@@ -91,7 +91,13 @@ void NotePreviewWidget::insertUrlImageToList(const QString &url, QString path)
 
 void NotePreviewWidget::changeImageWidth()
 {
-    int widgetWidth = width() - 10;
+    int widgetWidth = width();
+
+    if (0 == widgetWidth) {
+        return;
+    }
+
+    widgetWidth = (widgetWidth < 10) ? 0 : (width() - 10);
     QString html = toHtml();
     QRegularExpression re("<img src=\"([file|http|https|ftp]+:\\/\\/[^\"]+)\"( width=\"[0-9]*\")?");
     QRegularExpressionMatchIterator i = re.globalMatch(html);
