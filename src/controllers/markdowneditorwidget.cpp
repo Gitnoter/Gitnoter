@@ -13,7 +13,8 @@ MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
-    mNoteModel(nullptr)
+    mNoteModel(nullptr),
+    mModifyNoteSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this))
 {
     ui->setupUi(this);
     setupUi();
@@ -127,12 +128,11 @@ void MarkdownEditorWidget::appendCategory(const QString &category)
 
 void MarkdownEditorWidget::modifyNote()
 {
-    mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
-    ui->markdownPreview->setDisplayHtml(mNoteModel->getMarkdownHtml());
-    mNoteModel->saveNoteToLocal();
-    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
-
-    setWindowTitle();
+#ifdef Q_OS_WIN
+    mModifyNoteSingleTimeout->singleShot(1000, this, SLOT(setMarkdownPreviewHtml()));
+#else
+    setMarkdownPreviewHtml();
+#endif
 }
 
 void MarkdownEditorWidget::on_pushButton_category_clicked()
@@ -1377,4 +1377,19 @@ void MarkdownEditorWidget::highlightCurrentLine()
     // be aware that extra selections, like for global searching, gets
     // removed when the current line gets highlighted
     ui->markdownEditor->setExtraSelections(extraSelections);
+}
+
+void MarkdownEditorWidget::setMarkdownPreviewHtml()
+{
+    mNoteModel->setNoteText(ui->markdownEditor->toPlainText());
+
+    QList<int> editorSplitterSizes = gConfigModel->getEditorSplitterSizes();
+    if (editorSplitterSizes.length() == 2 && editorSplitterSizes[1] != 0) {
+        ui->markdownPreview->setDisplayHtml(mNoteModel->getMarkdownHtml());
+    }
+
+    mNoteModel->saveNoteToLocal();
+    mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
+
+    setWindowTitle();
 }

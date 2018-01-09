@@ -7,8 +7,7 @@
 #include "grouptreewidget.h"
 #include "notelistwidget.h"
 #include "mainwindow.h"
-
-#include <UGlobalHotkey/uglobalhotkeys.h>
+#include "singletimeout.h"
 
 #include <QWidget>
 #include <QPushButton>
@@ -190,6 +189,8 @@ private slots:
 
     void highlightCurrentLine();
 
+    void setMarkdownPreviewHtml();
+
 public:
     void setMainWindow(MainWindow *mainWindow) { mMainWindow = mainWindow; }
     MainWindow *mainWindow() { return mMainWindow; }
@@ -203,6 +204,7 @@ private:
 
     NoteModel *mNoteModel;
     QList<TagCellWidget *> mTagCellWidgetList;
+    SingleTimeout *mModifyNoteSingleTimeout;
 
 };
 

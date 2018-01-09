@@ -10,14 +10,15 @@ NotePreviewWidget::NotePreviewWidget(QWidget *parent) :
         mSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
         mDownloadThread(new QThread(this))
 {
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(mDownloadThread, SIGNAL(started()), this, SLOT(downloadThreadStarted()));
 }
 
 void NotePreviewWidget::resizeEvent(QResizeEvent* event) {
     // we need this, otherwise the preview is always blank
     QTextBrowser::resizeEvent(event);
-
-    if (mUrlImageList.length() != 0) {
+    qDebug() << event->size() << event->oldSize();
+    if (mUrlImageList.length() != 0 && event->size().width() != event->oldSize().width()) {
         mSingleTimeout->singleShot(1000, this, SLOT(changeImageWidth()));
     }
 }
