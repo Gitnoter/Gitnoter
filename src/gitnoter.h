@@ -25,8 +25,9 @@ public:
     enum UpdateViewFlag {
         MarkdownEditorWidget = 0x002001,
         NoteListTitle = 0x002002,
-        NoteListWidget = 0x002003 | NoteListTitle | MarkdownEditorWidget,
-        GroupTreeWidget = 0x002004 | NoteListWidget,
+        NoteListSort = 0x002003,
+        NoteListWidget = 0x002004 | NoteListTitle | MarkdownEditorWidget,
+        GroupTreeWidget = 0x002005 | NoteListWidget,
     };
     Q_DECLARE_FLAGS(UpdateViewFlags, UpdateViewFlag)
     Q_FLAGS(UpdateViewFlags)

@@ -225,6 +225,9 @@ QWidget#widget_6{
             <pointsize>-1</pointsize>
            </font>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
