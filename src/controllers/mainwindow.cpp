@@ -24,7 +24,8 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mEnterLicenseDialog(new EnterLicenseDialog(this)),
         mGitManager(new GitManager()),
         mLockDialog(new LockDialog(this)),
-        mSearchSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this))
+        mSearchSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
+        mOpenPurchasePanelTimestamp((int) QDateTime::currentSecsSinceEpoch())
 {
     ui->setupUi(this);
     initTempDir();
@@ -44,7 +45,6 @@ void MainWindow::setupUi()
     ui->widget_sidebar->setStyleSheet("#widget_sidebar{border: none;border-right: 1px solid rgb(191, 191, 191);}");
 #endif
 
-    mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
     mMenuBar->addActionToWindowMenu(this);
     mMenuBar->setMainWindow(this);
     mEnterLicenseDialog->init();
