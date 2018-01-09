@@ -319,10 +319,19 @@ QString Tools::md5(const QString &text)
 
 QSize Tools::getImageSize(const QString &path)
 {
+    const QString filePath = fileUrlToPath(path);
+#ifdef Q_OS_WIN
+    QPixmap pixmap;
+    QByteArray data = readerFile(filePath);
+
+    pixmap.loadFromData(data);
+
+    return pixmap.size();
+#endif
     int the_x = 0;
     int the_y = 0;
 
-    getImageSize(qstringToConstData(fileUrlToPath(path)), &the_x, &the_y);
+    getImageSize(qstringToConstData(filePath), &the_x, &the_y);
 
     return {the_x, the_y};
 }
@@ -390,7 +399,11 @@ bool Tools::getImageSize(const char *fn, int *x,int *y)
 QString Tools::fileUrlToPath(const QString &url)
 {
     if (url.startsWith("file://")) {
-        return url.mid(7);
+        int position = 7;
+#ifdef Q_OS_WIN
+        position = 8;
+#endif
+        return url.mid(position);
     }
 
     return url;

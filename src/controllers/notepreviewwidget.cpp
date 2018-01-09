@@ -76,7 +76,11 @@ void NotePreviewWidget::insertUrlImageToList(const QString &url, QString path)
             path = url;
         }
         else {
-            path = QDir(gTempPath).filePath("note-browser-" + Tools::md5(url) + ".jpg");
+            path = "file://";
+#ifdef Q_OS_WIN
+            path += "/";
+#endif
+            path += QDir(gTempPath).filePath("note-browser-" + Tools::md5(url) + ".jpg");
         }
     }
 
