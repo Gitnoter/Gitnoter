@@ -7,7 +7,7 @@
 
 NotePreviewWidget::NotePreviewWidget(QWidget *parent) :
         QTextBrowser(parent),
-        mSingleTimeout(new SingleTimeout(true, this)),
+        mSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
         mDownloadThread(new QThread(this))
 {
     connect(mDownloadThread, SIGNAL(started()), this, SLOT(downloadThreadStarted()));
@@ -20,8 +20,6 @@ void NotePreviewWidget::resizeEvent(QResizeEvent* event) {
     if (mUrlImageList.length() != 0) {
         mSingleTimeout->singleShot(1000, this, SLOT(changeImageWidth()));
     }
-
-    emit resize(event->size(), event->oldSize());
 }
 
 QVariant NotePreviewWidget::loadResource(int type, const QUrl &name)
@@ -142,7 +140,6 @@ void NotePreviewWidget::changeImageWidth()
         //        }
     }
     setHtml(html);
-    qDebug() << __func__;
 }
 
 void NotePreviewWidget::downloadThreadStarted()

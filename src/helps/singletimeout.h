@@ -2,12 +2,13 @@
 #define SINGLETIMEOUT_H
 
 #include <QTimer>
+#include <gitnoter.h>
 
 class SingleTimeout : public QTimer
 {
 Q_OBJECT
 public:
-    explicit SingleTimeout(bool resetTimeout = true, QObject *parent = nullptr);
+    explicit SingleTimeout(Gitnoter::SingleTimerType type = Gitnoter::ResetTimeout, QObject *parent = nullptr);
 
     void singleShot(int msec, QObject *receiver, const QString &member);
 
@@ -16,11 +17,11 @@ signals:
 public slots:
 
 public:
-    bool resetTimeout() { return mResetTimeout; }
-    void setResetTimeout(bool b) { mResetTimeout = b; }
+    Gitnoter::SingleTimerType resetTimeout() { return mSingleTimerType; }
+    void setResetTimeout(Gitnoter::SingleTimerType type) { mSingleTimerType = type; }
 
 private:
-    bool mResetTimeout;
+    Gitnoter::SingleTimerType mSingleTimerType;
 
 };
 

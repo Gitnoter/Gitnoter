@@ -47,6 +47,12 @@ public:
         Image = 0x004001,
         Accessory = 0x004002
     };
+
+    enum SingleTimerType {
+        SingleTimeNone = 0x005001,
+        ResetTimeout = 0x005002,
+        NoResetTimeout = 0x005003
+    };
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Gitnoter::UpdateViewFlags)

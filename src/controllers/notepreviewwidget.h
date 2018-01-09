@@ -30,9 +30,6 @@ private:
     void insertUrlImageToList(const QString &url, QString path = "");
     void initUrlImageList();
 
-signals:
-    void resize(QSize size, QSize oldSize = QSize());
-
 private slots:
     void changeImageWidth();
 

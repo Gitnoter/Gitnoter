@@ -1,9 +1,9 @@
 #include "singletimeout.h"
 #include "tools.h"
 
-SingleTimeout::SingleTimeout(bool resetTimeout, QObject *parent) :
+SingleTimeout::SingleTimeout(Gitnoter::SingleTimerType type, QObject *parent) :
         QTimer(parent),
-        mResetTimeout(resetTimeout)
+        mSingleTimerType(type)
 {
 
 }
@@ -13,14 +13,16 @@ void SingleTimeout::singleShot(int msec, QObject *receiver, const QString &membe
     if (!isActive()) {
         connect(this, &QTimer::timeout, [=]() {
             QMetaObject::invokeMethod(receiver, Tools::qstringToConstData(member.mid(1, member.length() - 3)));
-            stop();
-            disconnect(this);
+            if (Gitnoter::SingleTimeNone != mSingleTimerType) {
+                stop();
+                disconnect(this);
+            }
         });
         start(msec);
         return;
     }
 
-    if (mResetTimeout) {
+    if (Gitnoter::NoResetTimeout != mSingleTimerType) {
         stop();
         start(msec);
     }
