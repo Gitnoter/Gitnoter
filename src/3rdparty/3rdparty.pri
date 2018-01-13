@@ -34,3 +34,8 @@ include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)
 # qkeysequencewidget
 #
 #include($$PWD/UGlobalHotkey/uglobalhotkey.pri)
+
+#
+# qt-google-analytics
+#
+include($$PWD/qt-google-analytics/qt-google-analytics.pri)
