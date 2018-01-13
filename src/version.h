@@ -10,7 +10,7 @@
 #define VER_PRODUCTVERSION_STR      "1.0.0.beta6"   // 产品版本
 #define VER_PRODUCTBUILD_STR        168           // build
 
-#define VER_COMPANYNAME_STR         "Gitnoter"
+#define VER_COMPANYNAME_STR         "MakeHui"      // 公司名称
 #define VER_INTERNALNAME_STR        "Gitnoter.exe"
 #define VER_LEGALCOPYRIGHT_STR      "Copyright © 2018 MakeHui. "  // 版权
 #define VER_LEGALTRADEMARKS1_STR    "All rights reserved. "

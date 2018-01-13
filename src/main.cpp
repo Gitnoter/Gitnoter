@@ -1,13 +1,18 @@
 #include "mainwindow.h"
 #include "globals.h"
 #include "tools.h"
-#include "menubar.h"
+#include "version.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QApplication::setOrganizationName(VER_COMPANYNAME_STR);
+    QApplication::setOrganizationDomain(VER_ORGANIZATIONDOMAIN_STR);
+    QApplication::setApplicationName(VER_PRODUCTNAME_STR);
+    QApplication::setApplicationVersion(VER_PRODUCTVERSION_STR);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
