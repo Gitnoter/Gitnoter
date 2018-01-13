@@ -26,9 +26,11 @@ MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         mLockDialog(new LockDialog(this)),
         mSearchSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
         mOpenPurchasePanelTimestamp((int) QDateTime::currentSecsSinceEpoch()),
-        mSyncRepoThread(new QThread(this))
+        mSyncRepoThread(new QThread(this)),
+        mGAnalytics(new GAnalytics(__GOOGLE_ANALYTICS_TRACKING_ID__))
 {
     ui->setupUi(this);
+
     initTempDir();
     init();
     setupUi();
@@ -157,7 +159,7 @@ void MainWindow::on_pushButton_noteAdd_clicked()
             return;
         }
 
-        MessageDialog *messageDialog = new MessageDialog(this);
+        MessageDialog *messageDialog = new MessageDialog(this, this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
         NoteModel *noteModel = ui->noteListWidget->getNoteModel(gConfigModel->openMainWindowNoteUuid());
         const QString category = noteModel->getCategory().isEmpty() ?
@@ -179,7 +181,7 @@ void MainWindow::on_pushButton_noteSubtract_clicked()
             return;
         }
 
-        MessageDialog *messageDialog = new MessageDialog(this);
+        MessageDialog *messageDialog = new MessageDialog(this, this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNote()));
         messageDialog->openMessage(tr(u8"删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr(u8"删除笔记提示"), tr(u8"确定删除"));
     }
@@ -208,7 +210,7 @@ void MainWindow::on_pushButton_subtract_clicked()
 {
     Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
     if (Gitnoter::Category <= type) {
-        MessageDialog *messageDialog = new MessageDialog(this);
+        MessageDialog *messageDialog = new MessageDialog(this, this);
         connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeGroup()));
         messageDialog->openMessage(tr(u8"笔记本删除后, 笔记本内的笔记将会移动到回收站~ \n\nTip: 还没想好要说些什么o(╯□╰)o"), tr(u8"删除笔记本提示"), tr(u8"确定删除"));
     }
@@ -468,7 +470,7 @@ void MainWindow::newWindow(QListWidgetItem *)
         }
     }
 
-    MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget;
+    MarkdownEditorWidget *markdownEditorWidget = new MarkdownEditorWidget(this);
     markdownEditorWidget->init(uuid, this);
     markdownEditorWidget->show();
 
@@ -798,7 +800,7 @@ void MainWindow::openPurchasePanel()
         return;
     }
 
-    MessageDialog *messageDialog = new MessageDialog(this);
+    MessageDialog *messageDialog = new MessageDialog(this, this);
     messageDialog->setMessageInfo(
             tr(u8"您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(gPurchaseLicenseUrl),
             tr(u8"感谢您试用 %1（￣▽￣）").arg(VER_PRODUCTNAME_STR), tr(u8"购买"));
@@ -811,4 +813,11 @@ void MainWindow::openPurchasePanel()
     });
 
     messageDialog->exec();
+}
+
+void MainWindow::showEvent(QShowEvent *showEvent)
+{
+    QWidget::showEvent(showEvent);
+
+    mGAnalytics->sendScreenView(objectName());
 }

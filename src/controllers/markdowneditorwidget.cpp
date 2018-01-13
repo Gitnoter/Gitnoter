@@ -9,14 +9,16 @@
 #include <QFileDialog>
 #include <QDebug>
 
-MarkdownEditorWidget::MarkdownEditorWidget(QWidget *parent) :
+MarkdownEditorWidget::MarkdownEditorWidget(MainWindow *mainWindow, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MarkdownEditorWidget),
     mCategoryListWidget(new CategoryListWidget(this)),
     mNoteModel(nullptr),
-    mModifyNoteSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this))
+    mModifyNoteSingleTimeout(new SingleTimeout(Gitnoter::ResetTimeout, this)),
+    mMainWindow(mainWindow)
 {
     ui->setupUi(this);
+
     setupUi();
 }
 
@@ -1392,4 +1394,13 @@ void MarkdownEditorWidget::setMarkdownPreviewHtml()
     mMainWindow->noteListWidget()->noteModelChanged(mNoteModel);
 
     setWindowTitle();
+}
+
+void MarkdownEditorWidget::showEvent(QShowEvent *showEvent)
+{
+    QWidget::showEvent(showEvent);
+
+    if (mMainWindow && !parent()) {
+        mMainWindow->gAnalytics()->sendScreenView(objectName());
+    }
 }

@@ -250,3 +250,10 @@ void SettingDialog::on_buttonBox_rejected()
 {
     ((MainWindow *) parentWidget())->setRemoteToRepo();
 }
+
+void SettingDialog::showEvent(QShowEvent *showEvent)
+{
+    QDialog::showEvent(showEvent);
+
+    ((MainWindow *) parent())->gAnalytics()->sendScreenView(objectName());
+}

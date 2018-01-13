@@ -3,6 +3,7 @@
 #include "aboutdialog.h"
 #include "version.h"
 #include "tools.h"
+#include "mainwindow.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
@@ -20,4 +21,11 @@ AboutDialog::AboutDialog(QWidget *parent) :
 AboutDialog::~AboutDialog()
 {
     delete ui;
+}
+
+void AboutDialog::showEvent(QShowEvent *showEvent)
+{
+    QDialog::showEvent(showEvent);
+
+    ((MainWindow *) parent())->gAnalytics()->sendScreenView(objectName());
 }

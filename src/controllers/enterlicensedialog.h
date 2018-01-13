@@ -17,6 +17,9 @@ public:
 
     void init();
 
+protected:
+    void showEvent(QShowEvent *showEvent) override;
+
 private:
     bool checkLicense(QString license, bool save = false);
 

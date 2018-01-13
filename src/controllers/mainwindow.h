@@ -15,6 +15,8 @@
 #include "lockdialog.h"
 #include "singletimeout.h"
 
+#include <qt-google-analytics/ganalytics.h>
+
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
@@ -60,8 +62,8 @@ protected:
     void changeEvent(QEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-
     void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *showEvent) override;
 
 public slots:
     void init();
@@ -154,6 +156,8 @@ public:
     EnterLicenseDialog *enterLicenseDialog() { return mEnterLicenseDialog; }
     LockDialog *lockDialog() { return mLockDialog; }
 
+    GAnalytics *gAnalytics() { return mGAnalytics; }
+
 private:
     Ui::MainWindow *ui;
     MenuBar *mMenuBar;
@@ -169,6 +173,7 @@ private:
     int mOpenPurchasePanelTimestamp;
 
     GitManager *mGitManager;
+    GAnalytics *mGAnalytics;
 
 };
 

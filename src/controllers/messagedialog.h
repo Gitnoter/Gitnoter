@@ -1,6 +1,8 @@
 #ifndef MESSAGEDIALOG_H
 #define MESSAGEDIALOG_H
 
+#include "mainwindow.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -17,7 +19,7 @@ public:
         Close
     };
 
-    explicit MessageDialog(QWidget *parent = 0);
+    explicit MessageDialog(MainWindow *mainWindow, QWidget *parent = 0);
     ~MessageDialog();
 
     void openMessage(const QString &body, const QString &title = "",
@@ -28,8 +30,11 @@ public:
 
     void setActiveButton(MessageDialog::ActiveButton activeButton = MessageDialog::Apply);
 
+protected:
+    void showEvent(QShowEvent *showEvent) override;
+
 public:
-    static MessageDialog *openMessage( QWidget *parent, const QString &body, const QString &title = "",
+    static MessageDialog *openMessage(MainWindow *parent, const QString &body, const QString &title = "",
                             const QString &apply = "", const QString &close = "");
 
 signals:
@@ -45,6 +50,7 @@ private slots:
 private:
     Ui::MessageDialog *ui;
 
+    MainWindow *mMainWindow;
 };
 
 #endif // MESSAGEDIALOG_H

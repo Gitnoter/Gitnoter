@@ -30,7 +30,7 @@ class MarkdownEditorWidget : public QWidget
 Q_OBJECT
 
 public:
-    explicit MarkdownEditorWidget(QWidget *parent = 0);
+    explicit MarkdownEditorWidget(MainWindow *mainWindow = nullptr, QWidget *parent = nullptr);
 
     ~MarkdownEditorWidget();
 
@@ -45,6 +45,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *showEvent) override;
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;

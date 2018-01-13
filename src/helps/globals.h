@@ -48,6 +48,8 @@ extern const QString gPurchaseLicenseUrl;
 extern const QByteArray gAesKey;
 extern const QByteArray gAesIv;
 
+#define __GOOGLE_ANALYTICS_TRACKING_ID__ "UA-112372815-1"
+
 extern ConfigModel *gConfigModel;
 extern ThemeManager *gThemeManager;
 

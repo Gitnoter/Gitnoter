@@ -27,6 +27,9 @@ public:
 
     void init();
 
+protected:
+    void showEvent(QShowEvent *showEvent) override;
+
 private:
     void initProgressBar(QString data);
     void importNotes(QString data);

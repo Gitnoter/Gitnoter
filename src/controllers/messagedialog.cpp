@@ -1,9 +1,10 @@
 #include "messagedialog.h"
 #include "ui_messagedialog.h"
 
-MessageDialog::MessageDialog(QWidget *parent) :
+MessageDialog::MessageDialog(MainWindow *mainWindow, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::MessageDialog)
+    ui(new Ui::MessageDialog),
+    mMainWindow(mainWindow)
 {
     ui->setupUi(this);
 }
@@ -13,9 +14,9 @@ MessageDialog::~MessageDialog()
     delete ui;
 }
 
-MessageDialog *MessageDialog::openMessage(QWidget *parent, const QString &body, const QString &title, const QString &apply, const QString &close)
+MessageDialog *MessageDialog::openMessage(MainWindow *parent, const QString &body, const QString &title, const QString &apply, const QString &close)
 {
-    MessageDialog *messageDialog = new MessageDialog(parent);
+    MessageDialog *messageDialog = new MessageDialog(parent, parent);
     messageDialog->openMessage(body, title, apply, close);
 
     return messageDialog;
@@ -62,4 +63,11 @@ void MessageDialog::on_pushButton_close_clicked()
 void MessageDialog::on_pushButton_apply_clicked()
 {
     emit applyClicked();
+}
+
+void MessageDialog::showEvent(QShowEvent *showEvent)
+{
+    QDialog::showEvent(showEvent);
+
+    mMainWindow->gAnalytics()->sendScreenView(objectName());
 }

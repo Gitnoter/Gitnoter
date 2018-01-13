@@ -18,6 +18,9 @@ public:
 
     ~SettingDialog();
 
+protected:
+    void showEvent(QShowEvent *showEvent) override;
+
 private:
     void setupUi();
 

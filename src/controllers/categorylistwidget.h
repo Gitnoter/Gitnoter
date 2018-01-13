@@ -33,6 +33,9 @@ public:
     void append();
     void change();
 
+protected:
+    void showEvent(QShowEvent *showEvent) override;
+
 private slots:
     void on_pushButton_addCategory_clicked();
 

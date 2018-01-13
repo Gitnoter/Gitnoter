@@ -723,3 +723,10 @@ QString ImportNoteDialog::decodeHtmlEntities(QString text)
 
     return text;
 }
+
+void ImportNoteDialog::showEvent(QShowEvent *showEvent)
+{
+    QDialog::showEvent(showEvent);
+
+    ((MainWindow *) parent())->gAnalytics()->sendScreenView(objectName());
+}

@@ -115,3 +115,10 @@ void CategoryListWidget::on_buttonBox_accepted()
         change();
     }
 }
+
+void CategoryListWidget::showEvent(QShowEvent *showEvent)
+{
+    QDialog::showEvent(showEvent);
+
+    ((MarkdownEditorWidget *) parent())->mainWindow()->gAnalytics()->sendScreenView(objectName());
+}
