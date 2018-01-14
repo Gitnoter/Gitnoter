@@ -12,6 +12,7 @@
 #include "screenshot.h"
 
 #define __OPEN_PURCHASE_PANEL_TIME__ 300
+#define __HOLD_PRESSED_TIME__ 1000
 
 MainWindow::MainWindow(MenuBar *menubar, QWidget *parent) :
         QMainWindow(parent),
@@ -160,14 +161,21 @@ void MainWindow::on_pushButton_noteAdd_clicked()
         }
 
         MessageDialog *messageDialog = new MessageDialog(this, this);
-        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
-        NoteModel *noteModel = ui->noteListWidget->getNoteModel(gConfigModel->openMainWindowNoteUuid());
-        const QString category = noteModel->getCategory().isEmpty() ?
-                                 ui->groupTreeWidget->topLevelItem(Gitnoter::All)->text(0) :
-                                 noteModel->getCategory();
-        messageDialog->openMessage(tr(u8"笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
-                                   tr(u8"恢复笔记提示"),
-                                   tr(u8"确定恢复"));
+
+        if (mHoldPressedTime + __HOLD_PRESSED_TIME__ < QDateTime::currentMSecsSinceEpoch()) {
+            connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNoteAll()));
+            messageDialog->openMessage(tr(u8"确定需要恢复所有笔记吗?"), tr(u8"恢复笔记提示"), tr(u8"确定恢复"));
+        }
+        else {
+            connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(restoreNote()));
+            NoteModel *noteModel = ui->noteListWidget->getNoteModel(gConfigModel->openMainWindowNoteUuid());
+            const QString category = noteModel->getCategory().isEmpty()
+                                     ? ui->groupTreeWidget->topLevelItem(Gitnoter::All)->text(0)
+                                     : noteModel->getCategory();
+            messageDialog->openMessage(tr(u8"笔记将被恢复到 %1\n\nTip: 长按添加按钮可恢复回收站内所有笔记哦~").arg(category),
+                                       tr(u8"恢复笔记提示"),
+                                       tr(u8"确定恢复"));
+        }
     }
     else {
         appendNote();
@@ -177,13 +185,21 @@ void MainWindow::on_pushButton_noteAdd_clicked()
 void MainWindow::on_pushButton_noteSubtract_clicked()
 {
     if (gConfigModel->getSideSelectedType() == Gitnoter::Trash) {
+
         if (gConfigModel->openMainWindowNoteUuid().isEmpty()) {
             return;
         }
 
         MessageDialog *messageDialog = new MessageDialog(this, this);
-        connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNote()));
-        messageDialog->openMessage(tr(u8"删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr(u8"删除笔记提示"), tr(u8"确定删除"));
+
+        if (mHoldPressedTime + __HOLD_PRESSED_TIME__ < QDateTime::currentMSecsSinceEpoch()) {
+            connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNoteAll()));
+            messageDialog->openMessage(tr(u8"确定需要清空回收站吗?\n删除后将无法恢复\n\nPs: 大概吧 (*￣rǒ￣)"), tr(u8"清空笔记提示"), tr(u8"确定清空"));
+        }
+        else {
+            connect(messageDialog, SIGNAL(applyClicked()), this, SLOT(removeNote()));
+            messageDialog->openMessage(tr(u8"删除后将无法恢复\n\nTip: 长按删除按钮可清空回收站哦~"), tr(u8"删除笔记提示"), tr(u8"确定删除"));
+        }
     }
     else {
         trashNote();
@@ -231,6 +247,15 @@ void MainWindow::restoreNote()
     updateView(Gitnoter::NoteListWidget);
 }
 
+void MainWindow::restoreNoteAll()
+{
+    QList<NoteModel *> noteModelList = noteListWidget()->getNoteModelList(Gitnoter::Trash);
+    for (auto &&item : noteModelList) {
+        noteListWidget()->restore(item->getUuid());
+    }
+    updateView(Gitnoter::NoteListWidget);
+}
+
 void MainWindow::appendNote()
 {
     Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
@@ -250,6 +275,15 @@ void MainWindow::appendNote()
 void MainWindow::removeNote()
 {
     noteListWidget()->remove(gConfigModel->openMainWindowNoteUuid());
+    updateView(Gitnoter::NoteListWidget);
+}
+
+void MainWindow::removeNoteAll()
+{
+    QList<NoteModel *> noteModelList = noteListWidget()->getNoteModelList(Gitnoter::Trash);
+    for (auto &&item : noteModelList) {
+        noteListWidget()->remove(item->getUuid());
+    }
     updateView(Gitnoter::NoteListWidget);
 }
 
@@ -820,4 +854,14 @@ void MainWindow::showEvent(QShowEvent *showEvent)
     QWidget::showEvent(showEvent);
 
     mGAnalytics->sendScreenView(objectName());
+}
+
+void MainWindow::on_pushButton_noteSubtract_pressed()
+{
+    mHoldPressedTime = QDateTime::currentMSecsSinceEpoch();
+}
+
+void MainWindow::on_pushButton_noteAdd_pressed()
+{
+    mHoldPressedTime = QDateTime::currentMSecsSinceEpoch();
 }

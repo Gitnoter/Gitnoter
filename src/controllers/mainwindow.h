@@ -75,7 +75,9 @@ public slots:
     void appendNote();
     void trashNote();         // set isDelete: 1
     void removeNote();    // remove from disk
+    void removeNoteAll();    // remove from disk
     void restoreNote();
+    void restoreNoteAll();
 
     void sortNote();
     void searchNote(const QString &text = "");
@@ -144,6 +146,10 @@ private slots:
     void setRepoApplyClicked();
     void setRepoCloseClicked();
 
+    void on_pushButton_noteSubtract_pressed();
+
+    void on_pushButton_noteAdd_pressed();
+
 public:
     GroupTreeWidget *groupTreeWidget();
     NoteListWidget *noteListWidget();
@@ -174,6 +180,8 @@ private:
 
     GitManager *mGitManager;
     GAnalytics *mGAnalytics;
+
+    qint64 mHoldPressedTime;
 
 };
 
