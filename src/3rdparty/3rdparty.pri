@@ -39,3 +39,8 @@ include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)
 # qt-google-analytics
 #
 include($$PWD/qt-google-analytics/qt-google-analytics.pri)
+
+#
+# https://github.com/stsoor/LibGit2Wrapper
+#
+include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)
