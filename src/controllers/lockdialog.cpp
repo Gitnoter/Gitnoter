@@ -60,7 +60,6 @@ void LockDialog::showEvent(QShowEvent *showEvent)
     QDialog::showEvent(showEvent);
 
     ui->lineEdit->clear();
-
-    ((MainWindow *) parent())->gAnalytics()->sendScreenView(objectName());
+    mMainWindow->gAnalytics()->sendScreenView(objectName());
 }
 
