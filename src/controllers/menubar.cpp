@@ -620,7 +620,10 @@ void MenuBar::initLicenseAction(bool license)
 
 void MenuBar::addHasLicenseAction()
 {
+    clearLicenseActionList();
+
     QAction *action = new QAction(tr(u8"删除许可证"), this);
+    mLicenseActionList.append(action);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, [=]() {
         MessageDialog *messageDialog = MessageDialog::openMessage(
@@ -638,15 +641,28 @@ void MenuBar::addHasLicenseAction()
 
 void MenuBar::addNoLicenseAction()
 {
+    clearLicenseActionList();
+
     QAction *action = new QAction(tr(u8"购买许可证"), this);
+    mLicenseActionList.append(action);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, []() {
         QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
     });
 
     action = new QAction(tr(u8"输入许可证"), this);
+    mLicenseActionList.append(action);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, [=]() {
         mMainWindow->enterLicenseDialog()->open();
     });
+}
+
+void MenuBar::clearLicenseActionList()
+{
+    for (auto &&item : mLicenseActionList) {
+        ui->menu_help->removeAction(item);
+    }
+
+    mLicenseActionList.clear();
 }

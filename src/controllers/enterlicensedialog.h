@@ -1,6 +1,8 @@
 #ifndef ENTERLICENSEDIALOG_H
 #define ENTERLICENSEDIALOG_H
 
+#include "mainwindow.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -32,6 +34,7 @@ public:
 private:
     Ui::EnterLicenseDialog *ui;
     bool mLicense;
+    MainWindow *mMainWindow;
 
 };
 

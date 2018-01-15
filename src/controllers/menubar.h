@@ -38,6 +38,8 @@ public:
 private:
     void setupUi(QWidget *parent);
 
+    void clearLicenseActionList();
+
 signals:
     void printEditAccepted(QPrinter *printer);
     void printPreviewAccepted(QPrinter *printer);
@@ -158,6 +160,8 @@ private:
     QPrinter *mPrinter;
     QActionGroup *mWindowMenuActionGroup;
     MainWindow *mMainWindow;
+
+    QList<QAction *> mLicenseActionList;
 
 };
 

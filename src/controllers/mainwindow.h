@@ -40,6 +40,7 @@ class MarkdownEditorWidget;
 class NoteListWidget;
 class MenuBar;
 class UGlobalHotkey;
+class EnterLicenseDialog;
 
 class MainWindow : public QMainWindow
 {

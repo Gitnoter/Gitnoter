@@ -11,7 +11,8 @@
 EnterLicenseDialog::EnterLicenseDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EnterLicenseDialog),
-    mLicense(false)
+    mLicense(false),
+    mMainWindow((MainWindow *) parent)
 {
     ui->setupUi(this);
     ui->label_payInfo->setText(ui->label_payInfo->text().append(gPurchaseLicenseUrl));
@@ -31,10 +32,11 @@ void EnterLicenseDialog::on_buttonBox_accepted()
     }
 
     if (checkLicense(license, true)) {
-        (new MessageDialog((MainWindow *) parent()))->openMessage(tr(u8"如有任何疑问, 请随时联系: %1").arg(gEmailToUser), tr(u8"感谢您的购买和支持 (｡･ω･｡)"));
+        mMainWindow->menuBar()->initLicenseAction(mLicense);
+        (new MessageDialog(mMainWindow))->openMessage(tr(u8"如有任何疑问, 请随时联系: %1").arg(gEmailToUser), tr(u8"感谢您的购买和支持 (｡･ω･｡)"));
     }
     else {
-        (new MessageDialog((MainWindow *) parent()))->openMessage(
+        (new MessageDialog(mMainWindow))->openMessage(
                 tr(u8"请您检查是否输入正确, 包括许可证的开始和结束行哦~\n如确认无误仍然无法激活, 请及时联系: %1").arg(gEmailToUser),
                 tr(u8"该许可证似乎无效 ╮(￣▽￣)╭"));
     }
@@ -113,12 +115,12 @@ void EnterLicenseDialog::init()
 {
     QString license = Tools::readerFileString(gAppLicensePath);
     mLicense = license.isEmpty() ? false : checkLicense(Tools::decrypt(license));
-    ((MainWindow *) parentWidget())->menuBar()->initLicenseAction(mLicense);
+    mMainWindow->menuBar()->initLicenseAction(mLicense);
 }
 
 void EnterLicenseDialog::showEvent(QShowEvent *showEvent)
 {
     QDialog::showEvent(showEvent);
 
-    ((MainWindow *) parent())->gAnalytics()->sendScreenView(objectName());
+    mMainWindow->gAnalytics()->sendScreenView(objectName());
 }
