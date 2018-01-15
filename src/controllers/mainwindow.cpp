@@ -806,10 +806,23 @@ void MainWindow::syncRepo()
     mGitManager->setUserPass(Tools::qstringToConstData(repoEmail), Tools::qstringToConstData(repoPassword));
     mGitManager->setSignature(Tools::qstringToConstData(repoUsername), Tools::qstringToConstData(repoEmail));
 
-    connect(mSyncRepoThread, &QThread::started, [=]() {
-        mGitManager->pull();
+    bool repoChange = false;
+
+    connect(mSyncRepoThread, &QThread::started, [&]() {
         mGitManager->commitA();
-        qDebug() << mGitManager->push();
+        int startLogCount = static_cast<int>(mGitManager->getLogList().size());
+
+        mGitManager->pull();
+        int endPullLogCount = static_cast<int>(mGitManager->getLogList().size());
+
+        mGitManager->commitA();
+        int endCommitLogCount = static_cast<int>(mGitManager->getLogList().size());
+
+        if (endPullLogCount != endCommitLogCount) {
+            mGitManager->push();
+        }
+
+        repoChange = (startLogCount != endPullLogCount);
 
         disconnect(mSyncRepoThread);
         mSyncRepoThread->exit();
@@ -817,9 +830,11 @@ void MainWindow::syncRepo()
     mSyncRepoThread->start();
 
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [=]() {
+    connect(timer, &QTimer::timeout, [&, timer]()  {
         if (!mSyncRepoThread->isRunning()) {
-            reload();
+            if (repoChange) {
+                reload();
+            }
             timer->stop();
             delete timer;
         }

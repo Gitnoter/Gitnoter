@@ -546,6 +546,48 @@ int GitManager::commitU(const char *message)
     return 0;
 }
 
+std::vector<git_commit *> GitManager::getLogList()
+{
+    std::vector<git_commit *> logList = {};
+
+    git_revwalk *walker;
+    int error = git_revwalk_new(&walker, mRepo);
+    int nMaxRevs = 500;
+    int nCount = 0;
+    if (error >= 0)
+    {
+        error = git_revwalk_push_head(walker);
+        if (error >= 0)
+        {
+            //cleanup_history();
+            //m_pHist_Arr = new GBL_History_Array;
+            git_oid oid;
+
+            while (!git_revwalk_next(&oid, walker) && nCount < nMaxRevs)
+            {
+                git_commit *pCommit = nullptr;
+                git_commit_lookup(&pCommit, mRepo, &oid);
+
+                logList.push_back(pCommit);
+
+                // free the commit
+                git_commit_free(pCommit);
+                nCount++;
+            }
+
+            //*pHist_Arr = m_pHist_Arr;
+            git_revwalk_free(walker);
+        }
+    }
+
+    return logList;
+}
+
+const char *GitManager::getOidByGitCommit(git_commit *commit)
+{
+    return git_oid_tostr_s(git_commit_id(commit));
+}
+
 void GitManager::test()
 {
     const char *purl = "https://git.oschina.net/make/libgit2-test2.git";

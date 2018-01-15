@@ -280,7 +280,6 @@ public:
     }
 };
 
-
 class GitManager
 {
 public:
@@ -332,7 +331,12 @@ public:
 
     int resetHard();
 
+    std::vector<git_commit *> getLogList();
+
     void test();
+
+public:
+    static const char *getOidByGitCommit(git_commit *commit);
 
 private:
     git_repository *mRepo;
