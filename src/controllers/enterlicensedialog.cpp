@@ -8,6 +8,8 @@
 #include <QCryptographicHash>
 #include <QTextStream>
 
+#define __LICENSE_TIMESTAMP_FROMAT__ "yyyyMMddhhmmss"
+
 EnterLicenseDialog::EnterLicenseDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EnterLicenseDialog),
@@ -46,7 +48,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 {
     mLicense = false;
 
-    QString lid, email, licenseKeyPart1, licenseKeyPart2 = "";
+    QString lid, userinfo, startTime, endTime, licenseKeyPart1, licenseKeyPart2 = "";
     QTextStream in(&license);
     QStringList stringList = {};
 
@@ -58,7 +60,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
         stringList.append(line);
     }
 
-    if (stringList.length() != 12) {
+    if (stringList.length() != 13) {
         return false;
     }
 
@@ -69,36 +71,49 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
             }
             continue;
         }
-        else if (11 == i) {
+        else if (12 == i) {
             if (u8"—– END LICENSE —–" != stringList[i]) {
                 return false;
             }
             continue;
         }
         else if (1 == i) {
-            email = stringList[i];
+            userinfo = stringList[i];
         }
         else if (2 == i) {
+            QStringList list = stringList[i].split("-");
+            startTime = list[0];
+            endTime = list[1];
+        }
+        else if (3 == i) {
             if (!stringList[i].startsWith("LID-")) {
                 return false;
             }
 
             lid = stringList[i].mid(4);
         }
-        else if (3 <= i && i <= 6) {
+        else if (4 <= i && i <= 7) {
             licenseKeyPart1 += stringList[i].replace(" ", "");
         }
-        else if (7 <= i && i <= 10) {
+        else if (8 <= i && i <= 11) {
             licenseKeyPart2 += stringList[i].replace(" ", "");
         }
     }
 
     const QString salt = "FsUr*5GDs9u#o0@Zvace5WAyAmVGX09u";
     const QString productType = QSysInfo::kernelType();
-    const QString sha512Part1 = QString(QCryptographicHash::hash(QString(email + salt + lid + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
-    const QString sha512Part2 = QString(QCryptographicHash::hash(QString(lid + salt + email + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
+    const QString sha512Part1 = QString(QCryptographicHash::hash(QString(startTime + userinfo + salt + lid + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
+    const QString sha512Part2 = QString(QCryptographicHash::hash(QString(endTime + lid + salt + userinfo + salt + productType).toUtf8(), QCryptographicHash::Sha512).toHex()).toUpper();
 
     if (sha512Part1 != licenseKeyPart1 || sha512Part2 != licenseKeyPart2) {
+        return false;
+    }
+
+    int nowTimestamp = static_cast<int>(QDateTime::currentSecsSinceEpoch());
+    int startTimestamp = Tools::timestampFromDateTime(startTime, __LICENSE_TIMESTAMP_FROMAT__);
+    int endTimestamp = Tools::timestampFromDateTime(endTime, __LICENSE_TIMESTAMP_FROMAT__);
+
+    if (nowTimestamp < startTimestamp || nowTimestamp > endTimestamp || startTimestamp >= endTimestamp) {
         return false;
     }
 
