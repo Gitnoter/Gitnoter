@@ -43,4 +43,4 @@ include($$PWD/qt-google-analytics/qt-google-analytics.pri)
 #
 # https://github.com/stsoor/LibGit2Wrapper
 #
-include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)
+#include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)
