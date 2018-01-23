@@ -8,7 +8,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets Network PrintSupport Xml XmlPattern
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/hoedown HOEDOWN)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/libgit2/include LIBGIT2)
-aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/json JSON)
+#aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/json JSON)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/UGlobalHotkey UGlOBLEHOTKEY)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qt-google-analytics QtGoogleAnalytics)
@@ -80,6 +80,6 @@ add_executable(${PROJECT_NAME}
         helps/screenshot.h          helps/screenshot.cpp
         helps/singletimeout.h       helps/singletimeout.cpp
 
-        ${HOEDOWN} ${LIBGIT2} ${JSON} ${QTINYAES} ${UGlOBLEHOTKEY} ${QtGoogleAnalytics} ${LibGit2Wrapper})
+        ${HOEDOWN} ${LIBGIT2} ${QTINYAES} ${UGlOBLEHOTKEY} ${QtGoogleAnalytics} ${LibGit2Wrapper})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml Qt5::XmlPatterns git2)

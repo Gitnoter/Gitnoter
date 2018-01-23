@@ -18,7 +18,7 @@ include($$PWD/hoedown/hoedown.pri)
 #
 # json
 #
-include($$PWD/json/json.pri)
+#include($$PWD/json/json.pri)
 
 #
 # qtinyaes
