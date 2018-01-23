@@ -3,7 +3,6 @@
 #include "globals.h"
 #include "notelistcellwidget.h"
 
-#include <json/json.h>
 #include <hoedown/html.h>
 
 #include <QUrl>
@@ -12,6 +11,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QTemporaryFile>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 NoteModel::NoteModel(const QString &noteText)
 {
@@ -335,38 +337,41 @@ QString NoteModel::getStringFormTagList() const
 
 void NoteModel::setNoteData(const QString &noteData)
 {
-    QtJson::JsonObject result = QtJson::parse(noteData).toMap();
+    QJsonParseError e{};
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(noteData.toUtf8(), &e);
+    if(e.error == QJsonParseError::NoError && !jsonDoc.isNull())
+    {
+        QJsonObject jsonObject = jsonDoc.object();
+        mUuid = jsonObject.find("uuid").value().toString();
+        mCreateDate = jsonObject.find("createDate").value().toInt();
+        mUpdateDate = jsonObject.find("updateDate").value().toInt();
+        category = jsonObject.find("category").value().toString();
+        isDelete = jsonObject.find("isDelete").value().toInt();
 
-    mUuid = result["uuid"].toString();
-    mCreateDate = result["createDate"].toInt();
-    mUpdateDate = result["updateDate"].toInt();
-    category = result["category"].toString();
-    isDelete = result["isDelete"].toInt();
-
-    tagList.clear();
-    QtJson::JsonArray tagListArray = result["tagList"].toList();
-    for (int i = 0; i < tagListArray.length(); ++i) {
-        tagList.append(tagListArray[i].toString());
+        tagList.clear();
+        QJsonArray tagListArray = jsonObject.find("tagList").value().toArray();
+        for (auto &&tag : tagListArray) {
+            tagList.append(tag.toString());
+        }
     }
 }
 
 QString NoteModel::getNoteData() const
 {
-    QtJson::JsonObject contributor;
+    QJsonObject jsonObject;
+    jsonObject.insert("uuid", mUuid);
+    jsonObject.insert("createDate", mCreateDate);
+    jsonObject.insert("updateDate", mUpdateDate);
+    jsonObject.insert("category", category);
+    jsonObject.insert("isDelete", isDelete);
 
-    contributor["uuid"] = mUuid;
-    contributor["createDate"] = mCreateDate;
-    contributor["updateDate"] = mUpdateDate;
-    contributor["category"] = category;
-    contributor["isDelete"] = isDelete;
-
-    QtJson::JsonArray tagListArray;
+    QJsonArray tagListArray;
     for (int i = 0; i < tagList.length(); ++i) {
-        tagListArray.append(tagList[i]);
+        tagListArray.push_back(tagList[i]);
     }
-    contributor["tagList"] = tagListArray;
+    jsonObject.insert("tagList", tagListArray);
 
-    return QString(QtJson::serialize(contributor));
+    return QString(QJsonDocument(jsonObject).toJson());
 }
 
 void NoteModel::clear()
