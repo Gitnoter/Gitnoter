@@ -3,6 +3,8 @@
 #include "tools.h"
 #include "version.h"
 
+#include <QBreakpadHandler.h>
+
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -24,6 +26,10 @@ int main(int argc, char *argv[])
 
     qApp->setStyleSheet(qApp->styleSheet() + Tools::readerFileString(":/theme/default.qss"));
     QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+
+#if defined(QT_NO_DEBUG)
+    QBreakpadInstance.setDumpPath(__CRASHES_PATH__);
+#endif
 
     gConfigModel->init();
 

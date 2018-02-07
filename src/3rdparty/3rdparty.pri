@@ -41,6 +41,11 @@ include($$PWD/qkeysequencewidget/qkeysequencewidget.pri)
 include($$PWD/qt-google-analytics/qt-google-analytics.pri)
 
 #
+# qBreakpad
+#
+include($$PWD/qBreakpad/qBreakpad.pri)
+
+#
 # https://github.com/stsoor/LibGit2Wrapper
 #
 #include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)

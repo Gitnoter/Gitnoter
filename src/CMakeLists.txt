@@ -13,6 +13,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/UGlobalHotkey UGlOBLEHOTKEY)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qt-google-analytics QtGoogleAnalytics)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/LibGit2Wrapper LibGit2Wrapper)
+aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qBreakpad/handler qBreakpad)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qmarkdowntextedit)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/qkeysequencewidget)
