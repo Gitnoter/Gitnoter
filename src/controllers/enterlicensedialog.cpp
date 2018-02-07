@@ -112,6 +112,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
     int nowTimestamp = static_cast<int>(QDateTime::currentSecsSinceEpoch());
     int startTimestamp = Tools::timestampFromDateTime(startTime, __LICENSE_TIMESTAMP_FROMAT__);
     int endTimestamp = Tools::timestampFromDateTime(endTime, __LICENSE_TIMESTAMP_FROMAT__);
+    endTimestamp = endTimestamp == -1 ? std::numeric_limits<int>::max() : endTimestamp;
 
     if (nowTimestamp < startTimestamp || nowTimestamp > endTimestamp || startTimestamp >= endTimestamp) {
         return false;
