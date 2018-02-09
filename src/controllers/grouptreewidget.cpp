@@ -44,7 +44,7 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
         if (!noteModel->getIsDelete()) {
             appendToGroupModelMap(systemModelMap, Gitnoter::All, topLevelItem(Gitnoter::All)->text(0), 1);
 
-            if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) {
+            if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - __RecentlyUseDay__)) {
                 appendToGroupModelMap(systemModelMap, Gitnoter::Recent, topLevelItem(Gitnoter::Recent)->text(0), 1);
             }
 
@@ -64,14 +64,14 @@ void GroupTreeWidget::init(QList<NoteModel *> noteModelList, MainWindow *mainWin
         }
     }
 
-    stringList = Tools::readerFileToList(gRepoCategoryListPath);
+    stringList = Tools::readerFileToList(__RepoCategoryListPath__);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
             appendToGroupModelMap(categoryModelMap, Gitnoter::Category, str, 0);
         }
     }
 
-    stringList = Tools::readerFileToList(gRepoTagListPath);
+    stringList = Tools::readerFileToList(__RepoTagListPath__);
     for (auto &&str : stringList) {
         if (!str.isEmpty()) {
             appendToGroupModelMap(tagModelMap, Gitnoter::Tag, str, 0);
@@ -303,7 +303,7 @@ void GroupTreeWidget::appendOne(NoteModel *noteModel, int num)
             appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
         }
 
-        if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) {
+        if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - __RecentlyUseDay__)) {
             treeWidgetItem = getTreeWidgetItem(Gitnoter::Recent, noteModel->getCategory());
             if (treeWidgetItem) {
                 appendAny(treeWidgetItem->data(0, Qt::UserRole).value<GroupModel *>(), num);
@@ -390,10 +390,10 @@ bool GroupTreeWidget::has(Gitnoter::GroupType type, const QString &text)
 void GroupTreeWidget::saveDataToLocal(Gitnoter::GroupType type)
 {
     if (type == Gitnoter::Category) {
-        Tools::writerFile(gRepoCategoryListPath, toString(type).toUtf8());
+        Tools::writerFile(__RepoCategoryListPath__, toString(type).toUtf8());
     }
     else if (type == Gitnoter::Tag) {
-        Tools::writerFile(gRepoTagListPath, toString(type).toUtf8());
+        Tools::writerFile(__RepoTagListPath__, toString(type).toUtf8());
     }
 }
 
@@ -454,7 +454,7 @@ void GroupTreeWidget::subtract(NoteModel *noteModel, bool remove)
     else {
         mMainWindow->groupTreeWidget()->subtract(Gitnoter::Category, noteModel->getCategory());
     }
-    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) {
+    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - __RecentlyUseDay__)) {
         mMainWindow->groupTreeWidget()->subtract(Gitnoter::Recent);
     }
     mMainWindow->groupTreeWidget()->subtract(Gitnoter::All);
@@ -476,7 +476,7 @@ void GroupTreeWidget::add(NoteModel *noteModel)
     else {
         mMainWindow->groupTreeWidget()->add(Gitnoter::Category, noteModel->getCategory());
     }
-    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) {
+    if (noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - __RecentlyUseDay__)) {
         mMainWindow->groupTreeWidget()->add(Gitnoter::Recent);
     }
     mMainWindow->groupTreeWidget()->add(Gitnoter::All);

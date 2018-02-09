@@ -40,7 +40,7 @@ void SettingDialog::setupUi()
     // default key sequence
     ui->keySequenceWidget_cutRect->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
     ui->keySequenceWidget_cutRect->setClearButtonStyleSheet("border:none;");
-    ui->keySequenceWidget_cutRect->setDefaultKeySequence(gCutRectKeySequence);
+    ui->keySequenceWidget_cutRect->setDefaultKeySequence(__CutRectKeySequence__);
     ui->keySequenceWidget_cutRect->setKeySequence(QKeySequence(gConfigModel->getCutRectKeySequence()));
     connect(ui->keySequenceWidget_cutRect, SIGNAL(keySequenceAccepted(const QKeySequence &)),
             this, SLOT(onCutRectKeySequenceAccepted(const QKeySequence &)));
@@ -49,7 +49,7 @@ void SettingDialog::setupUi()
 
     ui->keySequenceWidget_cutFull->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
     ui->keySequenceWidget_cutFull->setClearButtonStyleSheet("border:none;");
-    ui->keySequenceWidget_cutFull->setDefaultKeySequence(gCutFullKeySequence);
+    ui->keySequenceWidget_cutFull->setDefaultKeySequence(__CutFullKeySequence__);
     ui->keySequenceWidget_cutFull->setKeySequence(QKeySequence(gConfigModel->getCutFullKeySequence()));
     connect(ui->keySequenceWidget_cutFull, SIGNAL(keySequenceAccepted(const QKeySequence &)),
             this, SLOT(onCutFullKeySequenceAccepted(const QKeySequence &)));
@@ -58,7 +58,7 @@ void SettingDialog::setupUi()
 
     ui->keySequenceWidget_cutWindow->setClearButtonIcon(QIcon(":/images/icon-delete.png"));
     ui->keySequenceWidget_cutWindow->setClearButtonStyleSheet("border:none;");
-    ui->keySequenceWidget_cutWindow->setDefaultKeySequence(gCutWindowKeySequence);
+    ui->keySequenceWidget_cutWindow->setDefaultKeySequence(__CutWindowKeySequence__);
     ui->keySequenceWidget_cutWindow->setKeySequence(QKeySequence(gConfigModel->getCutWindowKeySequence()));
     connect(ui->keySequenceWidget_cutWindow, SIGNAL(keySequenceAccepted(const QKeySequence &)),
             this, SLOT(onCutWindowKeySequenceAccepted(const QKeySequence &)));

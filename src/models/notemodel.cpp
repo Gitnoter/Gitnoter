@@ -33,7 +33,7 @@ QString NoteModel::getNoteDir()
         setUuid();
     }
 
-    return QDir(gRepoNoteTextPath).filePath(getUuid());
+    return QDir(__RepoNoteTextPath__).filePath(getUuid());
 }
 
 
@@ -61,7 +61,7 @@ QString NoteModel::getMarkdownHtml()
     // parse for relative file urls and make them absolute
     // (for example to show images under the note path)
     noteText.replace(QRegularExpression(
-            "([\\(<])" + gFileScheme + "://" + "([^\\/].+?)([\\)>])"), "\\1file://" + windowsSlash + getNoteDir() + "/\\2\\3");
+            "([\\(<])" + __FileScheme__ + "://" + "([^\\/].+?)([\\)>])"), "\\1file://" + windowsSlash + getNoteDir() + "/\\2\\3");
 
     unsigned char *sequence = (unsigned char *) qstrdup(noteText.toUtf8().constData());
     qint64 length = static_cast<qint64>(strlen((char *) sequence));
@@ -212,7 +212,7 @@ QString NoteModel::downloadUrlToMedia(QString url, NoteModel *noteModel, bool re
     Tools::writerFile(savePath, imageData);
 
     return returnUrlOnly
-           ? savePath : "![" + name + "](" + gFileScheme + "://" + saveName + "." + suffix + ")";
+           ? savePath : "![" + name + "](" + __FileScheme__ + "://" + saveName + "." + suffix + ")";
 }
 
 QString NoteModel::byteArrayToMedia(const QByteArray &byteArray, NoteModel *noteModel, bool returnUrlOnly)
@@ -328,9 +328,9 @@ QString NoteModel::getStringFormTagList() const
 {
     QString tagsString = "";
     for (auto &&item : tagList) {
-        tagsString += item + gTagSplit;
+        tagsString += item + __TagSplit__;
     }
-    tagsString.chop(gTagSplit.length());
+    tagsString.chop(QString(__TagSplit__).length());
 
     return tagsString;
 }
@@ -389,22 +389,22 @@ void NoteModel::saveNoteToLocal()
 {
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
-    Tools::writerFile(QDir(path).filePath(gNoteDataFileName), getNoteData().toUtf8());
+    Tools::writerFile(QDir(path).filePath(__NoteTextFileName__), getNoteText().toUtf8());
+    Tools::writerFile(QDir(path).filePath(__NoteDataFileName__), getNoteData().toUtf8());
 }
 
 void NoteModel::saveNoteTextToLocal()
 {
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(gNoteTextFileName), getNoteText().toUtf8());
+    Tools::writerFile(QDir(path).filePath(__NoteTextFileName__), getNoteText().toUtf8());
 }
 
 void NoteModel::saveNoteDataToLocal()
 {
     QString path = getNoteDir();
     Tools::createMkDir(path);
-    Tools::writerFile(QDir(path).filePath(gNoteDataFileName), getNoteData().toUtf8());
+    Tools::writerFile(QDir(path).filePath(__NoteDataFileName__), getNoteData().toUtf8());
 }
 
 QString NoteModel::getUuid()
@@ -524,16 +524,16 @@ QString NoteModel::getShortUuid() const
 }
 
 QString NoteModel::getFilePath(QString noteFilePath) {
-    return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(gFileScheme + "://", ""));
+    return "file://" + QDir(getNoteDir()).filePath(noteFilePath.replace(__FileScheme__ + "://", ""));
 }
 
 const QString NoteModel::createMediaMarkdown(const QString &fileName, const QString &baseName, Gitnoter::MediaType type)
 {
     if (Gitnoter::Image == type) {
-        return "![" + baseName + "](" + gFileScheme + "://" + fileName + ")";
+        return "![" + baseName + "](" + __FileScheme__ + "://" + fileName + ")";
     }
     else if (Gitnoter::Accessory == type) {
-        return "[" + baseName + "](" + gFileScheme + "://" + fileName + ")";
+        return "[" + baseName + "](" + __FileScheme__ + "://" + fileName + ")";
     }
 
     return "";

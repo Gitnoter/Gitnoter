@@ -18,15 +18,15 @@ NoteListWidget::~NoteListWidget()
 void NoteListWidget::init(MainWindow *mainWindow)
 {
     mMainWindow = mainWindow;
-    QDir dir(gRepoNoteTextPath);
+    QDir dir(__RepoNoteTextPath__);
     for (auto &&mfi : dir.entryInfoList()) {
         if (mfi.fileName() == "." || mfi.fileName() == "..") {
             continue;
         }
         if (mfi.isDir()) {
             QDir dir2(mfi.absoluteFilePath());
-            NoteModel *noteModel = new NoteModel(dir2.filePath(gNoteTextFileName),
-                                                 dir2.filePath(gNoteDataFileName));
+            NoteModel *noteModel = new NoteModel(dir2.filePath(__NoteTextFileName__),
+                                                 dir2.filePath(__NoteDataFileName__));
             mListWidgetItemList.append(append(noteModel));
         }
     }
@@ -200,7 +200,7 @@ QList<QListWidgetItem *> NoteListWidget::getListWidgetItemList(Gitnoter::GroupTy
             }
         }
         else if ((type == Gitnoter::All) ||
-                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - gSevenDays)) ||
+                 (type == Gitnoter::Recent && noteModel->getUpdateDate() > (QDateTime::currentSecsSinceEpoch() - __RecentlyUseDay__)) ||
                  (type == Gitnoter::Unclassified && noteModel->getCategory().isEmpty()) ||
                  (type == Gitnoter::Category && name == noteModel->getCategory()) ||
                  (type == Gitnoter::Tag && noteModel->getTagList().indexOf(name) != -1)) {

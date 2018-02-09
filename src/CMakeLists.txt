@@ -27,6 +27,7 @@ include_directories(${PROJECT_SOURCE_DIR}/views)
 include_directories(${PROJECT_SOURCE_DIR}/controllers)
 include_directories(${PROJECT_SOURCE_DIR}/helps)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/qBreakpad/handler)
 
 qt5_wrap_ui(UIS_HDRS
         views/mainwindow.ui

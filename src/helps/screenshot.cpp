@@ -45,7 +45,7 @@ void ScreenShot::savePixmap()
         return;
     }
 
-    mShotPixmap.save(fileName, "JPG", gImageQuality);
+    mShotPixmap.save(fileName, "JPG", __ImageQuality__);
     accept();
 }
 

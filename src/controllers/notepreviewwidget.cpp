@@ -81,7 +81,7 @@ void NotePreviewWidget::insertUrlImageToList(const QString &url, QString path)
 #ifdef Q_OS_WIN
             path += "/";
 #endif
-            path += QDir(gTempPath).filePath("note-browser-" + Tools::md5(url) + ".jpg");
+            path += QDir(__TempPath__).filePath("note-browser-" + Tools::md5(url) + ".jpg");
         }
     }
 
@@ -156,7 +156,7 @@ void NotePreviewWidget::downloadThreadStarted()
             continue;
         }
 
-        if (gUrlResourceScheme.indexOf(QUrl(item.url).scheme()) != -1) {
+        if (__UrlResourceScheme__.indexOf(QUrl(item.url).scheme()) != -1) {
             item.size = Tools::getImageSize(item.url);
             QByteArray data = Tools::downloadUrlToData(item.url);
             QPixmap pixmap;

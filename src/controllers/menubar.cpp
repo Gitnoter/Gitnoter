@@ -633,7 +633,7 @@ void MenuBar::addHasLicenseAction()
                 tr(u8"确定删除"));
         connect(messageDialog, &MessageDialog::applyClicked, [=]() {
             ui->menu_help->removeAction(action);
-            QDir().remove(gAppLicensePath);
+            QDir().remove(__AppLicensePath__);
             mMainWindow->enterLicenseDialog()->init();
         });
     });
@@ -647,7 +647,7 @@ void MenuBar::addNoLicenseAction()
     mLicenseActionList.append(action);
     ui->menu_help->addAction(action);
     connect(action, &QAction::triggered, []() {
-        QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
+        QDesktopServices::openUrl(QUrl(__PurchaseLicenseUrl__));
     });
 
     action = new QAction(tr(u8"输入许可证"), this);

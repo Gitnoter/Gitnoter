@@ -34,7 +34,7 @@ void MarkdownEditorWidget::setupUi()
     ui->lineEdit_tag->installEventFilter(this);
     ui->markdownEditor->installEventFilter(this);
     ui->markdownEditor->initSearchFrame(ui->widget_searchWidget);
-    ui->markdownEditor->setIgnoredClickUrlSchemata({gFileScheme});
+    ui->markdownEditor->setIgnoredClickUrlSchemata({__FileScheme__});
 
     updateMarkdownEditorSetting();
     highlightCurrentLine();
@@ -588,7 +588,7 @@ void MarkdownEditorWidget::webSearchText()
     const QString selectedText = ui->markdownEditor->textCursor().selectedText().trimmed();
     if (selectedText.isEmpty()) { return; }
 
-    QDesktopServices::openUrl(QUrl(gSearchEngine + selectedText));
+    QDesktopServices::openUrl(QUrl(__SearchEngine__ + selectedText));
 }
 
 void MarkdownEditorWidget::showSearchFindWidget()
@@ -777,7 +777,7 @@ void MarkdownEditorWidget::subtractFontSize()
 void MarkdownEditorWidget::resetFontSize()
 {
     QFont font = ui->markdownEditor->font();
-    font.setPointSize(gEditorFontSize);
+    font.setPointSize(__EditorFontSize__);
 
     ui->markdownEditor->setFont(font);
     gConfigModel->setEditorFont(font);
@@ -1175,7 +1175,7 @@ void MarkdownEditorWidget::on_markdownPreview_anchorClicked(const QUrl &arg1)
 {
     qDebug() << __func__ << " - 'url': " << arg1;
 
-    if (arg1.scheme() == gFileScheme) {
+    if (arg1.scheme() == __FileScheme__) {
         onOpenLocalUrl(arg1.toString());
     }
     else {
@@ -1254,10 +1254,10 @@ void MarkdownEditorWidget::savePixmap(const QPixmap &pixmap, const QString &name
     const QString filePath = QDir(mNoteModel->getNoteDir()).filePath(Tools::getShortUuid() + ".jpg");
     const QFileInfo fileInfo = QFileInfo(filePath);
 
-    pixmap.save(filePath, "JPG", gImageQuality);
+    pixmap.save(filePath, "JPG", __ImageQuality__);
 
     QTextCursor textCursor = ui->markdownEditor->textCursor();
-    textCursor.insertText("![" + name + "-" + fileInfo.baseName() + "](" + gFileScheme + "://" + fileInfo.fileName() + ")");
+    textCursor.insertText("![" + name + "-" + fileInfo.baseName() + "](" + __FileScheme__ + "://" + fileInfo.fileName() + ")");
     ui->markdownEditor->setTextCursor(textCursor);
 }
 

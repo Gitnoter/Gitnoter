@@ -129,14 +129,14 @@ void MainWindow::setupUi()
 void MainWindow::initTempDir()
 {
     QDir dir;
-    dir.mkdir(gAppDataLocation);
-    dir.mkdir(gAppDataPath);
-    dir.mkpath(gTempPath);
+    dir.mkdir(__AppDataLocation__);
+    dir.mkdir(__AppDataPath__);
+    dir.mkpath(__TempPath__);
 
-    mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath));
+    mGitManager->initLocalRepo(Tools::qstringToConstData(__RepoPath__));
 
-    dir.mkdir(gRepoNoteTextPath);
-    dir.mkdir(gRepoNoteDataPath);
+    dir.mkdir(__RepoNoteTextPath__);
+    dir.mkdir(__RepoNoteDataPath__);
 }
 
 void MainWindow::on_noteListWidget_itemClicked(QListWidgetItem *item)
@@ -616,17 +616,17 @@ void MainWindow::preposeWindow()
 
 void MainWindow::guide()
 {
-    QDesktopServices::openUrl(QUrl(gGuideUrl));
+    QDesktopServices::openUrl(QUrl(__GuideUrl__));
 }
 
 void MainWindow::historyChange()
 {
-    QDesktopServices::openUrl(QUrl(gHistoryChangeUrl));
+    QDesktopServices::openUrl(QUrl(__HistoryChangeUrl__));
 }
 
 void MainWindow::markdownLanguage()
 {
-    QDesktopServices::openUrl(QUrl(gMarkdownLanguageUrl));
+    QDesktopServices::openUrl(QUrl(__MarkdownLanguageUrl__));
 }
 
 void MainWindow::feedback()
@@ -636,12 +636,12 @@ void MainWindow::feedback()
                          + VER_PRODUCTVERSION_STR + " (build " + QString::number(VER_PRODUCTBUILD_STR) + ")"
                          + "\n" + QSysInfo::prettyProductName();
     QDesktopServices::openUrl(QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
-                    gEmailToUser, body), QUrl::TolerantMode));
+                    __EmailToUser__, body), QUrl::TolerantMode));
 }
 
 void MainWindow::issue()
 {
-    QDesktopServices::openUrl(QUrl(gIssueUrl));
+    QDesktopServices::openUrl(QUrl(__IssueUrl__));
 }
 
 void MainWindow::about()
@@ -723,7 +723,7 @@ void MainWindow::setRemoteToRepo()
     const QString repoUrlNew = gConfigModel->getRepoUrlNew();
     const QString repoEmailNew = gConfigModel->getRepoEmailNew();
     const QString repoPasswordNew = gConfigModel->getRepoPasswordNew();
-    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
+    const QString repoPathTemp = QString(__RepoPath__).replace(__RepoName__, __RepoNameTemp__);
 
     const char *email = Tools::qstringToConstData(repoEmailNew);
     const char *password = Tools::qstringToConstData(repoPasswordNew);
@@ -758,8 +758,8 @@ void MainWindow::setRemoteToRepo()
 
 void MainWindow::setRepoApplyClicked()
 {
-    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
-    const QString repoNoteTextPathTemp = QString(gRepoNoteTextPath).replace(gRepoName, gRepoNameTemp);
+    const QString repoPathTemp = QString(__RepoPath__).replace(__RepoName__, __RepoNameTemp__);
+    const QString repoNoteTextPathTemp = QString(__RepoNoteTextPath__).replace(__RepoName__, __RepoNameTemp__);
     QDir().mkdir(repoNoteTextPathTemp);
     QList<NoteModel *> noteModelList = ui->noteListWidget->getNoteModelList();
     for (auto &&noteModel : noteModelList) {
@@ -768,21 +768,21 @@ void MainWindow::setRepoApplyClicked()
         QDir().rename(noteModel->getNoteDir(), newPath);
     }
 
-    const QString repoNoteDataPathTemp = QString(gRepoNoteDataPath).replace(gRepoName, gRepoNameTemp);
+    const QString repoNoteDataPathTemp = QString(__RepoNoteDataPath__).replace(__RepoName__, __RepoNameTemp__);
     QDir(repoNoteDataPathTemp).removeRecursively();
-    QDir().rename(gRepoNoteDataPath, repoNoteDataPathTemp);
+    QDir().rename(__RepoNoteDataPath__, repoNoteDataPathTemp);
 
-    QDir(gRepoPath).removeRecursively();
-    QDir().rename(repoPathTemp, gRepoPath);
+    QDir(__RepoPath__).removeRecursively();
+    QDir().rename(repoPathTemp, __RepoPath__);
 
     syncRepo();
 }
 
 void MainWindow::setRepoCloseClicked()
 {
-    const QString repoPathTemp = QString(gRepoPath).replace(gRepoName, gRepoNameTemp);
-    QDir(gRepoPath).removeRecursively();
-    QDir().rename(repoPathTemp, gRepoPath);
+    const QString repoPathTemp = QString(__RepoPath__).replace(__RepoName__, __RepoNameTemp__);
+    QDir(__RepoPath__).removeRecursively();
+    QDir().rename(repoPathTemp, __RepoPath__);
 
     reload();
 }
@@ -802,7 +802,7 @@ void MainWindow::syncRepo()
         return;
     }
 
-    mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath));
+    mGitManager->initLocalRepo(Tools::qstringToConstData(__RepoPath__));
     mGitManager->setUserPass(Tools::qstringToConstData(repoEmail), Tools::qstringToConstData(repoPassword));
     mGitManager->setSignature(Tools::qstringToConstData(repoUsername), Tools::qstringToConstData(repoEmail));
 
@@ -851,11 +851,11 @@ void MainWindow::openPurchasePanel()
 
     MessageDialog *messageDialog = new MessageDialog(this, this);
     messageDialog->setMessageInfo(
-            tr(u8"您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(gPurchaseLicenseUrl),
+            tr(u8"您的应用尚未激活\n购买许可证以获得完整体验 %1").arg(__PurchaseLicenseUrl__),
             tr(u8"感谢您试用 %1（￣▽￣）").arg(VER_PRODUCTNAME_STR), tr(u8"购买"));
     connect(messageDialog, &MessageDialog::applyClicked, [=]() {
         mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();
-        QDesktopServices::openUrl(QUrl(gPurchaseLicenseUrl));
+        QDesktopServices::openUrl(QUrl(__PurchaseLicenseUrl__));
     });
     connect(messageDialog, &MessageDialog::closeClicked, [=]() {
         mOpenPurchasePanelTimestamp = (int) QDateTime::currentSecsSinceEpoch();

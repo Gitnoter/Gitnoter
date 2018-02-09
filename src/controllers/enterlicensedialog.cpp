@@ -17,7 +17,7 @@ EnterLicenseDialog::EnterLicenseDialog(QWidget *parent) :
     mMainWindow((MainWindow *) parent)
 {
     ui->setupUi(this);
-    ui->label_payInfo->setText(ui->label_payInfo->text().append(gPurchaseLicenseUrl));
+    ui->label_payInfo->setText(ui->label_payInfo->text().append(__PurchaseLicenseUrl__));
 }
 
 EnterLicenseDialog::~EnterLicenseDialog()
@@ -35,11 +35,11 @@ void EnterLicenseDialog::on_buttonBox_accepted()
 
     if (checkLicense(license, true)) {
         mMainWindow->menuBar()->initLicenseAction(mLicense);
-        (new MessageDialog(mMainWindow))->openMessage(tr(u8"如有任何疑问, 请随时联系: %1").arg(gEmailToUser), tr(u8"感谢您的购买和支持 (｡･ω･｡)"));
+        (new MessageDialog(mMainWindow))->openMessage(tr(u8"如有任何疑问, 请随时联系: %1").arg(__EmailToUser__), tr(u8"感谢您的购买和支持 (｡･ω･｡)"));
     }
     else {
         (new MessageDialog(mMainWindow))->openMessage(
-                tr(u8"请您检查是否输入正确, 包括许可证的开始和结束行哦~\n如确认无误仍然无法激活, 请及时联系: %1").arg(gEmailToUser),
+                tr(u8"请您检查是否输入正确, 包括许可证的开始和结束行哦~\n如确认无误仍然无法激活, 请及时联系: %1").arg(__EmailToUser__),
                 tr(u8"该许可证似乎无效 ╮(￣▽￣)╭"));
     }
 }
@@ -119,7 +119,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
     }
 
     if (save) {
-        Tools::writerFile(gAppLicensePath, Tools::encrypt(license).toUtf8());
+        Tools::writerFile(__AppLicensePath__, Tools::encrypt(license).toUtf8());
     }
 
     mLicense = true;
@@ -129,7 +129,7 @@ bool EnterLicenseDialog::checkLicense(QString license, bool save)
 
 void EnterLicenseDialog::init()
 {
-    QString license = Tools::readerFileString(gAppLicensePath);
+    QString license = Tools::readerFileString(__AppLicensePath__);
     mLicense = license.isEmpty() ? false : checkLicense(Tools::decrypt(license));
     mMainWindow->menuBar()->initLicenseAction(mLicense);
 }

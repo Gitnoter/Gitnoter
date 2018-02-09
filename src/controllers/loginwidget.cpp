@@ -81,8 +81,8 @@ bool LoginWidget::changeEnterButtonStatus()
 
 void LoginWidget::openMainWindow()
 {
-    Tools::createMkDir(gRepoNoteTextPath);
-    Tools::createMkDir(gRepoNoteDataPath);
+    Tools::createMkDir(__RepoNoteTextPath__);
+    Tools::createMkDir(__RepoNoteDataPath__);
 
     close();
     (new MainWindow(mMenuBar))->show();
@@ -102,8 +102,8 @@ void LoginWidget::on_pushButton_initLocal_clicked()
 
 int LoginWidget::initGitManager()
 {
-    if (QDir(gRepoPath).exists()) {
-        return mGitManager->open(Tools::qstringToConstData(gRepoPath));
+    if (QDir(__RepoPath__).exists()) {
+        return mGitManager->open(Tools::qstringToConstData(__RepoPath__));
     }
 
     if (!gConfigModel->getRepoUsername().isEmpty()
@@ -111,8 +111,8 @@ int LoginWidget::initGitManager()
         && !gConfigModel->getRepoUrl().isEmpty()) {
         mGitManager->setUserPass(Tools::qstringToConstData(gConfigModel->getRepoUsername()),
                                         Tools::qstringToConstData(gConfigModel->getRepoPassword()));
-        return mGitManager->clone(Tools::qstringToConstData(gConfigModel->getRepoUrl()), Tools::qstringToConstData(gRepoPath));
+        return mGitManager->clone(Tools::qstringToConstData(gConfigModel->getRepoUrl()), Tools::qstringToConstData(__RepoPath__));
     }
 
-    return mGitManager->initLocalRepo(Tools::qstringToConstData(gRepoPath), true);
+    return mGitManager->initLocalRepo(Tools::qstringToConstData(__RepoPath__), true);
 }

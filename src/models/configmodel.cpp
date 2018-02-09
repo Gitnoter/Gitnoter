@@ -44,8 +44,8 @@ ConfigModel::ConfigModel()
 
 void ConfigModel::init()
 {
-    Tools::createMkDir(gAppDataPath);
-    settings = new QSettings(gAppConfigPath, QSettings::IniFormat);
+    Tools::createMkDir(__AppDataPath__);
+    settings = new QSettings(__AppConfigPath__, QSettings::IniFormat);
 }
 
 template <typename T>
@@ -245,8 +245,8 @@ void ConfigModel::setEditorFont(const QFont &font)
 
 const QString ConfigModel::getCutRectKeySequence() const
 {
-    const QString keySequence = settings->value(mCutRectKeySequence, gCutRectKeySequence).toString();
-    return keySequence.isEmpty() ? gCutRectKeySequence : keySequence;
+    const QString keySequence = settings->value(mCutRectKeySequence, __CutRectKeySequence__).toString();
+    return keySequence.isEmpty() ? __CutRectKeySequence__ : keySequence;
 }
 
 void ConfigModel::setCutRectKeySequence(const QString &keySequence)
@@ -256,8 +256,8 @@ void ConfigModel::setCutRectKeySequence(const QString &keySequence)
 
 const QString ConfigModel::getCutFullKeySequence() const
 {
-    const QString keySequence = settings->value(mCutFullKeySequence, gCutFullKeySequence).toString();
-    return keySequence.isEmpty() ? gCutFullKeySequence : keySequence;
+    const QString keySequence = settings->value(mCutFullKeySequence, __CutFullKeySequence__).toString();
+    return keySequence.isEmpty() ? __CutFullKeySequence__ : keySequence;
 }
 
 void ConfigModel::setCutFullKeySequence(const QString &keySequence)
@@ -267,8 +267,8 @@ void ConfigModel::setCutFullKeySequence(const QString &keySequence)
 
 const QString ConfigModel::getCutWindowKeySequence() const
 {
-    const QString keySequence = settings->value(mCutWindowKeySequence, gCutWindowKeySequence).toString();
-    return keySequence.isEmpty() ? gCutWindowKeySequence : keySequence;
+    const QString keySequence = settings->value(mCutWindowKeySequence, __CutWindowKeySequence__).toString();
+    return keySequence.isEmpty() ? __CutWindowKeySequence__ : keySequence;
 }
 
 void ConfigModel::setCutWindowKeySequence(const QString &keySequence)
