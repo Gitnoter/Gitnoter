@@ -16,6 +16,13 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(VER_PRODUCTNAME_STR);
     QApplication::setApplicationVersion(VER_PRODUCTVERSION_STR);
 
+    QDir dir;
+    dir.mkdir(__AppDataLocation__);
+    dir.mkdir(__AppDataPath__);
+    dir.mkdir(__TempPath__);
+    dir.mkdir(__CRASHES_PATH__);
+    dir.mkdir(__CRASHES_BAK_PATH__);
+
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
 #endif
@@ -29,6 +36,23 @@ int main(int argc, char *argv[])
 
 #if defined(QT_NO_DEBUG)
     QBreakpadInstance.setDumpPath(__CRASHES_PATH__);
+
+    QStringList crashDumpList = QBreakpadInstance.dumpFileList();
+    QString crashBase64String = "";
+
+    for (int i = 0; i < crashDumpList.length(); ++i) {
+        const QString path = __CRASHES_PATH__ + "/" + crashDumpList[i];
+        crashBase64String += QString(
+                "------------------------------------------------------------------------------------------ crash: %1 "
+                "------------------------------------------------------------------------------------------\n %2\n\n"
+        ).arg(QString::number(i), Tools::fileToBase64(path));
+        QDir().rename(path, __CRASHES_BAK_PATH__ + "/" + crashDumpList[i]);
+    }
+
+    if (!crashBase64String.isEmpty()) {
+        QDesktopServices::openUrl(QUrl(QString("mailto:?to=%1&subject=Gitnoter for %2: Crashes&body=%3").arg(
+                __EmailToUser__, QSysInfo::prettyProductName(), crashBase64String), QUrl::TolerantMode));
+    }
 #endif
 
     gConfigModel->init();

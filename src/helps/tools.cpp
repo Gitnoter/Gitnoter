@@ -44,12 +44,12 @@ QString Tools::getShortUuid()
 
 int Tools::timestampFromDateTime(const QString dateTime, const QString &format)
 {
-    return QDateTime::fromString(dateTime, format.isEmpty() ? gDateFormat : format).toTime_t();
+    return QDateTime::fromString(dateTime, format.isEmpty() ? __DateFormat__ : format).toTime_t();
 }
 
 QString Tools::timestampToDateTime(int timestamp)
 {
-    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(gDateFormat);
+    return QDateTime::fromTime_t(static_cast<uint>(timestamp)).toString(__DateFormat__);
 }
 
 QString Tools::readerFileString(QString path)
@@ -296,13 +296,13 @@ QString Tools::getUsernameByEmail(const QString &email)
 
 QString Tools::encrypt(const QString &string)
 {
-    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
+    QTinyAes aes(QTinyAes::CBC, __AES_KEY__, __AES_IV__);
     return aes.encrypt(string.toUtf8()).toBase64();
 }
 
 QString Tools::decrypt(const QString &string)
 {
-    QTinyAes aes(QTinyAes::CBC, gAesKey, gAesIv);
+    QTinyAes aes(QTinyAes::CBC, __AES_KEY__, __AES_IV__);
 
     return QString(aes.decrypt(QByteArray::fromBase64(string.toUtf8())));
 }
@@ -407,4 +407,9 @@ QString Tools::fileUrlToPath(const QString &url)
     }
 
     return url;
+}
+
+QString Tools::fileToBase64(const QString &path)
+{
+    return QString(readerFile(path).toBase64());
 }

@@ -64,6 +64,8 @@ public:
 
     static QString fileUrlToPath(const QString &url);
 
+    static QString fileToBase64(const QString &path);
+
 private:
     /**
      * http://www.cplusplus.com/forum/beginner/45217/

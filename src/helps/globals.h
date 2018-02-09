@@ -32,6 +32,7 @@ extern ThemeManager *gThemeManager;
 #define __RepoTagListPath__         (gAppStandardPath + "/" + gPackageName + "/user/user.git" + "/data" + "/tags.list")
 #define __TempPath__                (gAppStandardPath + "/" + gPackageName + "/temp")
 #define __CRASHES_PATH__            (gAppStandardPath + "/" + gPackageName + "/crashes")
+#define __CRASHES_BAK_PATH__        (gAppStandardPath + "/" + gPackageName + "/crashes_bak")
 #define __RepoName__                "user.git"
 #define __RepoNameTemp__            "user-temp.git"
 #define __NoteTextFileName__        "markdown.md"

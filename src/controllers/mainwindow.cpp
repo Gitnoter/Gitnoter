@@ -128,13 +128,9 @@ void MainWindow::setupUi()
 
 void MainWindow::initTempDir()
 {
-    QDir dir;
-    dir.mkdir(__AppDataLocation__);
-    dir.mkdir(__AppDataPath__);
-    dir.mkpath(__TempPath__);
-
     mGitManager->initLocalRepo(Tools::qstringToConstData(__RepoPath__));
 
+    QDir dir;
     dir.mkdir(__RepoNoteTextPath__);
     dir.mkdir(__RepoNoteDataPath__);
 }
@@ -635,8 +631,8 @@ void MainWindow::feedback()
                          + QSysInfo::productType().toUpper() + " Version "
                          + VER_PRODUCTVERSION_STR + " (build " + QString::number(VER_PRODUCTBUILD_STR) + ")"
                          + "\n" + QSysInfo::prettyProductName();
-    QDesktopServices::openUrl(QUrl(QString("mailto:?to=%1&subject=Gitnoter for Mac: Feedback&body=%2").arg(
-                    __EmailToUser__, body), QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl(QString("mailto:?to=%1&subject=Gitnoter for %2: Feedback&body=%3").arg(
+                    __EmailToUser__, QSysInfo::prettyProductName(), body), QUrl::TolerantMode));
 }
 
 void MainWindow::issue()
