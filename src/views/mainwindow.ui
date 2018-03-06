@@ -172,7 +172,7 @@ QWidget#widget_6{
        <enum>Qt::Horizontal</enum>
       </property>
       <property name="opaqueResize">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="handleWidth">
        <number>0</number>
@@ -717,7 +717,7 @@ QWidget#widget_6{
            <number>100</number>
           </property>
           <property name="wordWrap">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="selectionRectVisible">
            <bool>false</bool>

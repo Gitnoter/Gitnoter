@@ -20,8 +20,6 @@ public:
 
     void reloadData();
 
-    virtual void paintEvent(QPaintEvent *event);
-
 private:
     Ui::NoteListCellWidget *ui;
     NoteModel *mNoteModel;

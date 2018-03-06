@@ -434,18 +434,34 @@ void NoteModel::setUpdateDate(int updateDate)
     mUpdateDate = updateDate == 0 ? (int) QDateTime::currentSecsSinceEpoch() : updateDate;
 }
 
-void NoteModel::setNoteText(QString body)
+void NoteModel::setNoteText(QString noteText)
 {
-    mNoteText = body;
+    if (mNoteText == noteText) {
+        return;
+    }
 
-    QTextStream in(&body);
+    mNoteText = noteText;
+    mBody.clear();
+    mTitle.clear();
+
+    QTextStream in(&noteText);
     while (!in.atEnd()) {
         QString lineText = in.readLine().trimmed();
-        if (!lineText.isEmpty()) {
-            mTitle = lineText.replace(QRegularExpression("^[#]*[ ]*"), "");
-            break;
+        if (mTitle.isEmpty()) {
+            if (!lineText.isEmpty()) {
+                mTitle = lineText.replace(QRegularExpression("^[#]*[ ]*"), "");
+                break;
+            }
+        }
+        else {
+            // TODO: 使用这个字符串会导致 splitter 卡顿
+            mBody.append(lineText);
         }
     }
+
+    mBody = noteText;
+
+    setUpdateDate();
 }
 
 void NoteModel::setUuid(QString uuid)
@@ -501,6 +517,11 @@ void NoteModel::setCategory(const QString &category)
 const QString &NoteModel::getTitle() const
 {
     return mTitle;
+}
+
+QString NoteModel::getBody()
+{
+    return mBody;
 }
 
 void NoteModel::setTitle(const QString &title)

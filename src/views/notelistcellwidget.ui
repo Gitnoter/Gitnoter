@@ -49,6 +49,7 @@ QWidget#widget_content{
   border: none;
   font-size: 12px;
   color: #6F747A;
+  background-color: rgba(0,0,0,0);
 }
 
 QLabel#label_tagList,
@@ -137,13 +138,13 @@ QLabel#label_categoryList{
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>20</height>
+             <height>23</height>
             </size>
            </property>
            <property name="font">
@@ -162,12 +163,21 @@ QLabel#label_categoryList{
           </widget>
          </item>
          <item>
-          <widget class="ElidedLabel" name="frame_body">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+          <widget class="QPlainTextEdit" name="frame_body">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+           <property name="overwriteMode">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -176,13 +186,13 @@ QLabel#label_categoryList{
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>23</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>20</height>
+             <height>23</height>
             </size>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout">
@@ -265,14 +275,6 @@ QLabel#label_categoryList{
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ElidedLabel</class>
-   <extends>QFrame</extends>
-   <header location="global">elidedlabel.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

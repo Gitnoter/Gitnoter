@@ -21,14 +21,7 @@ NoteListCellWidget::~NoteListCellWidget()
 void NoteListCellWidget::reloadData()
 {
     ui->label_title->setText(mNoteModel->getTitle());
-    ui->frame_body->setText(mNoteModel->getNoteText());
+    ui->frame_body->setPlainText(mNoteModel->getBody());
     ui->label_categoryList->setText(mNoteModel->getCategory());
     ui->label_tagList->setText(mNoteModel->getStringFormTagList());
-}
-
-void NoteListCellWidget::paintEvent(QPaintEvent *event)
-{
-//    qDebug()  << mNoteModel->getTitle();
-
-    QWidget::paintEvent(event);
 }

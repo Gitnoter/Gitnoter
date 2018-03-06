@@ -42,6 +42,8 @@ public:
 
     const QString &getTitle() const;
 
+    QString getBody();
+
     void setTitle(const QString &title);
 
     int getIsDelete() const;
@@ -50,15 +52,15 @@ public:
 
     void setUuid(QString uuid = "");
 
-    void setCreateDate(QString createDate = "");
+    void setCreateDate(QString createDate);
 
     void setCreateDate(int createDate = 0);
 
-    void setUpdateDate(QString updateDate = "");
+    void setUpdateDate(QString updateDate);
 
     void setUpdateDate(int updateDate = 0);
 
-    void setNoteText(QString body = "");
+    void setNoteText(QString noteText = "");
 
 public:
     explicit NoteModel(const QString &noteText = "");
@@ -110,6 +112,7 @@ private:
     int mCreateDate;
     int mUpdateDate;
     QString mTitle;
+    QString mBody;
     QString mNoteText;
     QStringList tagList;
     QString category;

@@ -271,18 +271,16 @@ void NoteListWidget::sort()
 
     for (int i = 0; i < count(); ++i) {
         QListWidgetItem *listWidgetItem = item(i);
-        switch (basis) {
-            case Gitnoter::Title:
-                listWidgetItem->setText(getNoteModel(listWidgetItem)->getTitle());
-                break;
-            case Gitnoter::CreateDate:
-                listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getCreateDate()));
-                break;
-            case Gitnoter::UpdateDate:
-                listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getUpdateDate()));
-                break;
-            default:
-                break;
+        if (Gitnoter::Title == basis) {
+            QString text = getNoteModel(listWidgetItem)->getTitle();
+            text = text.replace(QRegularExpression("[\\x{1F600}-\\x{1F7FF}]+"), "");
+            listWidgetItem->setText(text);
+        }
+        else if (Gitnoter::CreateDate == basis) {
+            listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getCreateDate()));
+        }
+        else if (Gitnoter::UpdateDate == basis) {
+            listWidgetItem->setText(QString(getNoteModel(listWidgetItem)->getUpdateDate()));
         }
     }
 
