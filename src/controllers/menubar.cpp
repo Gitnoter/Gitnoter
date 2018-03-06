@@ -23,80 +23,6 @@ MenuBar::~MenuBar()
     delete ui;
 }
 
-void MenuBar::setupUi(QWidget *parent)
-{
-    mWindowMenuActionGroup->setExclusive(true);
-    ui->action_preferences->setMenuRole(QAction::PreferencesRole);
-    ui->action_about->setMenuRole(QAction::AboutRole);
-    initGlobalHotKeys();
-
-    if (qobject_cast<MainWindow *>(parent)) {
-        setGroupEnable();
-    }
-
-    if (qobject_cast<LoginWidget *>(parent)) {
-
-    }
-
-    if (qobject_cast<MarkdownEditorWidget *>(parent)) {
-        qDebug() << "MarkdownEditorWidget";
-    }
-}
-
-void MenuBar::setGroupEnable()
-{
-    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
-    if (Gitnoter::Category == type) {
-        ui->action_newTags->setEnabled(false);
-        ui->action_newCategories->setEnabled(true);
-    }
-    else {
-        ui->action_newTags->setEnabled(Gitnoter::Tag == type);
-        ui->action_newCategories->setEnabled(false);
-    }
-}
-
-void MenuBar::addActionToWindowMenu(QWidget *widget)
-{
-    for (auto &&action :mWindowMenuActionGroup->actions()) {
-        action->setChecked(false);
-    }
-
-    QAction *action = new QAction(widget->windowTitle(), this);
-    action->setCheckable(true);
-    action->setData(QVariant::fromValue(widget));
-    action->setChecked(true);
-    ui->menu_window->addAction(action);
-    mWindowMenuActionGroup->addAction(action);
-
-    connect(action, SIGNAL(triggered()), this, SLOT(onWindowMenuActionTriggered()));
-
-    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
-}
-
-void MenuBar::removeActionToWindowMenu(QWidget *widget)
-{
-    for (auto &&action : mWindowMenuActionGroup->actions()) {
-        action->setChecked(false);
-
-        if (action->data().value<QWidget *>() == widget) {
-            ui->menu_window->removeAction(action);
-            mWindowMenuActionGroup->removeAction(action);
-        }
-    }
-
-    if (mWindowMenuActionGroup->actions().length() > 0) {
-        QAction *action = mWindowMenuActionGroup->actions().at(0);
-        QWidget *window = action->data().value<QWidget *>();
-
-        action->setChecked(true);
-        window->raise();
-        window->activateWindow();
-    }
-
-    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
-}
-
 void MenuBar::on_action_printPageSetting_triggered()
 {
     QPageSetupDialog *dialog = new QPageSetupDialog(mPrinter, parentWidget());
@@ -665,4 +591,172 @@ void MenuBar::clearLicenseActionList()
     }
 
     mLicenseActionList.clear();
+}
+
+void MenuBar::setActionEnabledRecursion(QMenu *menu, bool enabled)
+{
+    for (auto &&item : menu->actions()) {
+        if (item->isSeparator()) {
+            continue;
+        }
+
+        if (item->menu()) {
+            setActionEnabledRecursion(item->menu(), enabled);
+        }
+        else {
+            item->setEnabled(enabled);
+        }
+    }
+}
+
+void MenuBar::setupUi(QWidget *parent)
+{
+    mWindowMenuActionGroup->setExclusive(true);
+    ui->action_preferences->setMenuRole(QAction::PreferencesRole);
+    ui->action_about->setMenuRole(QAction::AboutRole);
+}
+
+void MenuBar::addActionToWindowMenu(QWidget *widget)
+{
+    for (auto &&action :mWindowMenuActionGroup->actions()) {
+        action->setChecked(false);
+    }
+
+    QAction *action = new QAction(widget->windowTitle(), this);
+    action->setCheckable(true);
+    action->setData(QVariant::fromValue(widget));
+    action->setChecked(true);
+    ui->menu_window->addAction(action);
+    mWindowMenuActionGroup->addAction(action);
+
+    connect(action, SIGNAL(triggered()), this, SLOT(onWindowMenuActionTriggered()));
+
+    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
+}
+
+void MenuBar::removeActionToWindowMenu(QWidget *widget)
+{
+    for (auto &&action : mWindowMenuActionGroup->actions()) {
+        action->setChecked(false);
+
+        if (action->data().value<QWidget *>() == widget) {
+            ui->menu_window->removeAction(action);
+            mWindowMenuActionGroup->removeAction(action);
+        }
+    }
+
+    if (mWindowMenuActionGroup->actions().length() > 0) {
+        QAction *action = mWindowMenuActionGroup->actions().at(0);
+        QWidget *window = action->data().value<QWidget *>();
+
+        action->setChecked(true);
+        window->raise();
+        window->activateWindow();
+    }
+
+    gConfigModel->setOpenWindowListNoteUuid(windowMenuWidgetList());
+}
+
+void MenuBar::setGroupActionEnable()
+{
+    Gitnoter::GroupType type = gConfigModel->getSideSelectedType();
+    if (Gitnoter::Category == type) {
+        ui->action_newTags->setEnabled(false);
+        ui->action_newCategories->setEnabled(true);
+    }
+    else {
+        ui->action_newTags->setEnabled(Gitnoter::Tag == type);
+        ui->action_newCategories->setEnabled(false);
+    }
+}
+
+void MenuBar::setActionEnabled()
+{
+    QList<QMenu *> menuList = {
+            ui->menu_notes,
+            ui->menu_edit,
+            ui->menu_search,
+            ui->menu_switch,
+            ui->menu_sign,
+            ui->menu_view,
+            ui->menu_window,
+            ui->menu_help
+    };
+
+    for (auto &&item : menuList) {
+        setActionEnabledRecursion(item, true);
+    }
+}
+
+void MenuBar::setMainWindowActionEnable()
+{
+    QList<QMenu *> menuList = {
+            ui->menu_notes,
+            ui->menu_search,
+            ui->menu_switch,
+            ui->menu_view,
+            ui->menu_window,
+            ui->menu_help
+    };
+
+    for (auto &&item : menuList) {
+        setActionEnabledRecursion(item, true);
+    }
+
+    setGroupActionEnable();
+}
+
+void MenuBar::setMarkdownEditorWindowActionEnable()
+{
+    QList<QMenu *> menuList = {
+            ui->menu_notes,
+            ui->menu_edit,
+            ui->menu_search,
+            ui->menu_switch,
+            ui->menu_sign,
+            ui->menu_view,
+            ui->menu_window,
+            ui->menu_help
+    };
+
+    for (auto &&item : menuList) {
+        setActionEnabledRecursion(item, true);
+    }
+}
+
+void MenuBar::setMarkdownEditorWidgetActionEnable()
+{
+    QList<QMenu *> menuList = {
+            ui->menu_notes,
+            ui->menu_edit,
+            ui->menu_search,
+            ui->menu_switch,
+            ui->menu_sign,
+            ui->menu_view,
+            ui->menu_window,
+            ui->menu_help
+    };
+
+    for (auto &&item : menuList) {
+        setActionEnabledRecursion(item, true);
+    }
+}
+
+void MenuBar::setLineEditActionEnable()
+{
+    QList<QMenu *> menuList = {
+            ui->menu_notes,
+            ui->menu_edit,
+            ui->menu_search,
+            ui->menu_switch,
+            ui->menu_view,
+            ui->menu_window,
+            ui->menu_help
+    };
+
+    for (auto &&item : menuList) {
+        setActionEnabledRecursion(item, true);
+    }
+
+    setGroupActionEnable();
 }

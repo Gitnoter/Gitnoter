@@ -56,6 +56,7 @@ private:
     MarkdownEditorWidget *mMarkdownEditorWidget;
     GroupModel *oldGroupModel;
     GroupModel *newGroupModel;
+    MainWindow *mMainWindow;
 
 };
 

@@ -23,22 +23,26 @@ public:
     explicit MenuBar(QWidget *parent = nullptr, MainWindow *mainWindow = nullptr);
     ~MenuBar();
 
-    void setGroupEnable();
     void addActionToWindowMenu(QWidget *widget = 0);
     void removeActionToWindowMenu(QWidget *widget = 0);
-
     void initLicenseAction(bool license = false);
+
     void addHasLicenseAction();
     void addNoLicenseAction();
 
-//    void initFormMarkdownEditorWidget();
-//    void initFormGroupTreeWidget();
-//    void initFormNoteListWidget();
+    void setGroupActionEnable();
+    void setLineEditActionEnable();
+    void setMainWindowActionEnable();
+    void setMarkdownEditorWindowActionEnable();
+    void setMarkdownEditorWidgetActionEnable();
+    void setActionEnabled();
 
 private:
     void setupUi(QWidget *parent);
 
     void clearLicenseActionList();
+
+    void setActionEnabledRecursion(QMenu *menu, bool enabled);
 
 signals:
     void printEditAccepted(QPrinter *printer);

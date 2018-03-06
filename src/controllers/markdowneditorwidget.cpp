@@ -194,10 +194,19 @@ bool MarkdownEditorWidget::eventFilter(QObject *object, QEvent *event)
             mMainWindow->menuBar()->getActionCut()->setEnabled(!selectedText.isEmpty());
             mMainWindow->menuBar()->getActionCopy()->setEnabled(!selectedText.isEmpty());
             mMainWindow->menuBar()->getActionWebSearch()->setEnabled(!selectedText.isEmpty());
+
+//            if (!parent()) {
+//                mMainWindow->menuBar()->setMainWindowActionEnable();
+//            }
+//            mMainWindow->menuBar()->setMarkdownEditorWidgetActionEnable();
         }
         else if (event->type() == QEvent::FocusOut) {
             mMainWindow->menuBar()->getActionUndo()->setEnabled(false);
             mMainWindow->menuBar()->getActionRedo()->setEnabled(false);
+
+            if (parent()) {
+//                mMainWindow->menuBar()->setMarkdownEditorWidgetActionEnable();
+            }
         }
     }
 

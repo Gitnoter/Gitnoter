@@ -9,7 +9,7 @@ CategoryListWidget::CategoryListWidget(QWidget *parent) :
         newGroupModel(nullptr)
 {
     ui->setupUi(this);
-
+    mMainWindow = ((MarkdownEditorWidget *) parent)->mainWindow();
     ui->listWidget_data->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->lineEdit->addAction(QIcon(":/images/icon-search.png"), QLineEdit::LeadingPosition);
 }
@@ -120,5 +120,5 @@ void CategoryListWidget::showEvent(QShowEvent *showEvent)
 {
     QDialog::showEvent(showEvent);
 
-    ((MarkdownEditorWidget *) parent())->mainWindow()->gAnalytics()->sendScreenView(objectName());
+    mMainWindow->gAnalytics()->sendScreenView(objectName());
 }
