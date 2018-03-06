@@ -16,6 +16,12 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(VER_PRODUCTNAME_STR);
     QApplication::setApplicationVersion(VER_PRODUCTVERSION_STR);
 
+#if defined(Q_OS_WIN)
+//    QApplication::setFont(QFont("Courier New"));
+#endif
+
+    QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+
     QDir dir;
     dir.mkdir(__AppDataLocation__);
     dir.mkdir(__AppDataPath__);
@@ -23,16 +29,15 @@ int main(int argc, char *argv[])
     dir.mkdir(__CRASHES_PATH__);
     dir.mkdir(__CRASHES_BAK_PATH__);
 
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
-#endif
-
 #if defined(Q_OS_MACOS)
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    qApp->setStyleSheet(Tools::readerFile(":/theme/windows-default.qss"));
+#endif
+
     qApp->setStyleSheet(qApp->styleSheet() + Tools::readerFileString(":/theme/default.qss"));
-    QDir::setCurrent(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
 
 #if defined(QT_NO_DEBUG)
     QBreakpadInstance.setDumpPath(__CRASHES_PATH__);
