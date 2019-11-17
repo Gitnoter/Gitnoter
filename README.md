@@ -46,7 +46,7 @@
 
 ### Gitnoter 主界面说明
 
-![主界面说明](https://gitee.com/uploads/images/2018/0215/130224_dfc69b4e_91466.png)
+![主界面说明](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/1.png)
 
 - ① 中横线前面显示笔记名称, 后面显示归档, [文档标题 - 归档]
 - ② 系统管理的归档文件夹
@@ -74,7 +74,7 @@
 
 打开设置面板, macOS `CMD + ,`, Linux 和 Windows `笔记 -> 设置...`
 
-![](https://gitee.com/uploads/images/2018/0215/143605_4c248021_91466.jpeg)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/2.png)
 
 - 仓库地址: 注册 `Git` 平台账号后创建仓库得到, 目前不支持`SSH`, 建议使用私有仓库
     + 国内建议使用: [Coding](https://coding.net/), [oschina](https://gitee.com)
@@ -85,12 +85,12 @@
 
 打开设置面板, macOS `CMD + ,`, Linux 和 Windows `笔记 -> 设置...`
 
-![](https://gitee.com/uploads/images/2018/0215/143608_1b705f0a_91466.jpeg)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/3.png)
 
 - 当无任何操作时自动锁定: 设置自动锁屏的延时时间
 - 解锁密码: 设置解锁密码, 不设置为空
 
-![](https://gitee.com/uploads/images/2018/0215/143543_4ce9b6e6_91466.jpeg)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/4.png)
 
 - 输入正确密码后如果为成解锁, 请再次输入回车
 
