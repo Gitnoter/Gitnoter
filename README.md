@@ -74,7 +74,7 @@
 
 打开设置面板, macOS `CMD + ,`, Linux 和 Windows `笔记 -> 设置...`
 
-![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/2.png)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/2.jpg)
 
 - 仓库地址: 注册 `Git` 平台账号后创建仓库得到, 目前不支持`SSH`, 建议使用私有仓库
     + 国内建议使用: [Coding](https://coding.net/), [oschina](https://gitee.com)
@@ -85,12 +85,12 @@
 
 打开设置面板, macOS `CMD + ,`, Linux 和 Windows `笔记 -> 设置...`
 
-![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/3.png)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/3.jpg)
 
 - 当无任何操作时自动锁定: 设置自动锁屏的延时时间
 - 解锁密码: 设置解锁密码, 不设置为空
 
-![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/4.png)
+![](https://raw.githubusercontent.com/Gitnoter/Gitnoter-Qt-Desktop/master/resources/4.jpg)
 
 - 输入正确密码后如果为成解锁, 请再次输入回车
 
