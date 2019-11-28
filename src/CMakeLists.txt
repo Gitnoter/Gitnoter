@@ -29,6 +29,10 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qtinyaes QTINYAES)
 #include_directories(${PROJECT_SOURCE_DIR}/3rdparty/UGlobalHotkey)
 #aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/UGlobalHotkey UGlOBLEHOTKEY)
 
+#
+# https://github.com/HSAnet/qt-google-analytics
+# Qt5 classes for providing Google analytics usage in a Qt/QtQuick application
+#
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/qt-google-analytics)
 aux_source_directory(${PROJECT_SOURCE_DIR}/3rdparty/qt-google-analytics QtGoogleAnalytics)
 
@@ -98,6 +102,9 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/helps SOURCES_HELPS)
 
 file(GLOB_RECURSE UIS_APP ${PROJECT_SOURCE_DIR}/views/*.ui)
 
+#
+# Build Qt UIs to headers
+#
 qt5_wrap_ui(HEADERS_UIS
     ${UIS_APP}
     ${UIS_QMARKDOWNTEXTEDIT})
