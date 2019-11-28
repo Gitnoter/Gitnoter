@@ -18,7 +18,7 @@ include($$PWD/hoedown/hoedown.pri)
 #
 # json
 #
-#include($$PWD/json/json.pri)
+include($$PWD/json/json.pri)
 
 #
 # qtinyaes
@@ -48,4 +48,4 @@ include($$PWD/qBreakpad/qBreakpad.pri)
 #
 # https://github.com/stsoor/LibGit2Wrapper
 #
-#include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)
+include($$PWD/LibGit2Wrapper/LibGit2Wrapper.pri)
