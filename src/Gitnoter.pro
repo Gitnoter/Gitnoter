@@ -30,93 +30,34 @@ CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 }
 
-INCLUDEPATH += $$PWD/controllers \
+INCLUDEPATH += \
+    $$PWD/controllers \
     $$PWD/view \
     $$PWD/models \
     $$PWD/helps
 
-DEPENDPATH += $$PWD/controllers \
+DEPENDPATH += \
+    $$PWD/controllers \
     $$PWD/view \
     $$PWD/models \
     $$PWD/helps
 
 SOURCES += \
     main.cpp \
-    controllers/mainwindow.cpp  \
-    controllers/categorylistwidget.cpp  \
-    controllers/loginwidget.cpp \
-    controllers/settingdialog.cpp \
-    controllers/aboutdialog.cpp \
-    controllers/lockdialog.cpp \
-    controllers/notelistcellwidget.cpp \
-    controllers/notelistsortpopupmenu.cpp \
-    controllers/elidedlabel.cpp \
-    controllers/markdowneditorwidget.cpp \
-    controllers/tagcellwidget.cpp \
-    controllers/messagedialog.cpp \
-    controllers/grouptreewidget.cpp \
-    controllers/notelistwidget.cpp \
-    controllers/menubar.cpp \
-    controllers/navigationbarwidget.cpp \
-    controllers/importnotedialog.cpp \
-    controllers/enterlicensedialog.cpp \
-    controllers/notepreviewwidget.cpp \
-    models/notemodel.cpp  \
-    models/configmodel.cpp \
-    models/groupmodel.cpp  \
-    helps/globals.cpp  \
-    helps/tools.cpp \
-    helps/gitmanager.cpp \
-    helps/thememanager.cpp \
-    helps/screenshot.cpp \
-    helps/singletimeout.cpp
+    $$files("controllers/*.cpp", true) \
+    $$files("models/*.cpp", true) \
+    $$files("helps/*.cpp", true)
+
 
 HEADERS += \
     gitnoter.h  \
     version.h \
-    controllers/mainwindow.h  \
-    controllers/categorylistwidget.h  \
-    controllers/loginwidget.h \
-    controllers/settingdialog.h \
-    controllers/aboutdialog.h \
-    controllers/lockdialog.h \
-    controllers/notelistcellwidget.h \
-    controllers/notelistsortpopupmenu.h \
-    controllers/elidedlabel.h \
-    controllers/markdowneditorwidget.h \
-    controllers/tagcellwidget.h \
-    controllers/messagedialog.h \
-    controllers/grouptreewidget.h \
-    controllers/notelistwidget.h \
-    controllers/menubar.h  \
-    controllers/navigationbarwidget.h \
-    controllers/importnotedialog.h \
-    controllers/enterlicensedialog.h \
-    controllers/notepreviewwidget.h \
-    models/notemodel.h  \
-    models/configmodel.h \
-    models/groupmodel.h \
-    helps/globals.h  \
-    helps/tools.h \
-    helps/gitmanager.h \
-    helps/thememanager.h \
-    helps/screenshot.h \
-    helps/singletimeout.h
+    $$files("controllers/*.h", true) \
+    $$files("models/*.h", true) \
+    $$files("helps/*.h", true)
 
 FORMS += \
-    views/mainwindow.ui \
-    views/categorylistwidget.ui \
-    views/loginwidget.ui \
-    views/settingdialog.ui \
-    views/aboutdialog.ui \
-    views/lockdialog.ui \
-    views/notelistcellwidget.ui \
-    views/markdowneditorwidget.ui \
-    views/tagcellwidget.ui \
-    views/messagedialog.ui \
-    views/menubar.ui \
-    views/importnotedialog.ui \
-    views/enterlicensedialog.ui
+    $$files("views/*.ui", true)
 
 RESOURCES += \
     resources/resources.qrc
